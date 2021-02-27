@@ -311,13 +311,16 @@ class owners(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def delete_id(self, ctx, *, id: int):
+    async def delete_id(self, ctx, *, id: int=None):
+        if ctx.message.reference:
+            id = ctx.message.reference.message_id
         try:
             await asyncio.wait_for(ctx.channel.get_partial_message(id).delete(), timeout=5)
         except asyncio.TimeoutError:
-            await asyncio.wait_for(self.bot.http.delete_message(ctx.channel.id, id), timeout=5)
-        except asyncio.TimeoutError:
-            await ctx.send("guess what retarded discord ratelimit me again")
+            try:
+                await asyncio.wait_for(self.bot.http.delete_message(ctx.channel.id, id), timeout=5)
+            except asyncio.TimeoutError:
+                await ctx.send("guess what retarded discord ratelimit me again")
 
     @commands.command()
     # @commands.is_owner()
