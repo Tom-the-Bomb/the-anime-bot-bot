@@ -124,7 +124,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, 
   def run(self, *args, **kwargs):
     # self.ipc.start()
     subprocess.check_output("pip install speedtest-cli", shell=True)
-    self.before_invoke(self.start_typing(ctx))
+    self.before_invoke(self.start_typing)
     self.utils = utils
     self.deleted_message_cache = {}
     self.concurrency = []
