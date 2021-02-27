@@ -1,30 +1,36 @@
-import discord
 import itertools
-from discord_slash import SlashCommand
-from utils.utils import utils
-import sys
-import vacefron
-import ipc
-import subprocess
-import mystbin
-import aiohttp
-import psutil
-import time
-from collections import Counter
-from asyncdagpi import Client
-from utils.asyncstuff import asyncexe
-import alexflipnote
-import aiozaneapi
-import eight_ball
 import os
+import subprocess
+import sys
+import time
+from collections import Counter, OrderedDict
+
+import aiohttp
+import aiozaneapi
+import alexflipnote
+import discord
+import eight_ball
+import ipc
+import mystbin
+import psutil
+import vacefron
+from asyncdagpi import Client
+from discord_slash import SlashCommand
+
+from utils.asyncstuff import asyncexe
+from utils.utils import utils
+
 alex_ = os.getenv("alex_")
 ipc_key=os.getenv("ipc_key")
 zane_api = os.getenv("zane_api")
 TOKEN_ACCESS = os.getenv("TOKEN_ACCESS")
 api_token = os.getenv("api_token")
 import re
+
 from discord.ext import commands
-from utils.HelpPaginator import HelpPaginator, CannotPaginate
+
+from utils.HelpPaginator import CannotPaginate, HelpPaginator
+
 token=re.compile(r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-zA-Z0-9_\-]{84})")
 class AnimeContext(commands.Context):
   def __init__(self, *args, **kwargs):
@@ -102,6 +108,25 @@ class AnimeColor(discord.Color):
 async def prefix_get(bot, message):
   return ['OVO ', 'OVO ', 'OVo ', 'OVo ', 'OvO ', 'OvO ', 'Ovo ', 'Ovo ', 'oVO ', 'oVO ', 'oVo ', 'oVo ', 'ovO ', 'ovO ', 'ovo ', 'ovo ']
 
+class LimitedSizeDict(OrderedDict):
+    def __init__(self, *args, **kwds):
+        self.size_limit = 1000
+        OrderedDict.__init__(self, *args, **kwds)
+        self._check_size_limit()
+
+    def __getitem__(self, key):
+        return super().__getitem__(key)
+  
+    def __setitem__(self, key, value):
+        OrderedDict.__setitem__(self, key, value)
+        self._check_size_limit()
+
+    def _check_size_limit(self):
+        if self.size_limit is not None:
+            while len(self) > self.size_limit:
+                self.popitem(last=True)
+
+            
 class AnimeBot(commands.Bot):
   def __init__(self):
     intents = discord.Intents.default()
@@ -126,7 +151,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, 
     subprocess.check_output("pip install speedtest-cli", shell=True)
     self.before_invoke(self.start_typing)
     self.utils = utils
-    self.deleted_message_cache = {}
+    self.deleted_message_cache = LimitedSizeDict()
     self.concurrency = []
     self.color = 0x00ff6a
     self.psutil_process = psutil.Process()
