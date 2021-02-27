@@ -435,8 +435,9 @@ class events(commands.Cog):
                     continue
                 if e.is_usable() != False:
                     lists.append(str(e))
-            message_ = await message.channel.send("".join(lists))
-            self.bot._message_cache[message.id] = message_
+                if lists != []:
+                    message_ = await message.channel.send("".join(lists))
+                    self.bot._message_cache[message.id] = message_
         # mentions = message.mentions
         # try:
         #   for x in mentions:
