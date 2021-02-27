@@ -364,7 +364,10 @@ class events(commands.Cog):
     async def on_raw_message_edit(self, payload):
         if not payload.cached_message:
             channel = self.bot.get_channel(payload.channel_id)
-            message = await channel.fetch_message(payload.message_id)
+            try:
+                message = await channel.fetch_message(payload.message_id)
+            except:
+                pass
             if message.embeds != []:
                 return
             await self.bot.process_commands(message)
