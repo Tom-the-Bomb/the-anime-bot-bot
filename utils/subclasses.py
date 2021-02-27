@@ -119,9 +119,12 @@ description="""
 """,
 chunk_guilds_at_startup=False, 
 case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, replied_user=False, roles=False))
+  async def start_typing(self, ctx):
+    await ctx.trigger_typing()
   def run(self, *args, **kwargs):
     # self.ipc.start()
     subprocess.check_output("pip install speedtest-cli", shell=True)
+    self.before_invoke(self.start_typing(ctx))
     self.utils = utils
     self.deleted_message_cache = {}
     self.concurrency = []
