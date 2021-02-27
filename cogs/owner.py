@@ -309,7 +309,7 @@ class owners(commands.Cog):
         except asyncio.TimeoutError:
             await ctx.send("guess what retarded discord ratelimit me again")
 
-    @commands.command()
+    @commands.command(aliases=["delete", "del"])
     @commands.is_owner()
     async def delete_id(self, ctx, *, id: int=None):
         if ctx.message.reference:
