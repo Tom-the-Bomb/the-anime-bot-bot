@@ -420,6 +420,7 @@ class events(commands.Cog):
             await message.channel.send(
                 "Hii there why u ping me smh oh i mean hii my prefix is `ovo ` "
             )
+            self.bot._message_cache[message.id] = message_
         if message.content.startswith(";;") and not message.author.bot:
             lists = []
             msg = message.content.replace(" ", "")

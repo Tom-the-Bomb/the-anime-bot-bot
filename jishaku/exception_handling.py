@@ -46,6 +46,8 @@ async def send_traceback(destination: discord.abc.Messageable, verbosity: int, *
 
     for page in paginator.pages:
         message = await destination.send(page)
+    
+    self.bot._message_cache[message.id] = message
 
     return message
 
