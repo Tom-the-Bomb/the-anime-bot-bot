@@ -84,7 +84,7 @@ class events(commands.Cog):
 
     @tasks.loop(minutes=1)
     async def chunk(self):
-        async with lock:
+        async with self.lock:
             await self.bot.wait_until_ready()
             if self.started == False:
                 print(f"\033[92mStarted chunking\033[0m")
