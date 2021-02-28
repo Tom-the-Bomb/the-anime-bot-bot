@@ -18,6 +18,7 @@ import typing
 
 import discord
 from discord.ext import commands
+from utils.subclasses import AnimeBot
 
 from jishaku.flags import JISHAKU_NO_DM_TRACEBACK
 
@@ -136,12 +137,15 @@ class ReplResponseReactor(ReactionProcedureTimer):  # pylint: disable=too-few-pu
 
         if isinstance(exc_val, (SyntaxError, asyncio.TimeoutError, subprocess.TimeoutExpired)):
             # short traceback, send to channel
-            await send_traceback(self.message.channel, 0, exc_type, exc_val, exc_tb)
+            message = await send_traceback(self.message.channel, 0, exc_type, exc_val, exc_tb)
+            AnimeBot()._message_cache[self.message.id] = message
         else:
             # this traceback likely needs more info, so increase verbosity, and DM it instead.
             message = await send_traceback(
                 self.message.channel if JISHAKU_NO_DM_TRACEBACK else self.message.author,
                 8, exc_type, exc_val, exc_tb
             )
+            AnimeBot()._message_cache[self.message.id] = message
+
 
         return True  # the exception has been handled
