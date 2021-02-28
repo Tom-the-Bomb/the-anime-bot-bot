@@ -90,7 +90,7 @@ class ReactionProcedureTimer:  # pylint: disable=too-few-public-methods
     """
     __slots__ = ('message', 'bot', 'loop', 'handle', 'raised')
 
-    def __init__(self, message: discord.Message, bot: AnimeBot, loop: typing.Optional[asyncio.BaseEventLoop] = None):
+    def __init__(self, message: discord.Message, bot, loop: typing.Optional[asyncio.BaseEventLoop] = None):
         self.message = message
         self.bot = bot
         self.loop = loop or asyncio.get_event_loop()
