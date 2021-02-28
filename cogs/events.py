@@ -33,6 +33,7 @@ POSTGRE_DATABASE_URL = os.getenv("POSTGRE_DATABASE_URL")
 class events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.lock = asyncio.Lock()
         self.started = False
         self.bot.ws_recieved = 0
         self.bot.send = 0
@@ -83,16 +84,17 @@ class events(commands.Cog):
 
     @tasks.loop(minutes=1)
     async def chunk(self):
-        await self.bot.wait_until_ready()
-        if self.started == False:
-            print(f"\033[92mStarted chunking\033[0m")
-        for guild in self.bot.guilds:
-            if not guild.chunked:
-                await guild.chunk()
-            await asyncio.sleep(1)
-        if self.started == False:
-            print(f"\033[92mFinshed chunking\033[0m")
-            self.started = True
+        async with lock:
+            await self.bot.wait_until_ready()
+            if self.started == False:
+                print(f"\033[92mStarted chunking\033[0m")
+            for guild in self.bot.guilds:
+                if not guild.chunked:
+                    await guild.chunk()
+                await asyncio.sleep(1)
+            if self.started == False:
+                print(f"\033[92mFinshed chunking\033[0m")
+                self.started = True
 
     @tasks.loop(minutes=1)
     async def post(self, bot):
