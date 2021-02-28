@@ -162,7 +162,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, 
     self.socket_stats = Counter()
     self.command_counter = 0
     self.commandsusages = Counter()
-    self.session = aiohttp.ClientSession(headers={"User-Agent": f"python-requests/2.20.0 The Anime Bot/1.1.0 Python/{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]} aiohttp/{aiohttp.__version__}"})
+    self.session = aiohttp.ClientSession(headers={"User-Agent": f"python-requests/2.25.1 The Anime Bot/1.1.0 Python/{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]} aiohttp/{aiohttp.__version__}"})
     self.mystbin = mystbin.Client(session=self.session)
     self.vacefron_api=vacefron.Client(session=self.session, loop=self.loop)
     self.dag = Client(api_token, session=self.session, loop=self.loop)
