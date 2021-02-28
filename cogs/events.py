@@ -498,7 +498,7 @@ class events(commands.Cog):
             embed = await self.embed("timeout")
             return await ctx.send(embed=embed)
         elif isinstance(error, discord.errors.Forbidden):
-            embed = await self.embed(error.message)
+            embed = await self.embed(error.text)
             return await ctx.send(embed=embed)
         elif isinstance(error, discord.errors.HTTPException):
             embed = await self.embed(f"HTTPException {error.text}")
