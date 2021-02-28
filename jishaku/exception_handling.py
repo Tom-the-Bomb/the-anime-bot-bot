@@ -90,7 +90,7 @@ class ReactionProcedureTimer:  # pylint: disable=too-few-public-methods
     """
     __slots__ = ('message', 'bot', 'loop', 'handle', 'raised')
 
-    def __init__(self, message: discord.Message, bot, loop: typing.Optional[asyncio.BaseEventLoop] = None):
+    def __init__(self, message: discord.Message, bot=None, loop: typing.Optional[asyncio.BaseEventLoop] = None):
         self.message = message
         self.bot = bot
         self.loop = loop or asyncio.get_event_loop()
@@ -139,14 +139,20 @@ class ReplResponseReactor(ReactionProcedureTimer):  # pylint: disable=too-few-pu
         if isinstance(exc_val, (SyntaxError, asyncio.TimeoutError, subprocess.TimeoutExpired)):
             # short traceback, send to channel
             message = await send_traceback(self.message.channel, 0, exc_type, exc_val, exc_tb)
-            self.bot._message_cache[self.message.id] = message
+            try:
+                self.bot._message_cache[self.message.id] = message
+            except:
+                pass
         else:
             # this traceback likely needs more info, so increase verbosity, and DM it instead.
             message = await send_traceback(
                 self.message.channel if JISHAKU_NO_DM_TRACEBACK else self.message.author,
                 8, exc_type, exc_val, exc_tb
             )
-            self.bot._message_cache[self.message.id] = message
+            try:
+                self.bot._message_cache[self.message.id] = message
+            except:
+                pass
 
 
         return True  # the exception has been handled
