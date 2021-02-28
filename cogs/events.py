@@ -417,7 +417,7 @@ class events(commands.Cog):
     async def on_message(self, message):
         self.bot.deleted_message_cache[message.id] = message
         if message.content == "<@!787927476177076234>" and not message.author.bot:
-            await message.channel.send(
+            message_ = await message.channel.send(
                 "Hii there why u ping me smh oh i mean hii my prefix is `ovo ` "
             )
             self.bot._message_cache[message.id] = message_

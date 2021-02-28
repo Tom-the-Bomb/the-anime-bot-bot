@@ -47,7 +47,6 @@ async def send_traceback(destination: discord.abc.Messageable, verbosity: int, *
     for page in paginator.pages:
         message = await destination.send(page)
     
-    self.bot._message_cache[message.id] = message
 
     return message
 
@@ -140,7 +139,7 @@ class ReplResponseReactor(ReactionProcedureTimer):  # pylint: disable=too-few-pu
             await send_traceback(self.message.channel, 0, exc_type, exc_val, exc_tb)
         else:
             # this traceback likely needs more info, so increase verbosity, and DM it instead.
-            await send_traceback(
+            message = await send_traceback(
                 self.message.channel if JISHAKU_NO_DM_TRACEBACK else self.message.author,
                 8, exc_type, exc_val, exc_tb
             )
