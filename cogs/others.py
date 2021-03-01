@@ -348,7 +348,7 @@ class others(commands.Cog):
         async with self.bot.session.get("https://api.github.com/repos/Cryptex-github/the-anime-bot-bot/commits", headers={"Authorization": "token "+gittoken}) as resp:
             repo = await resp.json()
         lists = [
-            f"[`{i.get('commit').get('sha')[:7]}`]({i.get('commit').get('html_url')}) {i.get('commit').get('message')}"
+            f"[`{i.get('sha')[:7]}`]({i.get('html_url')}) {i.get('message')}"
             for i in repo
         ]
 
