@@ -1,10 +1,10 @@
-from quart import *
+from aiohttp import web
 
-app = Quart(__name__)
-
-@app.route('/')
 async def index(request):
     data = {"the best bot": "yes"}
-    return jsonify(data)
+    return web.json_response(data)
 
-app.run()
+
+app = web.Application()
+app.router.add_get("/", index)
+web.run_app(app)
