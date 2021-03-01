@@ -349,7 +349,7 @@ class others(commands.Cog):
             repo = await resp.json()
         lists = [
             f"[`{i.commit.sha[:7]}`]({i.commit.html_url}) {i.commit.message}"
-            for i in repo
+            for i in repo[:10]
         ]
 
         paginator = commands.Paginator(prefix="", suffix="", max_size=1000)
