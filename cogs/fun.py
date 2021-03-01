@@ -143,7 +143,7 @@ class fun(commands.Cog):
     @commands.command()
     async def ship(self, ctx, user_1: discord.User, user_2: discord.User):
         random.seed(user_1.id + user_2.id + 34 + 35 + 69)
-        embed = discord.Embed(color=self.bot.color, description=f"{user_1} + {user_2} = {random.randint(0, 100)}%")
+        embed = discord.Embed(color=self.bot.color, description=f"{user_1.name} + {user_2.name} = {random.randint(0, 100)}%\n{'<a:rooLove:744346239075877518>'*int(str(random.randint(0, 100))[0])}")
         await ctx.send(embed=embed)
 
 
