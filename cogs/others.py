@@ -345,7 +345,7 @@ class others(commands.Cog):
     @commands.max_concurrency(1, commands.BucketType.user)
     async def commits(self, ctx):
         await ctx.send("Getting commits")
-        async with self.bot.session.get("https://api.github.com/repos/Cryptex-github/the-anime-bot-bot/commits", headers={"Authorization": "token "+os!.getenv("gittoken")}) as resp:
+        async with self.bot.session.get("https://api.github.com/repos/Cryptex-github/the-anime-bot-bot/commits", headers={"Authorization": "token "+gittoken}) as resp:
             resp = await resp.json()
         lists = [
             f"[`{i.commit.sha[:7]}`]({i.commit.html_url}) {i.commit.message}"
