@@ -25,7 +25,7 @@ from jishaku.paginators import (PaginatorEmbedInterface, PaginatorInterface,
                                 WrappedPaginator)
 
 start_time = time.time()
-# gittoken = os.getenv("gittoken")
+gittoken = os.getenv("gittoken")
 # g = Github(gittoken)
 TOKEN = os.getenv("TOKEN")
 
@@ -341,14 +341,23 @@ class others(commands.Cog):
     #         paginator.add_line(i)
     #     return paginator
 
-    # @commands.command()
-    # @commands.max_concurrency(1, commands.BucketType.user)
-    # async def commits(self, ctx):
-    #     await ctx.send("Getting commits")
-    #     paginator = await self.commits_()
-    #     interface = PaginatorEmbedInterface(
-    #         ctx.bot, paginator, owner=ctx.author)
-    #     await interface.send_to(ctx)
+    @commands.command()
+    @commands.max_concurrency(1, commands.BucketType.user)
+    async def commits(self, ctx):
+        await ctx.send("Getting commits")
+        async with self.bot.session.get("https://api.github.com/repos/Cryptex-github/the-anime-bot-bot/commits", headers={"Authorization": "token "+os!.getenv("gittoken")}) as resp:
+            resp = await resp.json()
+        lists = [
+            f"[`{i.commit.sha[:7]}`]({i.commit.html_url}) {i.commit.message}"
+            for i in repo
+        ]
+
+        paginator = commands.Paginator(prefix="", suffix="", max_size=1000)
+        for i in lists:
+            paginator.add_line(i)
+        interface = PaginatorEmbedInterface(
+            ctx.bot, paginator, owner=ctx.author)
+        await interface.send_to(ctx)
 
     @commands.command(aliases=["info"])
     async def about(self, ctx):
