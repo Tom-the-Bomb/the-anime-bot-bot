@@ -139,6 +139,13 @@ class fun(commands.Cog):
             return to_bottom(text)
         else:
             return from_bottom(text)
+    
+    @commands.command()
+    async def ship(self, ctx, user_1: discord.User, user_2: discord.User):
+        random.seed(user_1.id + user_2.id + 34 + 35 + 69)
+        embed = discord.Embed(color=self.bot.color, description=f"{user_1} + {user_2} = {random.randint(0, 100)}%")
+        await ctx.send(embed=embed)
+
 
     @commands.command()
     async def pic(self, ctx, animal: str):
