@@ -14,6 +14,10 @@ from asyncdagpi import ImageFeatures
 import typing
 
 
+class str(commands.Converter, str):
+    async def convert(self, ctx, arg):
+        return arg.strip("<>")
+
 class pictures(commands.Cog):
     def __init__(self, bot):
         self.bot = bot

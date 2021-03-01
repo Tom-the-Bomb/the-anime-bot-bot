@@ -53,7 +53,7 @@ class AnimeContext(commands.Context):
     ovo = msg.replace("l", "v").replace("L", "v").replace("r", "v").replace("R", "v")
     print(self)
     return f"{ovo} ovo"
-  async def get(self, link):
+  async def get_paste(self, link):
     try:
       return str(await self.bot.mystbin.get(link))
     except:
