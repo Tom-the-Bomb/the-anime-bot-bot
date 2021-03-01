@@ -346,7 +346,7 @@ class others(commands.Cog):
     async def commits(self, ctx):
         await ctx.send("Getting commits")
         async with self.bot.session.get("https://api.github.com/repos/Cryptex-github/the-anime-bot-bot/commits", headers={"Authorization": "token "+gittoken}) as resp:
-            resp = await resp.json()
+            repo = await resp.json()
         lists = [
             f"[`{i.commit.sha[:7]}`]({i.commit.html_url}) {i.commit.message}"
             for i in repo
