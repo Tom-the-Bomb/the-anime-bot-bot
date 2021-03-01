@@ -70,9 +70,9 @@ class pictures(commands.Cog):
         await ctx.send(file=discord.File(buffer, "aww.png"))
 
     @commands.command()
-    async def womancat(self, ctx, woman: typing.Optional[typing.Union[discord.Member,
+    async def womancat(self, ctx, woman: typing.Optional[typing.Union[discord.User,
                                                 discord.PartialEmoji,
-                                                discord.Emoji, str]], cat: typing.Optional[typing.Union[discord.Member,
+                                                discord.Emoji, str]], cat: typing.Optional[typing.Union[discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]]):
         if woman is None:
@@ -169,7 +169,7 @@ class pictures(commands.Cog):
     async def amiajoke(
             self,
             ctx,
-            thing: typing.Optional[typing.Union[discord.Member,
+            thing: typing.Optional[typing.Union[discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]],
             level: float = 0.3):
@@ -223,7 +223,7 @@ class pictures(commands.Cog):
     async def pixelate(
             self,
             ctx,
-            thing: typing.Optional[typing.Union[discord.Member,
+            thing: typing.Optional[typing.Union[discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]],
             level: float = 0.3):
@@ -255,7 +255,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def swirl(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -283,7 +283,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def sobel(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -306,7 +306,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def palette(self,
                       ctx,
-                      thing: typing.Union[discord.Member, discord.PartialEmoji,
+                      thing: typing.Union[discord.User, discord.PartialEmoji,
                                           discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -329,7 +329,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def sort(self,
                    ctx,
-                   thing: typing.Union[discord.Member, discord.PartialEmoji,
+                   thing: typing.Union[discord.User, discord.PartialEmoji,
                                        discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -352,7 +352,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def cube(self,
                    ctx,
-                   thing: typing.Union[discord.Member, discord.PartialEmoji,
+                   thing: typing.Union[discord.User, discord.PartialEmoji,
                                        discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -378,7 +378,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def braille(self,
                       ctx,
-                      thing: typing.Union[discord.Member, discord.PartialEmoji,
+                      thing: typing.Union[discord.User, discord.PartialEmoji,
                                           discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -398,7 +398,7 @@ class pictures(commands.Cog):
     @commands.command(aliases=["dot"])
     async def dots(self,
                    ctx,
-                   thing: typing.Union[discord.Member, discord.PartialEmoji,
+                   thing: typing.Union[discord.User, discord.PartialEmoji,
                                        discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -421,7 +421,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def threshold(self,
                         ctx,
-                        thing: typing.Union[discord.Member,
+                        thing: typing.Union[discord.User,
                                             discord.PartialEmoji,
                                             discord.Emoji, str] = None):
         async with ctx.channel.typing():
@@ -446,7 +446,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def spread(self,
                      ctx,
-                     thing: typing.Union[discord.Member, discord.PartialEmoji,
+                     thing: typing.Union[discord.User, discord.PartialEmoji,
                                          discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -469,7 +469,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def jpeg(self,
                    ctx,
-                   thing: typing.Union[discord.Member, discord.PartialEmoji,
+                   thing: typing.Union[discord.User, discord.PartialEmoji,
                                        discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -492,7 +492,7 @@ class pictures(commands.Cog):
     @commands.command(aliases=["magik"])
     async def magic(self,
                     ctx,
-                    thing: typing.Optional[typing.Union[discord.Member,
+                    thing: typing.Optional[typing.Union[discord.User,
                                                         discord.PartialEmoji,
                                                         discord.Emoji, str]],
                     level: float = 0.6):
@@ -517,7 +517,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def floor(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -593,7 +593,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def captcha(self,
                       ctx,
-                      thing: typing.Union[discord.Member, discord.PartialEmoji,
+                      thing: typing.Union[discord.User, discord.PartialEmoji,
                                           discord.Emoji, str] = None,
                       *,
                       text="enter something here"):
@@ -616,7 +616,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def solar(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -634,7 +634,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def rainbow(self,
                       ctx,
-                      thing: typing.Union[discord.Member, discord.PartialEmoji,
+                      thing: typing.Union[discord.User, discord.PartialEmoji,
                                           discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -652,7 +652,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def awareness(self,
                         ctx,
-                        thing: typing.Union[discord.Member,
+                        thing: typing.Union[discord.User,
                                             discord.PartialEmoji,
                                             discord.Emoji, str] = None):
         async with ctx.channel.typing():
@@ -671,7 +671,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def night(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -689,7 +689,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def paint(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -707,7 +707,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def polaroid(self,
                        ctx,
-                       thing: typing.Union[discord.Member,
+                       thing: typing.Union[discord.User,
                                            discord.PartialEmoji, discord.Emoji,
                                            str] = None):
         async with ctx.channel.typing():
@@ -726,7 +726,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def sepia(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -744,7 +744,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def poster(self,
                      ctx,
-                     thing: typing.Union[discord.Member, discord.PartialEmoji,
+                     thing: typing.Union[discord.User, discord.PartialEmoji,
                                          discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -762,7 +762,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def charcoal(self,
                        ctx,
-                       thing: typing.Union[discord.Member,
+                       thing: typing.Union[discord.User,
                                            discord.PartialEmoji, discord.Emoji,
                                            str] = None):
         async with ctx.channel.typing():
@@ -781,7 +781,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def ascii(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -799,7 +799,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def deepfry(self,
                       ctx,
-                      thing: typing.Union[discord.Member, discord.PartialEmoji,
+                      thing: typing.Union[discord.User, discord.PartialEmoji,
                                           discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -817,7 +817,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def trash(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -835,7 +835,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def gay(self,
                   ctx,
-                  thing: typing.Union[discord.Member, discord.PartialEmoji,
+                  thing: typing.Union[discord.User, discord.PartialEmoji,
                                       discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -853,7 +853,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def shatter(self,
                       ctx,
-                      thing: typing.Union[discord.Member, discord.PartialEmoji,
+                      thing: typing.Union[discord.User, discord.PartialEmoji,
                                           discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -871,7 +871,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def delete(self,
                      ctx,
-                     thing: typing.Union[discord.Member, discord.PartialEmoji,
+                     thing: typing.Union[discord.User, discord.PartialEmoji,
                                          discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -889,7 +889,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def fedora(self,
                      ctx,
-                     thing: typing.Union[discord.Member, discord.PartialEmoji,
+                     thing: typing.Union[discord.User, discord.PartialEmoji,
                                          discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -907,7 +907,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def jail(self,
                    ctx,
-                   thing: typing.Union[discord.Member, discord.PartialEmoji,
+                   thing: typing.Union[discord.User, discord.PartialEmoji,
                                        discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -925,7 +925,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def sith(self,
                    ctx,
-                   thing: typing.Union[discord.Member, discord.PartialEmoji,
+                   thing: typing.Union[discord.User, discord.PartialEmoji,
                                        discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -943,7 +943,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def bad(self,
                   ctx,
-                  thing: typing.Union[discord.Member, discord.PartialEmoji,
+                  thing: typing.Union[discord.User, discord.PartialEmoji,
                                       discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -961,7 +961,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def obama(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -979,7 +979,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def hitler(self,
                      ctx,
-                     thing: typing.Union[discord.Member, discord.PartialEmoji,
+                     thing: typing.Union[discord.User, discord.PartialEmoji,
                                          discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -997,7 +997,7 @@ class pictures(commands.Cog):
     @commands.command(aliases=["evil"])
     async def satan(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -1015,7 +1015,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def angel(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -1033,7 +1033,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def rgb(self,
                   ctx,
-                  thing: typing.Union[discord.Member, discord.PartialEmoji,
+                  thing: typing.Union[discord.User, discord.PartialEmoji,
                                       discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -1051,7 +1051,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def blur(self,
                    ctx,
-                   thing: typing.Union[discord.Member, discord.PartialEmoji,
+                   thing: typing.Union[discord.User, discord.PartialEmoji,
                                        discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -1069,7 +1069,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def hog(self,
                   ctx,
-                  thing: typing.Union[discord.Member, discord.PartialEmoji,
+                  thing: typing.Union[discord.User, discord.PartialEmoji,
                                       discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -1087,7 +1087,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def triangle(self,
                        ctx,
-                       thing: typing.Union[discord.Member,
+                       thing: typing.Union[discord.User,
                                            discord.PartialEmoji, discord.Emoji,
                                            str] = None):
         async with ctx.channel.typing():
@@ -1106,7 +1106,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def invert(self,
                      ctx,
-                     thing: typing.Union[discord.Member, discord.PartialEmoji,
+                     thing: typing.Union[discord.User, discord.PartialEmoji,
                                          discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -1124,7 +1124,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def wasted(self,
                      ctx,
-                     thing: typing.Union[discord.Member, discord.PartialEmoji,
+                     thing: typing.Union[discord.User, discord.PartialEmoji,
                                          discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -1142,7 +1142,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def america(self,
                       ctx,
-                      thing: typing.Union[discord.Member, discord.PartialEmoji,
+                      thing: typing.Union[discord.User, discord.PartialEmoji,
                                           discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -1160,7 +1160,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def triggered(self,
                         ctx,
-                        thing: typing.Union[discord.Member,
+                        thing: typing.Union[discord.User,
                                             discord.PartialEmoji,
                                             discord.Emoji, str] = None):
         async with ctx.channel.typing():
@@ -1179,7 +1179,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def wanted(self,
                      ctx,
-                     thing: typing.Union[discord.Member, discord.PartialEmoji,
+                     thing: typing.Union[discord.User, discord.PartialEmoji,
                                          discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -1197,7 +1197,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def colors(self,
                      ctx,
-                     thing: typing.Union[discord.Member, discord.PartialEmoji,
+                     thing: typing.Union[discord.User, discord.PartialEmoji,
                                          discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
@@ -1215,7 +1215,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def pixel(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.PartialEmoji,
+                    thing: typing.Union[discord.User, discord.PartialEmoji,
                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             if thing is None:
