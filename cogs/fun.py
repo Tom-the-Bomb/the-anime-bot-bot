@@ -141,7 +141,7 @@ class fun(commands.Cog):
             return from_bottom(text)
     
     @commands.command()
-    async def ship(self, ctx, user_1: discord.User, user_2: discord.User):
+    async def ship(self, ctx, user_1: typing.Union[discord.Member, discord.User], user_2: typing.Union[discord.Member, discord.User]):
         random.seed(user_1.id + user_2.id + 34 + 35 + 69)
         amount = int(str(random.randint(0, 100))[0]) if len(str(random.randint(0, 100))) >= 2 else 1
         embed = discord.Embed(color=self.bot.color, description=f"{user_1.name} + {user_2.name} = **{random.randint(0, 100)}**%\n{'<a:rooLove:744346239075877518>'* amount}")
