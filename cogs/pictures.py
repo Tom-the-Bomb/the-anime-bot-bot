@@ -782,9 +782,8 @@ class pictures(commands.Cog):
                      ctx,
                      thing: typing.Union[discord.Member, discord.User, discord.PartialEmoji,
                                          discord.Emoji, str] = None):
-        async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-            await ctx.reply(file=await self.polaroid(url, "invert"))
+        url = await self.get_url(ctx, thing)
+        await ctx.reply(file=await self.polaroid(url, "invert"))
 
     @commands.command()
     async def wasted(self,
