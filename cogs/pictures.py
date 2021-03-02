@@ -34,8 +34,8 @@ class pictures(commands.Cog):
             if thing.startswith("http") or thing.startswith(
                     "https") or thing.startswith("www"):
                 url = thing
-        else:
-            url = await emoji_to_url(thing)
+            else:
+                url = await emoji_to_url(thing)
         
         return url
 
