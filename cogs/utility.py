@@ -1077,7 +1077,7 @@ class utility(commands.Cog):
             text=
             f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
             icon_url=ctx.author.avatar_url)
-        await ctx.reply(embed, discord.File(BytesIO(await member1.avatar_url.read()), f"{member1.id}{format}"))
+        await ctx.reply(embed=embed, file=discord.File(BytesIO(await member1.avatar_url.read()), f"{member1.id}{format}"))
 
 
 def setup(bot):
