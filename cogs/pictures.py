@@ -21,6 +21,24 @@ class str(commands.Converter, str):
 class pictures(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
+    async def get_url(self, ctx, thing):
+        if thing is None:
+            url = str(ctx.author.avatar_url_as(static_format="png"))
+        elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
+            url = str(thing.url)
+        elif isinstance(thing, (discord.Member, discord.User)):
+            url = str(thing.avatar_url_as(static_format="png"))
+        else:
+            thing = str(thing)
+            if thing.startswith("http") or thing.startswith(
+                    "https") or thing.startswith("www"):
+                url = thing
+        else:
+            url = await emoji_to_url(thing)
+        
+        return url
+
     
     async def polaroid_(self, image, method):
         async with self.bot.session.get(image) as resp:
@@ -28,7 +46,7 @@ class pictures(commands.Cog):
         im = polaroid.Image(image1)
         method1 = getattr(im, method)
         method1()
-        return discord.File(BytesIO(im.save_bytes()), filename="polaroid.png")
+        return discord.File(BytesIO(im.save_bytes()), filename=f"{method}.png")
 
 
     @staticmethod

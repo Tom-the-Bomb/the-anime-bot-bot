@@ -1062,7 +1062,7 @@ class utility(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command()
-    async def avatar(self, ctx, member: discord.User = None):
+    async def avatar(self, ctx, member: typing.Union[discord.User, str] = None):
         """
     shows a members's avatar
 
@@ -1070,6 +1070,8 @@ class utility(commands.Cog):
         member1 = member
         if member1 is None:
             member1 = ctx.author
+        if member == "random":
+            member1 = random.choice(ctx.guild.members)
         embed = discord.Embed(color=self.bot.color)
         format = ".gif" if member1.is_avatar_animated() else ".png"
         embed.set_image(url=f"attachment://{member1.id}{format}")
