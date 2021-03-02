@@ -549,7 +549,7 @@ class fun(commands.Cog):
 
     @staticmethod
     @asyncexe()
-    def tts_(text):
+    def tts_(text, lang):
         t = gtts.gTTS(text=text)
         buffer = BytesIO()
         t.write_to_fp(buffer)
@@ -558,9 +558,9 @@ class fun(commands.Cog):
 
 
     @commands.command()
-    async def tts(self, ctx, *, text="enter something "):
+    async def tts(self, ctx, lang="en", *, text="enter something "):
         async with ctx.typing():
-            file = await self.tts_(text)
+            file = await self.tts_(text, lang)
             await ctx.send(file=file)
 
     @commands.command()
