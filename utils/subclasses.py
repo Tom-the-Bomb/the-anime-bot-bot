@@ -143,7 +143,7 @@ description="""
   |_| |_| |_|\___| /_/   \_\_| |_|_|_| |_| |_|\___| |____/ \___/ \__|
 """,
 chunk_guilds_at_startup=False, 
-case_insensitive=True, allowed_mentions=discord.AllowedMentions(everyone=False, replied_user=False, roles=False))
+case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
   async def start_typing(self, ctx):
     await ctx.trigger_typing()
   def run(self, *args, **kwargs):
