@@ -554,7 +554,7 @@ class fun(commands.Cog):
         buffer = BytesIO()
         t.write_to_fp(buffer)
         buffer.seek(0)
-        return discord.File(buffer, filename="audio.wav")
+        return discord.File(buffer, filename="audio.mp3")
 
 
     @commands.command()
