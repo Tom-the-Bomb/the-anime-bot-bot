@@ -475,8 +475,7 @@ class pictures(commands.Cog):
                                           discord.Emoji, str] = None):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.rainbow(), url)
-        file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
+        file = discord.File(fp=await self.polaroid_(url, "apply_gradient"), filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
     @commands.command()
