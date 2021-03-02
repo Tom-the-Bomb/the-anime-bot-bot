@@ -23,16 +23,16 @@ class pictures(commands.Cog):
         self.bot = bot
 
     async def get_url(self, ctx, thing):
-        if ctx.message.refrence:
-            if ctx.message.refrence.cached_message:
-                if ctx.message.refrence.cached_message.embeds.type == "image":
-                    url = ctx.message.refrence.cached_message.embeds.url
+        if ctx.message.reference:
+            if ctx.message.reference.cached_message:
+                if ctx.message.reference.cached_message.embeds.type == "image":
+                    url = ctx.message.reference.cached_message.embeds.url
                     return url
-                elif ctx.message.refrence.cached_message.attachments and ctx.message.refrence.cached_message.attachments.width and ctx.message.refrence.cached_message.attachments.height:
-                    url = ctx.message.refrence.cached_message.attachments.url
+                elif ctx.message.reference.cached_message.attachments and ctx.message.reference.cached_message.attachments.width and ctx.message.reference.cached_message.attachments.height:
+                    url = ctx.message.reference.cached_message.attachments.url
                     return url
             else:
-                message = bot.get_channel(ctx.message.refrence.channel_id).fetch_message(ctx.message.refrence.message_id)
+                message = bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
                 if message.embeds.type == "image":
                     url = message.embeds.url
                     return url
