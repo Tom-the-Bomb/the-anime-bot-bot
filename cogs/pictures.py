@@ -37,8 +37,12 @@ class pictures(commands.Cog):
                     url = message.embeds[0].url
                     return url
                 elif message.attachments and message.attachments[0].width and message.attachments[0].height:
-                    url = message.attachments.url
+                    url = message.attachments[0].url
                     return url
+
+        if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
+            return ctx.message.attachments[0].url
+
 
         if thing is None:
             url = str(ctx.author.avatar_url_as(format="png"))
