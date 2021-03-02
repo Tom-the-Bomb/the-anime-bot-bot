@@ -778,9 +778,7 @@ class pictures(commands.Cog):
         await ctx.reply(file=file)
 
     @commands.command()
-    async def invert(self,
-                     ctx,
-                     thing: typing.Union[discord.Member, discord.User, discord.PartialEmoji,
+    async def invert(self, ctx, thing: typing.Union[discord.Member, discord.User, discord.PartialEmoji,
                                          discord.Emoji, str] = None):
         url = await self.get_url(ctx, thing)
         await ctx.reply(file=await self.polaroid(url, "invert"))
