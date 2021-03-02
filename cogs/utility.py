@@ -1071,12 +1071,13 @@ class utility(commands.Cog):
         if member1 is None:
             member1 = ctx.author
         embed = discord.Embed(color=self.bot.color)
-        embed.set_image(url=str(member1.avatar_url_as(static_format="png")))
+        format = ".gif" if member1.is_avatar_animated() else ".png"
+        embed.set_image(url=f"attachment://{member1.id}{format}")
         embed.set_footer(
             text=
             f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
             icon_url=ctx.author.avatar_url)
-        await ctx.reply(embed=embed)
+        await ctx.reply(embed, discord.File(BytesIO(member1.avatar_url.read()), f"{member1.id}{format}"))
 
 
 def setup(bot):
