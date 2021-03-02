@@ -41,11 +41,11 @@ class pictures(commands.Cog):
                     return url
 
         if thing is None:
-            url = str(ctx.author.avatar_url_as(static_format="png"))
+            url = str(ctx.author.avatar_url_as(format="png"))
         elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
             url = str(thing.url)
         elif isinstance(thing, (discord.Member, discord.User)):
-            url = str(thing.avatar_url_as(static_format="png"))
+            url = str(thing.avatar_url_as(format="png"))
         else:
             thing = str(thing)
             if thing.startswith("http") or thing.startswith(
