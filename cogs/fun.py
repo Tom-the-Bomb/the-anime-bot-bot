@@ -550,7 +550,7 @@ class fun(commands.Cog):
     @staticmethod
     @asyncexe()
     def tts_(text, lang):
-        t = gtts.gTTS(text=text)
+        t = gtts.gTTS(text=text, lang=lang)
         buffer = BytesIO()
         t.write_to_fp(buffer)
         buffer.seek(0)
