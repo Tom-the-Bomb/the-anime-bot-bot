@@ -497,6 +497,12 @@ class events(commands.Cog):
             embed = await self.embed(
                 "this command must be used in NSFW channel")
             return await ctx.send(embed=embed)
+        elif isinstance(error, commands.errors.UserNotFound):
+            embed = await self.embed("User not found")
+            return await ctx.send(embed=embed)
+        elif isinstance(error, commands.errors.MemberNotFound):
+            embed = await self.embed("Member not found")
+            return await ctx.send(embed=embed)
         elif isinstance(error, asyncio.TimeoutError):
             embed = await self.embed("timeout")
             return await ctx.send(embed=embed)
