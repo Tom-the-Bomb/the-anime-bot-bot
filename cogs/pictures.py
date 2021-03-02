@@ -28,16 +28,16 @@ class pictures(commands.Cog):
                 if ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "image":
                     url = ctx.message.reference.cached_message.embeds[0].url
                     return url
-                elif ctx.message.reference.cached_message.attachments and ctx.message.reference.cached_message.attachments.width and ctx.message.reference.cached_message.attachments.height:
-                    url = ctx.message.reference.cached_message.attachments.url
+                elif ctx.message.reference.cached_message.attachments and ctx.message.reference.cached_message.attachments[0].width and ctx.message.reference.cached_message.attachments[0].height:
+                    url = ctx.message.reference.cached_message.attachments[0].url
                     return url
             else:
                 message = bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
                 if message.embeds and message.embeds[0].type == "image":
                     url = message.embeds[0].url
                     return url
-                elif message.attachments and message.attachments.width and message.attachments.height:
-                    url = message.url
+                elif message.attachments and message.attachments[0].width and message.attachments[0].height:
+                    url = message.attachments.url
                     return url
 
         if thing is None:
