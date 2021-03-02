@@ -475,8 +475,7 @@ class pictures(commands.Cog):
                                           discord.Emoji, str] = None):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
-        file = discord.File(fp=await self.polaroid_(url, "apply_gradient"), filename="rainbow.png")
-        await ctx.reply(file=file)
+        await ctx.reply(file=await self.polaroid_(url, "apply_gradient"))
 
     @commands.command()
     async def awareness(self,
