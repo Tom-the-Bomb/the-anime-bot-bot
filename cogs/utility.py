@@ -1085,12 +1085,12 @@ class utility(commands.Cog):
             member1 = random.choice(ctx.guild.members)
         embed = discord.Embed(color=self.bot.color)
         format = ".gif" if member1.is_avatar_animated() else ".png"
-        embed.set_image(url=f"attachment://{member1.id}{format}")
+        embed.set_image(url=f"attachment://{member1.id}{format}", description=f"[webp]({str(member1.avatar_url_as(format="png"))}) [jpeg]({str(member1.avatar_url_as(format="jpeg"))}) [png]({str(member1.avatar_url_as(format="png"))})" if ctx.author.is_avatar_animated() else f"[webp]({str(member1.avatar_url_as(format="png"))}) [jpeg]({str(member1.avatar_url_as(format="jpeg"))}) [png]({str(member1.avatar_url_as(format="png"))}) [gif]({str(member1.avatar_url_as(format="gif"))})")
         embed.set_footer(
             text=
             f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
             icon_url=ctx.author.avatar_url)
-        await ctx.reply(embed=embed, file=discord.File(BytesIO(await member1.avatar_url.read()), f"{member1.id}{format}"))
+        await ctx.reply(embed=embed, file=discord.File(BytesIO(await member1.avatar_url_as(format="png").read()), f"{member1.id}{format}"))
 
 
 def setup(bot):
