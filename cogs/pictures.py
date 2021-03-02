@@ -97,33 +97,8 @@ class pictures(commands.Cog):
                                                 discord.Emoji, str]], cat: typing.Optional[typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]]):
-        if woman is None:
-            url = str(ctx.author.avatar_url_as(static_format="png"))
-        elif isinstance(woman, (discord.PartialEmoji, discord.Emoji)):
-            url = str(woman.url)
-        elif isinstance(woman, (discord.Member, discord.User)):
-            url = str(woman.avatar_url_as(static_format="png"))
-        else:
-            woman = str(woman)
-            if woman.startswith("http") or woman.startswith(
-                    "https") or woman.startswith("www"):
-                url = woman
-            else:
-                url = await emoji_to_url(woman)
-        if cat is None:
-            url1 = str(ctx.me.avatar_url_as(static_format="png"))
-        elif isinstance(cat, (discord.PartialEmoji, discord.Emoji)):
-            url1 = str(cat.url)
-        elif isinstance(woman, discord.Member) or isinstance(
-                cat, discord.User):
-            url1 = str(cat.avatar_url_as(static_format="png"))
-        else:
-            cat = str(cat)
-            if cat.startswith("http") or cat.startswith(
-                    "https") or cat.startswith("www"):
-                url1 = cat
-            else:
-                url1 = await emoji_to_url(cat)
+        url = await self.get_url(ctx, woman)
+        url1 = await self.get_url(ctx, cat)
         pic = await self.bot.vacefron_api.woman_yelling_at_cat(woman=url, cat=url1)
         await ctx.send(file=discord.File(await pic.read(),
                                         filename=f"woman_yelling_at_cat.png"))
@@ -197,19 +172,7 @@ class pictures(commands.Cog):
             level: float = 0.3):
         async with ctx.channel.typing():
             level = min(level, 1)
-            if thing is None:
-                url = str(ctx.author.avatar_url_as(static_format="png"))
-            elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
-                url = str(thing.url)
-            elif isinstance(thing, (discord.Member, discord.User)):
-                url = str(thing.avatar_url_as(static_format="png"))
-            else:
-                thing = str(thing)
-                if thing.startswith("http") or thing.startswith(
-                        "https") or thing.startswith("www"):
-                    url = thing
-                else:
-                    url = await emoji_to_url(thing)
+            url = await self.get_url(ctx, thing)
         embed = discord.Embed(color=0x00ff6a).set_image(
             url="attachment://alex.png")
         image = discord.File(await (await self.bot.alex.amiajoke(url)).read(),
@@ -251,19 +214,7 @@ class pictures(commands.Cog):
             level: float = 0.3):
         async with ctx.channel.typing():
             level = min(level, 1)
-            if thing is None:
-                url = str(ctx.author.avatar_url_as(static_format="png"))
-            elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
-                url = str(thing.url)
-            elif isinstance(thing, (discord.Member, discord.User)):
-                url = str(thing.avatar_url_as(static_format="png"))
-            else:
-                thing = str(thing)
-                if thing.startswith("http") or thing.startswith(
-                        "https") or thing.startswith("www"):
-                    url = thing
-                else:
-                    url = await emoji_to_url(thing)
+            url = await self.get_url(ctx, thing)
             try:
                 image = await self.bot.zaneapi.pixelate(url, level)
             except asyncio.TimeoutError:
