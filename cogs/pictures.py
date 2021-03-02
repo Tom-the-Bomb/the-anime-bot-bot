@@ -490,6 +490,14 @@ class pictures(commands.Cog):
         await ctx.reply(file=file)
 
     @commands.command()
+    async def invert(self,
+                      ctx,
+                      thing: typing.Union[discord.Member, discord.User, discord.PartialEmoji,
+                                          discord.Emoji, str] = None):
+        async with ctx.channel.typing():
+            url = await self.get_url(ctx, thing)
+        await ctx.reply(file=await self.polaroid_(url, "invert"))
+    @commands.command()
     async def rainbow(self,
                       ctx,
                       thing: typing.Union[discord.Member, discord.User, discord.PartialEmoji,
@@ -776,12 +784,6 @@ class pictures(commands.Cog):
         img = await self.bot.dag.image_process(ImageFeatures.triangle(), url)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
-
-    @commands.command()
-    async def invert(self, ctx, thing: typing.Union[discord.Member, discord.User, discord.PartialEmoji,
-                                         discord.Emoji, str] = None):
-        url = await self.get_url(ctx, thing)
-        await ctx.reply(file=await self.polaroid(url, "invert"))
 
     @commands.command()
     async def wasted(self,
