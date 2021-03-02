@@ -676,7 +676,7 @@ class fun(commands.Cog):
             new = bytes(text1, "utf-8")
             decrypted = f.decrypt(new)
             decrypted = str(decrypted, 'utf-8')
-            await ctx.reply(decrypted)
+            await ctx.reply(decrypted, allowed_mentions=discord.AllowedMentions.none())
         except:
             await ctx.send("You provided a invalid link")
 
