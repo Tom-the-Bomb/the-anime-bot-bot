@@ -1,44 +1,49 @@
-import discord
-from discord.ext import commands
-import cv2
-import pyqrcode
-from bs4 import BeautifulSoup
-import requests
-import flags
-from translate import Translator
-from itertools import cycle
-import cse
 import os
+from itertools import cycle
+
+import cse
+import cv2
+import discord
+import flags
+import pyqrcode
+import requests
+from bs4 import BeautifulSoup
+from discord.ext import commands
+from translate import Translator
+
 google_api_1 = os.getenv("google_api_1")
 google_api_2 = os.getenv("google_api_2")
 google_api_3 = os.getenv("google_api_3")
-from contextlib import suppress
-from menus import menus
-import typing
-import json
-from utils import fuzzy
-import zlib
-import io
-import re
-from pyfiglet import Figlet
 import ast
+import base64
 import decimal
+import io
+import json
+import random
+import random as rng
+import re
+import typing
+import unicodedata
+import zlib
+from collections import Counter
+from contextlib import suppress
+from datetime import datetime
+from io import BytesIO
+from typing import Optional
+
 import aiohttp
 import humanize
-from typing import Optional
-from collections import Counter
-from utils.format import plural
-from currency_converter import CurrencyConverter
-from utils.asyncstuff import asyncexe
-from twemoji_parser import emoji_to_url
-from PIL import Image, ImageFont
-from io import BytesIO
-from jishaku.paginators import PaginatorInterface, PaginatorEmbedInterface
-from datetime import datetime
-import base64
-import unicodedata
 import numpy as np
-import random as rng
+from currency_converter import CurrencyConverter
+from menus import menus
+from PIL import Image, ImageFont
+from pyfiglet import Figlet
+from twemoji_parser import emoji_to_url
+from utils import fuzzy
+from utils.asyncstuff import asyncexe
+from utils.format import plural
+
+from jishaku.paginators import PaginatorEmbedInterface, PaginatorInterface
 
 
 class googlemenu(menus.Menu):
