@@ -421,23 +421,7 @@ class others(commands.Cog):
     async def privacy(self, ctx):
         await ctx.message.add_reaction("<:mochaok:788473006606254080>")
         policy = """
-    1) What data do you collect, including but not limited to personal identifying information?
-    We do collect User Id
-
-    2) Why do you need the data?
-    We need that data in order for the bot to function normally for example the user info command
-
-    3) How do you use the data?
-    We normally use it to retrieve user's data example, username
-
-    4) Other than Discord the company and users of your own bot on Discord the platform, who do you share your collected data with, if anyone?
-    We don't share any info with anyone.
-
-    5) How can users contact you if they have concerns about your bot?
-    Join the support server https://discord.gg/bUpF6d6bP9 and send Cryptex#3092 a dm.
-    
-    6) If you store data, how can users have that data removed?
-    We do not store data all data temporarily cached.
+        [Our Privacy Policy](https://cryptex-github.github.io/the-anime-bot-bot/privacy)
   """
         embed = await embedbase.embed(self, ctx)
         embed.add_field(name="policy", value=policy)

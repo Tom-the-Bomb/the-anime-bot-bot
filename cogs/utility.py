@@ -580,7 +580,7 @@ class utility(commands.Cog):
                 return await ctx.send(f"`{canonical['href']}`")
             if refresh:
                 return await ctx.send(f"`{refresh['content'].split('; url=')[1]}`")
-            await ctx.send(resp.url)
+            await ctx.send(f"`{resp.url}")
            
 
     @commands.command()
