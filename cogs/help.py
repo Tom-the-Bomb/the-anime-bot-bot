@@ -35,8 +35,11 @@ class HelpCommand(commands.HelpCommand):
         embed = discord.Embed(color=self.context.bot.color, description=f"""
         Hi Welcome to The Anime bot's help command
         You can use the following commands
+
         `{self.context.prefix}help [command]`
+
         `{self.context.prefix}help [module]`
+        
         **Avaiable Modules are:**
         ```
         {cogs}
