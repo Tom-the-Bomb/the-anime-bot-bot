@@ -42,6 +42,7 @@ class HelpCommand(commands.HelpCommand):
         {cogs}
         ```
         """)
+        await ctx.send(embed=embed)
         # is_working = True
         # dicts = {
         #     739614767941156874: "animes",
