@@ -30,7 +30,7 @@ class HelpCommand(commands.HelpCommand):
         await interface.send_to(self.context)
 
     async def send_bot_help(self, mapping):
-        cogs = "\n".join([i for i in bot.cogs.keys()])
+        cogs = "\n".join([i for i in self.context.bot.cogs.keys()])
 
         embed = discord.Embed(color=self.context.bot.color, description=f"""
         Hi Welcome to The Anime bot's help command
