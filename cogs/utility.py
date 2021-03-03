@@ -565,11 +565,6 @@ class utility(commands.Cog):
                         return await ctx.send(str(await self.bot.mystbin.post(message, syntax="python")))
             await ctx.send(str(await self.bot.mystbin.post(code)))
 
-    @staticmethod
-    @asyncexe()
-    def redirectcheck_(website):
-        return requests.get(website).url
-
     @commands.command()
     async def replacespace(self, ctx, emoji, *, thing):
         await ctx.send(thing.replace(" ", emoji), allowed_mentions=discord.AllowedMentions.none())
@@ -580,9 +575,13 @@ class utility(commands.Cog):
         async with self.bot.session.get(website) as resp:
             soup = BeautifulSoup(await resp.text(), features="lxml")
             canonical = soup.find('link', {'rel': 'canonical'})
-            if canonical is None:
-                return await ctx.send(f"`{resp.real_url}`")
-            await ctx.send(f"`{canonical['href']}`")
+            refresh = soup.find("meta", {"http-equiv": "refresh"})
+            if canonical:
+                return await ctx.send(f"`{canonical['href']}`")
+            if refresh
+                return await ctx.send(f"`{refresh['content'].split('; url=')[1]}`")
+            await ctx.send(resp.url)
+           
 
     @commands.command()
     async def mytime(self, ctx):
