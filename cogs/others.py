@@ -210,7 +210,7 @@ class others(commands.Cog):
         embed.set_author(name="Use this link to invite")
         embed.add_field(
             name="link ",
-            value="https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2146823543&scope=bot"
+            value="[Invite me](https://cryptex-github.github.io/the-anime-bot-bot/invite)"
         )
         await ctx.reply(embed=embed)
 
