@@ -420,9 +420,7 @@ class others(commands.Cog):
     @commands.command()
     async def privacy(self, ctx):
         await ctx.message.add_reaction("<:mochaok:788473006606254080>")
-        policy = """
-        [Our Privacy Policy](https://cryptex-github.github.io/the-anime-bot-bot/privacy)
-  """
+        policy = "[Our Privacy Policy](https://cryptex-github.github.io/the-anime-bot-bot/privacy)"
         embed = await embedbase.embed(self, ctx)
         embed.add_field(name="policy", value=policy)
         embed.set_footer(
