@@ -15,7 +15,7 @@ class HelpCommand(commands.HelpCommand):
         await self.context.send(embed=embed)
 
     async def send_command_help(self, command):
-        embed = discord.Embed(color=self.context.bot.color, title=f"{self.clean_prefix}{command.qualified_name}",
+        embed = discord.Embed(color=self.context.bot.color, title=self.get_command_signature(command),
                               description=command.short_doc or "oh seems like my owner is too lazy to add help for this command sorry")
         await self.context.send(embed=embed)
 
@@ -24,13 +24,13 @@ class HelpCommand(commands.HelpCommand):
         commands_ = await self.filter_commands(cog.get_commands(), sort=True)
         commands_ = [self.get_command_signature(i) for i in commands_]
         for i in commands_:
-            paginator.add_line(i)
+            paginator.add_line(f"**{i}**")
         interface = PaginatorEmbedInterface(
             self.context.bot, paginator, owner=self.context.author)
         await interface.send_to(self.context)
 
     async def send_bot_help(self, mapping):
-        cogs = "\n".join([i for i in self.context.bot.cogs.keys()])
+        cogs = "\n".join(self.context.bot.cogs.keys())
 
         embed = discord.Embed(color=self.context.bot.color, description=f"""
         Hi Welcome to The Anime bot's help command
