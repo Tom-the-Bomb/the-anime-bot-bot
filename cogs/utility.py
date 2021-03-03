@@ -578,7 +578,7 @@ class utility(commands.Cog):
             refresh = soup.find("meta", {"http-equiv": "refresh"})
             if canonical:
                 return await ctx.send(f"`{canonical['href']}`")
-            if refresh
+            if refresh:
                 return await ctx.send(f"`{refresh['content'].split('; url=')[1]}`")
             await ctx.send(resp.url)
            
