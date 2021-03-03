@@ -39,12 +39,13 @@ class HelpCommand(commands.HelpCommand):
         `{self.context.prefix}help [command]`
 
         `{self.context.prefix}help [module]`
-        
+
         **Avaiable Modules are:**
         ```
         {cogs}
         ```
         """)
+        embed.set_thumbnail(url=str(self.context.me.avatar_url_as(format="png")))
         await self.context.send(embed=embed)
         # is_working = True
         # dicts = {
