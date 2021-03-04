@@ -47,7 +47,7 @@ class pictures(commands.Cog):
         elif isinstance(thing, (discord.Member, discord.User)):
             url = str(thing.avatar_url_as(format="png"))
         else:
-            thing = str(image).strip("<>")
+            thing = str(thing).strip("<>")
             if thing.startswith("http") or thing.startswith(
                     "https") or thing.startswith("www"):
                 url = thing
