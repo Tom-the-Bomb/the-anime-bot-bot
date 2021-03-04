@@ -464,7 +464,7 @@ class utility(commands.Cog):
         file_ = BytesIO()
         with zipfile.ZipFile(file_, mode="w") as zipfile_:
             for n,v in emojis:
-                zipfile_.writestr(n, BytesIO(v))
+                zipfile_.writestr(n, v.getvalue())
         return discord.File(file_, "emojis.zip")
 
 
@@ -474,7 +474,7 @@ class utility(commands.Cog):
         emojis = []
         for i in ctx.guild.emojis:
             e = await i.url_as().read()
-            e = (f"{i.name}.png" if not i.animated else f"{i.name}.gif", e)
+            e = (f"{i.name}.png" if not i.animated else f"{i.name}.gif", BytesIO(e))
             emojis.append(e)
         await ctx.send(file=await self.zip_emojis(emojis))
 
