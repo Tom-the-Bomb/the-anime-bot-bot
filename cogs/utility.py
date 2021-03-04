@@ -1,4 +1,5 @@
 import os
+import zipfile
 from itertools import cycle
 
 import cse
@@ -456,6 +457,27 @@ class utility(commands.Cog):
     def translate_(from_lang, to_lang, thing):
         return Translator(from_lang=from_lang,
                           to_lang=to_lang).translate(thing)
+
+    @staticmethod
+    @asyncexe()
+    def zip_emojis(emojis):
+        file_ = BytesIO()
+        with zipfile.ZipFile(file_, mode="w") as zipfile_:
+            for i in emojis:
+                for n,v in i:
+                    zipfile_.writestr(n, v)
+        return discord.File(file_, "emojis.zip")
+
+
+
+    @commands.command()
+    async def zipemoji(self, ctx):
+        emojis = []
+        for i in ctx.guild.emojis:
+            e = await i.url_as().read()
+            e = (f"{i.name}.png" if not i.animated else f"{i.name}.gif", e)
+            emojis.append(e)
+        await ctx.send(file=await self.zip_emojis(emojis))
 
     @commands.command()
     async def ip(self, ctx, ip):
