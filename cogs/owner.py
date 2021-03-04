@@ -145,6 +145,28 @@ class owners(commands.Cog):
     # @commands.is_owner()
     # async def takepic(self, ctx, *, website):
     #   await ctx.send(file=await self.takepic_(website))
+    @staticmethod
+    @asyncexe()
+    def zip_emojis(emojis):
+        file_ = BytesIO()
+        with zipfile.ZipFile(file_, mode="w") as zipfile_:
+            for n,v in emojis:
+                zipfile_.writestr(n, v.getvalue())
+        file_.seek(0)
+        return discord.File(file_, "emojis.zip")
+
+
+
+    @commands.command()
+    @commands.is_owner()
+    async def zipallemoji(self, ctx):
+        emojis = []
+        for i in ctx.bot.emojis:
+            e = await i.url_as().read()
+            e = (f"{i.name}.png" if not i.animated else f"{i.name}.gif", BytesIO(e))
+            emojis.append(e)
+        await ctx.send(file=await self.zip_emojis(emojis))
+
     @commands.command()
     @commands.is_owner()
     async def rubroke(self, ctx):
