@@ -53,7 +53,7 @@ class pictures(commands.Cog):
                 url = thing
             else:
                 url = await emoji_to_url(thing)
-        async with bot.session.get(url) as resp:
+        async with self.bot.session.get(url) as resp:
             if resp.status != 200:
                 raise commands.CommandError("Invalid Picture")
         
