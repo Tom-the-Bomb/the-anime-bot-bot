@@ -471,6 +471,7 @@ class utility(commands.Cog):
 
 
     @commands.command()
+    @commands.has_permissions(manage_emojis=True)
     async def zipemoji(self, ctx):
         emojis = []
         for i in ctx.guild.emojis:
