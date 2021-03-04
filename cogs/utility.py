@@ -463,9 +463,8 @@ class utility(commands.Cog):
     def zip_emojis(emojis):
         file_ = BytesIO()
         with zipfile.ZipFile(file_, mode="w") as zipfile_:
-            for i in emojis:
-                for n,v in i:
-                    zipfile_.writestr(n, v)
+            for n,v in emojis:
+                zipfile_.writestr(n, v)
         return discord.File(file_, "emojis.zip")
 
 
