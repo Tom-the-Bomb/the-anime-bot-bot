@@ -465,6 +465,7 @@ class utility(commands.Cog):
         with zipfile.ZipFile(file_, mode="w") as zipfile_:
             for n,v in emojis:
                 zipfile_.writestr(n, v.getvalue())
+        file_.seek(0)
         return discord.File(file_, "emojis.zip")
 
 
