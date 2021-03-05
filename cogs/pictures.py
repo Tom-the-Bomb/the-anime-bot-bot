@@ -22,22 +22,22 @@ class pictures(commands.Cog):
         if ctx.message.reference:
             if ctx.message.reference.cached_message:
                 if ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "image":
-                    url = ctx.message.reference.cached_message.embeds[0].url
+                    url = ctx.message.reference.cached_message.embeds[0].proxy_url
                     return url
                 elif ctx.message.reference.cached_message.attachments and ctx.message.reference.cached_message.attachments[0].width and ctx.message.reference.cached_message.attachments[0].height:
-                    url = ctx.message.reference.cached_message.attachments[0].url
+                    url = ctx.message.reference.cached_message.attachments[0].proxy_url
                     return url
             else:
                 message = bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
                 if message.embeds and message.embeds[0].type == "image":
-                    url = message.embeds[0].url
+                    url = message.embeds[0].proxy_url
                     return url
                 elif message.attachments and message.attachments[0].width and message.attachments[0].height:
                     url = message.attachments[0].url
                     return url
 
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
-            return ctx.message.attachments[0].url
+            return ctx.message.attachments[0].proxy_url
 
 
         if thing is None:
