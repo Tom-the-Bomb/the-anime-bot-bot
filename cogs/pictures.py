@@ -30,7 +30,7 @@ class pictures(commands.Cog):
                     url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
             else:
-                message = self.bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
+                message = await self.bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
                 if message.embeds and message.embeds[0].type == "image":
                     url = message.embeds[0].thumbnail.proxy_url
                     url = url.replace("cdn.discordapp.com", "media.discordapp.net")
