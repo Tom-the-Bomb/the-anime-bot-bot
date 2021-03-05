@@ -39,7 +39,7 @@ class AnimeContext(commands.Context):
   async def remove(self, *args, **kwargs):
     m = await self.send(*args, **kwargs)
     await m.add_reaction("\U0000274c")
-    await self.bot.wait_for("reaction_add", check=lambda i,v: i.message.id == m.id and v.id == m.author.id and i.emoji.name == "\U0000274c")
+    await self.bot.wait_for("reaction_add", check=lambda i,v: i.message.id == m.id and v.id == self.message.author.id and i.emoji == "\U0000274c")
     await m.delete()
   @discord.utils.cached_property
   def replied_reference(self):
