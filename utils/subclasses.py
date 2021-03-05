@@ -37,7 +37,7 @@ class AnimeContext(commands.Context):
     self.utils = utils
     super().__init__(*args, **kwargs)
   async def remove(self, content=None, **kwargs):
-    m = await self.send(content=content, kwargs)
+    m = await self.send(content, kwargs)
     await m.add_reaction("\U0000274c")
     await self.bot.wait_for("reaction_add", lambda i,v: i.message.id == m.id and v.id == m.author.id and i.emoji.name == "\U0000274c")
     await m.delete()
