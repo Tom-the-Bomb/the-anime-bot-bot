@@ -22,22 +22,26 @@ class pictures(commands.Cog):
         if ctx.message.reference:
             if ctx.message.reference.cached_message:
                 if ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "image":
-                    url = ctx.message.reference.cached_message.embeds[0].proxy_url
+                    url = ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
                 elif ctx.message.reference.cached_message.attachments and ctx.message.reference.cached_message.attachments[0].width and ctx.message.reference.cached_message.attachments[0].height:
                     url = ctx.message.reference.cached_message.attachments[0].proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
             else:
                 message = bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
                 if message.embeds and message.embeds[0].type == "image":
-                    url = message.embeds[0].proxy_url
+                    url = message.embeds[0].thumbnail.proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
                 elif message.attachments and message.attachments[0].width and message.attachments[0].height:
-                    url = message.attachments[0].url
+                    url = message.attachments[0].proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
 
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
-            return ctx.message.attachments[0].proxy_url
+            return ctx.message.attachments[0].proxy_url.replace("cdn.discordapp.com", "media.discordapp.net")
 
 
         if thing is None:
@@ -56,7 +60,7 @@ class pictures(commands.Cog):
         async with self.bot.session.get(url) as resp:
             if resp.status != 200:
                 raise commands.CommandError("Invalid Picture")
-        
+        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
 
     
