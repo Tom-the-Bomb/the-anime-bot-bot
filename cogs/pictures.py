@@ -405,12 +405,13 @@ class pictures(commands.Cog):
                     thing: commands.Greedy[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
                                         discord.Emoji, str]] = None):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.floor(url)
-            embed = discord.Embed(color=0x00ff6a).set_image(
-                url="attachment://floor.gif")
-            await ctx.send(file=discord.File(fp=image, filename="floor.gif"),
-                           embed=embed)
+            for i in thing:
+                url = await self.get_url(ctx, i)
+                image = await self.bot.zaneapi.floor(url)
+                embed = discord.Embed(color=0x00ff6a).set_image(
+                    url="attachment://floor.gif")
+                await ctx.send(file=discord.File(fp=image, filename="floor.gif"),
+                            embed=embed)
 
     # @commands.command()
     # async def rainbow(self, ctx):
