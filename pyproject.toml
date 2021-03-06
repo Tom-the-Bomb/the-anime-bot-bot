@@ -2,7 +2,7 @@
 name = "the-anime-bot-bot-1"
 version = "0.1.0"
 description = ""
-authors = ["repl.it user <replituser@example.com>"]
+authors = ["cryptex"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
