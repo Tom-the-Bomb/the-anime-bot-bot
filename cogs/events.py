@@ -50,7 +50,7 @@ class events(commands.Cog):
     
     @tasks.loop(minutes=1)
     async def gists(self):
-        await bot.wait_until_ready()
+        await self.bot.wait_until_ready()
         async with aiofile.async_open("discord.log", "r") as f:
             content = await f.read()
         await self.bot.session.post("https://api.github.com/gists", headers={"Authorization": f"token {os.getenv('gists')}", "Accept": "application/vnd.github.inertia-preview+json"}, data={
