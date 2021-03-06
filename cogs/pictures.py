@@ -56,11 +56,13 @@ class pictures(commands.Cog):
             url = str(thing.avatar_url_as(format="png"))
         else:
             thing = str(thing).strip("<>")
-            if thing.startswith("http") or thing.startswith(
-                    "https") or thing.startswith("www"):
+            if self.url_regex.match(thing):
                 url = thing
             else:
-                url = await emoji_to_url(thing)
+                try:
+                    url = await emoji_to_url(thing)
+                except:
+                    raise CommandError("Invalid url")
         async with self.bot.session.get(url) as resp:
             if resp.status != 200:
                 raise commands.CommandError("Invalid Picture")

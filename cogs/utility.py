@@ -544,6 +544,9 @@ class utility(commands.Cog):
 
     @commands.command()
     async def mystbin(self, ctx, *, code:str=None):
+        anything = anything.strip("<>")
+        if not self.bot.url_regex.match(anything):
+            return await ctx.send("Not a valid url")
         if ctx.message.reference:
             if ctx.message.reference.cached_message:
                 if (
