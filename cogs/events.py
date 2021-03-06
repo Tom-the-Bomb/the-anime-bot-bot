@@ -60,8 +60,8 @@ class events(commands.Cog):
                     "content": content
                 }
             }
-        }
-        await self.bot.session.post("https://api.github.com/gists", headers={"Authorization": f"token {os.getenv('gists')}", "Accept": "application/vnd.github.inertia-preview+json"}, data=data) as resp:
+         }
+        async with self.bot.session.post("https://api.github.com/gists", headers={"Authorization": f"token {os.getenv('gists')}", "Accept": "application/vnd.github.inertia-preview+json"}, data=data) as resp:
             pass
 
     @tasks.loop(seconds=30)
