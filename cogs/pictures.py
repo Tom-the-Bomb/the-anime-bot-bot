@@ -415,7 +415,7 @@ class pictures(commands.Cog):
                 image = await self.bot.zaneapi.floor(url)
                 embed = discord.Embed(color=0x00ff6a).set_image(
                     url="attachment://floor.gif")
-                await ctx.send(file=discord.File(fp=image, filename="floor.gif"),
+                return await ctx.send(file=discord.File(fp=image, filename="floor.gif"),
                             embed=embed)
 
             if len(thing) > 10:
