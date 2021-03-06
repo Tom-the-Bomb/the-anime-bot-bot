@@ -58,9 +58,9 @@ class events(commands.Cog):
             content = await f.read()
         data = {
             "public": False,
+            "description": date,
             "files": {
                 "discord.log": {
-                    "description": date,
                     "content": content
                 }
             }
