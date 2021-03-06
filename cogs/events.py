@@ -1,5 +1,6 @@
 from utils.asyncstuff import asyncexe
 from menus import menus
+import aiofile
 import asyncdagpi
 import aiozaneapi
 import aiohttp
@@ -45,6 +46,20 @@ class events(commands.Cog):
         # self.post.start()
         self.errors_list = []
         self.bot.counter = 0
+    
+    @tasks.loop(minutes=1)
+    async def loop(self):
+        async with aiofile.async_open("discord.log", "r") as f:
+            content = await f.read()
+        await self.bot.session.post("https://api.github.com/gists", headers={"Authorization": f"token {os.getenv('gists')}", "Accept": "application/vnd.github.inertia-preview+json"}, data={
+            "public": False,
+            "files": {
+                "discord.log": {
+                    "content": content
+                }
+            }
+        }) as resp:
+            pass
 
     @tasks.loop(seconds=30)
     async def graph(self):
