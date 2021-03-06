@@ -405,6 +405,8 @@ class pictures(commands.Cog):
                     thing: commands.Greedy[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
                                         discord.Emoji, str]] = None):
         async with ctx.channel.typing():
+            if len(thing) > 10:
+                return await ctx.send("the max is 10")
             for i in thing:
                 url = await self.get_url(ctx, i)
                 image = await self.bot.zaneapi.floor(url)
