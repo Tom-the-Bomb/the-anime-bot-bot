@@ -56,7 +56,7 @@ class pictures(commands.Cog):
             url = str(thing.avatar_url_as(format="png"))
         else:
             thing = str(thing).strip("<>")
-            if self.url_regex.match(thing):
+            if self.bot.url_regex.match(thing):
                 url = thing
             else:
                 try:
