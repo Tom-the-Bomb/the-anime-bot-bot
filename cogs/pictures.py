@@ -25,6 +25,10 @@ class pictures(commands.Cog):
                     url = ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url
                     url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
+                elif ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "rich":
+                    url = ctx.message.reference.cached_message.embeds[0].image.proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    return url
                 elif ctx.message.reference.cached_message.attachments and ctx.message.reference.cached_message.attachments[0].width and ctx.message.reference.cached_message.attachments[0].height:
                     url = ctx.message.reference.cached_message.attachments[0].proxy_url
                     url = url.replace("cdn.discordapp.com", "media.discordapp.net")
