@@ -60,7 +60,7 @@ class events(commands.Cog):
             "public": False,
             "files": {
                 "discord.log": {
-                    "description": date
+                    "description": date,
                     "content": content
                 }
             }
