@@ -59,9 +59,8 @@ class pictures(commands.Cog):
             if self.bot.url_regex.match(thing):
                 url = thing
             else:
-                try:
-                    url = await emoji_to_url(thing)
-                except:
+                url = await emoji_to_url(thing)
+                if url == thing:
                     raise commands.CommandError("Invalid url")
         async with self.bot.session.get(url) as resp:
             if resp.status != 200:
