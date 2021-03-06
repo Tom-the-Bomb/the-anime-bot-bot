@@ -49,7 +49,7 @@ class events(commands.Cog):
         self.errors_list = []
         self.bot.counter = 0
     
-    @tasks.loop(minutes=1)
+    @tasks.loop(minutes=30)
     async def gists(self):
         await self.bot.wait_until_ready()
         date = datetime.datetime.now() - datetime.timedelta(hours=8)
