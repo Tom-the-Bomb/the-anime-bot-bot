@@ -52,7 +52,7 @@ class events(commands.Cog):
     @tasks.loop(minutes=1)
     async def gists(self):
         await self.bot.wait_until_ready()
-        date = datetime.datetime.now() - datetime!.timedelta(hours=8)
+        date = datetime.datetime.now() - datetime.timedelta(hours=8)
         date = f"{date.month} {date.day} {date.year} {date.hour}:{date.minute}:{date.second}"
         async with aiofile.async_open("discord.log", "r") as f:
             content = await f.read()
