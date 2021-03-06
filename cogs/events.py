@@ -53,14 +53,15 @@ class events(commands.Cog):
         await self.bot.wait_until_ready()
         async with aiofile.async_open("discord.log", "r") as f:
             content = await f.read()
-        await self.bot.session.post("https://api.github.com/gists", headers={"Authorization": f"token {os.getenv('gists')}", "Accept": "application/vnd.github.inertia-preview+json"}, data={
+        data = {
             "public": False,
             "files": {
                 "discord.log": {
                     "content": content
                 }
             }
-        }) as resp:
+        }
+        await self.bot.session.post("https://api.github.com/gists", headers={"Authorization": f"token {os.getenv('gists')}", "Accept": "application/vnd.github.inertia-preview+json"}, data=data) as resp:
             pass
 
     @tasks.loop(seconds=30)
