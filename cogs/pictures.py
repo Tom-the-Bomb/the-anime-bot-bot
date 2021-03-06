@@ -410,6 +410,14 @@ class pictures(commands.Cog):
                     thing: commands.Greedy[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
                                         discord.Emoji, str]] = None):
         async with ctx.channel.typing():
+            if not thing:
+                url = await self.get_url(ctx, thing)
+                image = await self.bot.zaneapi.floor(url)
+                embed = discord.Embed(color=0x00ff6a).set_image(
+                    url="attachment://floor.gif")
+                await ctx.send(file=discord.File(fp=image, filename="floor.gif"),
+                            embed=embed)
+
             if len(thing) > 10:
                 return await ctx.send("the max is 10")
             for i in thing:
