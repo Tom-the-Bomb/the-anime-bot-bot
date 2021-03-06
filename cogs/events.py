@@ -389,7 +389,7 @@ class events(commands.Cog):
         if not payload.cached_message:
             channel = self.bot.get_channel(payload.channel_id)
             try:
-                message = await channel.fetch_message(payload.message_id):
+                message = await channel.fetch_message(payload.message.id)
                 if message:
                     if message.embeds != []:
                         return
