@@ -480,98 +480,98 @@ class events(commands.Cog):
                               title="An error occured",
                               description=text)
 
-    @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
-        if hasattr(ctx.command, 'on_error'):
-            return
+    # @commands.Cog.listener()
+    # async def on_command_error(self, ctx, error):
+    #     if hasattr(ctx.command, 'on_error'):
+    #         return
 
-        ignored = (commands.CommandNotFound)
-        error = getattr(error, 'original', error)
-        if isinstance(error, ignored):
-            return
-        self.errors_list.append(error)
-        if isinstance(error, commands.DisabledCommand):
-            embed = await self.embed(f"{ctx.command} has been disabled.")
-            return await ctx.send(embed=embed)
-        elif isinstance(error, commands.NSFWChannelRequired):
-            embed = await self.embed(
-                "this command must be used in NSFW channel")
-            return await ctx.send(embed=embed)
-        elif isinstance(error, commands.errors.UserNotFound):
-            embed = await self.embed("User not found")
-            return await ctx.send(embed=embed)
-        elif isinstance(error, commands.errors.MemberNotFound):
-            embed = await self.embed("Member not found")
-            return await ctx.send(embed=embed)
-        elif isinstance(error, asyncio.TimeoutError):
-            embed = await self.embed("timeout")
-            return await ctx.send(embed=embed)
-        elif isinstance(error, discord.errors.Forbidden):
-            embed = await self.embed(error.text)
-            return await ctx.send(embed=embed)
-        elif isinstance(error, discord.errors.HTTPException):
-            embed = await self.embed(f"HTTPException {error.text}")
-            return await ctx.send(embed=embed)
-        elif isinstance(error, GlobalCooldown):
-            embed = await self.embed(
-                f"You have hit the global ratelimit try again in {round(error.retry_after)} seconds"
-            )
-            return await ctx.send(embed=embed)
-        elif isinstance(error, aiozaneapi.GatewayError):
-            embed = await self.embed("Zane api have a error")
-            await ctx.reply(embed=embed)
-        elif isinstance(error, commands.errors.NotOwner):
-            embed = await self.embed(
-                "You must be the bot owner to use this command")
-            return await ctx.send(embed=embed)
-        elif isinstance(error, commands.NoPrivateMessage):
-            try:
-                embed = await self.embed(
-                    "{ctx.command} can not be used in Private Messages.")
-                await ctx.author.send(embed=embed)
-            except discord.HTTPException:
-                pass
-        elif isinstance(error, AttributeError):
-            return
-        elif isinstance(error, commands.errors.InvalidEndOfQuotedStringError):
-            embed = await self.embed(
-                "Make sure to put a space between the quotes")
-            await ctx.send(embed=embed)
-        elif isinstance(error, commands.ConversionError):
-            embed = await self.embed(f"Unable to convert {error.converter}")
-            await ctx.send(embed=embed)
-        elif isinstance(error, commands.BadArgument):
-            embed = await self.embed(f"Unable to convert")
-            await ctx.send(embed=embed)
-        elif isinstance(error, commands.MissingRequiredArgument):
-            embed = await self.embed(
-                f"You are missing `{error.param.name}` argument")
-            await ctx.send(embed=embed)
-        elif isinstance(error, commands.CommandOnCooldown):
-            embed = await self.embed(
-                f"dude chill try again in {round(error.retry_after)} seconds")
-            await ctx.reply(embed=embed)
-        elif isinstance(error, commands.BotMissingPermissions):
-            embed = await self.embed(
-                f"Bot is missing {error.missing_perms} to do that")
-            await ctx.reply(embed=embed)
-        elif isinstance(error, commands.MissingPermissions):
-            embed = await self.embed("you do not have permission to do that")
-            await ctx.reply(embed=embed)
-        elif isinstance(error, asyncdagpi.errors.BadUrl):
-            embed = await self.embed("You did not pass in the right arguments")
-            await ctx.reply(embed=embed)
-        elif isinstance(error, asyncdagpi.errors.ApiError):
-            embed = await self.embed("The image API have a error")
-            await ctx.reply(embed=embed)
-        else:
-            embed = discord.Embed(color=0xFF0000,
-                                  description=f"```py\n{error}```")
-            await ctx.send(embed=embed)
-            # # print(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
-            # print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
-            # # traceback.print_exception(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
-            # traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+    #     ignored = (commands.CommandNotFound)
+    #     error = getattr(error, 'original', error)
+    #     if isinstance(error, ignored):
+    #         return
+    #     self.errors_list.append(error)
+    #     if isinstance(error, commands.DisabledCommand):
+    #         embed = await self.embed(f"{ctx.command} has been disabled.")
+    #         return await ctx.send(embed=embed)
+    #     elif isinstance(error, commands.NSFWChannelRequired):
+    #         embed = await self.embed(
+    #             "this command must be used in NSFW channel")
+    #         return await ctx.send(embed=embed)
+    #     elif isinstance(error, commands.errors.UserNotFound):
+    #         embed = await self.embed("User not found")
+    #         return await ctx.send(embed=embed)
+    #     elif isinstance(error, commands.errors.MemberNotFound):
+    #         embed = await self.embed("Member not found")
+    #         return await ctx.send(embed=embed)
+    #     elif isinstance(error, asyncio.TimeoutError):
+    #         embed = await self.embed("timeout")
+    #         return await ctx.send(embed=embed)
+    #     elif isinstance(error, discord.errors.Forbidden):
+    #         embed = await self.embed(error.text)
+    #         return await ctx.send(embed=embed)
+    #     elif isinstance(error, discord.errors.HTTPException):
+    #         embed = await self.embed(f"HTTPException {error.text}")
+    #         return await ctx.send(embed=embed)
+    #     elif isinstance(error, GlobalCooldown):
+    #         embed = await self.embed(
+    #             f"You have hit the global ratelimit try again in {round(error.retry_after)} seconds"
+    #         )
+    #         return await ctx.send(embed=embed)
+    #     elif isinstance(error, aiozaneapi.GatewayError):
+    #         embed = await self.embed("Zane api have a error")
+    #         await ctx.reply(embed=embed)
+    #     elif isinstance(error, commands.errors.NotOwner):
+    #         embed = await self.embed(
+    #             "You must be the bot owner to use this command")
+    #         return await ctx.send(embed=embed)
+    #     elif isinstance(error, commands.NoPrivateMessage):
+    #         try:
+    #             embed = await self.embed(
+    #                 "{ctx.command} can not be used in Private Messages.")
+    #             await ctx.author.send(embed=embed)
+    #         except discord.HTTPException:
+    #             pass
+    #     elif isinstance(error, AttributeError):
+    #         return
+    #     elif isinstance(error, commands.errors.InvalidEndOfQuotedStringError):
+    #         embed = await self.embed(
+    #             "Make sure to put a space between the quotes")
+    #         await ctx.send(embed=embed)
+    #     elif isinstance(error, commands.ConversionError):
+    #         embed = await self.embed(f"Unable to convert {error.converter}")
+    #         await ctx.send(embed=embed)
+    #     elif isinstance(error, commands.BadArgument):
+    #         embed = await self.embed(f"Unable to convert")
+    #         await ctx.send(embed=embed)
+    #     elif isinstance(error, commands.MissingRequiredArgument):
+    #         embed = await self.embed(
+    #             f"You are missing `{error.param.name}` argument")
+    #         await ctx.send(embed=embed)
+    #     elif isinstance(error, commands.CommandOnCooldown):
+    #         embed = await self.embed(
+    #             f"dude chill try again in {round(error.retry_after)} seconds")
+    #         await ctx.reply(embed=embed)
+    #     elif isinstance(error, commands.BotMissingPermissions):
+    #         embed = await self.embed(
+    #             f"Bot is missing {error.missing_perms} to do that")
+    #         await ctx.reply(embed=embed)
+    #     elif isinstance(error, commands.MissingPermissions):
+    #         embed = await self.embed("you do not have permission to do that")
+    #         await ctx.reply(embed=embed)
+    #     elif isinstance(error, asyncdagpi.errors.BadUrl):
+    #         embed = await self.embed("You did not pass in the right arguments")
+    #         await ctx.reply(embed=embed)
+    #     elif isinstance(error, asyncdagpi.errors.ApiError):
+    #         embed = await self.embed("The image API have a error")
+    #         await ctx.reply(embed=embed)
+    #     else:
+    #         embed = discord.Embed(color=0xFF0000,
+    #                               description=f"```py\n{error}```")
+    #         await ctx.send(embed=embed)
+    #         # # print(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
+    #         # print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+    #         # # traceback.print_exception(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
+    #         # traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     @commands.command()
     @commands.is_owner()
