@@ -38,6 +38,7 @@ class events(commands.Cog):
         self.started = False
         self.bot.ws_recieved = 0
         self.bot.send = 0
+        self.gists.start()
         self.status.start(bot)
         self.graph.start()
         self.post.start(bot)
@@ -48,7 +49,8 @@ class events(commands.Cog):
         self.bot.counter = 0
     
     @tasks.loop(minutes=1)
-    async def loop(self):
+    async def gists(self):
+        await bot.wait_until_ready()
         async with aiofile.async_open("discord.log", "r") as f:
             content = await f.read()
         await self.bot.session.post("https://api.github.com/gists", headers={"Authorization": f"token {os.getenv('gists')}", "Accept": "application/vnd.github.inertia-preview+json"}, data={
