@@ -402,8 +402,8 @@ class pictures(commands.Cog):
     @commands.command()
     async def floor(self,
                     ctx,
-                    thing: typing.Union[discord.Member, discord.User, discord.PartialEmoji,
-                                        discord.Emoji, str] = None):
+                    thing: commands.Greedy[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
+                                        discord.Emoji, str]] = None):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.floor(url)
