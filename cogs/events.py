@@ -385,13 +385,14 @@ class events(commands.Cog):
         if not payload.cached_message:
             channel = self.bot.get_channel(payload.channel_id)
             try:
-                message = await channel.fetch_message(payload.message_id)
+                message = await channel.fetch_message(payload.message_id):
+                if message:
+                    if message.embeds != []:
+                        return
+                        await self.bot.process_commands(message)
+
             except:
                 pass
-            if message.embeds != []:
-                return
-            await self.bot.process_commands(message)
-
     @staticmethod
     @asyncexe()
     def on_message_edit_(self, old):
