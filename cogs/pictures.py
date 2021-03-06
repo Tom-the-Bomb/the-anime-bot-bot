@@ -404,6 +404,7 @@ class pictures(commands.Cog):
                            embed=embed)
 
     @commands.command()
+    @commands.max_concurrency(1, commands.BucketType.user)
     async def floor(self,
                     ctx,
                     thing: commands.Greedy[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
