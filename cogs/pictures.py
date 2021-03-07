@@ -88,7 +88,7 @@ class pictures(commands.Cog):
         im = polaroid.Image(image1)
         method1 = getattr(im, method)
         await self.bot.loop.run_in_executor(None, method1, *args, **kwargs)
-        return discord.File(BytesIO(im.save_bytes()), filename=f"{method}.png")
+        return discord.File(BytesIO(await self.bot.loop.run_in_executor(None, im.save_bytes()), filename=f"{method}.png")
 
 
     @staticmethod
@@ -537,6 +537,10 @@ class pictures(commands.Cog):
                                           discord.Emoji, str]], radius=5, intensity=50):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
+        if radius > 10:
+            radius = 10
+        if intensity > 100:
+            intensity = 100
         await ctx.reply(file=await self.polaroid_(url, "oil", radius, intensity))
     @commands.command()
     async def rainbow(self,
