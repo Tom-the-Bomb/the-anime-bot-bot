@@ -82,12 +82,12 @@ class pictures(commands.Cog):
         return url
 
     
-    async def polaroid_(self, image, method):
+    async def polaroid_(self, image, method, *args, **kwargs):
         async with self.bot.session.get(image) as resp:
             image1 = await resp.read()
         im = polaroid.Image(image1)
         method1 = getattr(im, method)
-        await self.bot.loop.run_in_executor(None, method1)
+        await self.bot.loop.run_in_executor(None, method1, *args, **kwargs)
         return discord.File(BytesIO(im.save_bytes()), filename=f"{method}.png")
 
 
@@ -533,11 +533,11 @@ class pictures(commands.Cog):
     @commands.command()
     async def oil(self,
                       ctx,
-                      thing: typing.Union[discord.Member, discord.User, discord.PartialEmoji,
-                                          discord.Emoji, str] = None):
+                      thing: typing.Optional[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
+                                          discord.Emoji, str]], radius=34, intensity=64):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
-        await ctx.reply(file=await self.polaroid_(url, "oil"))
+        await ctx.reply(file=await self.polaroid_(url, "oil", radius, intensity))
     @commands.command()
     async def rainbow(self,
                       ctx,
