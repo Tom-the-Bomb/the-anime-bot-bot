@@ -155,6 +155,7 @@ class utility(commands.Cog):
                 'python': 'https://docs.python.org/3',
                 'asyncpg': "https://magicstack.github.io/asyncpg/current/",
                 "zaneapi": "https://docs.zaneapi.com/en/latest/",
+                "pypi": "https://warehouse.pypa.io/index.html",
                 "aiohttp": "https://docs.aiohttp.org/en/stable/"
             }
             async with self.bot.session.get(f"https://idevision.net/api/public/rtfm?query={obj}&location={page_types.get(key)}&show-labels=true&label-labels=true") as resp:
@@ -524,6 +525,10 @@ class utility(commands.Cog):
     @rtfm.command(name="zaneapi")
     async def rtfm_zaneapi(self, ctx, *, thing: str = None):
         await self.uhh_rtfm_pls(ctx, "zaneapi", thing)
+
+    @rtfm.command(name="pypi")
+    async def rtfm_pypi(self, ctx, *, thing: str = None):
+        await self.uhh_rtfm_pls(ctx, "pypi", thing)
 
     @rtfm.command(name="aiohttp")
     async def rtfm_aiohttp(self, ctx, *, thing: str = None):
