@@ -26,9 +26,14 @@ class pictures(commands.Cog):
                     url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
                 elif ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "rich":
-                    url = ctx.message.reference.cached_message.embeds[0].image.proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                    return url
+                    if ctx.message.reference.cached_message.embeds[0].image.proxy_url:
+                        url = ctx.message.reference.cached_message.embeds[0].image.proxy_url
+                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        return url
+                    elif ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url:
+                        url = ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url
+                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        return url
                 elif ctx.message.reference.cached_message.attachments and ctx.message.reference.cached_message.attachments[0].width and ctx.message.reference.cached_message.attachments[0].height:
                     url = ctx.message.reference.cached_message.attachments[0].proxy_url
                     url = url.replace("cdn.discordapp.com", "media.discordapp.net")
@@ -39,11 +44,19 @@ class pictures(commands.Cog):
                     url = message.embeds[0].thumbnail.proxy_url
                     url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
+                elif message.embeds and message.embeds[0].type == "rich":
+                    if message.embeds[0].image.proxy_url:
+                        url = message.embeds[0].image.proxy_url
+                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        return url
+                    elif message.embeds[0].thumbnail.proxy_url:
+                        url = message.embeds[0].thumbnail.proxy_url
+                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        return url
                 elif message.attachments and message.attachments[0].width and message.attachments[0].height:
                     url = message.attachments[0].proxy_url
                     url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
-
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             return ctx.message.attachments[0].proxy_url.replace("cdn.discordapp.com", "media.discordapp.net")
 
