@@ -534,7 +534,7 @@ class pictures(commands.Cog):
     async def oil(self,
                       ctx,
                       thing: typing.Optional[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
-                                          discord.Emoji, str]], radius=34, intensity=64):
+                                          discord.Emoji, str]], radius=5, intensity=50):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
         await ctx.reply(file=await self.polaroid_(url, "oil", radius, intensity))
