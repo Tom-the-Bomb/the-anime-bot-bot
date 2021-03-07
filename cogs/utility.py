@@ -155,7 +155,7 @@ class utility(commands.Cog):
                 'python': 'https://docs.python.org/3',
                 'asyncpg': "https://magicstack.github.io/asyncpg/current/",
                 "zaneapi": "https://docs.zaneapi.com/en/latest/",
-                "pypi": "https://warehouse.pypa.io/index.html",
+                "pypi": "https://warehouse.pypa.io/api-reference/index.html",
                 "aiohttp": "https://docs.aiohttp.org/en/stable/"
             }
             async with self.bot.session.get(f"https://idevision.net/api/public/rtfm?query={obj}&location={page_types.get(key)}&show-labels=true&label-labels=true") as resp:
