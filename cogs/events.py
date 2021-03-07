@@ -123,9 +123,9 @@ class events(commands.Cog):
         await bot.wait_until_ready()
         await bot.session.post("https://top.gg/api/bots/787927476177076234/stats",
                            headers={"Authorization": topgg},
-                           data=json.dumps({
+                           data={
                                "server_count": len(bot.guilds)
-                           }))
+                           })
         await bot.session.post(
             "https://discordbotlist.com/api/v1/bots/anime-quotepic-bot/stats",
             headers={"Authorization": discord_bot_list},
