@@ -160,7 +160,6 @@ class utility(commands.Cog):
                 if resp.status == 429:
                     time = resp.headers.get("ratelimit-retry-after")
                     await asyncio.sleep(int(time))
-                    return await self.uhh_rtfm_pls(ctx, key, obj)
                 matches = await resp.json()
                 matches = matches.get("nodes")
                 embed = discord.Embed(color=self.bot.color)
