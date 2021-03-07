@@ -532,7 +532,7 @@ class utility(commands.Cog):
 
     @commands.group(invoke_without_command=True, aliases=["findsource"])
     async def rtfs(self, ctx, *, thing: str = None):
-        await self.uhh_rtfm_pls(ctx, "discord.py", thing)
+        await self.uhh_rtfs_pls(ctx, "discord.py", thing)
         
 
     @commands.group(invoke_without_command=True,
