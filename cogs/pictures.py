@@ -534,7 +534,7 @@ class pictures(commands.Cog):
     async def oil(self,
                       ctx,
                       thing: typing.Optional[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
-                                          discord.Emoji, str]], radius=5, intensity=50):
+                                          discord.Emoji, str]], radius=5, intensity=30):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
         if radius > 10:
