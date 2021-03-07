@@ -142,11 +142,32 @@ class utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.rtfm_lock = asyncio.Lock()
+        self.rtfs_lock = asyncio.Lock()
         bot.cse1 = cse.Search(api_key=google_api_1)
         bot.cse2 = cse.Search(api_key=google_api_2)
         bot.cse3 = cse.Search(api_key=google_api_3)
         bot.cse_lists = cycle([bot.cse1, bot.cse2, bot.cse3])
 
+    async def uhh_rtfs_pls(self, ctx, key, obj):
+        await self.rtfm_lock.acquire()
+        try:
+            async with self.bot.session.get(f"https://idevision.net/api/public/rtfs?query={obj}&libary={key}") as resp:
+                if resp.status == 429:
+                    time = resp.headers.get("ratelimit-retry-after")
+                    await asyncio.sleep(int(time))
+                    self.rtfs_lock.release()
+                    return await self.uhh_rtfm_pls(ctx, key, obj)
+                if resp.headers.get("Content-Type") == "application/octet-stream":
+                    self.rtfs_lock.release()
+                    return await self.uhh_rtfm_pls(ctx, key, obj)
+                matches = await resp.json()
+                matches = matches.get("nodes")
+                embed = discord.Embed(color=self.bot.color)
+                embed.description = '\n'.join(f'[{key}]({url})' for key, url in matches.items())
+                return await ctx.send(embed=embed, reference=ctx.replied_reference)
+        finally:
+            if self.rtfm_lock.locked():
+                self.rtfm_lock.release()
     async def uhh_rtfm_pls(self, ctx, key, obj):
         page_types = {
             'latest': 'https://discordpy.readthedocs.io/en/latest',
@@ -508,6 +529,11 @@ class utility(commands.Cog):
             await ctx.send(embed=discord.Embed().from_dict(thing))
         except Exception as e:
             raise commands.CommandError(e)
+
+    @commands.group(invoke_without_command=True, aliases=["findsource"])
+    async def rtfs(self, ctx, *, thing: str = None):
+        await self.uhh_rtfm_pls(ctx, "discord.py", thing)
+        
 
     @commands.group(invoke_without_command=True,
                     aliases=[
