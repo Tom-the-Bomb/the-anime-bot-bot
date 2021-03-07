@@ -9,6 +9,8 @@ async8ball==2.0.9
 asyncdagpi==3.2.2
 asyncpg==0.21.0
 beautifulsoup4==4.9.3
+brotlipy0.7.0
+cchardet==2.1.7
 cryptography==3.4.6
 dblpy==0.4.0
 discord.py==1.6.0
