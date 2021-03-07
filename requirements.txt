@@ -15,7 +15,7 @@ babel==2.9.0
 beautifulsoup4==4.9.3
 bottom==2.2.0
 braceexpand==0.1.6
-brotlipy==0.7.0
+brotli==1.0.9
 bs4==0.0.1
 caio==0.8.0
 cchardet==2.1.7
@@ -26,6 +26,7 @@ chardet==4.0.0
 click==7.1.2
 colorama==0.4.4; platform_system == "Windows" or sys_platform == "win32"
 cryptography==3.4.6
+discord==1.0.1
 discord.py==1.6.0
 distlib==0.3.1
 docutils==0.16
@@ -61,7 +62,7 @@ py==1.10.0
 pycares==3.1.1
 pycparser==2.20
 pyfiglet==0.8.post1
-pygments==2.8.0
+pygments==2.8.1
 pynacl==1.4.0
 pyparsing==2.4.7
 pyqrcode==1.2.1
