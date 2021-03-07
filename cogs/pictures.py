@@ -83,7 +83,7 @@ class pictures(commands.Cog):
 
     @staticmethod
     @asyncexe()
-    def run_polaroid(image, method, *args, **kwargs):
+    def run_polaroid(image1, method, *args, **kwargs):
         im = polaroid.Image(image1)
         method1 = getattr(im, method)
         method1(*args, **kwargs)
