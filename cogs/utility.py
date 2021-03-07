@@ -161,11 +161,11 @@ class utility(commands.Cog):
                 if resp.status == 429:
                     time = resp.headers.get("ratelimit-retry-after")
                     await asyncio.sleep(time)
-            matches = await resp.json()
-            matches = matches.get("nodes")
-            embed = discord.Embed(color=self.bot.color)
-            embed.description = '\n'.join(f'[{key}]({url})' for key, url in matches)
-            return await ctx.send(embed=embed, reference=ctx.replied_reference)
+                matches = await resp.json()
+                matches = matches.get("nodes")
+                embed = discord.Embed(color=self.bot.color)
+                embed.description = '\n'.join(f'[{key}]({url})' for key, url in matches)
+                return await ctx.send(embed=embed, reference=ctx.replied_reference)
 
     @staticmethod
     def choosebstofcal(ctx, times, choices):
