@@ -163,6 +163,9 @@ class utility(commands.Cog):
                     await asyncio.sleep(int(time))
                     self.rtfm_lock.release()
                     return await self.uhh_rtfm_pls(ctx, key, obj)
+                if resp.headers.get("Content-Type") == "application/octet-stream":
+                    self.rtfm_lock.release()
+                    return await self.uhh_rtfm_pls(ctx, key, obj)
                 matches = await resp.json()
                 matches = matches.get("nodes")
                 embed = discord.Embed(color=self.bot.color)
