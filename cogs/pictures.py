@@ -87,7 +87,7 @@ class pictures(commands.Cog):
             image1 = await resp.read()
         im = polaroid.Image(image1)
         method1 = getattr(im, method)
-        method1()
+        await self.bot.loop.run_in_executor(None, method1)
         return discord.File(BytesIO(im.save_bytes()), filename=f"{method}.png")
 
 
