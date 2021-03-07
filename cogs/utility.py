@@ -164,7 +164,7 @@ class utility(commands.Cog):
                 matches = await resp.json()
                 matches = matches.get("nodes")
                 embed = discord.Embed(color=self.bot.color)
-                embed.description = '\n'.join(f'[{key}]({url})' for key, url in matches)
+                embed.description = '\n'.join(f'[{key}]({url})' for key, url in matches.items())
                 return await ctx.send(embed=embed, reference=ctx.replied_reference)
 
     @staticmethod
