@@ -542,10 +542,6 @@ class pictures(commands.Cog):
                                           discord.Emoji, str]]):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
-        if radius > 10:
-            radius = 10
-        if intensity > 100:
-            intensity = 100
         await ctx.reply(file=await self.polaroid_(url, "oil", 3, 30))
     @commands.command()
     async def rainbow(self,
