@@ -585,7 +585,7 @@ class utility(commands.Cog):
         """
       Calculate some math
       """
-        thing = thing.replace(" ", "").replace("^", "**").replace("pi", " 3.1415926535")
+        thing = thing.replace(" ", "").replace("^", "**").replace("pi", "3.1415926535")
         lists = ["\"", "\'", "()", ".."]
         if any(i in thing for i in lists):
             return await ctx.send("nope don't even think about it")
