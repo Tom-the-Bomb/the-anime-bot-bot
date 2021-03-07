@@ -149,25 +149,25 @@ class utility(commands.Cog):
         bot.cse_lists = cycle([bot.cse1, bot.cse2, bot.cse3])
 
     async def uhh_rtfs_pls(self, ctx, key, obj):
-        await self.rtfm_lock.acquire()
+        await self.rtfs_lock.acquire()
         try:
             async with self.bot.session.get(f"https://idevision.net/api/public/rtfs?query={obj}&libary={key}") as resp:
                 if resp.status == 429:
                     time = resp.headers.get("ratelimit-retry-after")
                     await asyncio.sleep(int(time))
                     self.rtfs_lock.release()
-                    return await self.uhh_rtfm_pls(ctx, key, obj)
+                    return await self.uhh_rtfs_pls(ctx, key, obj)
                 if resp.headers.get("Content-Type") == "application/octet-stream":
                     self.rtfs_lock.release()
-                    return await self.uhh_rtfm_pls(ctx, key, obj)
+                    return await self.uhh_rtfs_pls(ctx, key, obj)
                 matches = await resp.json()
                 matches = matches.get("nodes")
                 embed = discord.Embed(color=self.bot.color)
                 embed.description = '\n'.join(f'[{key}]({url})' for key, url in matches.items())
                 return await ctx.send(embed=embed, reference=ctx.replied_reference)
         finally:
-            if self.rtfm_lock.locked():
-                self.rtfm_lock.release()
+            if self.rtfs_lock.locked():
+                self.rtfs_lock.release()
     async def uhh_rtfm_pls(self, ctx, key, obj):
         page_types = {
             'latest': 'https://discordpy.readthedocs.io/en/latest',
