@@ -81,14 +81,19 @@ class pictures(commands.Cog):
         url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
 
+    @staticmethod
+    @asyncexe()
+    def run_polaroid(image, method, *args, **kwargs):
+        im = polaroid.Image(image1)
+        method1 = getattr(im, method)
+        method1(*args, **kwargs)
+        return discord.File(BytesIO(im.save_bytes()), filename=f"{method}.png")
+
     
     async def polaroid_(self, image, method, *args, **kwargs):
         async with self.bot.session.get(image) as resp:
             image1 = await resp.read()
-        im = polaroid.Image(image1)
-        method1 = getattr(im, method)
-        await self.bot.loop.run_in_executor(None, method1, *args, **kwargs)
-        return discord.File(BytesIO(await self.bot.loop.run_in_executor(None, im.save_bytes)), filename=f"{method}.png")
+        return await self.run_polaroid(image1, method, *args, **kwargs)
 
 
     @staticmethod
@@ -534,14 +539,14 @@ class pictures(commands.Cog):
     async def oil(self,
                       ctx,
                       thing: typing.Optional[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
-                                          discord.Emoji, str]], radius=5, intensity=30):
+                                          discord.Emoji, str]]):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
         if radius > 10:
             radius = 10
         if intensity > 100:
             intensity = 100
-        await ctx.reply(file=await self.polaroid_(url, "oil", radius, intensity))
+        await ctx.reply(file=await self.polaroid_(url, "oil", 3, 30))
     @commands.command()
     async def rainbow(self,
                       ctx,
