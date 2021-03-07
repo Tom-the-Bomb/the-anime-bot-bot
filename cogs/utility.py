@@ -158,6 +158,8 @@ class utility(commands.Cog):
                     self.rtfs_lock.release()
                     return await self.uhh_rtfs_pls(ctx, key, obj)
                 if resp.headers.get("Content-Type") == "application/octet-stream":
+                    time = resp.headers.get("ratelimit-retry-after")
+                    await asyncio.sleep(int(time))
                     self.rtfs_lock.release()
                     return await self.uhh_rtfs_pls(ctx, key, obj)
                 matches = await resp.json()
@@ -185,6 +187,8 @@ class utility(commands.Cog):
                     self.rtfm_lock.release()
                     return await self.uhh_rtfm_pls(ctx, key, obj)
                 if resp.headers.get("Content-Type") == "application/octet-stream":
+                    time = resp.headers.get("ratelimit-retry-after")
+                    await asyncio.sleep(int(time))
                     self.rtfm_lock.release()
                     return await self.uhh_rtfm_pls(ctx, key, obj)
                 matches = await resp.json()
