@@ -88,7 +88,7 @@ class pictures(commands.Cog):
         im = polaroid.Image(image1)
         method1 = getattr(im, method)
         await self.bot.loop.run_in_executor(None, method1, *args, **kwargs)
-        return discord.File(BytesIO(await self.bot.loop.run_in_executor(None, im.save_bytes()), filename=f"{method}.png")
+        return discord.File(BytesIO(await self.bot.loop.run_in_executor(None, im.save_bytes)), filename=f"{method}.png")
 
 
     @staticmethod
