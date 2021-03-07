@@ -576,7 +576,7 @@ class events(commands.Cog):
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.BotMissingPermissions):
             embed = await self.embed(
-                f"Bot is missing {", ".join(error.missing_perms)} to do that")
+                f"Bot is missing {', '.join(error.missing_perms)} to do that")
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.MissingPermissions):
             embed = await self.embed("you do not have permission to do that")
