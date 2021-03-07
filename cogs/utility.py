@@ -148,23 +148,29 @@ class utility(commands.Cog):
         bot.cse_lists = cycle([bot.cse1, bot.cse2, bot.cse3])
 
     async def uhh_rtfm_pls(self, ctx, key, obj):
-        async with self.rtfm_lock:
-            page_types = {
-                'latest': 'https://discordpy.readthedocs.io/en/latest',
-                'python': 'https://docs.python.org/3',
-                'asyncpg': "https://magicstack.github.io/asyncpg/current/",
-                "zaneapi": "https://docs.zaneapi.com/en/latest/",
-                "aiohttp": "https://docs.aiohttp.org/en/stable/"
-            }
+        page_types = {
+            'latest': 'https://discordpy.readthedocs.io/en/latest',
+            'python': 'https://docs.python.org/3',
+            'asyncpg': "https://magicstack.github.io/asyncpg/current/",
+            "zaneapi": "https://docs.zaneapi.com/en/latest/",
+            "aiohttp": "https://docs.aiohttp.org/en/stable/"
+        }
+        await self.rtfm_lock.acquire()
+        try:
             async with self.bot.session.get(f"https://idevision.net/api/public/rtfm?query={obj}&location={page_types.get(key)}&show-labels=true&label-labels=true") as resp:
                 if resp.status == 429:
                     time = resp.headers.get("ratelimit-retry-after")
                     await asyncio.sleep(int(time))
+                    self.rtfm_lock.release()
+                    return await self.uhh_rtfm_pls(ctx, key, obj)
                 matches = await resp.json()
                 matches = matches.get("nodes")
                 embed = discord.Embed(color=self.bot.color)
                 embed.description = '\n'.join(f'[{key.replace("discord.", "").replace("ext.", "")}]({url})' for key, url in matches.items())
                 return await ctx.send(embed=embed, reference=ctx.replied_reference)
+        finally:
+            if self.rtfm_lock.locked():
+                self.rtfm_lock.release()
 
     @staticmethod
     def choosebstofcal(ctx, times, choices):
