@@ -106,7 +106,6 @@ class googlemenu(menus.Menu):
             f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}"
         )
         await self.message.edit(embed=embed)
-
     @menus.button('\N{BLACK SQUARE FOR STOP}\ufe0f')
     async def on_stop(self, payload):
         self.stop()
@@ -160,7 +159,7 @@ class utility(commands.Cog):
             async with self.bot.session.get(f"https://idevision.net/api/public/rtfm?query={obj}&location={page_types.get(key)}&show-labels=true&label-labels=true") as resp:
                 if resp.status == 429:
                     time = resp.headers.get("ratelimit-retry-after")
-                    await asyncio.sleep(time)
+                    await asyncio.sleep(int(time))
                     return await self.uhh_rtfm_pls(ctx, key, obj)
                 matches = await resp.json()
                 matches = matches.get("nodes")
