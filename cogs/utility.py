@@ -279,6 +279,22 @@ class utility(commands.Cog):
         # await interface.send_to(ctx)
         e.description = '\n'.join(f'[{key}]({url})' for key, url in matches)
         await ctx.send(embed=e, reference=ctx.replied_reference)
+    
+    @staticmethod
+    def choosebstofcal(ctx, times, choices):
+        if times is None:
+            times = (len(choices)**2) + 1
+        times = min(1000000, max(1, times))
+        results = Counter(np.random.choice(choices, times))
+        builder = []
+        if len(results) > 30:
+            builder.append('Showing the top 30 results')
+        for index, (elem, count) in enumerate(results.most_common(30),
+                                              start=1):
+            builder.append(
+                f'**{index}. {elem} ** `({plural(count):time}, {count/times:.2%})`'
+            )
+        return builder
     @staticmethod
     def convertcal(amount, from_, to):
         c = CurrencyConverter(decimal=True)
