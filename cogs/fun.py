@@ -493,9 +493,11 @@ class fun(commands.Cog):
     @commands.command()
     async def tenor(self, ctx, *, search):
         gif = await self.tenor_(search)
+        async with self.bot.session.get(gif) as resp:
+            gif = BytesIO(await resp.read())            
         embed = await embedbase.embed(self, ctx)
-        embed.set_image(url=gif)
-        await ctx.send(embed=embed)
+        embed.set_image(url=f"attachment://{search}.gif")
+        await ctx.send(embed=embed, file=discord.File(gif, f"{search}.gif"))
 
     @commands.command(aliases=["sw", "speedwatch"])
     async def speedwatcher(self, ctx, member: discord.Member = None):
