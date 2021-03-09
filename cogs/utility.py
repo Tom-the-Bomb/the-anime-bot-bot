@@ -638,7 +638,7 @@ class utility(commands.Cog):
             results = []
             js = await resp.json()
             for i in js["items"]:
-                results.append(f"{i['title']}\n{i['link']}\n{i.get('snippet', "No description")}\n")
+                results.append(f"{i['title']}\n{i['link']}\n{i.get('snippet', 'No description')}\n")
             paginator = commands.Paginator(prefix="", suffix="", max_size=500)
             embed=discord.Embed(color=self.bot.color)
             for i in results:
