@@ -612,7 +612,7 @@ class utility(commands.Cog):
                     continue
                 counter = 0
                 real_results = []
-            for i in results:
+            for i in titles:
                 real_results.append(f"{titles[counter]}\n{results[counter]}\n")
                 counter += 1
             return real_results
