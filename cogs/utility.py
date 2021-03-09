@@ -587,7 +587,7 @@ class utility(commands.Cog):
     """
         await ctx.send(await self.translate_(from_lang, to_lang, thing))
 
-    async def google_(self, thing, ctx):
+    async def google_(self, thing):
         # return await next(self.bot.cse_lists
         #                   ).search(thing,
         #                            safe_search=not ctx.channel.is_nsfw())
@@ -622,7 +622,7 @@ class utility(commands.Cog):
 
     @commands.command()
     async def google(self, ctx, *, thing: str):
-        results = await self.google_(thing, ctx)
+        results = await self.google_(thing)
         paginator = commands.Paginator(prefix="", suffix="", max_size=500)
         embed=discord.Embed(color=self.bot.color)
         for i in results:
