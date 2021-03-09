@@ -613,8 +613,11 @@ class utility(commands.Cog):
                 counter = 0
                 real_results = []
             for i in titles:
-                real_results.append(f"{titles[counter]}\n{results[counter]}\n")
-                counter += 1
+                try:
+                    real_results.append(f"{titles[counter]}\n{results[counter]}\n")
+                    counter += 1
+                except:
+                    return real_results
             return real_results
 
 
