@@ -639,12 +639,12 @@ class utility(commands.Cog):
             js = await resp.json()
             for i in js["items"]:
                 results.append(f"{i['title']}\n{i['link']}\n{i.get('snippet', 'No description')}\n")
-            paginator = commands.Paginator(prefix="", suffix="", max_size=500)
-            embed=discord.Embed(color=self.bot.color)
-            for i in results:
-                paginator.add_line(i)
-            interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author, embed=embed)
-            await interface.send_to(ctx)
+        paginator = commands.Paginator(prefix="", suffix="", max_size=1000)
+        embed=discord.Embed(color=self.bot.color)
+        for i in results:
+            paginator.add_line(i)
+        interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author, embed=embed)
+        await interface.send_to(ctx)
 
 
 
