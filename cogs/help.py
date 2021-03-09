@@ -20,7 +20,7 @@ class HelpCommand(commands.HelpCommand):
         await self.context.send(embed=embed)
 
     async def send_cog_help(self, cog):
-        paginator = commands.Paginator(prefix="", suffix="")
+        paginator = commands.Paginator(prefix="", suffix="", max_size=1000)
         commands_ = await self.filter_commands(cog.get_commands(), sort=True)
         commands_ = [self.get_command_signature(i) for i in commands_]
         for i in commands_:

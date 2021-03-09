@@ -190,7 +190,7 @@ class utility(commands.Cog):
         bot.cse1 = cse.Search(api_key=google_api_1)
         bot.cse2 = cse.Search(api_key=google_api_2)
         bot.cse3 = cse.Search(api_key=google_api_3)
-        bot.cse_lists = cycle([bot.cse1, bot.cse2, bot.cse3])
+        bot.cse_lists = cycle([google_api_1, google_api_2, google_api_3])
     def parse_object_inv(self, stream, url):
         # key: URL
         # n.b.: key doesn't have `discord` or `discord.ext.commands` namespaces
@@ -626,13 +626,35 @@ class utility(commands.Cog):
 
     @commands.command()
     async def google(self, ctx, *, thing: str):
-        results = await self.google_(thing)
-        paginator = commands.Paginator(prefix="", suffix="", max_size=500)
-        embed=discord.Embed(color=self.bot.color)
-        for i in results:
-          paginator.add_line(i)
-        interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author, embed=embed)
-        await interface.send_to(ctx)
+        params = {
+            "key": next(self.bot.cse_lists),
+            "cx": "0013301c62cb228c5",
+            "q": thing.replace(" ", "+"),
+            "gl": "countryUS",
+            "num": "10",
+            "safe": "off"  if ctx.channel.is_nsfw() else "active"
+        }
+        async with self.bot.session.get(f"https://www.googleapis.com/customsearch/v1", params=params) as resp:
+            results = []
+            js = await resp.json()
+            for i in js["items"]:
+                results.append(f"{i['title']}\n{i['link']}\n{i.get('snippet', "No description")}\n")
+            paginator = commands.Paginator(prefix="", suffix="", max_size=500)
+            embed=discord.Embed(color=self.bot.color)
+            for i in results:
+                paginator.add_line(i)
+            interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author, embed=embed)
+            await interface.send_to(ctx)
+
+
+
+        # results = await self.google_(thing)
+        # paginator = commands.Paginator(prefix="", suffix="", max_size=500)
+        # embed=discord.Embed(color=self.bot.color)
+        # for i in results:
+        #   paginator.add_line(i)
+        # interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author, embed=embed)
+        # await interface.send_to(ctx)
 
     @commands.command()
     async def make_embed(self, ctx, *, thing: json.loads):
