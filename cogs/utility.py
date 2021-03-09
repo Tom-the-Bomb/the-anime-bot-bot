@@ -598,22 +598,22 @@ class utility(commands.Cog):
             titles = [i.getText() for i in soup.find_all("h3")]
             a = soup.find_all("a")
             for i in a:
-            l = i.get("href")
-            try:
-                m = re.search("(?P<url>https?://[^\s]+)", l)
-                n = m.group(0)
-                rul = n.split('&')[0]
-                domain = urlparse(rul)
-                if(re.search('google.com', domain.netloc)):
-                continue
-                else:
-                results.append(rul)
-            except:
-                continue
-            counter = 0
-            real_results = []
+                l = i.get("href")
+                try:
+                    m = re.search("(?P<url>https?://[^\s]+)", l)
+                    n = m.group(0)
+                    rul = n.split('&')[0]
+                    domain = urlparse(rul)
+                    if(re.search('google.com', domain.netloc)):
+                        continue
+                    else:
+                        results.append(rul)
+                except:
+                    continue
+                counter = 0
+                real_results = []
             for i in results:
-            real_results.append(f"{titles[counter]}\n{results[counter]}\n")
+                real_results.append(f"{titles[counter]}\n{results[counter]}\n")
             return real_results
 
 
