@@ -1,8 +1,11 @@
 import asyncio
 import os
+import re
 import zipfile
 from itertools import cycle
+from urllib.parse import urlparse
 
+import bs4
 import cse
 import cv2
 import discord
@@ -586,21 +589,43 @@ class utility(commands.Cog):
 
     @staticmethod
     async def google_(self, thing, ctx):
-        return await next(self.bot.cse_lists
-                          ).search(thing,
-                                   safe_search=not ctx.channel.is_nsfw())
+        # return await next(self.bot.cse_lists
+        #                   ).search(thing,
+        #                            safe_search=not ctx.channel.is_nsfw())
+        async with bot.session.get(f"https://google.com/search?q={thing}", headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36"}) as resp:
+            results = []
+            soup = bs4.BeautifulSoup(await resp.text(), "lxml")
+            titles = [i.getText() for i in soup.find_all("h3")]
+            a = soup.find_all("a")
+            for i in a:
+            l = i.get("href")
+            try:
+                m = re.search("(?P<url>https?://[^\s]+)", l)
+                n = m.group(0)
+                rul = n.split('&')[0]
+                domain = urlparse(rul)
+                if(re.search('google.com', domain.netloc)):
+                continue
+                else:
+                results.append(rul)
+            except:
+                continue
+            counter = 0
+            real_results = []
+            for i in results:
+            real_results.append(f"{titles[counter]}\n{results[counter]}\n")
+            return real_results
+
 
     @commands.command()
     async def google(self, ctx, *, thing: str):
         results = await self.google_(self, thing, ctx)
-        m = googlemenu(datas=results, safe_search=not ctx.channel.is_nsfw())
-        await m.start(ctx)
-        # paginator = commands.Paginator(prefix="", suffix="", max_size=500)
-        # embed=discord.Embed(color=self.bot.color)
-        # for i in results:
-        #   paginator.add_line(i)
-        # interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author, embed=embed)
-        # await interface.send_to(ctx)
+        paginator = commands.Paginator(prefix="", suffix="", max_size=500)
+        embed=discord.Embed(color=self.bot.color)
+        for i in results:
+          paginator.add_line(i)
+        interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author, embed=embed)
+        await interface.send_to(ctx)
 
     @commands.command()
     async def make_embed(self, ctx, *, thing: json.loads):
