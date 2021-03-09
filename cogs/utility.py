@@ -2,6 +2,10 @@ import asyncio
 import os
 import re
 import zipfile
+
+from fake_useragent import UserAgent
+
+ua = UserAgent()
 from itertools import cycle
 from urllib.parse import urlparse
 
@@ -591,7 +595,7 @@ class utility(commands.Cog):
         # return await next(self.bot.cse_lists
         #                   ).search(thing,
         #                            safe_search=not ctx.channel.is_nsfw())
-        async with self.bot.session.get(f"https://google.com/search?q={thing.replace(' ', '+')}", headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.82 Safari/537.36"}) as resp:
+        async with self.bot.session.get(f"https://google.com/search?q={thing.replace(' ', '+')}", headers={"User-Agent": ua.random}) as resp:
             results = []
             soup = bs4.BeautifulSoup(await resp.text(), "lxml")
             titles = [i.getText() for i in soup.find_all("h3")]
