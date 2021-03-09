@@ -588,7 +588,7 @@ class utility(commands.Cog):
         await ctx.send(await self.translate_(from_lang, to_lang, thing))
 
     @staticmethod
-    async def google_(self, ctx, *, thing):
+    async def google_(self, ctx, thing):
         # return await next(self.bot.cse_lists
         #                   ).search(thing,
         #                            safe_search=not ctx.channel.is_nsfw())
