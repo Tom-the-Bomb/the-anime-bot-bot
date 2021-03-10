@@ -5,6 +5,7 @@ import random
 import re
 import textwrap
 import time
+from .pictures.pictures import get_url
 import typing
 from io import BytesIO
 
@@ -139,6 +140,23 @@ class fun(commands.Cog):
             return to_bottom(text)
         else:
             return from_bottom(text)
+
+    @commands.command()
+    async def caption(self, ctx, thing: typing.Union[discord.Member, discord.User,
+                                                discord.PartialEmoji,
+                                                discord.Emoji, str]):
+        url = await get_url(ctx, thing)
+        data = {
+            "Content": url,
+            "Type": "CaptionRequest"
+        }
+        async with self.bot.session.get("https://captionbot.azurewebsites.net/api/messages", headers={"Content-Type": "application/json; charset=utf-8"}, data=json.dumps(data)) as resp:
+            text = await resp.text()
+            embed = discord.Emebd(color=self.bot.color, title=text)
+            embed.set_url(url="attachment://caption.png")
+            async with self.bot.session.get(url) as resp:
+                bytes_ = BytesIO(await resp.read())
+            await ctx.send(embed=embed, file=discord.File(bytes_, "caption.png"))
     
     @commands.command()
     async def ship(self, ctx, user_1: typing.Union[discord.Member, discord.User], user_2: typing.Union[discord.Member, discord.User]):
