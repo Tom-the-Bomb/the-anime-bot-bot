@@ -212,7 +212,7 @@ class fun(commands.Cog):
             "Content": url,
             "Type": "CaptionRequest"
         }
-        async with self.bot.session.get("https://captionbot.azurewebsites.net/api/messages", headers={"Content-Type": "application/json; charset=utf-8"}, data=json.dumps(data)) as resp:
+        async with self.bot.session.post("https://captionbot.azurewebsites.net/api/messages", headers={"Content-Type": "application/json; charset=utf-8"}, data=json.dumps(data)) as resp:
             text = await resp.text()
             embed = discord.Embed(color=self.bot.color, title=text)
             embed.set_image(url="attachment://caption.png")
