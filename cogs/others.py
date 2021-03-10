@@ -41,7 +41,7 @@ class others(commands.Cog):
         async with bot.session.get("https://top.gg/api/bots/787927476177076234/votes", headers={"Authorization": os.getenv("topgg")}) as resp:
             js = await resp.json()
             js = js[:5]
-            voters = [f"**{i.get("username")}**" for i in js]
+            voters = [f"**{i.get('username')}**" for i in js]
             embed = discord.Embed(title="Top 5 Voters", description="\n".join(voters))
             embed.set_footer
             await ctx.send(embed=embed)
