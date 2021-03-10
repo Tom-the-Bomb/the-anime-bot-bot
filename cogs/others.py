@@ -42,7 +42,7 @@ class others(commands.Cog):
             js = await resp.json()
             js = js[:5]
             voters = [f"**{i.get('username')}**" for i in js]
-            embed = discord.Embed(title="Top 5 Voters", description="\n".join(voters))
+            embed = discord.Embed(color=self.bot.color, title="Top 5 Voters", description="\n".join(voters))
             embed.set_footer
             await ctx.send(embed=embed)
 
