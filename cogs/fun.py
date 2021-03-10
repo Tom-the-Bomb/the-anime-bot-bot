@@ -5,7 +5,6 @@ import random
 import re
 import textwrap
 import time
-from .pictures.pictures import get_url
 import typing
 from io import BytesIO
 
@@ -79,6 +78,69 @@ class fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.talk_channels = []
+    
+    async def get_url(self, ctx, thing):
+        if ctx.message.reference:
+            if ctx.message.reference.cached_message:
+                if ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "image":
+                    url = ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    return url
+                elif ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "rich":
+                    if ctx.message.reference.cached_message.embeds[0].image.proxy_url:
+                        url = ctx.message.reference.cached_message.embeds[0].image.proxy_url
+                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        return url
+                    elif ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url:
+                        url = ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url
+                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        return url
+                elif ctx.message.reference.cached_message.attachments and ctx.message.reference.cached_message.attachments[0].width and ctx.message.reference.cached_message.attachments[0].height:
+                    url = ctx.message.reference.cached_message.attachments[0].proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    return url
+            else:
+                message = await self.bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
+                if message.embeds and message.embeds[0].type == "image":
+                    url = message.embeds[0].thumbnail.proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    return url
+                elif message.embeds and message.embeds[0].type == "rich":
+                    if message.embeds[0].image.proxy_url:
+                        url = message.embeds[0].image.proxy_url
+                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        return url
+                    elif message.embeds[0].thumbnail.proxy_url:
+                        url = message.embeds[0].thumbnail.proxy_url
+                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        return url
+                elif message.attachments and message.attachments[0].width and message.attachments[0].height:
+                    url = message.attachments[0].proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    return url
+        if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
+            return ctx.message.attachments[0].proxy_url.replace("cdn.discordapp.com", "media.discordapp.net")
+
+
+        if thing is None:
+            url = str(ctx.author.avatar_url_as(format="png"))
+        elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
+            url = str(thing.url)
+        elif isinstance(thing, (discord.Member, discord.User)):
+            url = str(thing.avatar_url_as(format="png"))
+        else:
+            thing = str(thing).strip("<>")
+            if self.bot.url_regex.match(thing):
+                url = thing
+            else:
+                url = await emoji_to_url(thing)
+                if url == thing:
+                    raise commands.CommandError("Invalid url")
+        async with self.bot.session.get(url) as resp:
+            if resp.status != 200:
+                raise commands.CommandError("Invalid Picture")
+        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+        return url
 
     async def get_quote(self):
         async with self.bot.session.get("https://leksell.io/zen/api/quotes/random") as resp:
@@ -145,7 +207,7 @@ class fun(commands.Cog):
     async def caption(self, ctx, thing: typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]):
-        url = await get_url(ctx, thing)
+        url = await self.get_url(ctx, thing)
         data = {
             "Content": url,
             "Type": "CaptionRequest"
