@@ -37,6 +37,16 @@ class others(commands.Cog):
         self.thing = {}
 
     @commands.command()
+    async def votes(self, ctx):
+        async with bot.session.get("https://top.gg/api/bots/787927476177076234/votes", headers={"Authorization": os.getenv("topgg")}) as resp:
+            js = await resp.json()
+            js = js[:5]
+            voters = [f"**{i.get("username")}**" for i in js]
+            embed = discord.Embed(title="Top 5 Voters", description="\n".join(voters))
+            embed.set_footer
+            await ctx.send(embed=embed)
+
+    @commands.command()
     async def snipe(self, ctx):
         """
         no this is never happening, people delete message for a reason and you just snipe that just not right.
