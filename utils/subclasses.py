@@ -10,6 +10,7 @@ import aiozaneapi
 import alexflipnote
 import discord
 import eight_ball
+from discord.ext.commands.cooldown import MaxConcurrency
 import ipc
 import mystbin
 import psutil
@@ -149,6 +150,14 @@ description="""
 """,
 chunk_guilds_at_startup=False, 
 case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
+  def add_command(self, command):
+    super().add_command(command)
+    command.cooldown_after_parsing = True
+    if not getattr(command._buckets, "_cooldown", None):
+      command._buckets = commands.CooldownMapping.from_cooldown(1, 3, commands.BucketType.user)
+    if not getattr(command, "_max_concurrency", None):
+      command._max_concurrency.MaxConcurrency(1, per=commands.BucketType.user, wait=False)
+
   async def start_typing(self, ctx):
     await ctx.trigger_typing()
   def run(self, *args, **kwargs):
