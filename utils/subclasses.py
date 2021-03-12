@@ -156,7 +156,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     if not getattr(command._buckets, "_cooldown", None):
       command._buckets = commands.CooldownMapping.from_cooldown(1, 3, commands.BucketType.user)
     if command._max_concurrency is None:
-      command._max_concurrency.MaxConcurrency(1, per=commands.BucketType.user, wait=False)
+      command._max_concurrency = MaxConcurrency(1, per=commands.BucketType.user, wait=False)
 
   async def start_typing(self, ctx):
     await ctx.trigger_typing()
