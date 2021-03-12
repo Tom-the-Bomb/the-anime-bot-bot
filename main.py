@@ -42,7 +42,7 @@ async def wtf(ctx):
     await ctx.respond()
     await ctx.send("wtf wtf")
 
-
+os.environ["NO_COLOR"] = True
 os.environ["JISHAKU_NO_DM_TRACEBACK"] = "True"
 os.environ["JISHAKU_NO_UNDERSCORE"] = "True"
 
