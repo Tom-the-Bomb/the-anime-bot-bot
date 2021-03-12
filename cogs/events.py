@@ -590,7 +590,7 @@ class events(commands.Cog):
             await ctx.reply(embed=embed)
         else:
             embed = discord.Embed(color=0xFF0000,
-                                  description=f"```py\n{''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__, limit=2040))}```")
+                                  description=f"[Traceback]({await ctx.paste(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))})```py\n{error}```")
             await ctx.send(embed=embed)
             # # print(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
             # print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
