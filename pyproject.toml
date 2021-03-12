@@ -43,6 +43,8 @@ cchardet = "^2.1.7"
 aiodns = "^2.0.0"
 polaroid = "^0.3.1"
 Brotli = "^1.0.9"
+fake-useragent = "^0.1.11"
+"prettify.py" = {git = "https://github.com/ShineyDev/prettify.py.git"}
 
 [tool.poetry.dev-dependencies]
 

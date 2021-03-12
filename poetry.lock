@@ -363,6 +363,14 @@ dev = ["pytest", "coverage", "coveralls"]
 
 [[package]]
 category = "main"
+description = "Up to date simple useragent faker with real world database"
+name = "fake-useragent"
+optional = false
+python-versions = "*"
+version = "0.1.11"
+
+[[package]]
+category = "main"
 description = "A platform independent file lock."
 name = "filelock"
 optional = false
@@ -433,7 +441,7 @@ description = "File identification library for Python"
 name = "identify"
 optional = false
 python-versions = ">=3.6.1"
-version = "2.1.0"
+version = "2.1.1"
 
 [package.extras]
 license = ["editdistance"]
@@ -627,7 +635,7 @@ description = "Hyper Fast and safe image manipulation library for python. Powere
 name = "polaroid"
 optional = false
 python-versions = ">=3.6"
-version = "0.3.1"
+version = "0.3.2"
 
 [package.dependencies]
 Sphinx = ">=3.4.3,<4.0.0"
@@ -638,7 +646,7 @@ description = "A framework for managing and maintaining multi-language pre-commi
 name = "pre-commit"
 optional = false
 python-versions = ">=3.6.1"
-version = "2.10.1"
+version = "2.11.1"
 
 [package.dependencies]
 cfgv = ">=2.0.0"
@@ -648,6 +656,18 @@ pyyaml = ">=5.1"
 toml = "*"
 virtualenv = ">=20.0.8"
 
+[[package]]
+category = "main"
+description = ""
+name = "prettify.py"
+optional = false
+python-versions = "*"
+version = "0.0.0"
+
+[package.source]
+reference = "8e3440930e08ea309c124ec654eb70bf5ba9734c"
+type = "git"
+url = "https://github.com/ShineyDev/prettify.py.git"
 [[package]]
 category = "main"
 description = "Cross-platform lib for process and system monitoring in Python."
@@ -1036,7 +1056,7 @@ description = "A Wrapper for vacefron.nl/api written in Python."
 name = "vacefron.py"
 optional = false
 python-versions = ">=3.6"
-version = "1.6.1"
+version = "1.6.2"
 
 [package.dependencies]
 aiohttp = "*"
@@ -1103,7 +1123,7 @@ python-versions = "*"
 version = "2021.3.3"
 
 [metadata]
-content-hash = "180281fcbcbccab1bfb22eda951e8c7ef54234fe1fff67bf105f7759aeb14ea5"
+content-hash = "0eababee8e377ad0e346b15e83146934f454b5578f3560b889577fc110083f23"
 python-versions = "^3.8"
 
 [metadata.files]
@@ -1401,6 +1421,9 @@ emoji = [
     {file = "emoji-1.2.0-py3-none-any.whl", hash = "sha256:6b19b65da8d6f30551eead1705539cc0eadcd9e33a6ecbc421a29b87f96287eb"},
     {file = "emoji-1.2.0.tar.gz", hash = "sha256:496f432058567985838c13d67dde84ca081614a8286c0b9cdc7d63dfa89d51a3"},
 ]
+fake-useragent = [
+    {file = "fake-useragent-0.1.11.tar.gz", hash = "sha256:c104998b750eb097eefc28ae28e92d66397598d2cf41a31aa45d5559ef1adf35"},
+]
 filelock = [
     {file = "filelock-3.0.12-py3-none-any.whl", hash = "sha256:929b7d63ec5b7d6b71b0fa5ac14e030b3f70b75747cef1b10da9b879fef15836"},
     {file = "filelock-3.0.12.tar.gz", hash = "sha256:18d82244ee114f543149c66a6e0c14e9c4f8a1044b5cdaadd0f82159d6a6ff59"},
@@ -1466,8 +1489,8 @@ humanize = [
     {file = "humanize-3.2.0.tar.gz", hash = "sha256:ab69004895689951b79f2ae4fdd6b8127ff0c180aff107856d5d98119a33f026"},
 ]
 identify = [
-    {file = "identify-2.1.0-py2.py3-none-any.whl", hash = "sha256:2a5fdf2f5319cc357eda2550bea713a404392495961022cf2462624ce62f0f46"},
-    {file = "identify-2.1.0.tar.gz", hash = "sha256:2179e7359471ab55729f201b3fdf7dc2778e221f868410fedcb0987b791ba552"},
+    {file = "identify-2.1.1-py2.py3-none-any.whl", hash = "sha256:220169a38a0c977c8fef377dc808d6a3330641b5211ec7356c7bbe73cda487c7"},
+    {file = "identify-2.1.1.tar.gz", hash = "sha256:da3d757c94596c50865aae63db6ba4e2e5e3f666c3ea6a6da0cd09a8b2d34abc"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},
@@ -1748,42 +1771,42 @@ pluggy = [
     {file = "pluggy-0.13.1.tar.gz", hash = "sha256:15b2acde666561e1298d71b523007ed7364de07029219b604cf808bfa1c765b0"},
 ]
 polaroid = [
-    {file = "polaroid-0.3.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:3f30ae5e96c38487ed906f8b5a2be321ac2bd49f181b0c712b0aad22f0a0fc0d"},
-    {file = "polaroid-0.3.1-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:79c7bb70eeccfea6acdf2aee5f8d2e525adc65784f922a26bb60520d912bdc16"},
-    {file = "polaroid-0.3.1-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:1e62b63ee49b12038eec8e0990c0cb0b1dd59905a3aed987ad7367abc7187dee"},
-    {file = "polaroid-0.3.1-cp36-cp36m-manylinux2010_i686.whl", hash = "sha256:2097ba6f29a19c9b22178b610cec64f21cac5341b793d411264b15664ab1b497"},
-    {file = "polaroid-0.3.1-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:fc9668d20f5d353b2738551418df08926aa396ca2a15622e508a3947a89b7a65"},
-    {file = "polaroid-0.3.1-cp36-cp36m-manylinux2014_aarch64.whl", hash = "sha256:18ad8b7b705fbd509064445f1a3f22c3dc8c44bff793cebebc7b7bafec9bac2d"},
-    {file = "polaroid-0.3.1-cp36-cp36m-win_amd64.whl", hash = "sha256:0ecc438cd4461868eada58d0ec25ab9fc49a9d51e3768b579683b6c961026ad4"},
-    {file = "polaroid-0.3.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:86d92c327c3b76873e60ece30e935ad3bec84144af15373f745603728e2eae96"},
-    {file = "polaroid-0.3.1-cp37-cp37m-manylinux1_i686.whl", hash = "sha256:56f2a5a72bddbae2855e09a132f8370d88f85e9ad0a8d6ef5abd3841d933af7c"},
-    {file = "polaroid-0.3.1-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:702cddc506a89153f8d809b0993f4b70c7fc8692019ceba06f8cf457c88a9773"},
-    {file = "polaroid-0.3.1-cp37-cp37m-manylinux2010_i686.whl", hash = "sha256:d24e5c19ba910a133d805728ad2de9efe49416fe3a00c6b5e6f2dc5a4cdf12b9"},
-    {file = "polaroid-0.3.1-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:d2abfefdc7e588e37cc4783a95fb264097a38ed92faf2eb352e771a0bd7476ec"},
-    {file = "polaroid-0.3.1-cp37-cp37m-manylinux2014_aarch64.whl", hash = "sha256:4f98208e7f54631613804bf8a8b155fda929b0428a5fae94c6ad62a15947e52b"},
-    {file = "polaroid-0.3.1-cp37-cp37m-win_amd64.whl", hash = "sha256:f5bd1fa32dded835dfa26f6540087056c87ceec61fca6ae53cbea3c6be8f12d5"},
-    {file = "polaroid-0.3.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:8b123630a75e396daf8e0ee1f435cb3176c71fd1508b3242211e7ffd4127ed5a"},
-    {file = "polaroid-0.3.1-cp38-cp38-manylinux1_i686.whl", hash = "sha256:530fe8c40f7533391c070a3b0a5bd3b6eb294e1e171371d8a081ccf661a02b4b"},
-    {file = "polaroid-0.3.1-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:e7a994938680e1b9e75ea1b83a141e0f9b52faa0586d64185f06b28627a29e6c"},
-    {file = "polaroid-0.3.1-cp38-cp38-manylinux2010_i686.whl", hash = "sha256:04a03178b89707c4a505241688bb3f14e9d556452878a72fb5fda4d65df9d033"},
-    {file = "polaroid-0.3.1-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:3ce913031bfe391223423733cb9bf3430fe6bdaba300f11a23f07613422c6729"},
-    {file = "polaroid-0.3.1-cp38-cp38-manylinux2014_aarch64.whl", hash = "sha256:9cb469c87420a91c6f784358c99c804e904b5c05dbccc1606d5418c95287e895"},
-    {file = "polaroid-0.3.1-cp38-cp38-win_amd64.whl", hash = "sha256:aeb96668e2c55805270449477b60e967ffebb5a782bb566ccd7cee1f6440f081"},
-    {file = "polaroid-0.3.1-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:10f1a21d98ba36882adb0f6c4aa51c8a62496e8beca123cb0b2ae0d1fd01b497"},
-    {file = "polaroid-0.3.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:671430e381615437b3cdbdd4e30b2c64850262759d5aab7509c4b36e1e8780cd"},
-    {file = "polaroid-0.3.1-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:7044912944ef6b1de720f8b8016ae2468f0a6613e719d576f3c3ee74598d6bd0"},
-    {file = "polaroid-0.3.1-cp39-cp39-manylinux1_i686.whl", hash = "sha256:f2ee7119e54c056b366a0fd310f5773201ccafecd579d1bb9a3417594ac2545a"},
-    {file = "polaroid-0.3.1-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:2542afb0535df80b46a6f485cc9d29986a7a873f885a40eb1f7e589b77473dc3"},
-    {file = "polaroid-0.3.1-cp39-cp39-manylinux2010_i686.whl", hash = "sha256:9c93f8bacb8695b0d5387a5bf3878baa3a95527b9fb4ca5954f8428970e0529e"},
-    {file = "polaroid-0.3.1-cp39-cp39-manylinux2010_x86_64.whl", hash = "sha256:09192b2f21cf2e704dd195a030b2e21ecc3c4996b29ef741ca519e01bc74ea8c"},
-    {file = "polaroid-0.3.1-cp39-cp39-manylinux2014_aarch64.whl", hash = "sha256:9410ec9d4794bee79c8f2ae9af2ceedcc7032292ee7ea1ce37b429f3f426e54a"},
-    {file = "polaroid-0.3.1-cp39-cp39-win_amd64.whl", hash = "sha256:951ba74fc214892043408669e289e9752483841092240244a84fd376ab0db38c"},
-    {file = "polaroid-0.3.1.tar.gz", hash = "sha256:a1f11aa4f1a69176c79365e9567b7553002b629789d0c23f73748d1f8cf0deea"},
+    {file = "polaroid-0.3.2-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:e46931bfc6d16c85938dd093cf2031eb50b4af829491b993e21d39f4da4ee86d"},
+    {file = "polaroid-0.3.2-cp36-cp36m-manylinux1_i686.whl", hash = "sha256:b3c57e0f7a4b44b80c3d2a0763b24ca88823c150185633a749298e55f6b987fc"},
+    {file = "polaroid-0.3.2-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:02e48140fc2ca2f5520ab7a73dd756d08abd2d617a98b122d82b5ab1ac4f2238"},
+    {file = "polaroid-0.3.2-cp36-cp36m-manylinux2010_i686.whl", hash = "sha256:69bb978cee014dda411a809cb2831fbe585d05dfeee69ee6e03e7fb2001979e5"},
+    {file = "polaroid-0.3.2-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:c32113109dd9f4210850653d9ef7d6c4ea26be4e3df5d56af9716fa470757ad0"},
+    {file = "polaroid-0.3.2-cp36-cp36m-manylinux2014_aarch64.whl", hash = "sha256:d07f7ed014d2d4d2e63dec378bf2281442e7db3bd71853b3f67cb1d96f25284e"},
+    {file = "polaroid-0.3.2-cp36-cp36m-win_amd64.whl", hash = "sha256:fad94b89b367fb897ca914498cb134bfb0b6bea242c10770e09edb8181b5031a"},
+    {file = "polaroid-0.3.2-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:5cf7f2594fd69aec752556c6bb25cdddef4172815320167a96f1f8882007669f"},
+    {file = "polaroid-0.3.2-cp37-cp37m-manylinux1_i686.whl", hash = "sha256:f501dba8ab3e35b53b3ce82ca55c7f41fb4fd9dbbe5d0b990be6ea51382eab58"},
+    {file = "polaroid-0.3.2-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:eb07547995585b90a0af26974e0b60675d2d34469b24eb7e5d66a5c15fd2765d"},
+    {file = "polaroid-0.3.2-cp37-cp37m-manylinux2010_i686.whl", hash = "sha256:0b669d760669e350bca19c3ed352b3e53af83dffadda887bce687452c941ba7e"},
+    {file = "polaroid-0.3.2-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:1ec13e5f41f00934041080553b23d00ae23aa2dd92d1d7abc8495b0799549b85"},
+    {file = "polaroid-0.3.2-cp37-cp37m-manylinux2014_aarch64.whl", hash = "sha256:842265a502721ed82f2b6a8ad83dca6cd88f66d3f64c113b017f7fbcc46b54f4"},
+    {file = "polaroid-0.3.2-cp37-cp37m-win_amd64.whl", hash = "sha256:aea8e110f17c77f30e3726af9310eaea4c1935e43799673bc122a5d371dd4ca5"},
+    {file = "polaroid-0.3.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:7aa6162fc100269f7e9beb47ffca13740af7140d6b59ee26ff3dbe2254bda2aa"},
+    {file = "polaroid-0.3.2-cp38-cp38-manylinux1_i686.whl", hash = "sha256:7b905f73c90c09eca4c35e77084ccdc671bf648c50612dca4132ea60ff3fbbea"},
+    {file = "polaroid-0.3.2-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:09bba6bee87454dd58a4996e66e0811d77b60c2b69425f20fe8097f6bca8f9f5"},
+    {file = "polaroid-0.3.2-cp38-cp38-manylinux2010_i686.whl", hash = "sha256:f9918c7dae764564e0706926ed630e6e30d0d7d3ebc49fc7ec7f280755637276"},
+    {file = "polaroid-0.3.2-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:4407d6cf81c9f8020dc76bc66c5d199f92ffbd96d4f5f10141869a7e8d4db29d"},
+    {file = "polaroid-0.3.2-cp38-cp38-manylinux2014_aarch64.whl", hash = "sha256:67cc4cc04be67e57b045942d0d6bcebc18fa750e51af3a1b3b6e8cfdfaed5111"},
+    {file = "polaroid-0.3.2-cp38-cp38-win_amd64.whl", hash = "sha256:e8678599b55608319e89e8fb6c695dd29873f44cc66863dc29ddc4dde901f198"},
+    {file = "polaroid-0.3.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:f216c6328d88e19cd4430e8a63b4d48bb37a819c822c41625a95a904961bb366"},
+    {file = "polaroid-0.3.2-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:a5f02bc3439bf6da94ccffcd5b0ed1e40fe6d8fcf676bbd7ba65a47fb0f66416"},
+    {file = "polaroid-0.3.2-cp39-cp39-manylinux1_i686.whl", hash = "sha256:77511a9e4306571b88b42bd256088a508c9c5acc1e91422820594246d61bb49b"},
+    {file = "polaroid-0.3.2-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:952ba111910292a1615858796b49f9f14e46baf35480492d592192af9a04501a"},
+    {file = "polaroid-0.3.2-cp39-cp39-manylinux2010_i686.whl", hash = "sha256:6c76fe783174aacb985713ffdf719a1be90ddcaea0ca10e0dac2f74386870566"},
+    {file = "polaroid-0.3.2-cp39-cp39-manylinux2010_x86_64.whl", hash = "sha256:c0d23d471fb2f65c5769f796e3fa7b0d2838de2f6992b92eac1f295208d046ad"},
+    {file = "polaroid-0.3.2-cp39-cp39-manylinux2014_aarch64.whl", hash = "sha256:03aad474a52cf7525ef991d0b5445c8e516eaef6747d2ba06cf94d31d89a0e7a"},
+    {file = "polaroid-0.3.2-cp39-cp39-win_amd64.whl", hash = "sha256:3c1f0202491bd6d543bfbc2b11e58d28ebaad75fa164c3f1db8476bdf5a8db29"},
+    {file = "polaroid-0.3.2.tar.gz", hash = "sha256:a51cff534b3889910044f47bf8727a4cd02d29669b1d353df8b07b87df457f55"},
 ]
 pre-commit = [
-    {file = "pre_commit-2.10.1-py2.py3-none-any.whl", hash = "sha256:16212d1fde2bed88159287da88ff03796863854b04dc9f838a55979325a3d20e"},
-    {file = "pre_commit-2.10.1.tar.gz", hash = "sha256:399baf78f13f4de82a29b649afd74bef2c4e28eb4f021661fc7f29246e8c7a3a"},
+    {file = "pre_commit-2.11.1-py2.py3-none-any.whl", hash = "sha256:94c82f1bf5899d56edb1d926732f4e75a7df29a0c8c092559c77420c9d62428b"},
+    {file = "pre_commit-2.11.1.tar.gz", hash = "sha256:de55c5c72ce80d79106e48beb1b54104d16495ce7f95b0c7b13d4784193a00af"},
 ]
+"prettify.py" = []
 psutil = [
     {file = "psutil-5.8.0-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:0066a82f7b1b37d334e68697faba68e5ad5e858279fd6351c8ca6024e8d6ba64"},
     {file = "psutil-5.8.0-cp27-cp27m-manylinux2010_i686.whl", hash = "sha256:0ae6f386d8d297177fd288be6e8d1afc05966878704dad9847719650e44fc49c"},
@@ -1904,18 +1927,26 @@ pyyaml = [
     {file = "PyYAML-5.4.1-cp27-cp27mu-manylinux1_x86_64.whl", hash = "sha256:bb4191dfc9306777bc594117aee052446b3fa88737cd13b7188d0e7aa8162185"},
     {file = "PyYAML-5.4.1-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:6c78645d400265a062508ae399b60b8c167bf003db364ecb26dcab2bda048253"},
     {file = "PyYAML-5.4.1-cp36-cp36m-manylinux1_x86_64.whl", hash = "sha256:4e0583d24c881e14342eaf4ec5fbc97f934b999a6828693a99157fde912540cc"},
+    {file = "PyYAML-5.4.1-cp36-cp36m-manylinux2014_aarch64.whl", hash = "sha256:72a01f726a9c7851ca9bfad6fd09ca4e090a023c00945ea05ba1638c09dc3347"},
+    {file = "PyYAML-5.4.1-cp36-cp36m-manylinux2014_s390x.whl", hash = "sha256:895f61ef02e8fed38159bb70f7e100e00f471eae2bc838cd0f4ebb21e28f8541"},
     {file = "PyYAML-5.4.1-cp36-cp36m-win32.whl", hash = "sha256:3bd0e463264cf257d1ffd2e40223b197271046d09dadf73a0fe82b9c1fc385a5"},
     {file = "PyYAML-5.4.1-cp36-cp36m-win_amd64.whl", hash = "sha256:e4fac90784481d221a8e4b1162afa7c47ed953be40d31ab4629ae917510051df"},
     {file = "PyYAML-5.4.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:5accb17103e43963b80e6f837831f38d314a0495500067cb25afab2e8d7a4018"},
     {file = "PyYAML-5.4.1-cp37-cp37m-manylinux1_x86_64.whl", hash = "sha256:e1d4970ea66be07ae37a3c2e48b5ec63f7ba6804bdddfdbd3cfd954d25a82e63"},
+    {file = "PyYAML-5.4.1-cp37-cp37m-manylinux2014_aarch64.whl", hash = "sha256:cb333c16912324fd5f769fff6bc5de372e9e7a202247b48870bc251ed40239aa"},
+    {file = "PyYAML-5.4.1-cp37-cp37m-manylinux2014_s390x.whl", hash = "sha256:fe69978f3f768926cfa37b867e3843918e012cf83f680806599ddce33c2c68b0"},
     {file = "PyYAML-5.4.1-cp37-cp37m-win32.whl", hash = "sha256:dd5de0646207f053eb0d6c74ae45ba98c3395a571a2891858e87df7c9b9bd51b"},
     {file = "PyYAML-5.4.1-cp37-cp37m-win_amd64.whl", hash = "sha256:08682f6b72c722394747bddaf0aa62277e02557c0fd1c42cb853016a38f8dedf"},
     {file = "PyYAML-5.4.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:d2d9808ea7b4af864f35ea216be506ecec180628aced0704e34aca0b040ffe46"},
     {file = "PyYAML-5.4.1-cp38-cp38-manylinux1_x86_64.whl", hash = "sha256:8c1be557ee92a20f184922c7b6424e8ab6691788e6d86137c5d93c1a6ec1b8fb"},
+    {file = "PyYAML-5.4.1-cp38-cp38-manylinux2014_aarch64.whl", hash = "sha256:fd7f6999a8070df521b6384004ef42833b9bd62cfee11a09bda1079b4b704247"},
+    {file = "PyYAML-5.4.1-cp38-cp38-manylinux2014_s390x.whl", hash = "sha256:bfb51918d4ff3d77c1c856a9699f8492c612cde32fd3bcd344af9be34999bfdc"},
     {file = "PyYAML-5.4.1-cp38-cp38-win32.whl", hash = "sha256:fa5ae20527d8e831e8230cbffd9f8fe952815b2b7dae6ffec25318803a7528fc"},
     {file = "PyYAML-5.4.1-cp38-cp38-win_amd64.whl", hash = "sha256:0f5f5786c0e09baddcd8b4b45f20a7b5d61a7e7e99846e3c799b05c7c53fa696"},
     {file = "PyYAML-5.4.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:294db365efa064d00b8d1ef65d8ea2c3426ac366c0c4368d930bf1c5fb497f77"},
     {file = "PyYAML-5.4.1-cp39-cp39-manylinux1_x86_64.whl", hash = "sha256:74c1485f7707cf707a7aef42ef6322b8f97921bd89be2ab6317fd782c2d53183"},
+    {file = "PyYAML-5.4.1-cp39-cp39-manylinux2014_aarch64.whl", hash = "sha256:d483ad4e639292c90170eb6f7783ad19490e7a8defb3e46f97dfe4bacae89122"},
+    {file = "PyYAML-5.4.1-cp39-cp39-manylinux2014_s390x.whl", hash = "sha256:fdc842473cd33f45ff6bce46aea678a54e3d21f1b61a7750ce3c498eedfe25d6"},
     {file = "PyYAML-5.4.1-cp39-cp39-win32.whl", hash = "sha256:49d4cdd9065b9b6e206d0595fee27a96b5dd22618e7520c33204a4a3239d5b10"},
     {file = "PyYAML-5.4.1-cp39-cp39-win_amd64.whl", hash = "sha256:c20cfa2d49991c8b4147af39859b167664f2ad4561704ee74c1de03318e898db"},
     {file = "PyYAML-5.4.1.tar.gz", hash = "sha256:607774cbba28732bfa802b54baa7484215f530991055bb562efbed5b2f20a45e"},
@@ -2009,8 +2040,8 @@ uvloop = [
     {file = "uvloop-0.15.2.tar.gz", hash = "sha256:2bb0624a8a70834e54dde8feed62ed63b50bad7a1265c40d6403a2ac447bce01"},
 ]
 "vacefron.py" = [
-    {file = "vacefron.py-1.6.1-py3-none-any.whl", hash = "sha256:eeba7acdd8ebfbdf423eda37f2aeaab52a3bb554a5544d59605c0fc6bbad2c10"},
-    {file = "vacefron.py-1.6.1.tar.gz", hash = "sha256:f8fdee5b270b6bed4457d5265c621063b39b0cd651dcce96f6cd4119a64e2585"},
+    {file = "vacefron.py-1.6.2-py3-none-any.whl", hash = "sha256:fe4eefc76c9177c4e452657b2eaffe585e7c46bf45a1c30be2fc1367eabfd834"},
+    {file = "vacefron.py-1.6.2.tar.gz", hash = "sha256:ff2c0468a2018cddfa316fd04d9fc23a1e86e8e0926b0d8deddaaba48c1b2fe6"},
 ]
 virtualenv = [
     {file = "virtualenv-20.4.2-py2.py3-none-any.whl", hash = "sha256:2be72df684b74df0ea47679a7df93fd0e04e72520022c57b479d8f881485dbe3"},
