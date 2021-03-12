@@ -1,4 +1,5 @@
 import aiohttp
+import prettify_exceptions
 import discord
 import os
 webhook_url = os.getenv("webhook")
