@@ -573,8 +573,8 @@ class utility(commands.Cog):
             if canonical:
                 return await ctx.send(f"`{canonical['href']}`")
             if refresh:
-                return await ctx.send(f"`{refresh['content'].split('; url=')[1]}`")
-            await ctx.send(f"`{resp.url}")
+                return await ctx.send(f"`{refresh.get('content').lower().split('; url=')[1]}`")
+            await ctx.send(f"`{resp.url}`")
            
 
     @commands.command()
