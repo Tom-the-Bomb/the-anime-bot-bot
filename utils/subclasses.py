@@ -10,7 +10,7 @@ import aiozaneapi
 import alexflipnote
 import discord
 import eight_ball
-from discord.ext.commands.cooldown import MaxConcurrency
+from discord.ext.commands.cooldowns import MaxConcurrency
 import ipc
 import mystbin
 import psutil
