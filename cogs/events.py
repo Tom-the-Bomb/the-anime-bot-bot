@@ -1,4 +1,5 @@
 from utils.asyncstuff import asyncexe
+import prettify_exceptions
 from menus import menus
 import datetime
 import aiofile
@@ -589,7 +590,7 @@ class events(commands.Cog):
             await ctx.reply(embed=embed)
         else:
             embed = discord.Embed(color=0xFF0000,
-                                  description=f"```py\n{error}```")
+                                  description=f"```py\n{.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__))}```")
             await ctx.send(embed=embed)
             # # print(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
             # print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
