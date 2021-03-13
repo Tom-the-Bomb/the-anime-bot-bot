@@ -444,9 +444,9 @@ class utility(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_emojis=True)
     async def zipemoji(self, ctx):
-    """
-    Zip all emojis in this server it could take a while since we try to compress it as small as we can
-    """
+        """
+        Zip all emojis in this server it could take a while since we try to compress it as small as we can
+        """
         emojis = []
         for i in ctx.guild.emojis:
             e = await i.url_as().read()
