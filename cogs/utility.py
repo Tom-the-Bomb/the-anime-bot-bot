@@ -1,4 +1,5 @@
 import asyncio
+import config
 import os
 import re
 import zipfile
@@ -19,9 +20,9 @@ from bs4 import BeautifulSoup
 from discord.ext import commands
 from translate import Translator
 
-google_api_1 = os.getenv("google_api_1")
-google_api_2 = os.getenv("google_api_2")
-google_api_3 = os.getenv("google_api_3")
+google_api_1 = config.google_api_1
+google_api_2 = config.google_api_2
+google_api_3 = config.google_api_3
 import ast
 import base64
 import decimal
@@ -464,7 +465,7 @@ class utility(commands.Cog):
 
     @commands.command()
     async def ip(self, ctx, ip):
-        async with self.bot.session.get("https://api.ksoft.si/kumo/geoip", headers = {"Authorization": os.getenv("ksoft")}, params = {"ip": ip}) as resp:
+        async with self.bot.session.get("https://api.ksoft.si/kumo/geoip", headers = {"Authorization": config.ksoft}, params = {"ip": ip}) as resp:
             res = await resp.json()
             if res.get("message"):
                 return await ctx.send(res.get("message"))
@@ -904,7 +905,7 @@ class utility(commands.Cog):
         """
     Convert from one currency to another. Currency code are listed here https://en.wikipedia.org/wiki/ISO_4217#Active_codes
     """
-        async with self.bot.session.get("https://api.ksoft.si/kumo/currency", headers = {"Authorization": os.getenv("ksoft")}, params = {"from": from_, "to": to, "value": amount}) as resp:
+        async with self.bot.session.get("https://api.ksoft.si/kumo/currency", headers = {"Authorization": config.ksoft}, params = {"from": from_, "to": to, "value": amount}) as resp:
             res = await resp.json()
             if res.get("message"):
                 return await ctx.send(res.get("message"))
