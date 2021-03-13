@@ -4,7 +4,6 @@ from io import BytesIO
 import aiohttp
 import discord
 from discord.ext import commands
-from replit import db
 
 
 class animes(commands.Cog):
