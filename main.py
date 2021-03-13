@@ -9,7 +9,6 @@ import traceback
 import warnings
 
 import aioredis
-import uvloop
 
 import discord
 from discord.ext import commands
@@ -24,7 +23,6 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 
-asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
 TOKEN = os.getenv("TOKEN")
