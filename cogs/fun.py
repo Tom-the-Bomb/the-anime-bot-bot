@@ -1,4 +1,5 @@
 import asyncio
+import config
 import json
 import os
 import random
@@ -22,9 +23,9 @@ from utils.asyncstuff import asyncexe
 from utils.embed import embedbase
 from utils.paginator import AnimePages
 
-talk_token = os.getenv("talk_token")
-rapid_api_key = os.getenv("rapid_api_key")
-tenor_API_key = os.getenv("tenor_API_key")
+talk_token = config.talk_token
+rapid_api_key = config.rapid_api_key
+tenor_API_key = config.tenor_API_key
 
 
 class UrbanDictionaryPageSource(menus.ListPageSource):
@@ -750,7 +751,7 @@ class fun(commands.Cog):
     async def decode(self, ctx, *, text):
         await ctx.trigger_typing()
         text1 = text
-        key = os.getenv("key")
+        key = config.key
         f = Fernet(key)
         try:
             if text1.startswith("https://mystb.in/"):
@@ -765,7 +766,7 @@ class fun(commands.Cog):
     @commands.command()
     async def encode(self, ctx, *, text: str):
         await ctx.trigger_typing()
-        key = os.getenv("key")
+        key = config.key
         f = Fernet(key)
         newtext = bytes(text, "utf-8")
         new_token = f.encrypt(newtext)
