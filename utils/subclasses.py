@@ -162,7 +162,6 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     await ctx.trigger_typing()
   def run(self, *args, **kwargs):
     # self.ipc.start()
-    subprocess.check_output("pip install speedtest-cli", shell=True)
     self.url_regex = re.compile(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", re.IGNORECASE)
     self.before_invoke(self.start_typing)
     self.utils = utils
