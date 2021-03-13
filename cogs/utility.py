@@ -433,7 +433,7 @@ class utility(commands.Cog):
     @asyncexe()
     def zip_emojis(emojis):
         file_ = BytesIO()
-        with zipfile.ZipFile(file_, mode="w", compression=zipfile.ZIP_DEFLATED) as zipfile_:
+        with zipfile.ZipFile(file_, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zipfile_:
             for n,v in emojis:
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
@@ -443,6 +443,9 @@ class utility(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(manage_emojis=True)
+    """
+    Zip all emojis in this server it could take a while since we try to compress it as small as we can
+    """
     async def zipemoji(self, ctx):
         emojis = []
         for i in ctx.guild.emojis:
