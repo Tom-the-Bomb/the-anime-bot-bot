@@ -1,5 +1,6 @@
 import asyncio
 import difflib
+import config
 import functools
 import logging
 import os
@@ -25,7 +26,7 @@ logger.addHandler(handler)
 
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
-TOKEN = os.getenv("TOKEN")
+TOKEN = config.TOKEN
 
 
 bot = AnimeBot()
