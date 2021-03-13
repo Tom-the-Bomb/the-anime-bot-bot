@@ -1,4 +1,5 @@
 import itertools
+import config
 import os
 import subprocess
 import sys
@@ -21,11 +22,11 @@ from discord_slash import SlashCommand
 from utils.asyncstuff import asyncexe
 from utils.utils import utils
 
-alex_ = os.getenv("alex_")
-ipc_key=os.getenv("ipc_key")
-zane_api = os.getenv("zane_api")
-TOKEN_ACCESS = os.getenv("TOKEN_ACCESS")
-api_token = os.getenv("api_token")
+alex_ = config.alex_
+ipc_key = config.ipc_key
+zane_api = config.zane_api
+TOKEN_ACCESS = config.TOKEN_ACCESS
+api_token = config.api_token
 import re
 
 from discord.ext import commands
