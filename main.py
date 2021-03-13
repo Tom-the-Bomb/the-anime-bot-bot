@@ -27,8 +27,6 @@ logger.addHandler(handler)
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
-os.system("python3 webserver.py &")
-os.system("python3 hmm.py &")
 TOKEN = os.getenv("TOKEN")
 
 
