@@ -1,8 +1,9 @@
 import aiohttp
+import config
 import prettify_exceptions
 import discord
 import os
-webhook_url = os.getenv("webhook")
+webhook_url = config.webhook
 from discord import AsyncWebhookAdapter, Webhook
 from discord.ext import commands
 
