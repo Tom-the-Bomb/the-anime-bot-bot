@@ -431,9 +431,9 @@ class utility(commands.Cog):
 
     @staticmethod
     @asyncexe()
-    def zip_emojis(emojis):
+    def zip_emojis(emojis, method):
         file_ = BytesIO()
-        with zipfile.ZipFile(file_, mode="w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zipfile_:
+        with zipfile.ZipFile(file_, mode="w", compression=method, compresslevel=9) as zipfile_:
             for n,v in emojis:
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
@@ -443,16 +443,25 @@ class utility(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(manage_emojis=True)
-    async def zipemoji(self, ctx):
+    async def zipemoji(self, ctx, compression_method: lambda x: str(x).upper()="DEFLATED"):
         """
         Zip all emojis in this server it could take a while since we try to compress it as small as we can
+        if you have 7zip installed on your computer choose LZMA compression method is way faster and the file will be way smaller
+        we also support BZIP2 if LZMA don't work for you
+        Example:
+        ovo zipemoji
+        ovo zipemoji lzma
+        ovo zipemoji bzip2
         """
+        method = getattr(zipfile, f"ZIP_{compression_method}")
+        if not method:
+            return await ctx.send("Invalid compression method")
         emojis = []
         for i in ctx.guild.emojis:
             e = await i.url_as().read()
             e = (f"{i.name}.png" if not i.animated else f"{i.name}.gif", BytesIO(e))
             emojis.append(e)
-        await ctx.send(file=await self.zip_emojis(emojis))
+        await ctx.send(file=await self.zip_emojis(emojis, method))
 
     @commands.command()
     async def ip(self, ctx, ip):
