@@ -11,7 +11,6 @@ from urllib.parse import urlparse
 
 import bs4
 import cse
-import cv2
 import discord
 import flags
 import pyqrcode
