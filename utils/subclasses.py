@@ -181,7 +181,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     await ctx.trigger_typing()
   def run(self, *args, **kwargs):
     # self.ipc.start()
-    self.default_prefix = ['OVO ', 'OVO ', 'OVo ', 'OVo ', 'OvO ', 'OvO ', 'Ovo ', 'Ovo ', 'oVO ', 'oVO ', 'oVo ', 'oVo ', 'ovO ', 'ovO ', 'ovo ', 'ovo ']
+    self.default_prefix = ['ovo ']
     self.prefixes = {}
     db = self.loop.run_until_complete(asyncpg.create_pool('postgres://postgres1:postgres@localhost:5432/cryptex'))
     self.db = db
