@@ -54,19 +54,35 @@ class owners(commands.Cog):
     # @commands.Cog.listener()
     # async def on_ready(self):
     #   task = asyncio.create_task(self.reactionreload())
+    
+    async def run_process(self, command):
+        try:
+            process = await asyncio.create_subprocess_shell(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            result = await process.communicate()
+        except NotImplementedError:
+            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            result = await self.bot.loop.run_in_executor(None, process.communicate)
+
+        return [output.decode() for output in result]
+    
+    @commands.command(aliases=["r", "pull", "sync"])
+    @commands.is_owner()
+    async def reload(self, ctx):
+        embed=discord.Embed(title="Syncing...", description="Fetching new files from GitHub.", color=0x36393F)
+        msg = await ctx.send(embed=embed)
+        stdout = await self.run_process('cd /home/cryptex/the-anime-bot-bot && git pull')
+        embed=discord.Embed(title="Synced...", description=stdout[0], color=0x36393F)
+        cogs = [x.stem for x in Path('cogs').glob('*.py')]
+        for extension in cogs:
+            try:
+                self.bot.reload_extension(f'cogs.{extension}')
+            except:
+                pass
+        await msg.edit(embed=embed)
 
     @classmethod
     def check(self, payload):
         return payload.user_id == 590323594744168494 and payload.emoji.name == "\{NBLACK UNIVERSAL RECYCLING SYMBOL}"
-    
-    @asyncexe()
-    def pull(self):
-        return subprocess.check_output("git pull", shell=True)
-    
-    @commands.command()
-    @commands.is_owner()
-    async def pull(self, ctx):
-        return await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"```\n{await self.pull()}\n```")
 
     @tasks.loop(minutes=1)
     async def reactionreload(self):
@@ -262,41 +278,6 @@ class owners(commands.Cog):
 
             await interface.add_line(
                 f"\n[status] Return code {reader.close_code}")
-
-    @commands.command()
-    @commands.is_owner()
-    async def reload(self, ctx, text_):
-        text_ = text_.lower()
-        await ctx.message.add_reaction("<:greenTick:596576670815879169>")
-        embed = discord.Embed(color=0x00ff6a,
-                              description=f"<a:loading:747680523459231834>")
-        message = await ctx.reply(embed=embed)
-        self.list = []
-        if text_ == "all":
-            for file in os.listdir("./cogs"):
-                if file.endswith(".py"):
-                    try:
-                        self.bot.reload_extension(f"cogs.{file[:-3]}")
-                        self.list.append(file[:-3])
-                    except Exception as e:
-                        embed = discord.Embed(
-                            color=0xFF0000,
-                            description=f"Error while reloading cogs \n {e}")
-                        return await message.edit(embed=embed)
-            text = "\n <:greenTick:596576670815879169>".join(self.list)
-            embed = discord.Embed(
-                color=0x00ff6a,
-                description=f"Reloaded All Cogs \n <:greenTick:596576670815879169> {text}")
-            await message.edit(embed=embed)
-        else:
-            for file in os.listdir("./cogs"):
-                if file.startswith(f"{text_}.py"):
-                    self.bot.reload_extension(f"cogs.{file[:-3]}")
-                    embed = discord.Embed(
-                        color=0x00ff6a,
-                        description=f" <:greenTick:596576670815879169> Reloaded {file[:-3]}"
-                    )
-                    await message.edit(embed=embed)
 
     @commands.command()
     @commands.is_owner()
