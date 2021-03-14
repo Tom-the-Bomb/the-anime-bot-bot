@@ -54,6 +54,10 @@ class owners(commands.Cog):
     # @commands.Cog.listener()
     # async def on_ready(self):
     #   task = asyncio.create_task(self.reactionreload())
+
+    @classmethod
+    def check(self, payload):
+        return payload.user_id == 590323594744168494 and payload.emoji.name == "\{NBLACK UNIVERSAL RECYCLING SYMBOL}"
     
     @asyncexe()
     def pull(self):
@@ -63,10 +67,6 @@ class owners(commands.Cog):
     @commands.is_owner()
     async def pull(self, ctx):
         return await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"```\n{await self.pull)}\n```")
-
-    @classmethod
-    def check(self, payload):
-        return payload.user_id == 590323594744168494 and payload.emoji.name == "\{NBLACK UNIVERSAL RECYCLING SYMBOL}"
 
     @tasks.loop(minutes=1)
     async def reactionreload(self):
