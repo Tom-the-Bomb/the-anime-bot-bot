@@ -298,12 +298,12 @@ class others(commands.Cog):
             Example:
             ovo prefix prefix1 prefix2 prefix3
             """
-            old_prefixes = await self.bot.db.fetchrow("SELECT guild_id, prefix FROM prefix WHERE guild_id=$1", ctx.guild.id)
+            old_prefixes = await self.bot.db.fetchrow("SELECT * FROM prefix WHERE guild_id=$1", ctx.guild.id)
             old_prefixes = old_prefixes["prefix"]
             new_prefixes = old_prefixes
             for i in prefixforbot:
                 new_prefixes.append(i)
-            await self.bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE prefix SET prefix = $2 WHERE guild_id = $1", ctx.guild.id, new_prefixes)
+            await self.bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET prefix = $2 WHERE guild_id = $1", ctx.guild.id, new_prefixes)
             embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Succefully appended new prefix New prefixes are: {', '.join(new_prefixes)}")
             return await ctx.send(embed=embed)
     @prefix.command(name="override")
@@ -315,7 +315,7 @@ class others(commands.Cog):
         Example:
         ovo prefix override prefix1 prefix2 prefix3
         """
-        await self.bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE prefix SET prefix = $2 WHERE guild_id = $1", ctx.guild.id, prefixforbot)
+        await self.bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET prefix = $2 WHERE guild_id = $1", ctx.guild.id, prefixforbot)
         embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Succefully override prefix New prefixes are: {', '.join(prefixforbot)}")
         return await ctx.send(embed=embed)
     
