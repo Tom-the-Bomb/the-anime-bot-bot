@@ -292,19 +292,20 @@ class others(commands.Cog):
     @commands.command()
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
-    async def prefix(self, ctx, prefixforbot: str):
-        await ctx.trigger_typing()
-        with open("prefixes.json", "r") as f:
-            prefixes = json.load(f)
-        prefixes[str(ctx.guild.id)] = prefixforbot
-        with open("prefixes.json", "w") as f:
-            json.dump(prefixes, f, indent=4)
-        embed = await embedbase.embed(self, ctx)
-        embed.set_author(name=f"prefix changed to {prefixforbot}")
-        embed.set_footer(
-            text=f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
-            icon_url=ctx.author.avatar_url)
-        await ctx.reply(embed=embed)
+    async def prefix(self, ctx, prefixforbot: commands.Greedy[str], override:bool=False):
+        if override:
+            await self.bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE prefix SET prefix = $2 WHERE guild_id = $1", ctx.guild.id, prefixforbot)
+            embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Succefully override prefix New prefixes are: {', '.join(prefixforbot)}")
+            return await ctx.send(embed=embed)
+        else:
+            old_prefixes = await bot.db.fetchrow("SELECT guild_id, prefix FROM prefix WHERE guild_id=$1", ctx.guild.id)
+            old_prefixes = old_prefixes[prefix]
+            new_prefixes = old_prefixes
+            for i in prefixforbot:
+                new_prefixes.append(i)
+            await self.bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE prefix SET prefix = $2 WHERE guild_id = $1", ctx.guild.id, new_prefixes)
+            embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Succefully appended new prefix New prefixes are: {', '.join(new_prefixes)}")
+            return await ctx.send(embed=embed)
 
     @commands.command()
     @commands.cooldown(1, 60, commands.BucketType.user)
