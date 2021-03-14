@@ -2,13 +2,13 @@ import asyncio
 import io
 import os
 import random
+import asyncpg
 import subprocess
 import textwrap
 import traceback
 import zipfile
 from contextlib import redirect_stdout
 from io import BytesIO
-from utils.subclasses import self.db
 
 import aiohttp
 import discord
@@ -40,6 +40,7 @@ class MyMenu(menus.Menu, timeout=9223372036854775807):
 class owners(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        bot.loop.create_task(self.async_init())
 
     def cleanup_code(self, content):
         """Automatically removes code blocks from the code."""
@@ -50,6 +51,10 @@ class owners(commands.Cog):
         # remove `foo`
         return content.strip('` \n')
 
+    async def async_init(self):
+        self.db = await asyncpg.create_pool('postgres://postgres1:postgres@localhost:5432/cryptex')
+        print("logged in!")    
+    
     # self.reactionreload.start()
 
     # @commands.Cog.listener()
@@ -386,7 +391,7 @@ class owners(commands.Cog):
         # this cog as a base for their other cog, and since this one is kinda
         # odd and unnecessary for most people, I will make it easy to remove
         # for those people.
-        from utils.format import TabularData, plural
+        from utils.formats import TabularData, plural
         import time
 
         query = self.cleanup_code(query)
@@ -394,9 +399,9 @@ class owners(commands.Cog):
         is_multistatement = query.count(';') > 1
         if is_multistatement:
             # fetch does not support multiple statements
-            strategy = bot.db.execute
+            strategy = self.db.execute
         else:
-            strategy = bot.db.fetch
+            strategy = self.db.fetch
 
         try:
             start = time.perf_counter()
