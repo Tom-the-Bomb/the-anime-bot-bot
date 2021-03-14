@@ -145,6 +145,15 @@ class owners(commands.Cog):
     # @commands.is_owner()
     # async def takepic(self, ctx, *, website):
     #   await ctx.send(file=await self.takepic_(website))
+    
+    @asyncexe()
+    def pull(self):
+        return subprocess.check_output("git pull", shell=True)
+    
+    @commands.command()
+    @commands.is_owner()
+    async def pull(self, ctx):
+        return await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"```py\n{await self.pull()}\n```")
     @staticmethod
     @asyncexe()
     def zip_emojis(emojis):
