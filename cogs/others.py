@@ -303,7 +303,7 @@ class others(commands.Cog):
             new_prefixes = old_prefixes
             for i in prefixforbot:
                 new_prefixes.append(i)
-            await self.bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET prefix = $2 WHERE guild_id = $1", ctx.guild.id, new_prefixes)
+            await self.bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET prefix = $2 WHERE prefix.guild_id = $1", ctx.guild.id, new_prefixes)
             embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Succefully appended new prefix New prefixes are: {', '.join(new_prefixes)}")
             return await ctx.send(embed=embed)
     @prefix.command(name="override")
