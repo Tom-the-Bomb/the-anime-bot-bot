@@ -59,7 +59,7 @@ class owners(commands.Cog):
     def pull_(self):
         return subprocess.check_output("git pull", shell=True).decode('utf-8')
     
-    @commands.command()
+    @commands.command(aliases=['sync'])
     @commands.is_owner()
     async def pull(self, ctx):
         return await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"```\n{await self.pull_()}\n```"))
