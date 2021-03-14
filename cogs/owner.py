@@ -66,7 +66,7 @@ class owners(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def pull(self, ctx):
-        return await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"```\n{await self.pull)}\n```")
+        return await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"```\n{await self.pull()}\n```")
 
     @tasks.loop(minutes=1)
     async def reactionreload(self):
