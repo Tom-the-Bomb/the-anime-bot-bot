@@ -22,7 +22,7 @@ from discord_slash import SlashCommand
 from utils.asyncstuff import asyncexe
 from utils.utils import utils
 
-alexflipnote_ = str(config.alexflip)
+alexflipnote_ = str(config.alex_)
 ipc_key = str(config.ipc_key)
 zane_api = str(config.zane_api)
 TOKEN_ACCESS = str(config.TOKEN_ACCESS)
