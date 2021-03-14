@@ -8,7 +8,7 @@ import traceback
 import zipfile
 from contextlib import redirect_stdout
 from io import BytesIO
-from utils.subclasses import db
+from utils.subclasses import self.db
 
 import aiohttp
 import discord
