@@ -22,7 +22,7 @@ from discord_slash import SlashCommand
 from utils.asyncstuff import asyncexe
 from utils.utils import utils
 
-alexflipnote = str(os.getenv("alexflip"))
+alexflipnote_ = str(os.getenv("alexflip"))
 ipc_key = str(os.getenv("ipc_key"))
 zane_api = str(os.getenv("zane_api"))
 TOKEN_ACCESS = str(os.getenv("TOKEN_ACCESS"))
@@ -181,7 +181,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     self.mystbin = mystbin.Client(session=self.session)
     self.vacefron_api=vacefron.Client(session=self.session, loop=self.loop)
     self.dag = Client(api_token, session=self.session, loop=self.loop)
-    self.alex=alexflipnote.Client(alexflip, session=self.session, loop=self.loop)
+    self.alex=alexflipnote.Client(alexflipnote_, session=self.session, loop=self.loop)
     self.ball = eight_ball.ball()
     self.zaneapi = aiozaneapi.Client(zane_api)
     for command in self.commands:
