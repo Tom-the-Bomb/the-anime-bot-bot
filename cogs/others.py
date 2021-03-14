@@ -39,7 +39,7 @@ class others(commands.Cog):
 
     @commands.command()
     async def votes(self, ctx):
-        async with self.bot.session.get("https://top.gg/api/bots/787927476177076234/votes", headers={"Authorization": str(os.getenv("topgg"))}) as resp:
+        async with self.bot.session.get("https://top.gg/api/bots/787927476177076234/votes", headers={"Authorization": (config.topgg)}) as resp:
             js = await resp.json()
             js = js[:5]
             voters = [f"**{i.get('username')}**" for i in js]
