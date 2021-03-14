@@ -22,11 +22,11 @@ from discord_slash import SlashCommand
 from utils.asyncstuff import asyncexe
 from utils.utils import utils
 
-alex_ = config.alex_
-ipc_key = config.ipc_key
-zane_api = config.zane_api
-TOKEN_ACCESS = config.TOKEN_ACCESS
-api_token = config.api_token
+alexflipnote = str(os.getenv("alexflip"))
+ipc_key = str(os.getenv("ipc_key"))
+zane_api = str(os.getenv("zane_api"))
+TOKEN_ACCESS = str(os.getenv("TOKEN_ACCESS"))
+api_token = str(os.getenv("api_token"))
 import re
 
 from discord.ext import commands
