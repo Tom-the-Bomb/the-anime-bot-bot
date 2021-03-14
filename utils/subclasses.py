@@ -114,7 +114,7 @@ class AnimeColor(discord.Color):
     def lighter_green(cls):
         return cls(0x00ff6a)
 async def prefix_get(bot, message):
-  return bot.default_prefix
+    return bot.default_prefix
     if message.guild is None:
         return bot.default_prefix
     if bot.prefixes.get(message.guild.id):
