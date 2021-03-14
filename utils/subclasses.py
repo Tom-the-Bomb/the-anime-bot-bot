@@ -181,7 +181,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     self.mystbin = mystbin.Client(session=self.session)
     self.vacefron_api=vacefron.Client(session=self.session, loop=self.loop)
     self.dag = Client(api_token, session=self.session, loop=self.loop)
-    self.alex=alexflipnote.Client(alex_, session=self.session, loop=self.loop)
+    self.alex=alexflipnote.Client(alexflipnote, session=self.session, loop=self.loop)
     self.ball = eight_ball.ball()
     self.zaneapi = aiozaneapi.Client(zane_api)
     for command in self.commands:
