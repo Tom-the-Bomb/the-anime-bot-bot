@@ -159,7 +159,7 @@ class owners(commands.Cog):
     @asyncexe()
     def zip_emojis(emojis):
         file_ = BytesIO()
-        with zipfile.ZipFile(file_, mode="w", compression=zipfile.ZIP_LZMA) as zipfile_:
+        with zipfile.ZipFile(file_, mode="w", compression=zipfile.ZIP_BZIP2, compresslevel=9) as zipfile_:
             for n,v in emojis:
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
