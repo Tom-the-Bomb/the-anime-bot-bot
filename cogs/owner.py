@@ -263,6 +263,41 @@ class owners(commands.Cog):
 
             await interface.add_line(
                 f"\n[status] Return code {reader.close_code}")
+                                                  
+    @commands.command()
+    @commands.is_owner()
+    async def reload(self, ctx, text_):
+        text_ = text_.lower()
+        await ctx.message.add_reaction("<:greenTick:596576670815879169>")
+        embed = discord.Embed(color=0x00ff6a,
+                              description=f"<a:loading:747680523459231834>")
+        message = await ctx.reply(embed=embed)
+        self.list = []
+        if text_ == "all":
+            for file in os.listdir("./cogs"):
+                if file.endswith(".py"):
+                    try:
+                        self.bot.reload_extension(f"cogs.{file[:-3]}")
+                        self.list.append(file[:-3])
+                    except Exception as e:
+                        embed = discord.Embed(
+                            color=0xFF0000,
+                            description=f"Error while reloading cogs \n {e}")
+                        return await message.edit(embed=embed)
+            text = "\n <:greenTick:596576670815879169>".join(self.list)
+            embed = discord.Embed(
+                color=0x00ff6a,
+                description=f"Reloaded All Cogs \n <:greenTick:596576670815879169> {text}")
+            await message.edit(embed=embed)
+        else:
+            for file in os.listdir("./cogs"):
+                if file.startswith(f"{text_}.py"):
+                    self.bot.reload_extension(f"cogs.{file[:-3]}")
+                    embed = discord.Embed(
+                        color=0x00ff6a,
+                        description=f" <:greenTick:596576670815879169> Reloaded {file[:-3]}"
+                    )
+                    await message.edit(embed=embed)
 
     @commands.command()
     @commands.is_owner()
