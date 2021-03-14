@@ -57,12 +57,12 @@ class owners(commands.Cog):
     
     @asyncexe()
     def pull_(self):
-        return subprocess.check_output("git pull", shell=True)
+        return subprocess.check_output("git pull", shell=True).decode('utf-8')
     
     @commands.command()
     @commands.is_owner()
     async def pull(self, ctx):
-        return await ctx.send(embed=discord.Embed(title="Pulling from GitHub...", color=self.bot.color, description=f"```\n{await self.pull_().decode('utf-8')}\n```"))
+        return await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"```\n{await self.pull_()}\n```"))
 
 
     @classmethod
