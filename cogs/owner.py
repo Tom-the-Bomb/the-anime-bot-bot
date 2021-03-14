@@ -62,7 +62,7 @@ class owners(commands.Cog):
     @commands.command(aliases=['sync'])
     @commands.is_owner()
     async def pull(self, ctx):
-        return await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"```\n{await self.pull_()}\n```"))
+        return await ctx.send(embed=discord.Embed(color=self.bot.color, title="Pulling from GitHub...", description=f"```\n{await self.pull_()}\n```"))
 
 
     @classmethod
