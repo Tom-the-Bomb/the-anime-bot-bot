@@ -54,6 +54,31 @@ class owners(commands.Cog):
     # @commands.Cog.listener()
     # async def on_ready(self):
     #   task = asyncio.create_task(self.reactionreload())
+    
+    async def run_process(self, command):
+        try:
+            process = await asyncio.create_subprocess_shell(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            result = await process.communicate()
+        except NotImplementedError:
+            process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            result = await self.bot.loop.run_in_executor(None, process.communicate)
+
+        return [output.decode() for output in result]
+    
+    @commands.command(aliases=["r", "pull", "sync"])
+    @commands.is_owner()
+    async def reload(self, ctx):
+        embed=discord.Embed(title="Syncing...", description="Fetching new files from GitHub.", color=0x36393F)
+        msg = await ctx.send(embed=embed)
+        stdout = await self.run_process('cd /home/cryptex/the-anime-bot-bot && git pull')
+        embed=discord.Embed(title="Synced...", description=stdout[0], color=0x36393F)
+        cogs = [x.stem for x in Path('cogs').glob('*.py')]
+        for extension in cogs:
+            try:
+                self.bot.reload_extension(f'cogs.{extension}')
+            except:
+                pass
+        await msg.edit(embed=embed)
 
     @classmethod
     def check(self, payload):
