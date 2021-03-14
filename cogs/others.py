@@ -299,7 +299,7 @@ class others(commands.Cog):
             ovo prefix prefix1 prefix2 prefix3
             """
             old_prefixes = await self.bot.db.fetchrow("SELECT guild_id, prefix FROM prefix WHERE guild_id=$1", ctx.guild.id)
-            old_prefixes = old_prefixes[prefix]
+            old_prefixes = old_prefixes["prefix"]
             new_prefixes = old_prefixes
             for i in prefixforbot:
                 new_prefixes.append(i)
