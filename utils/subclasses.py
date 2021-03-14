@@ -1,4 +1,5 @@
 import itertools
+import asyncpg
 import config
 import os
 import subprocess
@@ -14,7 +15,6 @@ import eight_ball
 from discord.ext.commands.cooldowns import MaxConcurrency
 import ipc
 import mystbin
-import asyncpg
 import psutil
 import vacefron
 from asyncdagpi import Client
@@ -164,6 +164,8 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     await ctx.trigger_typing()
   def run(self, *args, **kwargs):
     # self.ipc.start()
+    db = self.loop.run_until_complete(asyncpg.create_pool('postgres://postgres1:postgres@localhost:5432/cryptex'))
+    self.db = db
     self.url_regex = re.compile(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", re.IGNORECASE)
     self.before_invoke(self.start_typing)
     self.utils = utils
