@@ -114,7 +114,17 @@ class AnimeColor(discord.Color):
     def lighter_green(cls):
         return cls(0x00ff6a)
 async def prefix_get(bot, message):
-  return ['OVO ', 'OVO ', 'OVo ', 'OVo ', 'OvO ', 'OvO ', 'Ovo ', 'Ovo ', 'oVO ', 'oVO ', 'oVo ', 'oVo ', 'ovO ', 'ovO ', 'ovo ', 'ovo ']
+    if message.guild is None:
+        return bot.default_prefix
+    if bot.prefixes.get(message.guild.id):
+        return bot.prefixes.get(message.guild.id)
+    if not bot.prefixes.get(message.guild.id):
+        await bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO NOTHING", message.guild.id, str(bot.default_prefix).replace('[', '{').replace(']', '}').replace('\'', '\"'))
+        bot.prefix[guild.id] = bot.default_prefix
+        return bot.prefix[guild.id]
+    return bot.default_prefix
+        
+    
 
 class LimitedSizeDict(OrderedDict):
     def __init__(self, *args, **kwds):
@@ -162,9 +172,11 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
   async def create_cache(self):
     await self.wait_until_ready()
     for i in self.guilds:
-      await self.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO NOTHING", guild.id, "ovo ")
-    
-
+      await self.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO NOTHING", i.id, str(self.default_prefix).replace('[', '{').replace(']', '}').replace('\'', '\"'))
+    prefixes = await self.db.fetch("SELECT * FROM prefix")
+    for i in prefixes:
+        self.prefixes[i["guild_id"]] = i["prefix"]
+        
   async def start_typing(self, ctx):
     await ctx.trigger_typing()
   def run(self, *args, **kwargs):
