@@ -26,9 +26,9 @@ from jishaku.paginators import (PaginatorEmbedInterface, PaginatorInterface,
                                 WrappedPaginator)
 
 start_time = time.time()
-gittoken = config.gittoken
+gittoken = str(os.getenv("gittoken"))
 # g = Github(gittoken)
-TOKEN = config.TOKEN
+TOKEN = str(os.getenv("TOKEN"))
 
 
 class others(commands.Cog):
@@ -39,7 +39,7 @@ class others(commands.Cog):
 
     @commands.command()
     async def votes(self, ctx):
-        async with self.bot.session.get("https://top.gg/api/bots/787927476177076234/votes", headers={"Authorization": config.topgg}) as resp:
+        async with self.bot.session.get("https://top.gg/api/bots/787927476177076234/votes", headers={"Authorization": str(os.getenv("topgg"))}) as resp:
             js = await resp.json()
             js = js[:5]
             voters = [f"**{i.get('username')}**" for i in js]

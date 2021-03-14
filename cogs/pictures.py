@@ -14,6 +14,8 @@ from io import BytesIO
 from asyncdagpi import ImageFeatures
 import typing
 
+authorizationthing = str(os.getenv("ksoft"))
+
 
 class pictures(commands.Cog):
     def __init__(self, bot):
@@ -120,7 +122,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def tag(self, ctx, tag:str):
         nsfw = "true" if ctx.channel.is_nsfw() == True else "false"
-        async with self.bot.session.get("https://api.ksoft.si/images/random-image", headers = {"Authorization": config.ksoft}, params = {"nsfw": nsfw, "tag": tag}) as resp:
+        async with self.bot.session.get("https://api.ksoft.si/images/random-image", headers = {"Authorization": authorizationthing}, params = {"nsfw": nsfw, "tag": tag}) as resp:
             res = await resp.json()
             tag = res.get("tag")
             snowflake = res.get("snowflake")
@@ -132,7 +134,7 @@ class pictures(commands.Cog):
         await ctx.send(file=discord.File(buffer, f"{tag}_{snowflake}.png"))
     @commands.command()
     async def aww(self, ctx):
-        async with self.bot.session.get("https://api.ksoft.si/images/random-aww", headers = {"Authorization": config.ksoft}) as resp:
+        async with self.bot.session.get("https://api.ksoft.si/images/random-aww", headers = {"Authorization": authorizationthing}) as resp:
             res = await resp.json()
             link = res.get("image_url")
             async with self.bot.session.get(link) as resp:

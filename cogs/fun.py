@@ -23,9 +23,9 @@ from utils.asyncstuff import asyncexe
 from utils.embed import embedbase
 from utils.paginator import AnimePages
 
-talk_token = config.talk_token
-rapid_api_key = config.rapid_api_key
-tenor_API_key = config.tenor_API_key
+talk_token = str(os.getenv("talk_token"))
+rapid_api_key = str(os.getenv("rapid_api_key"))
+tenor_API_key = str(os.getenv("tenor_API_key"))
 
 
 class UrbanDictionaryPageSource(menus.ListPageSource):

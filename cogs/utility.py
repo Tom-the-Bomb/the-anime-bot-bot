@@ -20,9 +20,9 @@ from bs4 import BeautifulSoup
 from discord.ext import commands
 from translate import Translator
 
-google_api_1 = config.google_api_1
-google_api_2 = config.google_api_2
-google_api_3 = config.google_api_3
+google_api_1 = str(os.getenv("google_api_1"))
+google_api_2 = str(os.getenv("google_api_2"))
+google_api_3 = str(os.getenv("google_api_3"))
 import ast
 import base64
 import decimal

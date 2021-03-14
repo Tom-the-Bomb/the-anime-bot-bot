@@ -24,9 +24,7 @@ handler.setFormatter(logging.Formatter('%(asctime)s:%(levelname)s:%(name)s: %(me
 logger.addHandler(handler)
 
 
-
 warnings.filterwarnings("ignore", category=DeprecationWarning)
-TOKEN = config.TOKEN
 
 
 bot = AnimeBot()
@@ -39,6 +37,10 @@ async def wtf(ctx):
     await ctx.respond()
     await ctx.send("wtf wtf")
 
+bot.owner_ids = [
+    711057339360477184, 590323594744168494
+]
+
 os.environ["NO_COLOR"] = "True"
 os.environ["JISHAKU_NO_DM_TRACEBACK"] = "True"
 os.environ["JISHAKU_NO_UNDERSCORE"] = "True"
@@ -47,4 +49,4 @@ for file in os.listdir("./cogs"):
     if file.endswith(".py"):
         bot.load_extension(f"cogs.{file[:-3]}")
 
-bot.run(TOKEN)
+bot.run(config.token)

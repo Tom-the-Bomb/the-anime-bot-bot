@@ -1,5 +1,4 @@
 from utils.asyncstuff import asyncexe
-import config
 import prettify_exceptions
 from menus import menus
 import datetime
@@ -25,13 +24,15 @@ from discord.ext import commands, tasks
 
 logging.getLogger('asyncio').setLevel(logging.CRITICAL)
 
+authorizationdeal = str(os.getenv("gists"))
 
-discord_bot_list = config.discord_bot_list
-bots_for_discord = config.bots_for_discord
-topgg = config.topgg
-discord_extreme_list = config.discord_extreme_list
-botlist_space = config.botlist_space
-POSTGRE_DATABASE_URL = config.POSTGRE_DATABASE_URL
+
+discord_bot_list = str(os.getenv("discord_bot_list"))
+bots_for_discord = str(os.getenv("bots_for_discord"))
+topgg = str(os.getenv("topgg"))
+discord_extreme_list = str(os.getenv("discord_extreme_list"))
+botlist_space = str(os.getenv("botlist_space"))
+POSTGRE_DATABASE_URL = str(os.getenv("POSTGRE_DATABASE_URL"))
 
 
 class events(commands.Cog):
@@ -67,7 +68,7 @@ class events(commands.Cog):
                 }
             }
          }
-        async with self.bot.session.post("https://api.github.com/gists", headers={"Authorization": f"token {config.gists}", "Accept": "application/vnd.github.inertia-preview+json"}, data=json.dumps(data)) as resp:
+        async with self.bot.session.post("https://api.github.com/gists", headers={"Authorization": f"{authorizationdeal}", "Accept": "application/vnd.github.inertia-preview+json"}, data=json.dumps(data)) as resp:
             pass
 
     @tasks.loop(seconds=30)

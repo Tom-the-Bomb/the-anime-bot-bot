@@ -3,7 +3,7 @@ import config
 import prettify_exceptions
 import discord
 import os
-webhook_url = config.webhook
+webhook_url = str(os.getenv("webhook"))
 from discord import AsyncWebhookAdapter, Webhook
 from discord.ext import commands
 
