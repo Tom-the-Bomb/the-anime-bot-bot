@@ -114,7 +114,6 @@ class AnimeColor(discord.Color):
     def lighter_green(cls):
         return cls(0x00ff6a)
 async def prefix_get(bot, message):
-    return bot.default_prefix
     if message.guild is None:
         return bot.default_prefix
     if bot.prefixes.get(message.guild.id):
@@ -186,7 +185,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     self.prefixes = {}
     db = self.loop.run_until_complete(asyncpg.create_pool('postgres://postgres1:postgres@localhost:5432/cryptex'))
     self.db = db
-#     self.loop.create_task(self.create_cache())
+    self.loop.create_task(self.create_cache())
     self.url_regex = re.compile(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", re.IGNORECASE)
     self.before_invoke(self.start_typing)
     self.utils = utils
