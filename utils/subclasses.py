@@ -114,12 +114,13 @@ class AnimeColor(discord.Color):
     def lighter_green(cls):
         return cls(0x00ff6a)
 async def prefix_get(bot, message):
+  return bot.default_prefix
     if message.guild is None:
         return bot.default_prefix
     if bot.prefixes.get(message.guild.id):
         return bot.prefixes.get(message.guild.id)
     if not bot.prefixes.get(message.guild.id):
-        await bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO NOTHING", message.guild.id, str(bot.default_prefix).replace('[', '{').replace(']', '}').replace('\'', '\"'))
+        await bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO NOTHING", message.guild.id, bot.default_prefix)
         bot.prefix[guild.id] = bot.default_prefix
         return bot.prefix[guild.id]
     return bot.default_prefix
@@ -172,7 +173,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
   async def create_cache(self):
     await self.wait_until_ready()
     for i in self.guilds:
-      await self.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO NOTHING", i.id, str(self.default_prefix).replace('[', '{').replace(']', '}').replace('\'', '\"'))
+      await self.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO NOTHING", i.id, self.default_prefix)
     prefixes = await self.db.fetch("SELECT * FROM prefix")
     for i in prefixes:
         self.prefixes[i["guild_id"]] = i["prefix"]
