@@ -72,7 +72,7 @@ class owners(commands.Cog):
         msg = await ctx.send(embed=embed)
         stdout = await self.run_process('cd /home/cryptex/the-anime-bot-bot && git pull')
         embed=discord.Embed(title="Synced...", description=stdout[0], color=0x36393F)
-        cogs = [x.stem for x in Path('cogs').glob('*.py')]
+        cogs = [x.stem for x in Path('/home/cryptex/the-anime-bot-bot/cogs').glob('*.py')]
         for extension in cogs:
             try:
                 self.bot.reload_extension(f'cogs.{extension}')
