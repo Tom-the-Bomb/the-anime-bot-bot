@@ -391,7 +391,7 @@ class owners(commands.Cog):
         # this cog as a base for their other cog, and since this one is kinda
         # odd and unnecessary for most people, I will make it easy to remove
         # for those people.
-        from utils.formats import TabularData, plural
+        from utils.format import TabularData, plural
         import time
 
         query = self.cleanup_code(query)
