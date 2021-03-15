@@ -31,7 +31,7 @@ class HelpCommand(commands.HelpCommand):
         lists = []
         commands_ = await self.filter_commands(cog.get_commands(), sort=True)
         commands_ = [self.get_command_signature(i) for i in commands_]
-        for i in commannds_:
+        for i in commands_:
             lists.append(f"**{i}**")
         pages = menus.MenuPages(source=HelpMenuSource(lists), clear_reactions_after=True)
         await pages.start(ctx)
