@@ -5,9 +5,9 @@ from jishaku.paginators import PaginatorEmbedInterface, PaginatorInterface
 
 class TodoMenuSource(menus.ListPageSource):
     def __init__(self, data):
-        super().__init__(data, per_page=4)
+        super().__init__(data, per_page=5)
     async def format_page(self, menu, entries):
-        return {"embed": discord.Embed(f"{menu.ctx.author.name}'s menu", description="\n".join(entries))}
+        return {"embed": discord.Embed(color=menu.ctx.bot.color, title=f"{menu.ctx.author.name}'s menu", description="\n".join(entries))}
 
 class todo(commands.Cog):
     def __init__(self, bot):
