@@ -48,7 +48,7 @@ class todo(commands.Cog):
         tasks = contents.split(",")
         offset = 1
         for i in tasks:
-            await self.bot.db.execute("INSERT INTO todos (author_id, content, created_at, message_id, jump_url) VALUES ($1, $2, $3, $4, $5)", ctx.author.id, i, ctx.message.created_at + datetime.timedelta(microsecond=offset), ctx.message.id, ctx.message.jump_url)
+            await self.bot.db.execute("INSERT INTO todos (author_id, content, created_at, message_id, jump_url) VALUES ($1, $2, $3, $4, $5)", ctx.author.id, i, ctx.message.created_at + datetime.timedelta(microseconds=offset), ctx.message.id, ctx.message.jump_url)
             offset += 1
         todos = await self.bot.db.fetch("SELECT * FROM todos WHERE author_id = $1 AND message_id = $2", ctx.author.id, ctx.message.id)
         return await ctx.send(embed=discord.Embed(color=self.bot.color, title="Successfully added new todos", description="\n".join(tasks)))
