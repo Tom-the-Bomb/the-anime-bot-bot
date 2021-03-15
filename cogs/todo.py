@@ -11,7 +11,7 @@ class todo(commands.Cog):
         pass
     @todo.command()
     async def list(self, ctx):
-        todos = await self.bot.db.fetch("SELECT * FROM todos WHERE user_id = $1 ORDER BY created_at", ctx.author.id)
+        todos = await self.bot.db.fetch("SELECT * FROM todos WHERE author_id = $1 ORDER BY created_at", ctx.author.id)
         if not todos:
             return await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"you have no todos `{ctx.prefix}todo add sometodos` to make one"))
         paginator = commands.Paginator(prefix="", suffix="", max_size=1000)
