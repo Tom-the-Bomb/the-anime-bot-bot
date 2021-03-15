@@ -34,7 +34,7 @@ class HelpCommand(commands.HelpCommand):
         for i in commands_:
             lists.append(f"**{i}**")
         pages = menus.MenuPages(source=HelpMenuSource(lists), clear_reactions_after=True)
-        await pages.start(ctx)
+        await pages.start(self.context)
 
     async def send_bot_help(self, mapping):
         cogs = "\n".join(self.context.bot.cogs.keys())
