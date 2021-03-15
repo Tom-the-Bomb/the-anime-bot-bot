@@ -452,26 +452,26 @@ class events(commands.Cog):
             self.bot._message_cache[message.id] = message_
         if message.content.startswith(";;") and not message.author.bot:
             if self.bot.emojioptions.get(ctx.author.id) == True:
-            lists = []
-            msg = message.content.replace(" ", "")
-            emojis = msg.split(";;")
-            for i in emojis:
-                if i == "":
-                    continue
-                e = finder(i, self.bot.emojis, key=lambda i: i.name, lazy=False)
-                if e == []:
-                    continue
-                e = e[0]
-                if e is None or emojis == []:
-                    continue
-                if e.is_usable() != False:
-                    lists.append(str(e))
-            if lists != []:
-                try:
-                    message_ = await message.channel.send("".join(lists))
-                    self.bot._message_cache[message.id] = message_
-                except:
-                    pass
+                lists = []
+                msg = message.content.replace(" ", "")
+                emojis = msg.split(";;")
+                for i in emojis:
+                    if i == "":
+                        continue
+                    e = finder(i, self.bot.emojis, key=lambda i: i.name, lazy=False)
+                    if e == []:
+                        continue
+                    e = e[0]
+                    if e is None or emojis == []:
+                        continue
+                    if e.is_usable() != False:
+                        lists.append(str(e))
+                if lists != []:
+                    try:
+                        message_ = await message.channel.send("".join(lists))
+                        self.bot._message_cache[message.id] = message_
+                    except:
+                        pass
         # mentions = message.mentions
         # try:
         #   for x in mentions:
