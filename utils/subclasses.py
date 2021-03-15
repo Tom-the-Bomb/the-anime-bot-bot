@@ -176,6 +176,10 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     prefixes = await self.db.fetch("SELECT * FROM prefix")
     for i in prefixes:
         self.prefixes[i["guild_id"]] = i["prefix"]
+    emojioptions = await self.db.fetch("SELECT * FROM emojioptions")
+    if emojioptions:
+      for i in emojioptions:
+        self.emojioptions[i["user_id"]] = i["enabled"]
         
   async def start_typing(self, ctx):
     await ctx.trigger_typing()
@@ -185,6 +189,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     self.prefixes = {}
     db = self.loop.run_until_complete(asyncpg.create_pool('postgres://postgres1:postgres@localhost:5432/cryptex'))
     self.db = db
+    self.emojioptions = {}
     self.loop.create_task(self.create_cache())
     self.url_regex = re.compile(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", re.IGNORECASE)
     self.before_invoke(self.start_typing)
