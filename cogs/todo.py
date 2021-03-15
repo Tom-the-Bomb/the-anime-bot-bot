@@ -22,8 +22,8 @@ class todo(commands.Cog):
         todos = await self.bot.db.fetch("SELECT * FROM todos WHERE author_id = $1 ORDER BY created_at", ctx.author.id)
         task_1 = todos[task1 - 1]
         task_2 = todos[task2 - 1]
-        await bot.db.execute("UPDATE todos SET created_at = $1 WHERE created_at = $2", task_2["created_at"], task_1["created_at"])
-        await bot.db.execute("UPDATE todos SET created_at = $1 WHERE created_at = $2", task_1["created_at"], task_2["created_at"])
+        await self.bot.db.execute("UPDATE todos SET created_at = $1 WHERE created_at = $2", task_2["created_at"], task_1["created_at"])
+        await self.bot.db.execute("UPDATE todos SET created_at = $1 WHERE created_at = $2", task_1["created_at"], task_2["created_at"])
         return await ctx.send(embed=discord.Embed(color=self.bot.color, title="Swap tasks", description=f"Succesfully swapped task {task1} and {task2}"))
     @todo.command()
     async def remove(self, ctx, index: commands.Greedy[int]):
