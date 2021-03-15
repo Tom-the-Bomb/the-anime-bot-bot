@@ -32,6 +32,11 @@ class todo(commands.Cog):
     async def add(self, ctx, *, content):
         await self.bot.db.execute("INSERT INTO todos (author_id, content, created_at, message_id, jump_url) VALUES ($1, $2, $3, $4, $5)", ctx.author.id, content, ctx.message.created_at, ctx.message.id, ctx.message.jump_url)
         return await ctx.send(embed=discord.Embed(color=self.bot.color, description="Successfully added new todo"))
+
+    @todo.command()
+    async def remove(self, ctx, *, content):
+        await self.bot.db.execute("DELETE WHERE from todos (author_id, content, created_at, message_id, jump_url) VALUES ($1, $2, $3, $4, $5)", ctx.author.id, content, ctx.message.created_at, ctx.message.id, ctx.message.jump_url)
+        return await ctx.send(embed=discord.Embed(color=self.bot.color, description="Successfully removed that todo"))
     
 
         
