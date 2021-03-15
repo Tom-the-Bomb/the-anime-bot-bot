@@ -253,12 +253,12 @@ class others(commands.Cog):
         start=time.perf_counter()
         await self.bot.db.fetch("SELECT 1")
         postgres = time.perf_counter()-start
-        postgres = round(postgres*1000, 3)
+        postgres = round(postgres*1000)
         embed = await embedbase.embed(self, ctx)
         embed.set_author(name="ping")
         embed.add_field(name="<:stab:744345955637395586>  websocket latency",
                         value=f"```{round(self.bot.latency * 1000)} ms ```")
-        embed.add_field(name="<:postgres:821095695746203689> Postgre sql latency", value=f"```{postgres}```")
+        embed.add_field(name="<:postgres:821095695746203689> Postgre sql latency", value=f"```{postgres} ms```")
         embed.add_field(name="<a:typing:597589448607399949> API latency",
                         value=f"```{round(final_latency * 1000)} ms ```")
         # start1 = time.perf_counter()
