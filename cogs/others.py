@@ -251,7 +251,7 @@ class others(commands.Cog):
         end = time.perf_counter()
         final_latency = end - start
         start=time.perf_counter()
-        await bot.db.fetch("SELECT 1")
+        await self.bot.db.fetch("SELECT 1")
         postgres=time.perf_counter()-start
         return round(end*1000, 3)
         embed = await embedbase.embed(self, ctx)
