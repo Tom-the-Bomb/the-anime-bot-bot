@@ -301,11 +301,13 @@ class others(commands.Cog):
     @prefix.command(name="remove")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
-    async def prefix_remove(self, ctx, *, prefix_to_remove: str):
+    async def prefix_remove(self, ctx, prefix_to_remove: str):
         """
         Remove a prefix for your server
         Example:
         ovo prefix remove prefixname
+        if your prefix contain space:
+        ovo prefix remove "prefixname "
         """
         if not prefix_to_remove in self.bot.prefixes[ctx.guild.id]:
           return await ctx.send("This prefix don't exist maybe you made a typo? Case and space Sensitive")
@@ -322,11 +324,13 @@ class others(commands.Cog):
     @prefix.command(name="add")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
-    async def prefix_add(self, ctx, *, prefixforbot: str):
+    async def prefix_add(self, ctx, prefixforbot: str):
         """
         Add a new prefix for your server
         Example:
         ovo prefix add newprefix
+        if your prefix contain space:
+        ovo prefix add "newprefix "
         """
         old_prefixes = await self.bot.db.fetchrow("SELECT * FROM prefix WHERE guild_id=$1", ctx.guild.id)
         old_prefixes = old_prefixes["prefix"]
