@@ -1,8 +1,16 @@
 import discord
 from discord.ext import commands
 
+from menus import menus
+
 from jishaku.paginators import PaginatorEmbedInterface
 from jishaku.models import copy_context_with
+
+class HelpMenuSource(menus.ListPageSource):
+    def __init__(self, data):
+        super().__init__(data, per_page=10)
+    async def format_page(self, menu, entries):
+        return {"embed": discord.Embed(color=menu.ctx.bot.color, title=f"Help command", description="\n".join(entries))}
 
 
 class HelpCommand(commands.HelpCommand):
@@ -20,14 +28,13 @@ class HelpCommand(commands.HelpCommand):
         await self.context.send(embed=embed)
 
     async def send_cog_help(self, cog):
-        paginator = commands.Paginator(prefix="", suffix="", max_size=1000)
+        lists = []
         commands_ = await self.filter_commands(cog.get_commands(), sort=True)
         commands_ = [self.get_command_signature(i) for i in commands_]
-        for i in commands_:
-            paginator.add_line(f"**{i}**")
-        interface = PaginatorEmbedInterface(
-            self.context.bot, paginator, owner=self.context.author)
-        await interface.send_to(self.context)
+        for i in commannds_:
+            lists.append(f"**{i}**")
+         pages = menus.MenuPages(source=HelpMenuSource(lists), clear_reactions_after=True)
+        await pages.start(ctx)
 
     async def send_bot_help(self, mapping):
         cogs = "\n".join(self.context.bot.cogs.keys())
