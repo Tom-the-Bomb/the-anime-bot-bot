@@ -19,7 +19,7 @@ class todo(commands.Cog):
         for i in todos:
             paginator.add_line(f"[{counter}]({i['jump_url']}). {i['content']}")
             counter += 1
-        interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author)
+        interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
         await interface.send_to(ctx)
     @todo.command()
     async def add(self, ctx, *, content):
