@@ -450,7 +450,8 @@ class events(commands.Cog):
                 "Hii there why u ping me smh oh i mean hii my prefix is `ovo ` "
             )
             self.bot._message_cache[message.id] = message_
-        if message.content.startswith(";;") and not message.author.bot and self.bot.emojioptions.get(ctx.author.id) == True:
+        if message.content.startswith(";;") and not message.author.bot:
+            if self.bot.emojioptions.get(ctx.author.id) == True:
             lists = []
             msg = message.content.replace(" ", "")
             emojis = msg.split(";;")
