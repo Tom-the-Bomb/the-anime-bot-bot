@@ -20,6 +20,8 @@ class todo(commands.Cog):
     @todo.command()
     async def swap(self, ctx, task1: int, task2: int):
         todos = await self.bot.db.fetch("SELECT * FROM todos WHERE author_id = $1 ORDER BY created_at", ctx.author.id)
+        if (task1, task2) > len(todos) or todos is None:
+            return await ctx.send("You can't swap tasks you don't have")
         task_1 = todos[task1 - 1]
         task_2 = todos[task2 - 1]
         await self.bot.db.execute("UPDATE todos SET created_at = $1 WHERE created_at = $2", task_2["created_at"], task_1["created_at"])
@@ -28,6 +30,11 @@ class todo(commands.Cog):
     @todo.command()
     async def remove(self, ctx, index: commands.Greedy[int]):
         todos = await self.bot.db.fetch("SELECT * FROM todos WHERE author_id = $1 ORDER BY created_at", ctx.author.id)
+        if todos is None:
+            return await ctx.send("You can't remove tasks you don't have")
+        for i in index:
+            if i > len(todos):
+                return await ctx.send("You can't remove tasks you don't have")
         to_delete = [todos[num - 1]["created_at"] for num in index]
         to_display = []
         for i in index:
