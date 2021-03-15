@@ -20,7 +20,7 @@ class todo(commands.Cog):
     @todo.command()
     async def swap(self, ctx, task1: int, task2: int):
         todos = await self.bot.db.fetch("SELECT * FROM todos WHERE author_id = $1 ORDER BY created_at", ctx.author.id)
-        if (task1, task2) > len(todos) or todos is None:
+        if task1 > len(todos) or task2 > len(todos) or todos is None:
             return await ctx.send("You can't swap tasks you don't have")
         task_1 = todos[task1 - 1]
         task_2 = todos[task2 - 1]
