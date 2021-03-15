@@ -612,7 +612,7 @@ class events(commands.Cog):
             return await ctx.send(embed=embed)
         else:
             error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
-            embed = discord.Embed(color=self.bot.color, description=error["error"] if len(error["error"]) <= 2048 else await ctx.paste(error["error"]))
+            embed = discord.Embed(color=self.bot.color, description=f"```py\n{error['error']}\n```" if len(f"```py\n{error['error']}\n```") <= 2048 else await ctx.paste(error["error"]))
             embed.add_field(name="message", value=error["message"])
             embed.add_field(name="created_at", value=humanize.naturaldelta(error["created_at"]-datetime.timedelta(hours=8)))
             embed.add_field(name="Author name", value=error["author_name"])
