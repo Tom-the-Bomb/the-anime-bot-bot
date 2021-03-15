@@ -616,7 +616,7 @@ class events(commands.Cog):
             embed.add_field(name="message", value=error["message"])
             embed.add_field(name="created_at", value=humanize.naturaldelta(error["created_at"]-datetime.timedelta(hours=8)))
             embed.add_field(name="Author name", value=error["author_name"])
-            embed.add_field(name="command", value=error["command"]
+            embed.add_field(name="command", value=error["command"])
             return await ctx.send(embed=embed)
             
             
