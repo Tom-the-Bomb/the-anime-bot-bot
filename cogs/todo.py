@@ -17,7 +17,7 @@ class todo(commands.Cog):
         paginator = commands.Paginator(prefix="", suffix="", max_size=1000)
         counter = 0
         for i in todos:
-            paginator.add_line(f"[{counter}]({i['jump_url']}). {content}")
+            paginator.add_line(f"[{counter}]({i['jump_url']}). {i['content']}")
         interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author)
         await interface.send_to(ctx)
     @todo.command()
