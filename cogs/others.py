@@ -39,7 +39,7 @@ class others(commands.Cog):
         
     @commands.command()
     async def emojioptions(self, ctx, enabled:bool):
-      await self.bot.db.execute("INSERT INTO emojioptions (user_id, enabled) VALUES ($1, $2)", ctx.author.id, enabled)
+      await self.bot.db.execute("INSERT INTO emojioptions (user_id, enabled) VALUES ($1, $2) ON CONFLICT DO UPDATE SET enabled = $2 WHERE emojioptions.user_id = $1 ", ctx.author.id, enabled)
       self.bot.emojioptions[ctx.author.id] = enabled
       await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"you have set emoji auto response to {enabled}"))
       
