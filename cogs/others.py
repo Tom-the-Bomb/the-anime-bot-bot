@@ -298,17 +298,35 @@ class others(commands.Cog):
             """
             embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Current guild prefixes are: `{', '.join(self.bot.prefixes[ctx.guild.id])}`\n\nTo add a prefix run: {ctx.prefix}add `prefix here`")
             return await ctx.send(embed=embed)
+    @prefix.command(name="remove")
+    @commands.guild_only()
+    @commands.has_permissions(manage_guild=True)
+    async def prefix_remove(self, ctx, *, prefix_to_remove: str):
+        """
+        Remove a prefix for your server
+        Example:
+        ovo prefix remove prefixname
+        """
+        if not prefix_to_remove in self.bot.prefixes[ctx.guild.id]:
+          return await ctx.send("This prefix don't exist maybe you made a typo? Case and space Sensitive")
+        old_prefixes = await self.bot.db.fetchrow("SELECT * FROM prefix WHERE guild_id=$1", ctx.guild.id)
+        old_prefixes = old_prefixes["prefix"]
+        new_prefixes = old_prefixes
+        new_prefixes.remove(prefix_to_remove)
+        await self.bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET prefix = $2 WHERE prefix.guild_id = $1", ctx.guild.id, new_prefixes)
+        self.bot.prefixes[ctx.guild.id] = new_prefixes
+        embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Succefully appended new prefix New prefixes are: {', '.join(new_prefixes)}")
+        return await ctx.send(embed=embed)
             
                        
     @prefix.command(name="add")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
-    async def prefix_add(self, ctx, prefixforbot: str):
+    async def prefix_add(self, ctx, *, prefixforbot: str):
         """
         Add a new prefix for your server
         Example:
         ovo prefix add newprefix
-        ovo prefix add "new prefix "
         """
         old_prefixes = await self.bot.db.fetchrow("SELECT * FROM prefix WHERE guild_id=$1", ctx.guild.id)
         old_prefixes = old_prefixes["prefix"]
