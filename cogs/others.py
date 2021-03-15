@@ -252,8 +252,8 @@ class others(commands.Cog):
         final_latency = end - start
         start=time.perf_counter()
         await self.bot.db.fetch("SELECT 1")
-        postgres=time.perf_counter()-start
-        return round(end*1000, 3)
+        postgres = time.perf_counter()-start
+        postgres = round(postgres*1000, 3)
         embed = await embedbase.embed(self, ctx)
         embed.set_author(name="ping")
         embed.add_field(name="<:stab:744345955637395586>  websocket latency",
