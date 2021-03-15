@@ -120,8 +120,8 @@ async def prefix_get(bot, message):
         return bot.prefixes.get(message.guild.id)
     if not bot.prefixes.get(message.guild.id):
         await bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO NOTHING", message.guild.id, bot.default_prefix)
-        bot.prefixes[guild.id] = bot.default_prefix
-        return bot.prefixes[guild.id]
+        bot.prefixes[message.guild.id] = bot.default_prefix
+        return bot.prefixes[message.guild.id]
     return bot.default_prefix
         
     
