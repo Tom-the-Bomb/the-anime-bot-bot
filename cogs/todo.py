@@ -17,6 +17,15 @@ class todo(commands.Cog):
     async def todo(self, ctx):
         pass
     @todo.command()
+    async def remove(self, ctx, index: commands.Greedy[int]):
+        todos = await bot.db.fetch("SELECT * FROM todos WHERE author_id = $1", ctx.author.id)
+        to_delete = [todos[num - 1]["created_at"] for num in index]
+        to_display = []
+        for i in index:
+            to_display.append(f"{i} - {todos[i-1]['content']}")
+        await bot.db.execute("DELETE FROM todos WHERE author_id = $1 AND created_at = ANY ($2)", ctx.author.id, tuple(to_delete))
+        return await ctx.send(embed=discord.Embed(color=self.bot.color, title=f"Deleted {len(index)} tasks", description="\n".join(to_display))
+    @todo.command()
     async def list(self, ctx):
         todos = await self.bot.db.fetch("SELECT * FROM todos WHERE author_id = $1 ORDER BY created_at", ctx.author.id)
         if not todos:
