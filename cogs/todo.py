@@ -15,9 +15,10 @@ class todo(commands.Cog):
         if not todos:
             return await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"you have no todos `{ctx.prefix}todo add sometodos` to make one"))
         paginator = commands.Paginator(prefix="", suffix="", max_size=1000)
-        counter = 0
+        counter = 1
         for i in todos:
             paginator.add_line(f"[{counter}]({i['jump_url']}). {i['content']}")
+            counter += 1
         interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author)
         await interface.send_to(ctx)
     @todo.command()
