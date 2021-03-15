@@ -365,7 +365,8 @@ class PaginatorEmbedInterface(PaginatorInterface):
 
     @property
     def page_size(self) -> int:
-        return self.paginator.max_size
+        page_count = self.page_count
+        return self.paginator.max_size + len(f'\nPage {page_count}/{page_count}')
 
 
 class WrappedPaginator(commands.Paginator):
