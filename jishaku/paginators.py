@@ -3,12 +3,9 @@
 """
 jishaku.paginators
 ~~~~~~~~~~~~~~~~~~
-
 Paginator-related tools and interfaces for Jishaku.
-
 :copyright: (c) 2021 Devon (Gorialis) R
 :license: MIT, see LICENSE for more details.
-
 """
 
 import asyncio
@@ -39,35 +36,25 @@ EMOJI_DEFAULT = EmojiSettings(
 class PaginatorInterface:  # pylint: disable=too-many-instance-attributes
     """
     A message and reaction based interface for paginators.
-
     This allows users to interactively navigate the pages of a Paginator, and supports live output.
-
     An example of how to use this with a standard Paginator:
-
     .. code:: python3
-
         from discord.ext import commands
-
         from jishaku.paginators import PaginatorInterface
-
         # In a command somewhere...
             # Paginators need to have a reduced max_size to accommodate the extra text added by the interface.
             paginator = commands.Paginator(max_size=1900)
-
             # Populate the paginator with some information
             for line in range(100):
                 paginator.add_line(f"Line {line + 1}")
-
             # Create and send the interface.
             # The 'owner' field determines who can interact with this interface. If it's None, anyone can use it.
             interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
             await interface.send_to(ctx)
-
             # send_to creates a task and returns control flow.
             # It will raise if the interface can't be created, e.g., if there's no reaction permission in the channel.
             # Once the interface has been sent, line additions have to be done asynchronously, so the interface can be updated.
             await interface.add_line("My, the Earth sure is full of things!")
-
             # You can also check if it's closed using the 'closed' property.
             if not interface.closed:
                 await interface.add_line("I'm still here!")
@@ -148,7 +135,6 @@ class PaginatorInterface:  # pylint: disable=too-many-instance-attributes
     def page_size(self) -> int:
         """
         A property that returns how large a page is, calculated from the paginator properties.
-
         If this exceeds `max_page_size`, an exception is raised upon instantiation.
         """
         page_count = self.page_count
@@ -158,7 +144,6 @@ class PaginatorInterface:  # pylint: disable=too-many-instance-attributes
     def send_kwargs(self) -> dict:
         """
         A property that returns the kwargs forwarded to send/edit when updating the page.
-
         As this must be compatible with both `discord.TextChannel.send` and `discord.Message.edit`,
         it should be a dict containing 'content', 'embed' or both.
         """
@@ -191,7 +176,6 @@ class PaginatorInterface:  # pylint: disable=too-many-instance-attributes
     async def send_to(self, destination: discord.abc.Messageable):
         """
         Sends a message to the given destination with this interface.
-
         This automatically creates the response task for you.
         """
 
@@ -216,7 +200,6 @@ class PaginatorInterface:  # pylint: disable=too-many-instance-attributes
     async def send_all_reactions(self):
         """
         Sends all reactions for this paginator, if any are missing.
-
         This method is generally for internal use only.
         """
 
@@ -290,6 +273,9 @@ class PaginatorInterface:  # pylint: disable=too-many-instance-attributes
 
             while not self.bot.is_closed():
                 done, _ = await asyncio.wait(task_list, timeout=self.timeout, return_when=asyncio.FIRST_COMPLETED)
+
+                if not done:
+                    raise asyncio.TimeoutError
 
                 for task in done:
                     task_list.remove(task)
@@ -385,12 +371,9 @@ class PaginatorEmbedInterface(PaginatorInterface):
 class WrappedPaginator(commands.Paginator):
     """
     A paginator that allows automatic wrapping of lines should they not fit.
-
     This is useful when paginating unpredictable output,
     as it allows for line splitting on big chunks of data.
-
     Delimiters are prioritized in the order of their tuple.
-
     Parameters
     -----------
     wrap_on: tuple
@@ -431,22 +414,22 @@ class WrappedPaginator(commands.Paginator):
                     break
 
             if not wrapped:
-                if not self.force_wrap:
+                if self.force_wrap:
+                    super().add_line(line[0:true_max_size - 1])
+                    line = line[true_max_size - 1:]
+                else:
                     raise ValueError(
                         f"Line of length {original_length} had sequence of {len(line)} characters"
                         f" (max is {true_max_size}) that WrappedPaginator could not wrap with"
                         f" delimiters: {self.wrap_on}"
                     )
 
-                super().add_line(line[0:true_max_size - 1])
-                line = line[true_max_size - 1:]
         super().add_line(line, empty=empty)
 
 
 class FilePaginator(commands.Paginator):
     """
     A paginator of syntax-highlighted codeblocks, read from a file-like.
-
     Parameters
     -----------
     fp
