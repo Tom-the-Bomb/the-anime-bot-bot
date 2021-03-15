@@ -26,7 +26,7 @@ class todo(commands.Cog):
         for i in todos:
             lists.append(f"[{counter}]({i['jump_url']}). {i['content']}")
             counter += 1
-        pages = menus.MenuPages(source=TodoMenuSource(lists, clear_reactions_after=True))
+        pages = menus.MenuPages(source=TodoMenuSource(lists), clear_reactions_after=True)
         await pages.start(ctx)
     @todo.command()
     async def add(self, ctx, *, content):
