@@ -296,7 +296,7 @@ class others(commands.Cog):
             """
             Shows prefixes and avaiable prefix commands
             """
-            embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Current guild prefixes are: `{', '.join(self.bot.prefixes[ctx.guild.id])}`\n\nTo add a prefix run: {ctx.prefix}add `prefix here`")
+            embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Current guild prefixes are: `{', '.join(self.bot.prefixes[ctx.guild.id])}`\n\nTo add a prefix run: {ctx.prefix}add `prefix`\n\nTo remove a prefix run {ctx.prefix}remove `prefix`")
             return await ctx.send(embed=embed)
     @prefix.command(name="remove")
     @commands.guild_only()
