@@ -30,7 +30,7 @@ class HelpCommand(commands.HelpCommand):
     async def send_cog_help(self, cog):
         lists = []
         commands_ = await self.filter_commands(cog.get_commands(), sort=True)
-        commands_ = [self.get_command_signature(i) for i in commands_]
+        commands_ = [self.get_command_signature(i) if not isinstance(i, commands.Group) else self.get_command_signature(v) for v in i.walk_commands() for i in commands_]
         for i in commands_:
             lists.append(f"**{i}**")
         pages = menus.MenuPages(source=HelpMenuSource(lists), clear_reactions_after=True)
