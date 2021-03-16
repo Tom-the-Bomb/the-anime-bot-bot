@@ -35,7 +35,7 @@ class HelpCommand(commands.HelpCommand):
                 for v in i.walk_commands():
                     lists.append(self.get_command_signature(v)
             else:
-                self.get_command_signature(i)
+                lists.append(self.get_command_signature(i))
         for i in lists:
             lists.append(f"**{i}**")
         pages = menus.MenuPages(source=HelpMenuSource(lists), clear_reactions_after=True)
