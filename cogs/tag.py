@@ -27,7 +27,7 @@ class tag(commands.Cog):
             if name == i["tag_name"]:
                 return await ctx.send("This tag already exist")
         await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4, $5)", name, content, ctx.author.id, ctx.message.id, 0)
-        await ctx.send(f"Succefully added tag `{name}`")
+        await ctx.send(f"Successfully added tag `{name}`")
 
 
 
