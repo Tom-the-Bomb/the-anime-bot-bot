@@ -120,19 +120,6 @@ class pictures(commands.Cog):
         return igif
 
     @commands.command()
-    async def tag(self, ctx, tag:str):
-        nsfw = "true" if ctx.channel.is_nsfw() == True else "false"
-        async with self.bot.session.get("https://api.ksoft.si/images/random-image", headers = {"Authorization": authorizationthing}, params = {"nsfw": nsfw, "tag": tag}) as resp:
-            res = await resp.json()
-            tag = res.get("tag")
-            snowflake = res.get("snowflake")
-            link = res.get("url")
-            if link is None:
-                return await ctx.send("can't find that tag")
-            async with self.bot.session.get(link) as resp:
-                buffer = BytesIO(await resp.read())
-        await ctx.send(file=discord.File(buffer, f"{tag}_{snowflake}.png"))
-    @commands.command()
     async def aww(self, ctx):
         async with self.bot.session.get("https://api.ksoft.si/images/random-aww", headers = {"Authorization": authorizationthing}) as resp:
             res = await resp.json()
