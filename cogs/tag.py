@@ -26,9 +26,9 @@ class tag(commands.Cog):
         
     @tag.command()
     async def remove(self, ctx, *, name):
-        tags = await self.bot.db.fetch("SELECT * FROM tags WHERE tag_name = $1", name)
+        tags = await self.bot.db.fetch("SELECT * FROM tags WHERE tag_name = $1 AND author_id = $2", name, ctx.author.id)
         if not tags:
-            return await ctx.send("Tag not found")
+            return await ctx.send("Tag not found or you don't own the tag")
         await self.bot.db.execute("DELETE FROM tags WHERE tag_name = $1", name)
         await ctx.send(f"Deleted tag {name}")
     @tag.command()
