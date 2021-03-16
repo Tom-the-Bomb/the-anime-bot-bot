@@ -10,7 +10,7 @@ class TodoMenuSource(menus.ListPageSource):
     async def format_page(self, menu, entries):
         return {"embed": discord.Embed(color=menu.ctx.bot.color, title=f"{menu.ctx.author.name}'s todo list", description="\n".join(entries))}
 
-class todos(commands.Cog):
+class todo(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         
