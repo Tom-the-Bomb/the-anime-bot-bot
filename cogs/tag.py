@@ -11,6 +11,7 @@ class tag(commands.Cog):
         if not tags:
             return await ctx.send("Tag not found")
         await ctx.send(tags["tag_content"])
+        await self.bot.db.execute("UPDATE tags SET count = count + 1 WHERE tag_name = $1", name)
         
     @tag.command()
     async def remove(self, ctx, *, name):
@@ -25,7 +26,7 @@ class tag(commands.Cog):
         for i in tags:
             if name == i["tag_name"]:
                 return await ctx.send("This tag already exist")
-        await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id) VALUES ($1, $2, $3, $4)", name, content, ctx.author.id, ctx.message.id)
+        await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4)", name, content, ctx.author.id, ctx.message.id, 0)
         await ctx.send(f"Succefully added tag `{name}`")
 
 
