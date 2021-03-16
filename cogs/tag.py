@@ -7,7 +7,7 @@ class tag(commands.Cog):
 
     @commands.group(invoke_without_command=True)
     async def tag(self, ctx, *, name):
-        tags = await self.bot.db.fetchrow("SELECT * FROM tags WHERE name = $1", name)
+        tags = await self.bot.db.fetchrow("SELECT * FROM tags WHERE tag_name = $1", name)
         if not tags:
             return await ctx.send("Tag not found")
         await ctx.send(tags["tag_content"])
