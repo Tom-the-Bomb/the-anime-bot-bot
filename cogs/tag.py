@@ -11,6 +11,14 @@ class tag(commands.Cog):
         if not tags:
             return await ctx.send("Tag not found")
         await ctx.send(tags["tag_content"])
+        
+    @tag.command()
+    async def remove(self, ctx, *, name):
+        tags = await self.bot.db.fetch("SELECT * FROM tags WHERE tag_name = $1", name)
+        if not tags:
+            return await ctx.send("Tag not found")
+        await self.bot.db.execute("DELETE FROM tags WHERE tag_name = $1", name)
+        await ctx.send(f"Deleted tag {name}")
     @tag.command()
     async def add(self, ctx, name, *, content):
         tags = await self.bot.db.fetch("SELECT * FROM tags")
