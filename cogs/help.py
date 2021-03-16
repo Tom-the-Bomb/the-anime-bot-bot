@@ -33,7 +33,7 @@ class HelpCommand(commands.HelpCommand):
         for i in commands_:
             if isinstance(i, commands.Group):
                 for v in i.walk_commands():
-                    lists.append(self.get_command_signature(v)
+                    lists.append(self.get_command_signature(v))
             else:
                 lists.append(self.get_command_signature(i))
         for i in lists:
