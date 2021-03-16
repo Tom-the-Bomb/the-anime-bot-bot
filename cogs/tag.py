@@ -11,7 +11,7 @@ class tag(commands.Cog):
         if not tags:
             return await ctx.send("Tag not found")
         await ctx.send(tags["tag_content"])
-        await self.bot.db.execute("UPDATE tags SET count = count + 1 WHERE tag_name = $1", name)
+        await self.bot.db.execute("UPDATE tags SET uses = uses + 1 WHERE tag_name = $1", name)
         
     @tag.command()
     async def remove(self, ctx, *, name):
