@@ -180,9 +180,11 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     if emojioptions:
       for i in emojioptions:
         self.emojioptions[i["user_id"]] = i["enabled"]
-        
-  async def start_typing(self, ctx):
+
+  async def before_invoke_(self, ctx):
     await ctx.trigger_typing()
+    if not ctx.guild.chunked:
+      await ctx.guild.chunk()
   def run(self, *args, **kwargs):
     # self.ipc.start()
     self.default_prefix = ['ovo ']
@@ -192,7 +194,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     self.emojioptions = {}
     self.loop.create_task(self.create_cache())
     self.url_regex = re.compile(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", re.IGNORECASE)
-    self.before_invoke(self.start_typing)
+    self.before_invoke(self.before_invoke_)
     self.utils = utils
     self.deleted_message_cache = LimitedSizeDict()
     self.concurrency = []
