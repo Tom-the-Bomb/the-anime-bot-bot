@@ -72,7 +72,7 @@ class owners(commands.Cog):
     @commands.is_owner()
     async def ss(self, ctx, website:str):
         driver = webdriver.Firefox(options=Options)
-        self.bot.loop.run_in_executor(None, driver.get, website)
+        await self.bot.loop.run_in_executor(None, driver.get, website)
         bytes_ = BytesIO(driver.get_screenshot_as_png())
         file = discord.File(bytes_, filename="screnshot.png")
         await ctx.send(file=file)
