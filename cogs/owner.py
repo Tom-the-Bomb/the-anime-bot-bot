@@ -10,6 +10,9 @@ import zipfile
 from contextlib import redirect_stdout
 from io import BytesIO
 
+from selenium import webdriver
+from selenium.webdriver.firefox.options import Options
+
 import aiohttp
 import discord
 from bs4 import BeautifulSoup
@@ -64,6 +67,15 @@ class owners(commands.Cog):
     @asyncexe()
     def pull_(self):
         return subprocess.check_output("git pull", shell=True).decode('utf-8')
+    
+    @commands.command()
+    @commands.is_owner()
+    async def ss(self, ctx, website:str):
+        driver = webdriver.Firefox(options=Options)
+        self.bot.loop.run_in_executor(None, driver.get, website)
+        bytes_ = BytesIO(driver.get_screenshot_as_png())
+        file = discord.File(bytes_, filename="screnshot.png")
+        await ctx.send(file=file)
     
     @commands.command(aliases=['sync'])
     @commands.is_owner()
