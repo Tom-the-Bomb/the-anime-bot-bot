@@ -183,8 +183,9 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
 
   async def before_invoke_(self, ctx):
     await ctx.trigger_typing()
-    if not ctx.guild.chunked:
-      await ctx.guild.chunk()
+    if ctx.guild:
+      if not ctx.guild.chunked:
+        await ctx.guild.chunk()
   def run(self, *args, **kwargs):
     # self.ipc.start()
     self.default_prefix = ['ovo ']
