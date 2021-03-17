@@ -43,7 +43,6 @@ class MyMenu(menus.Menu, timeout=9223372036854775807):
 class owners(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        bot.loop.create_task(self.async_init())
 
     def cleanup_code(self, content):
         """Automatically removes code blocks from the code."""
@@ -53,10 +52,6 @@ class owners(commands.Cog):
 
         # remove `foo`
         return content.strip('` \n')
-
-    async def async_init(self):
-        self.db = await asyncpg.create_pool('postgres://postgres1:postgres@localhost:5432/cryptex')
-        print("logged in!")    
     
     # self.reactionreload.start()
 
@@ -71,7 +66,7 @@ class owners(commands.Cog):
     @commands.command()
     @commands.is_owner()
     async def ss(self, ctx, website:str):
-        driver = webdriver.Firefox()
+        driver = webdriver.Firefox("/usr/local/bin/geckodriver")
         await self.bot.loop.run_in_executor(None, driver.get, website)
         bytes_ = BytesIO(driver.get_screenshot_as_png())
         file = discord.File(bytes_, filename="screnshot.png")
