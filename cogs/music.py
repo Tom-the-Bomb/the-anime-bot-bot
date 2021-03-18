@@ -82,6 +82,10 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
         self.bot.loop.create_task(self.start_nodes())
 
+    def cog_unload(self):
+        for i in self.bot.wavelink.players.values():
+            await i.destory()
+
     async def start_nodes(self):
         await self.bot.wait_until_ready()
         await self.bot.wavelink.initiate_node(host="0.0.0.0",
@@ -174,7 +178,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             return await ctx.send('Could not find any songs with that query. maybe you made a typo?')
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if not player.is_connected:
-            await ctx.invoke(self.connect_)
+            await ctx.invoke(self.join)
         if not player.started:
             return await player.start(ctx, tracks)
         if isinstance(tracks, wavelink.TrackPlaylist):
