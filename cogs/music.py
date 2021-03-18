@@ -85,9 +85,9 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         self.bot.loop.create_task(self.start_nodes())
 
     def cog_unload(self):
-        self.bot.loop.create_task(self.destory_players())
+        self.bot.loop.create_task(self.destroy_players())
 
-    async def destory_players(self):
+    async def destroy_players(self):
         for i in self.bot.wavelink.players.values():
             await i.destroy()
     async def start_nodes(self):
@@ -152,7 +152,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     @commands.command()
     async def leave(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
-        await player.destory()
+        await player.destroy()
         await ctx.send("disconnected")
 
     @commands.command()
