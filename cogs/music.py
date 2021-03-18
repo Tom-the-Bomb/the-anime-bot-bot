@@ -152,7 +152,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             "metal": wavelink.Equalizer.metal(),
             "piano": wavelink.Equalizer.piano()
         }
-        if not name in equalizer.keys():
+        if not name in equalizers.keys():
             return await ctx.send("""
                 `none` - Resets the equalizer
                 `boost` - Boost equalizer. This equalizer emphasizes punchy bass and crisp mid-high tones. Not suitable for tracks with deep/low bass.
