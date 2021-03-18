@@ -95,14 +95,15 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             await event.player.do_next()
 
     async def cog_check(self, ctx):
+        player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if not ctx.guild:
             raise commands.NoPrivateMessage
-        if not ctx.player.is_connected:
+        if not player.is_connected:
             return True
         if not ctx.author.voice:
             await ctx.send("You must be in a voice channel to use this command.")
             return False
-        if ctx.author.voice.channel.id != ctx.player.channel_id:
+        if ctx.author.voice.channel.id != player.channel_id:
             await ctx.send("You must be in the same voice channel as me to use this command.")
             return False
         return True
@@ -132,8 +133,8 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     @commands.command()
     async def fastforward(self, ctx, seconnds:int):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
-        seek_position = ctx.player.position + (seconds * 1000)
-        await ctx.player.seek(seek_position)
+        seek_position = player.position + (seconds * 1000)
+        await player.seek(seek_position)
         await ctx.send(f"Fast forwarded {seconds} Current position: {humanize.precisedelta(datetime.timedelta(milliseconds=10))}")
 
 
@@ -179,12 +180,12 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         if isinstance(query_results, wavelink.TrackPlaylist):
             for track in query_results.tracks:
                 track = Track(track.id, track.info, requester=ctx.author)
-                ctx.player.queue.append(track)
+                player.queue.append(track)
             playlist_name = query_results.data['playlistInfo']['name']
             await ctx.send(f"Added playlist `{playlist_name}` with `{len(query_results.tracks)}` songs to the queue. ")
         else:
             track = Track(query_results[0].id, query_results[0].info, requester=ctx.author)
-            ctx.player.queue.append(track)
+            player.queue.append(track)
             await ctx.send(f"Added `{track}` to the queue.")
 
     @commands.command()
