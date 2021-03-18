@@ -149,7 +149,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send(f"Fast forwarded {seconds} Current position: {humanize.precisedelta(datetime.timedelta(milliseconds=10))}")
 
 
-    @commands.command()
+    @commands.command(aliases=['dc', 'disconnect', 'stop'])
     async def leave(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         await player.destroy()
@@ -199,7 +199,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             player.queue.append(track)
             await ctx.send(f"Added `{track}` to the queue.")
 
-    @commands.command()
+    @commands.command(aliases=['resume'])
     async def unpause(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if not player.is_paused:
