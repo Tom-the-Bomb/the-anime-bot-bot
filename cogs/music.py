@@ -92,12 +92,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             await i.destroy()
     async def start_nodes(self):
         await self.bot.wait_until_ready()
-        await self.bot.wavelink.initiate_node(host="0.0.0.0",
+        node = await self.bot.wavelink.initiate_node(host="0.0.0.0",
                                               port=2333,
                                               rest_uri="http://0.0.0.0:2333",
                                               password="youshallnotpass",
                                               identifier="MAIN",
                                               region="us_central")
+        node.set_hook(self.on_node_event)
+        
     async def on_node_event(self, event):
         if isinstance(event, (wavelink.TrackEnd, wavelink.on_track_stuck, wavelink.TrackException)):
             await event.player.do_next()
