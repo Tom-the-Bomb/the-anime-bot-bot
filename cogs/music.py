@@ -99,11 +99,12 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                                               password="youshallnotpass",
                                               identifier="MAIN",
                                               region="us_central")
-        node.set_hook(self.on_node_event)
         
-    async def on_node_event(self, event):
-        if isinstance(event, (wavelink.TrackEnd, wavelink.on_track_stuck, wavelink.TrackException)):
-            await event.player.do_next()
+    @wavelink.WavelinkMixin.listener('on_track_stuck')
+    @wavelink.WavelinkMixin.listener('on_track_end')
+    @wavelink.WavelinkMixin.listener('on_track_exception')
+    async def on_node_event(self, node, event):
+        await event.player.do_next()
 
     async def cog_check(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
