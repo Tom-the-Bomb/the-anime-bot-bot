@@ -57,7 +57,7 @@ class Player(wavelink.Player):
 
 
     async def do_next(self):
-        print("do next")
+        await self.ctx.send("a")
         if self.repeat:
             self.queue_position -= 1
 
