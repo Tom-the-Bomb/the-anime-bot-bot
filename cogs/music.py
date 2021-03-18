@@ -20,6 +20,7 @@ class Player(wavelink.Player):
         self.started = False
         self.is_waiting = True
         self.repeat = False
+        self.ctx = None
         self.loop = False
         self.queue = []
         self.queue_position = 0
@@ -51,6 +52,7 @@ class Player(wavelink.Player):
         await ctx.send(embed=self.make_embed(track))
         self.queue_position += 1
         await self.play(self.now_playing)
+        self.ctx = ctx
         self.started = True
 
 
@@ -69,7 +71,7 @@ class Player(wavelink.Player):
                 return await self.destroy()
 
         self.queue_position += 1
-        await ctx.send(embed=self.make_embed(song))
+        await self.ctx.send(embed=self.make_embed(song))
 
         await self.play(song)
 
