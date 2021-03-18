@@ -120,6 +120,21 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         return True
 
     @commands.command()
+    async def now(self, ctx):
+        player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
+        
+        await ctx.send(embed=player.make_embed(player.now_playing))
+    
+    @commands.command()
+    async def volume(self, ctx, volume:int=100):
+        if volume < 0 or volume > 100:
+            return await ctx.send("volume must be between 0 to 100")
+        player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
+        await player.set_volume(volume)
+        await ctx.send(f"Volume is now {volume}") 
+        
+
+    @commands.command()
     async def join(self, ctx, vc: discord.VoiceChannel = None):
         if not vc:
             if ctx.author.voice:
