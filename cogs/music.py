@@ -92,9 +92,9 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             await i.destroy()
     async def start_nodes(self):
         await self.bot.wait_until_ready()
-        node = await self.bot.wavelink.initiate_node(host="0.0.0.0",
+        node = await self.bot.wavelink.initiate_node(host="127.0.0.1",
                                               port=2333,
-                                              rest_uri="http://0.0.0.0:2333",
+                                              rest_uri="http://127.0.0.1:2333",
                                               password="youshallnotpass",
                                               identifier="MAIN",
                                               region="us_central")
