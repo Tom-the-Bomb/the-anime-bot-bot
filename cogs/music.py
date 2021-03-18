@@ -169,7 +169,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         await player.set_eq(equalizers.get(name))
-        await player.seek(1)
+        await player.seek(player.position + 1)
         await ctx.send(f"equalizer setted to {name}")
 
     @commands.command()
