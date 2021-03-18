@@ -16,13 +16,13 @@ class Track(wavelink.Track):
 class Player(wavelink.Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-    self.now_playing = None
-    self.started = False
-    self.is_waiting = True
-    self.repeat = False
-    self.loop = False
-    self.queue = []
-    self.queue_position = 0
+        self.now_playing = None
+        self.started = False
+        self.is_waiting = True
+        self.repeat = False
+        self.loop = False
+        self.queue = []
+        self.queue_position = 0
     
     def make_embed(self, track):
         embed = discord.Embed(color=0x00ff6a, title="Now playing", description=f"now playing: **{track.title}**")
