@@ -168,7 +168,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
     @commands.command()
     async def play(self, ctx, *, music):
-        tracks = await self.bot.wavelink.get_tracks(f'ytsearch:{query}')
+        c = await self.bot.wavelink.get_tracks(f'ytsearch:{music}')
 
         if not tracks:
             return await ctx.send('Could not find any songs with that query. maybe you made a typo?')
@@ -177,14 +177,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             await ctx.invoke(self.connect_)
         if not player.started:
             return await player.start(ctx, tracks)
-        if isinstance(query_results, wavelink.TrackPlaylist):
-            for track in query_results.tracks:
+        if isinstance(tracks, wavelink.TrackPlaylist):
+            for track in tracks.tracks:
                 track = Track(track.id, track.info, requester=ctx.author)
                 player.queue.append(track)
-            playlist_name = query_results.data['playlistInfo']['name']
-            await ctx.send(f"Added playlist `{playlist_name}` with `{len(query_results.tracks)}` songs to the queue. ")
+            playlist_name = tracks.data['playlistInfo']['name']
+            await ctx.send(f"Added playlist `{playlist_name}` with `{len(tracks.tracks)}` songs to the queue. ")
         else:
-            track = Track(query_results[0].id, query_results[0].info, requester=ctx.author)
+            track = Track(tracks[0].id, tracks[0].info, requester=ctx.author)
             player.queue.append(track)
             await ctx.send(f"Added `{track}` to the queue.")
 
