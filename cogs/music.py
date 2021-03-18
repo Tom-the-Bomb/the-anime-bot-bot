@@ -83,9 +83,11 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         self.bot.loop.create_task(self.start_nodes())
 
     def cog_unload(self):
+        self.bot.loop.create_task(self.destory_players())
+
+    async def destory_players(self):
         for i in self.bot.wavelink.players.values():
             await i.destory()
-
     async def start_nodes(self):
         await self.bot.wait_until_ready()
         await self.bot.wavelink.initiate_node(host="0.0.0.0",
