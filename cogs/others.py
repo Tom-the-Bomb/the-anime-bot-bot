@@ -25,7 +25,6 @@ from utils.subclasses import AnimeColor
 from jishaku.paginators import (PaginatorEmbedInterface, PaginatorInterface,
                                 WrappedPaginator)
 
-start_time = time.time()
 gittoken = (config.gittoken)
 # g = Github(gittoken)
 TOKEN = (config.TOKEN)
@@ -492,7 +491,7 @@ class others(commands.Cog):
     async def uptime(self, ctx):
         await ctx.trigger_typing()
         current_time = time.time()
-        difference = int(round(current_time - start_time))
+        difference = current_time - self.bot.start_time
         text = humanize.precisedelta(datetime.timedelta(seconds=difference))
         embed = await embedbase.embed(self, ctx)
         embed.add_field(name="uptime ", value=text)
