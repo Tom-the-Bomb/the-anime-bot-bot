@@ -137,7 +137,7 @@ class pictures(commands.Cog):
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]=None):
         url = await self.get_url(ctx, thing)
-        await ctx.send(f"```py\n{await self.ocr_(url)}\n```")
+        await ctx.send(f"```\n{await self.ocr_(url)}\n```")
     @commands.command()
     async def aww(self, ctx):
         async with self.bot.session.get("https://api.ksoft.si/images/random-aww", headers = {"Authorization": authorizationthing}) as resp:
