@@ -21,7 +21,8 @@ class pictures(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    async def get_url(self, ctx, thing):
+    async def get_url(self, ctx, thing, **kwargs):
+        check = kwargs.get("check", True)
         if ctx.message.reference:
             if ctx.message.reference.cached_message:
                 if ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "image":
@@ -78,12 +79,17 @@ class pictures(commands.Cog):
                 url = await emoji_to_url(thing)
                 if url == thing:
                     raise commands.CommandError("Invalid url")
-        async with self.bot.session.get(url) as resp:
-            if resp.status != 200:
-                raise commands.CommandError("Invalid Picture")
+        if check:
+            async with self.bot.session.get(url) as resp:
+                if resp.status != 200:
+                    raise commands.CommandError("Invalid Picture")
         url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
 
+    async def ocr_(self, bytes_):
+        async with ratelimiter.RateLimiter(max_calls=2, period=10):
+            async with self.bot.session.post("https://idevision.net/api/public/ocr", headers={"Authorization": config.idevision}, data=bytes_) as resp:
+                return (await resp.json)["data"]
     @staticmethod
     @asyncexe()
     def run_polaroid(image1, method, *args, **kwargs):
@@ -119,6 +125,13 @@ class pictures(commands.Cog):
         igif.seek(0)
         return igif
 
+    @commands.command()
+    async def ocr(self, ctx, thing: typing.Union[discord.Member, discord.User,
+                                                discord.PartialEmoji,
+                                                discord.Emoji, str]=None):
+        url = await self.get_url(ctx, thing)
+        async with self.bot.session.get(url) as resp:
+            await ctx.send(f"```py\n{await self.ocr_(BytesIO(await resp.read()))}\n```")
     @commands.command()
     async def aww(self, ctx):
         async with self.bot.session.get("https://api.ksoft.si/images/random-aww", headers = {"Authorization": authorizationthing}) as resp:
