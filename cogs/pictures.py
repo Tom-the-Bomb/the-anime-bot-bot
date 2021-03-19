@@ -87,10 +87,16 @@ class pictures(commands.Cog):
         url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
 
-    async def ocr_(self, bytes_):
+    async def ocr_(self, url):
         async with ratelimiter.RateLimiter(max_calls=2, period=10):
-            async with self.bot.session.get("https://idevision.net/api/public/ocr", headers={"Authorization": config.idevision}, data=bytes_) as resp:
-                return (await resp.json())["data"]
+            async with self.bot.session.get(url) as resp:
+                if "image" not in resp.content_type:
+                    return "Invalid image"
+                with aiohttp.MultipartWriter() as writer:
+                    p = writer.append(resp.content, {"Content-Type": resp.content_type})
+                    p.set_content_disposition("attachment", filename="picture.png"
+                    async with self.bot.session.get("https://idevision.net/api/public/ocr", headers={"Authorization": config.idevision}, data=writer) as resp:
+                        return (await resp.json())["data"]
     @staticmethod
     @asyncexe()
     def run_polaroid(image1, method, *args, **kwargs):
@@ -131,8 +137,7 @@ class pictures(commands.Cog):
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]=None):
         url = await self.get_url(ctx, thing)
-        async with self.bot.session.get(url) as resp:
-            await ctx.send(f"```py\n{await self.ocr_(BytesIO(await resp.read()))}\n```")
+        await ctx.send(f"```py\n{await self.ocr_(url)}\n```")
     @commands.command()
     async def aww(self, ctx):
         async with self.bot.session.get("https://api.ksoft.si/images/random-aww", headers = {"Authorization": authorizationthing}) as resp:
