@@ -493,13 +493,9 @@ class others(commands.Cog):
         await ctx.trigger_typing()
         current_time = time.time()
         difference = int(round(current_time - start_time))
-        text = str(datetime.timedelta(seconds=difference))
+        text = humanize.precisedelta(datetime.timedelta(seconds=difference))
         embed = await embedbase.embed(self, ctx)
         embed.add_field(name="uptime ", value=text)
-        embed.add_field(
-            name="Check bot uptime",
-            value="[Check bot uptime](https://stats.uptimerobot.com/v935zFWnqv/786692111)"
-        )
         await ctx.reply(embed=embed)
 
     @commands.command()
