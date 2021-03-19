@@ -143,7 +143,7 @@ class pictures(commands.Cog):
         return igif
 
     @commands.command()
-    async def ocr(self, ctx, thing: typing.Union[discord.Member, discord.User,
+    async def cdn(self, ctx, thing: typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]=None):
         url = await self.get_url(ctx, thing)
