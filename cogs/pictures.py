@@ -94,7 +94,7 @@ class pictures(commands.Cog):
                     return "Invalid image"
                 with aiohttp.MultipartWriter() as writer:
                     p = writer.append(resp.content, {"Content-Type": resp.content_type})
-                    p.set_content_disposition("attachment", filename="picture.png"
+                    p.set_content_disposition("attachment", filename="picture.png")
                     async with self.bot.session.get("https://idevision.net/api/public/ocr", headers={"Authorization": config.idevision}, data=writer) as resp:
                         return (await resp.json())["data"]
     @staticmethod
