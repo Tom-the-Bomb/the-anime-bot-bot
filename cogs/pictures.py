@@ -96,7 +96,7 @@ class pictures(commands.Cog):
                     p = writer.append(resp.content, {"Content-Type": resp.content_type})
                     p.set_content_disposition("attachment", filename="animebot_picture.png")
                     async with self.bot.session.get("https://idevision.net/api/cdn", headers={"Authorization": config.idevision}, data=writer) as resp:
-                        return await resp.json()
+                        return (await resp.json()
     async def ocr_(self, url):
         async with ratelimiter.RateLimiter(max_calls=2, period=10):
             async with self.bot.session.get(url) as resp:
@@ -105,7 +105,7 @@ class pictures(commands.Cog):
                 with aiohttp.MultipartWriter() as writer:
                     p = writer.append(resp.content, {"Content-Type": resp.content_type})
                     p.set_content_disposition("attachment", filename="picture.png")
-                    async with self.bot.session.get("https://idevision.net/api/public/ocr", headers={"Authorization": config.idevision}, data=writer) as resp:
+                    async with self.bot.session.post("https://idevision.net/api/public/ocr", headers={"Authorization": config.idevision}, data=writer) as resp:
                         return (await resp.json())["data"]
     @staticmethod
     @asyncexe()
