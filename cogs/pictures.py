@@ -87,6 +87,16 @@ class pictures(commands.Cog):
         url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
 
+    async def cdn_(self, url):
+        async with ratelimiter.RateLimiter(max_calls=3, period=7):
+            async with self.bot.session.get(url) as resp:
+                if "image" not in resp.content_type:
+                    return "Invalid image"
+                with aiohttp.MultipartWriter() as writer:
+                    p = writer.append(resp.content, {"Content-Type": resp.content_type})
+                    p.set_content_disposition("attachment", filename="animebot_picture.png")
+                    async with self.bot.session.get("https://idevision.net/api/cdn", headers={"Authorization": config.idevision}, data=writer) as resp:
+                        return (await resp.json())["url"]
     async def ocr_(self, url):
         async with ratelimiter.RateLimiter(max_calls=2, period=10):
             async with self.bot.session.get(url) as resp:
@@ -132,6 +142,12 @@ class pictures(commands.Cog):
         igif.seek(0)
         return igif
 
+    @commands.command()
+    async def ocr(self, ctx, thing: typing.Union[discord.Member, discord.User,
+                                                discord.PartialEmoji,
+                                                discord.Emoji, str]=None):
+        url = await self.get_url(ctx, thing)
+        await ctx.send(f"<{await self.cdn_(url)}>")
     @commands.command()
     async def ocr(self, ctx, thing: typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
