@@ -95,10 +95,10 @@ class pictures(commands.Cog):
             async with self.bot.session.get(url) as resp:
                 if "image" not in resp.content_type:
                     return "Invalid image"
-                # with aiohttp.MultipartWriter() as writer:
-                #     p = writer.append(resp.content, {"Content-Type": resp.content_type})
-                #     p.set_content_disposition("attachment", filename=str(resp.url).split("/")[-1])
-                async with self.bot.session.post("https://idevision.net/api/cdn", headers={"Authorization": config.idevision}, data=BytesIO(await resp.read())) as resp:
+                with aiohttp.MultipartWriter() as writer:
+                    p = writer.append(resp.content, {"Content-Type": resp.content_type})
+                    p.set_content_disposition("attachment", filename=str(resp.url).split("/")[-1])
+                async with self.bot.session.post("https://idevision.net/api/cdn", headers={"Authorization": config.idevision}, data=writer) as resp:
                     return (await resp.json())["url"]
     async def ocr_(self, url):
         async with ratelimiter.RateLimiter(max_calls=2, period=10):
