@@ -149,7 +149,7 @@ class pictures(commands.Cog):
     async def cdn(self, ctx, thing: typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]=None):
-        url = await self.get_url(ctx, thing, avatar=False)
+        url = await self.get_url(ctx, thing)
         await ctx.send(f"<{await self.cdn_(url)}>")
     @commands.command()
     async def ocr(self, ctx, thing: typing.Union[discord.Member, discord.User,
