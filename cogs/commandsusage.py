@@ -14,7 +14,7 @@ class commandsusage(commands.Cog):
     async def on_command_completion(self, ctx):
         self.bot.command_counter += 1
         self.bot.commandsusages[ctx.command.qualified_name] += 1
-
+        await self.bot.db.execute("INSERT INTO commandsusage VALUES ($1, $2) ON CONFLICT (command) DO UPDATE SET usages = usages + 1", ctx.command.qualified_name, 1)
     @commands.command()
     async def commandsusage(self, ctx):
         counter = 0
