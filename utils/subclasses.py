@@ -180,6 +180,10 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     if emojioptions:
       for i in emojioptions:
         self.emojioptions[i["user_id"]] = i["enabled"]
+    commandsusage = await self.db.fetch("SELECT * FROM commandsusage")
+    for i in commandsusage:
+      self.commandsusages[i["command"]] = i["usages"]
+
         
   async def chunk_(self, ctx):
       if ctx.guild:
