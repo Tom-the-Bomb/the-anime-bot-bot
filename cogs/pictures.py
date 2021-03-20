@@ -487,7 +487,7 @@ class pictures(commands.Cog):
             ctx, await ctx.author.avatar_url_as(format="png").read(),
             "add_noise_rand")
 
-    @commands.command()
+    @commands.command(aliases=['wtp'])
     async def pokemon(self, ctx):
         await ctx.trigger_typing()
         wtp = await self.bot.dag.wtp()
@@ -496,7 +496,7 @@ class pictures(commands.Cog):
             await ctx.author.send(wtp.name)
         embed = discord.Embed(color=0x2ecc71)
         ability = "".join(wtp.abilities)
-        embed.set_author(name=f"{ctx.author} have {tried} try")
+        embed.set_author(name=f"{ctx.author} has {tried} tries")
         embed.add_field(name="pokemon's ability", value=ability)
         embed.set_image(url=wtp.question)
         message = await ctx.send(embed=embed)
@@ -509,8 +509,8 @@ class pictures(commands.Cog):
             tried -= 1
             embed = discord.Embed(color=0x2ecc71)
             ability = "".join(wtp.abilities)
-            embed.set_author(name=f"{ctx.author} have {tried} try")
-            embed.add_field(name="pokemon's ability", value=ability)
+            embed.set_author(name=f"{ctx.author} has {tried} tries")
+            embed.add_field(name="Pokemon's Ability", value=ability)
             embed.set_image(url=wtp.question)
             await message.edit(embed=embed)
             if msg.content.lower() == wtp.name.lower():
@@ -524,7 +524,7 @@ class pictures(commands.Cog):
             if tried == 0:
                 await message.delete()
                 embed = discord.Embed(color=0x2ecc71)
-                embed.set_author(name=f"{ctx.author} losed")
+                embed.set_author(name=f"{ctx.author} lost")
                 embed.set_image(url=wtp.answer)
                 await ctx.reply(embed=embed)
                 tried = 3
