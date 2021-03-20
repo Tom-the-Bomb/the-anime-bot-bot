@@ -98,7 +98,7 @@ class pictures(commands.Cog):
                 # with aiohttp.MultipartWriter() as writer:
                 #     p = writer.append(resp.content, {"Content-Type": resp.content_type})
                 #     p.set_content_disposition("attachment", filename=str(resp.url).split("/")[-1])
-                async with self.bot.session.post("https://idevision.net/api/cdn", headers={"Authorization": config.idevision}, data=BytesIO(await resp.read())) as resp:
+                async with self.bot.session.post("https://idevision.net/api/cdn", headers={"Authorization": config.idevision, "File-Name": str(resp.url).split("/")[-1]}, data=BytesIO(await resp.read())) as resp:
                     return (await resp.json())["url"]
     async def ocr_(self, url):
         async with ratelimiter.RateLimiter(max_calls=2, period=10):
