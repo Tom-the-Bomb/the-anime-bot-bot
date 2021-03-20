@@ -23,6 +23,7 @@ class pictures(commands.Cog):
         self.bot = bot
 
     async def get_url(self, ctx, thing, **kwargs):
+        avatar = kwargs.get("avatar", True)
         check = kwargs.get("check", True)
         if ctx.message.reference:
             if ctx.message.reference.cached_message:
@@ -66,7 +67,7 @@ class pictures(commands.Cog):
             return ctx.message.attachments[0].proxy_url.replace("cdn.discordapp.com", "media.discordapp.net")
 
 
-        if thing is None:
+        if thing is None and avatar:
             url = str(ctx.author.avatar_url_as(format="png"))
         elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
             url = str(thing.url)
@@ -80,6 +81,8 @@ class pictures(commands.Cog):
                 url = await emoji_to_url(thing)
                 if url == thing:
                     raise commands.CommandError("Invalid url")
+        if not avatar:
+            return None
         if check:
             async with self.bot.session.get(url) as resp:
                 if resp.status != 200:
@@ -146,7 +149,7 @@ class pictures(commands.Cog):
     async def cdn(self, ctx, thing: typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]=None):
-        url = await self.get_url(ctx, thing)
+        url = await self.get_url(ctx, thing, avatar=False)
         await ctx.send(f"<{await self.cdn_(url)}>")
     @commands.command()
     async def ocr(self, ctx, thing: typing.Union[discord.Member, discord.User,
