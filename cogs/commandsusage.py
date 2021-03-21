@@ -3,8 +3,15 @@ from collections import Counter
 import discord
 from discord.ext import commands
 
+from menus import menus
+
 from jishaku.paginators import PaginatorInterface, PaginatorEmbedInterface
 
+class CommandsUsageMenu(menus.ListPageSource):
+    def __init__(self, data):
+        super().__init__(data, per_page=10)
+    async def format_page(self, menu, entries):
+        return {"embed": discord.Embed(color=menu.ctx.bot.color, title=f"Command Usage", description="\n".join(entries))}
 
 class commandsusage(commands.Cog):
     def __init__(self, bot):
@@ -22,15 +29,8 @@ class commandsusage(commands.Cog):
         for i, (n, v) in enumerate(self.bot.commandsusages.most_common()):
             counter += 1
             lists.append(f"`{counter}. {n:<20} {v}`")
-        paginator = commands.Paginator(max_size=1800,
-                                        prefix="",
-                                        suffix="")
-        for i in lists:
-            paginator.add_line(i)
-        interface = PaginatorEmbedInterface(ctx.bot,
-                                        paginator,
-                                        owner=ctx.author)
-        return await interface.send_to(ctx)
+        pages = menus.MenuPages(source=CommandsUsageMenu(lists), clear_reactions_after=True)
+        await pages.start(ctx)
 
 def setup(bot):
     bot.add_cog(commandsusage(bot))
