@@ -16,7 +16,7 @@ class commandsusage(commands.Cog):
         self.bot.commandsusages[ctx.command.qualified_name] += 1
         await self.bot.db.execute("INSERT INTO commandsusage VALUES ($1, $2) ON CONFLICT (command) DO UPDATE SET usages = commandsusage.usages + 1", ctx.command.qualified_name, 1)
     @commands.command()
-    async def commandsusage(self, ctx):
+    async def commandusage(self, ctx):
         counter = 0
         lists = [f"Total {self.bot.command_counter} commands invoked"]
         for i, (n, v) in enumerate(self.bot.commandsusages.most_common()):
