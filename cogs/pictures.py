@@ -449,7 +449,7 @@ class pictures(commands.Cog):
             image = await self.bot.zaneapi.magic(url, level)
             embed = discord.Embed(color=0x00ff6a).set_image(
                 url="attachment://magic.gif")
-            await ctx.send(file=discord.File(fp=image, filename="magic.gif"))
+            await ctx.send(file=discord.File(fp=image, filename="magic.gif"), embed=embed)
 
     @commands.command()
     @commands.max_concurrency(1, commands.BucketType.user)
