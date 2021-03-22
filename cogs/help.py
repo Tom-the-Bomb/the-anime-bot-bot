@@ -53,7 +53,7 @@ class HelpCommand(commands.HelpCommand):
 
         `{self.context.prefix}help [module]`
 
-        **Avaiable Modules are:**
+        **Available Modules are:**
         ```
         {cogs}
         ```
