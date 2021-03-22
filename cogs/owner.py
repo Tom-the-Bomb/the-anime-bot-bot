@@ -406,9 +406,9 @@ class owners(commands.Cog):
         is_multistatement = query.count(';') > 1
         if is_multistatement:
             # fetch does not support multiple statements
-            strategy = self.db.execute
+            strategy = self.bot.db.execute
         else:
-            strategy = self.db.fetch
+            strategy = self.bot.db.fetch
 
         try:
             start = time.perf_counter()
