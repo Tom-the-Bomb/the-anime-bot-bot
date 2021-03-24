@@ -2,6 +2,7 @@ import json
 from io import BytesIO
 import bs4
 import random
+from utils.asyncstuff import asyncexe
 
 import discord
 from discord.ext import commands
@@ -51,21 +52,27 @@ class animes(commands.Cog):
             f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
             icon_url=ctx.author.avatar_url)
         await ctx.reply(embed=embed)
+        
+    @asyncexe()
+    def animequote_(self, anime):
+         anime = await resp.text()
+         soup = bs4.BeautifulSoup(anime)
+         quote = soup.find(class_="quoteBig").getText()
+         image = f"https://www.less-real.com{soup.find_all('img')[1]['src']}"
+         embed = discord.Embed(color=self.bot.color, description=quote)
+         embed.set_image(url=image)
+         return embed
+        
 
     @commands.command(aliases=["animequotes"],
                       brief=" new new anime quote from the web ")
     async def animequote(self, ctx):
         await ctx.trigger_typing()
         num = random.randint(1, 7830)
-        resp = await self.bot.session.get(f"https://www.less-real.com/quotes/{num}")
-        anime = await resp.text()
-        soup = bs4.BeautifulSoup(anime)
-        quote = soup.find(class_="quoteBig").getText()
-        image = f"https://www.less-real.com{soup.find_all('img')[1]['src']}"
-        embed = discord.Embed(color=self.bot.color, description=quote)
-        embed.set_image(url=image)
-        await ctx.send(embed=embed)
-        
+        async with self.bot.session.get(await self.bot.session.get(f"https://www.less-real.com/quotes/{num}")) as resp:
+            embed = await self.animequote_(await resp.text())
+            await ctx.send(embed=embed)
+
 
 
 def setup(bot):
