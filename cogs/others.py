@@ -420,7 +420,7 @@ class others(commands.Cog):
 
     @commands.command(aliases=["info"])
     async def about(self, ctx):
-        p = pathlib.Path('./')
+        p = pathlib.Path('./cogs')
         cm = cr = fn = cl = ls = fc = cc = 0
         for f in p.rglob('*.py'):
             if str(f).startswith("venv"):
