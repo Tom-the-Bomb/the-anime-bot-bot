@@ -68,7 +68,7 @@ class animes(commands.Cog):
     async def animequote(self, ctx):
         await ctx.trigger_typing()
         num = random.randint(1, 7830)
-        async with self.bot.session.get(await self.bot.session.get(f"https://www.less-real.com/quotes/{num}")) as resp:
+        async with self.bot.session.get(f"https://www.less-real.com/quotes/{num}") as resp:
             embed = await self.animequote_(await resp.text())
             await ctx.send(embed=embed)
 
@@ -76,3 +76,4 @@ class animes(commands.Cog):
 
 def setup(bot):
     bot.add_cog(animes(bot))
+    
