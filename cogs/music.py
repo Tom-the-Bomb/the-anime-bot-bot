@@ -119,13 +119,13 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             return False
         return True
 
-    @commands.command()
+    @commands.command(aliases=['np', 'currentsong'])
     async def now(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         
         await ctx.send(embed=player.make_embed(player.now_playing))
     
-    @commands.command()
+    @commands.command(aliases=['vol'])
     async def volume(self, ctx, volume:int=100):
         if volume < 0 or volume > 100:
             return await ctx.send("volume must be between 0 to 100")
