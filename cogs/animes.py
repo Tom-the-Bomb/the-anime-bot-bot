@@ -55,7 +55,6 @@ class animes(commands.Cog):
         
     @asyncexe()
     def animequote_(self, anime):
-         anime = await resp.text()
          soup = bs4.BeautifulSoup(anime)
          quote = soup.find(class_="quoteBig").getText()
          image = f"https://www.less-real.com{soup.find_all('img')[1]['src']}"
