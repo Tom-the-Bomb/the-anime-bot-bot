@@ -255,10 +255,10 @@ class others(commands.Cog):
         postgres = round(postgres*1000)
         embed = await embedbase.embed(self, ctx)
         embed.set_author(name="ping")
-        embed.add_field(name="<:stab:744345955637395586>  websocket latency",
+        embed.add_field(name="<:stab:744345955637395586> Websocket Latency",
                         value=f"```{round(self.bot.latency * 1000)} ms ```")
-        embed.add_field(name="<:postgres:821095695746203689> Postgre sql latency", value=f"```{postgres} ms```")
-        embed.add_field(name="<a:typing:597589448607399949> API latency",
+        embed.add_field(name="<:postgres:821095695746203689> Postgres Latency", value=f"```{postgres} ms```")
+        embed.add_field(name="<a:typing:597589448607399949> API Latency",
                         value=f"```{round(final_latency * 1000)} ms ```")
         # start1 = time.perf_counter()
         # await self.bot.db.fetch("SELECT * FROM prefixes LIMIT 1")
@@ -468,7 +468,7 @@ class others(commands.Cog):
         # embed.add_field(name="Recent changes",
         #                 value="\n".join(lists), inline=False)
         embed.add_field(
-            name=" stats ",
+            name="File Stuff",
             value=f"```file: {fc:,}\nline: {ls:,}\ncharacters: {cc:,} \nclass: {cl:,}\nfunction: {fn:,}\ncoroutine: {cr:,}\ncomment: {cm:,}```",
             inline=False)
         embed.set_footer(
