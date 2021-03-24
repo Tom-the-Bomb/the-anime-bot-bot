@@ -61,7 +61,7 @@ class animes(commands.Cog):
         anime = await animejson.text()
         soup = bs4.BeautifulSoup(anime)
         quote = soup.find(class_="quoteBig").getText()
-        image = f"https://www.less-real.com{soup.find_all("img")[1]["src"]}"
+        image = f"https://www.less-real.com{soup.find_all('img')[1]['src']}"
         embed = discord.Embed(color=self.bot.color, description=quote)
         embed.set_image(url=image)
         await ctx.send(embed=embed)
