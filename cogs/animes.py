@@ -1,7 +1,8 @@
 import json
 from io import BytesIO
+import bs4
+import random
 
-import aiohttp
 import discord
 from discord.ext import commands
 
@@ -55,15 +56,16 @@ class animes(commands.Cog):
                       brief=" new new anime quote from the web ")
     async def animequote(self, ctx):
         await ctx.trigger_typing()
-        animejson = await self.bot.session.get("https://animechanapi.xyz/api/quotes/random")
-        anime = await animejson.json()
-        animeta = anime["data"]
-        animetosend = animeta[0]["quote"] + " By " + animeta[0][
-            "character"] + " in " + animeta[0]["anime"]
-        embed = discord.Embed(color=0x2ecc71)
-        embed.set_author(name="New anime quote from the web")
-        embed.add_field(name="quote", value=animetosend)
-        await ctx.reply(embed=embed)
+        num = random.randint(1, 7830)
+        resp = await self.bot.session.get(f"https://www.less-real.com/quotes/{num}")
+        anime = await animejson.text()
+        soup = bs4.BeautifulSoup(anime)
+        quote = soup.find(class_="quoteBig").getText()
+        image = f"https://www.less-real.com{soup.find_all("img")[1]["src"]}"
+        embed = discord.Embed(color=self.bot.color, description=quote)
+        embed.set_image(url=image)
+        await ctx.send(embed=embed)
+        
 
 
 def setup(bot):
