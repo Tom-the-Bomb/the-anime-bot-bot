@@ -469,7 +469,7 @@ class others(commands.Cog):
         #                 value="\n".join(lists), inline=False)
         embed.add_field(
             name=" stats ",
-            value=f"```file: {fc}\nline: {ls:,}\ncharacters: {cc} \nclass: {cl}\nfunction: {fn}\ncoroutine: {cr}\ncomment: {cm:,}```",
+            value=f"```file: {fc:,}\nline: {ls:,}\ncharacters: {cc:,} \nclass: {cl:,}\nfunction: {fn:,}\ncoroutine: {cr:,}\ncomment: {cm:,}```",
             inline=False)
         embed.set_footer(
             text=f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
