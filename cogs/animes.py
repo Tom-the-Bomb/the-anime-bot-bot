@@ -58,7 +58,7 @@ class animes(commands.Cog):
         await ctx.trigger_typing()
         num = random.randint(1, 7830)
         resp = await self.bot.session.get(f"https://www.less-real.com/quotes/{num}")
-        anime = await animejson.text()
+        anime = await resp.text()
         soup = bs4.BeautifulSoup(anime)
         quote = soup.find(class_="quoteBig").getText()
         image = f"https://www.less-real.com{soup.find_all('img')[1]['src']}"
