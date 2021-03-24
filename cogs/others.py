@@ -287,7 +287,7 @@ class others(commands.Cog):
         m = self.bot.psutil_process.memory_full_info()
         embed = await embedbase.embed(self, ctx)
         embed.add_field(
-            name="System Infos",
+            name="System Info",
             value=f"• `{humanize.naturalsize(m.rss)}` physical memory used\n",
             inline=False)
         await ctx.reply(embed=embed)
@@ -449,16 +449,16 @@ class others(commands.Cog):
         embed = await embedbase.embed(self, ctx)
         embed.set_author(name=self.bot.user, icon_url=self.bot.user.avatar_url)
         embed.add_field(
-            name="infos",
-            value=f"Guilds: {len(self.bot.guilds)} \nMembers: {len(self.bot.users)} \nCreator: {owner} \nLibrary: discord.py \nCommands used (since last reboot): {self.bot.counter} \nInvite link: [click](https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2146823543&scope=bot) \nMessages Cached: {len(self.bot.cached_messages)}",
+            name="Info",
+            value=f"Guilds: {len(self.bot.guilds)} \nMembers: {len(self.bot.users)} \nCreator: {owner} \nLibrary: discord.py \nCommands used (since last reboot): {self.bot.counter} \nInvite link: [click here](https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2146823543&scope=bot) \nMessages Cached: {len(self.bot.cached_messages)}",
             inline=False)
         embed.add_field(
             name="System Info",
             value=f"> `{humanize.naturalsize(m.rss)}` physical memory used\n> `{self.bot.psutil_process.cpu_percent()/psutil.cpu_count()}%` CPU usage\n> running on PID `{self.bot.psutil_process.pid}`\n> `{self.bot.psutil_process.num_threads()}` thread(s)",
             inline=False)
-        embed.add_field(name="<:stab:744345955637395586>  websocket latency",
+        embed.add_field(name="<:stab:744345955637395586>  Websocket Latency",
                         value=f"```{round(self.bot.latency * 1000)} ms ```")
-        embed.add_field(name="<a:typing:597589448607399949> API latency",
+        embed.add_field(name="<a:typing:597589448607399949> API Latency",
                         value=f"```{round(final_latency * 1000)} ms ```")
         # repo = g.get_repo("Cryptex-github/the-anime-bot-bot").get_commits()[:3]
         # lists = []
