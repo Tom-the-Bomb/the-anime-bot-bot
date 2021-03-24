@@ -37,6 +37,14 @@ class others(commands.Cog):
         self.thing = {}
         
     @commands.command()
+    async def owners(self, ctx):
+      embed = discord.Embed(color=self.bot.color, description=f"""
+      <:rooSip:511919340950650881> Owner: {str(self.bot.get_user(590323594744168494)) if self.bot.get_user(590323594744168494) else str(await self.bot.fetch_user(590323594744168494))}
+      <:rooSellout:739614245343199234> Rich Co-owner: {str(self.bot.get_user(711057339360477184)) if self.bot.get_user(711057339360477184) else str(await self.bot.fetch_user(711057339360477184))}
+""")
+      await ctx.send(embed=embed)
+        
+    @commands.command()
     async def emojioptions(self, ctx, enabled:bool):
       await self.bot.db.execute("INSERT INTO emojioptions (user_id, enabled) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET enabled = $2 WHERE emojioptions.user_id = $1 ", ctx.author.id, enabled)
       self.bot.emojioptions[ctx.author.id] = enabled
@@ -255,10 +263,10 @@ class others(commands.Cog):
         postgres = round(postgres*1000)
         embed = await embedbase.embed(self, ctx)
         embed.set_author(name="ping")
-        embed.add_field(name="<:stab:744345955637395586> Websocket Latency",
+        embed.add_field(name="<:stab:744345955637395586>  websocket latency",
                         value=f"```{round(self.bot.latency * 1000)} ms ```")
-        embed.add_field(name="<:postgres:821095695746203689> Postgres Latency", value=f"```{postgres} ms```")
-        embed.add_field(name="<a:typing:597589448607399949> API Latency",
+        embed.add_field(name="<:postgres:821095695746203689> Postgre sql latency", value=f"```{postgres} ms```")
+        embed.add_field(name="<a:typing:597589448607399949> API latency",
                         value=f"```{round(final_latency * 1000)} ms ```")
         # start1 = time.perf_counter()
         # await self.bot.db.fetch("SELECT * FROM prefixes LIMIT 1")
@@ -468,7 +476,7 @@ class others(commands.Cog):
         # embed.add_field(name="Recent changes",
         #                 value="\n".join(lists), inline=False)
         embed.add_field(
-            name="File Stuff",
+            name=" stats ",
             value=f"```file: {fc:,}\nline: {ls:,}\ncharacters: {cc:,} \nclass: {cl:,}\nfunction: {fn:,}\ncoroutine: {cr:,}\ncomment: {cm:,}```",
             inline=False)
         embed.set_footer(
