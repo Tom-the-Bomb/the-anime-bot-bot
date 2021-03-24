@@ -39,7 +39,7 @@ class others(commands.Cog):
     @commands.command()
     async def owners(self, ctx):
       embed = discord.Embed(color=self.bot.color, description=f"""
-      <:rooSip:511919340950650881> Owner: {str(self.bot.get_user(590323594744168494)) if self.bot.get_user(590323594744168494) else str(await self.bot.fetch_user(590323594744168494))}
+      <:rooSip:824129426181980191> Owner: {str(self.bot.get_user(590323594744168494)) if self.bot.get_user(590323594744168494) else str(await self.bot.fetch_user(590323594744168494))}
       <:rooSellout:739614245343199234> Rich Co-owner: {str(self.bot.get_user(711057339360477184)) if self.bot.get_user(711057339360477184) else str(await self.bot.fetch_user(711057339360477184))}
 """)
       await ctx.send(embed=embed)
