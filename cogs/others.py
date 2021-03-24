@@ -450,7 +450,7 @@ class others(commands.Cog):
         embed.set_author(name=self.bot.user, icon_url=self.bot.user.avatar_url)
         embed.add_field(
             name="infos",
-            value=f"Guilds: {len(self.bot.guilds)} \n Members: {len(self.bot.users)} \n Creators: {owner} \n Libary: discord.py \n Command used (since last reboot): {self.bot.counter} \n Invite link:  [click ](https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2146823543&scope=bot) \n Messages Cached: {len(self.bot.cached_messages)}",
+            value=f"Guilds: {len(self.bot.guilds)} \n Members: {len(self.bot.users)} \n Creators: {owner} \n library: discord.py \n Command used (since last reboot): {self.bot.counter} \n Invite link:  [click ](https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2146823543&scope=bot) \n Messages Cached: {len(self.bot.cached_messages)}",
             inline=False)
         embed.add_field(
             name="System Infos",
