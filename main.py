@@ -1,4 +1,6 @@
 import asyncio
+import tracemalloc
+tracemalloc.start()
 import difflib
 import config
 import functools
