@@ -15,7 +15,7 @@ class logging(commands.Cog):
                 self.bot.logging_cache[i["guild_id"]] = dict(i.items())
 
     @commands.group(invoke_without_command=True)
-    @commands.has_permission(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def logging(self, ctx):
         """
         View the status of logging
@@ -27,7 +27,7 @@ class logging(commands.Cog):
         settings = "\n".join(settings)
         await ctx.send(embed=discord.Embed(color=self.bot.color, description=settings))
     @logging.command()
-    @commands.has_permission(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def setup(self, ctx, channel:discord.TextChannel):
         """
         Setup logging:
@@ -51,7 +51,7 @@ class logging(commands.Cog):
             return await ctx.send(f"Logging is already on use {ctx.prefix}logging off to turn it off")
     
     @logging.command()
-    @commands.has_permission(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def off(self, ctx):
         if ctx.guild.id not in self.bot.logging_cache.keys():
             return await ctx.send("logging is already off")
@@ -61,7 +61,7 @@ class logging(commands.Cog):
 
 
     @logging.command()
-    @commands.has_permission(manage_guild=True)
+    @commands.has_permissions(manage_guild=True)
     async def toggle(self, ctx, event:str):
         """
         Toggle a certain event
