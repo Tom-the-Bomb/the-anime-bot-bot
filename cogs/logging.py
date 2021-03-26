@@ -21,7 +21,7 @@ class logging(commands.Cog):
         """
         logging_settings = self.bot.logging_cache.get(ctx.guild.id)
         if not logging_settings:
-            return await ctx.send(f"You have not enable logging run {ctx.prefix}logging toggle to enable it")
+            return await ctx.send(f"You have not enable logging run {ctx.prefix}logging setup to enable it")
         settings = [f"{i} - {v}" for i,v in logging_settings.items()]
         settings = "\n".join(settings)
         await ctx.send(embed=discord.Embed(color=self.bot.color, description=settings))
