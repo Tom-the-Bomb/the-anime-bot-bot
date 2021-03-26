@@ -180,7 +180,7 @@ class logging(commands.Cog):
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
-        if before.nick and after.nick and before.nick != after.nick:
+        if before.nick != after.nick:
             embed = discord.Embed(color=self.bot.color, title="Nickname Changed", description=f"Before Nickname: {before.nick}\nAfter Nickname: {after.nick}", timestamp=datetime.datetime.utcnow())
             await self.send_webhook(invite.guild.id, embed, "member_update")
         if before.roles != after.roles:
