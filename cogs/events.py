@@ -430,7 +430,7 @@ class events(commands.Cog):
         self.bot.deleted_message_cache[message.id] = message
         if message.content == "<@!787927476177076234>" and not message.author.bot:
             message_ = await message.channel.send(
-                f"Hii there why u ping me smh oh i mean hii my prefix is `{', '.join(self.bot.prefix[message.guild.id])}` "
+                f"Hii there why u ping me smh oh i mean hii my prefix is `{', '.join(self.bot.prefixes[message.guild.id])}` "
             )
             self.bot._message_cache[message.id] = message_
         if message.content.startswith(";;") and not message.author.bot and self.bot.emojioptions.get(message.author.id) == True:
