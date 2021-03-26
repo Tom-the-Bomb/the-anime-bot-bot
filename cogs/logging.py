@@ -42,7 +42,7 @@ class logging(commands.Cog):
                     return await ctx.send("Unable to create webhook in this channel maybe try a different channel?")
             except discord.Forbidden:
                 return await ctx.send("I do not have permission to create webhook in that channel, please make sure I have `manage_webhook` permission")
-            logging = await self.bot.db.fetch("INSERT INTO logging (guild_id, channel_id, webhook, channel_create, channel_update, channel_delete, role_create, role_update, role_delete, guild_update, emojis_update, member_update, member_ban, member_unban, invite_change, member_join, member_leave, voice_channel_change, message_delete, message_edit) VALUES ($1, $2, $3, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4) RETURNING *;", ctx.guild.id, channel.id, webhook.url, True)
+            logging = await self.bot.db.fetch("INSERT INTO logging (guild_id, channel_id, webhook, channel_create, channel_update, channel_delete, role_create, role_update, role_delete, guild_update, emojis_update, member_update, member_ban, member_unban, invite_change, member_join, member_leave, voice_channel_change, message_delete, message_edit) VALUES ($1, $2, $3, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4) RETURNING *;", ctx.guild.id, channel.id, webhook.url, True)
             self.bot.logging_cache[ctx.guild.id] = dict(logging.items())
             await ctx.send(f"Success, logging is enabled in this server, logging channel is {channel.mention}")
         else:
