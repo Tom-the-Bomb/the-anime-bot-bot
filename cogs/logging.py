@@ -80,7 +80,7 @@ class logging(commands.Cog):
 
 
     async def send_webhook(self, guild_id, embed, event):
-        if guild.id not in self.bot.logging_cache.keys():
+        if guild_id not in self.bot.logging_cache.keys():
             return
         if self.bot.logging_cache[guild_id][event] == False:
             return
@@ -212,13 +212,13 @@ class logging(commands.Cog):
         await self.send_webhook(invite.guild.id, embed, "invite_change")
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        embed = discord.Embed(color=self.bot.color, title="Member joined", description=f"{member.mention} just joined. We now have {member.guild.member_count} members. Account Created at: {humanize.precisedelta(member.created_at)} ago")
-        embed.set_footer(text=f"ID: {member.id}", timestamp=datetime.datetime.now())
+        embed = discord.Embed(color=self.bot.color, title="Member joined", description=f"{member.mention} just joined. We now have {member.guild.member_count} members. Account Created at: {humanize.precisedelta(member.created_at)} ago", timestamp=datetime.datetime.now())
+        embed.set_footer(text=f"ID: {member.id}")
         await self.send_webhook(member.guild.id, embed, "member_join")
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        embed = discord.Embed(color=self.bot.color, title="Member left", description=f"{member.mention} just left. We now have {member.guild.member_count} members. Account Created at: {humanize.precisedelta(member.created_at)} ago")
-        embed.set_footer(text=f"ID: {member.id}", timestamp=datetime.datetime.now())
+        embed = discord.Embed(color=self.bot.color, title="Member left", description=f"{member.mention} just left. We now have {member.guild.member_count} members. Account Created at: {humanize.precisedelta(member.created_at)} ago", timestamp=datetime.datetime.now())
+        embed.set_footer(text=f"ID: {member.id}")
         await self.send_webhook(member.guild.id, embed, "member_leave")
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
