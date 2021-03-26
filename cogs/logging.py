@@ -19,7 +19,7 @@ class logging(commands.Cog):
         """
         View the status of logging
         """
-        logging_settings = self.bot.logging_cache[ctx.guild.id]
+        logging_settings = self.bot.logging_cache.get(ctx.guild.id)
         if not logging_settings:
             return await ctx.send(f"You have not enable logging run {ctx.prefix}logging toggle to enable it")
         settings = [f"{i} - {v}" for i,v in logging_settings.items()]
