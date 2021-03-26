@@ -152,7 +152,7 @@ class AnimeBot(commands.Bot):
     # self.ipc = ipc.Server(self, secret_key=ipc_key)
     self.command_list = []
     super().__init__(command_prefix=prefix_get, 
-max_messages=10000, 
+max_messages=5000, 
 intents=intents, 
 description="""
 |_   _| |__   ___     / \   _ __ (_)_ __ ___   ___  | __ )  ___ | |_ 

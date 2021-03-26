@@ -99,11 +99,20 @@ class logging(commands.Cog):
         ...
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        ...
+        embed = discord.Embed(color=self.bot.color)
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         if not before.channel:
-            embed = discord.Embed(color=self.bot.color, )
+            embed = discord.Embed(color=self.bot.color, title="Joined voice channel", description=f"{member.display_name} joined voice channel {after.channel.mention}")
+            await self.send_webhook(member.guild.id, embed=embed)
+        if not after.channel:
+            embed = discord.Embed(color=self.bot.color, title="Left voice channel", description=f"{member.display_name} left voice channel {before.channel.mention}")
+             await self.send_webhook(member.guild.id, embed=embed)
+        if before.channel != after.channel:
+            embed = discord.Embed(color=self.bot.color, title="Changed voice channel", description=f"{member.display_name} changed voice channel from {before.channel.mention} to {after.channel.mention}")
+             await self.send_webhook(member.guild.id, embed=embed)
+        
+            
     @commands.Cog.listener()
     async def on_raw_message_edit(self, payload):
         if payload.cached_message:
