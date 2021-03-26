@@ -29,7 +29,7 @@ class tag(commands.Cog):
         tags = await self.bot.db.fetch("SELECT * FROM tags WHERE tag_name = $1 AND author_id = $2", name, ctx.author.id)
         if not tags:
             return await ctx.send("Tag not found or you don't own the tag")
-        await self.bot.db.execute("UPDATE tags SET content = $2 WHERE tag_name = $1", name, content)
+        await self.bot.db.execute("UPDATE tags SET tag_content = $2 WHERE tag_name = $1", name, content)
         await ctx.send(f"Edited tag {name}")
     @tag.command()
     async def remove(self, ctx, *, name):
