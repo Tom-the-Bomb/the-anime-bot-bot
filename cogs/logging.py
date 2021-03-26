@@ -237,6 +237,8 @@ class logging(commands.Cog):
     async def on_raw_message_edit(self, payload):
         if payload.cached_message:
             return
+        if not payload.guild_id:
+            return
         embed = discord.Embed(color=self.bot.color, title="Message Edited", description=f"The message is too old I can't find the content", timestamp=datetime.datetime.utcnow())
         await self.send_webhook(payload.guild_id, embed, "message_edit")
     @commands.Cog.listener()
@@ -254,6 +256,8 @@ class logging(commands.Cog):
         await self.send_webhook(payload.guild_id, embed, "message_delete")
     @commands.Cog.listener()
     async def on_raw_message_delete(self, payload):
+        if not payload.guild_id:
+            return
         if message.webhook_id:
             return
         message = payload.cached_message
