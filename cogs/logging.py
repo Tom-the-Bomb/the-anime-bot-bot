@@ -182,26 +182,26 @@ class logging(commands.Cog):
     async def on_member_update(self, before, after):
         if before.nick != after.nick:
             embed = discord.Embed(color=self.bot.color, title="Nickname Changed", description=f"Before Nickname: {before.nick}\nAfter Nickname: {after.nick}", timestamp=datetime.datetime.utcnow())
-            await self.send_webhook(invite.guild.id, embed, "member_update")
+            await self.send_webhook(after.guild.id, embed, "member_update")
         if before.roles != after.roles:
             if len(before.roles) < len(after.roles):
                 roles = set(before.roles)
                 new_roles = [i for i in after.roles not in roles]
                 embed = discord.Embed(color=self.bot.color, title="Role Added", description=f"Member: {member.mention}\nRoles: {', '.join(new_roles)}", timestamp=datetime.datetime.utcnow())
-                return await self.send_webhook(invite.guild.id, embed, "member_update")
+                return await self.send_webhook(after.guild.id, embed, "member_update")
             else:
                 roles = set(after.roles)
                 removed_roles = [i for i in before.roles not in roles]
                 embed = discord.Embed(color=self.bot.color, title="Role Removed", description=f"Member: {member.mention}\nRoles: {', '.join(removed_roles)}", timestamp=datetime.datetime.utcnow())
-                return await self.send_webhook(invite.guild.id, embed, "member_update")
+                return await self.send_webhook(after.guild.id, embed, "member_update")
     @commands.Cog.listener()
     async def on_member_ban(self, guild, user):
         embed = discord.Embed(color=self.bot.color, title="Member Banned", description=f"User: {str(user)} {user.mention} ({user.id})", timestamp=datetime.datetime.utcnow())
-        await self.send_webhook(invite.guild.id, embed, "member_ban")
+        await self.send_webhook(guild.id, embed, "member_ban")
     @commands.Cog.listener()
     async def on_member_unban(self, guild, user):
         embed = discord.Embed(color=self.bot.color, title="Member Unbanned", description=f"User: {str(user)} {user.mention} ({user.id})", timestamp=datetime.datetime.utcnow())
-        await self.send_webhook(invite.guild.id, embed, "member_unban")
+        await self.send_webhook(guild.id, embed, "member_unban")
     @commands.Cog.listener()
     async def on_invite_create(self, invite):
         embed = discord.Embed(color=self.bot.color, title="Invite Deleted", description=f"Invite ID: {invite.id}\nInvite URL: {invite.url}", timestamp=invite.created_at)
