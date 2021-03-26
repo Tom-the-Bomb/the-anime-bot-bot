@@ -115,7 +115,7 @@ class logging(commands.Cog):
         if channel.guild.id not in self.bot.logging_cache.keys():
             return
         embed = discord.Embed(color=self.bot.color, title="Channel Updated", timestamp=channel.created_at)
-        embed.set_footer(text=f"Channel ID: {channel.id}")
+        embed.set_footer(text=f"Channel ID: {after.id}")
         return await self.send_webhook(after.guild.id, embed, "channel_update")
 
     @commands.Cog.listener()
@@ -130,7 +130,7 @@ class logging(commands.Cog):
         if role.guild.id not in self.bot.logging_cache.keys():
             return
         embed = discord.Embed(color=self.bot.color, title="Role Created", description=f"**Role name:** {role.name}\n**Color:** {str(channel.color)}", timestamp=channel.created_at)
-        embed.set_footer(text=f"Channel ID: {channel.id}")
+        embed.set_footer(text=f"Role ID: {role.id}")
         await self.send_webhook(role.guild.id, embed, "role_delete")
 
 
@@ -138,10 +138,10 @@ class logging(commands.Cog):
     async def on_guild_role_update(self, before, after):
         if before.color != after.color:
             embed = discord.Embed(color=self.bot.color, title="Role Updated", description=f"**Role name:** {after.name}\n**Old Color:** {str(before.color)}\n**New Color:** {str(after.color)}", timestamp=datetime.datetime.utcnow())
-            await self.send_webhook(invite.guild.id, embed, "role_update")
+            await self.send_webhook(after.guild.id, embed, "role_update")
         if before.name != after.name:
             embed = discord.Embed(color=self.bot.color, title="Role Updated", description=f"**Old Role Name:** {before.name}\n**New Role Name:** {after.name}", timestamp=datetime.datetime.utcnow())
-            await self.send_webhook(invite.guild.id, embed, "role_update")
+            await self.send_webhook(after.guild.id, embed, "role_update")
         if before.permission != after.permission:
             changed_permission = [(i,v) for i,v in dict(after).items() if dict(before)[i] != v]
             to_display = []
@@ -149,7 +149,7 @@ class logging(commands.Cog):
                 to_display.append(f"Added permission {i}") if v else to_display.append(f"Removed permission {i}")
             to_display = "\n".join(to_display)
             embed = discord.Embed(color=self.bot.color, title="Role Updated", description=f"**New Permissions:** {to_display}", timestamp=datetime.datetime.utcnow())
-            await self.send_webhook(invite.guild.id, embed, "role_update")
+            await self.send_webhook(after.guild.id, embed, "role_update")
     @commands.Cog.listener()
     async def on_guild_role_delete(self, role):
         if role.guild.id not in self.bot.logging_cache.keys():
@@ -161,26 +161,26 @@ class logging(commands.Cog):
     async def on_guild_update(self, before, after):
         if before.afk_channel != after.afk_channel:
             embed = discord.Embed(color=self.bot.color, title="Guild Updated", description=f"**Old Afk channel:** {before.afk_channel.mention}*\n*New Afk channel:** {after.afk_channel.mention}", timestamp=datetime.datetime.utcnow())
-            return await self.send_webhook(invite.guild.id, embed, "guild_update")
+            return await self.send_webhook(after.id, embed, "guild_update")
         if before.afk_timeout != after.afk_timeout:
             embed = discord.Embed(color=self.bot.color, title="Guild Updated", description=f"**Old Afk timeout:** {before.afk_timeout}*\n*New Afk timeout:** {after.afk_timeout}", timestamp=datetime.datetime.utcnow())
-            return await self.send_webhook(invite.guild.id, embed, "guild_update")
+            return await self.send_webhook(after.id, embed, "guild_update")
         if before.name != after.name:
             embed = discord.Embed(color=self.bot.color, title="Guild Updated", description=f"**Old Name:** {before.name}*\n*New name:** {after.name}", timestamp=datetime.datetime.utcnow())
-            return await self.send_webhook(invite.guild.id, embed, "guild_update")
+            return await self.send_webhook(after.guild.id, embed, "guild_update")
         embed = discord.Embed(color=self.bot.color, title="Guild Updated", description=f"Something updated but I can't trace what updated", timestamp=datetime.datetime.utcnow())
-        await self.send_webhook(invite.guild.id, embed, "guild_update")
+        await self.send_webhook(after.id, embed, "guild_update")
 
     @commands.Cog.listener()
     async def on_guild_emojis_update(self, guild, before, after):
         if len(before) < len(after):
             new_emojis = [str(i) for i in after if i not in before]
             embed = discord.Embed(color=self.bot.color, title="New Emojis Added", description=f"{', '.join(new_emojis)}", timestamp=datetime.datetime.utcnow())
-            await self.send_webhook(invite.guild.id, embed, "emojis_update")
+            await self.send_webhook(after.guild.id, embed, "emojis_update")
         else:
             c = [str(i) for i in before if i not in after]
             embed = discord.Embed(color=self.bot.color, title="Emojis Removed", description=f"{', '.join(removed_emojis)}", timestamp=datetime.datetime.utcnow())
-            await self.send_webhook(invite.guild.id, embed, "emojis_update")
+            await self.send_webhook(after.guild.id, embed, "emojis_update")
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
