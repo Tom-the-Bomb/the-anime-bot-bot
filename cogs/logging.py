@@ -190,12 +190,12 @@ class logging(commands.Cog):
         if before.roles != after.roles:
             if len(before.roles) < len(after.roles):
                 roles = set(before.roles)
-                new_roles = [i for i in after.roles not in roles]
+                new_roles = [i.mention for i in after.roles if i not in roles]
                 embed = discord.Embed(color=self.bot.color, title="Role Added", description=f"Member: {member.mention}\nRoles: {', '.join(new_roles)}", timestamp=datetime.datetime.utcnow())
                 return await self.send_webhook(after.guild.id, embed, "member_update")
             else:
                 roles = set(after.roles)
-                removed_roles = [i for i in before.roles not in roles]
+                removed_roles = [i.mention for i in before.roles if i not in roles]
                 embed = discord.Embed(color=self.bot.color, title="Role Removed", description=f"Member: {member.mention}\nRoles: {', '.join(removed_roles)}", timestamp=datetime.datetime.utcnow())
                 return await self.send_webhook(after.guild.id, embed, "member_update")
     @commands.Cog.listener()
