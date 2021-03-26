@@ -84,8 +84,8 @@ class logging(commands.Cog):
             return
         if self.bot.logging_cache[guild_id][event] == False:
             return
-        webhook_url = self.bot.logging_cache[channel.guild.id]["webhook"]
-        channel_id = self.bot.logging_cache[channel.guild.id]["channel_id"]
+        webhook_url = self.bot.logging_cache[guild_id]["webhook"]
+        channel_id = self.bot.logging_cache[guild_id]["channel_id"]
         webhook = discord.Webhook.from_url(webhook_url, adapter=discord.AsyncWebhookAdapter(self.bot.session))
         try:
             message = await webhook.send(embed=embed, username="The Anime Bot logging", avatar_url=str(self.bot.user.avatar_url_as(format="png")))
