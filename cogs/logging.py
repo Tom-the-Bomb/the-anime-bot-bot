@@ -243,6 +243,8 @@ class logging(commands.Cog):
         await self.send_webhook(payload.guild_id, embed, "message_edit")
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
+        if after.embeds:
+            return
         before_content = before.content or  "message don't have content could be a attachment or embed"
         after_content = after.content or  "message don't have content could be a attachment or embed"
         embed = discord.Embed(color=self.bot.color, title="Message Edited", timestamp=datetime.datetime.utcnow())
