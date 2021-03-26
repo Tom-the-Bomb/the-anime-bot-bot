@@ -105,14 +105,14 @@ class logging(commands.Cog):
             return
         embed = discord.Embed(color=self.bot.color, title="New channel created", description=f"**channel name:** {channel.name}\n**Category:** {channel.category}", timestamp=channel.created_at)
         embed.set_footer(text=f"Channel ID: {channel.id}")
-        await self.send_webhook(guild_id, embed, "channel_create")
+        await self.send_webhook(channel.guild.id, embed, "channel_create")
     @commands.Cog.listener()
     async def on_guild_channel_update(self, before, after):
         if channel.guild.id not in self.bot.logging_cache.keys():
             return
         embed = discord.Embed(color=self.bot.color, title="Channel Updated", timestamp=channel.created_at)
         embed.set_footer(text=f"Channel ID: {channel.id}")
-        return await self.send_webhook(guild_id, embed, "channel_update")
+        return await self.send_webhook(after.guild.id, embed, "channel_update")
 
     @commands.Cog.listener()
     async def on_guild_channel_delete(self, channel):
@@ -120,14 +120,14 @@ class logging(commands.Cog):
             return
         embed = discord.Embed(color=self.bot.color, title="Channel Deleted", description=f"**channel name:** {channel.name}\n**Category:** {channel.category}", timestamp=channel.created_at)
         embed.set_footer(text=f"Channel ID: {channel.id}")
-        await self.send_webhook(guild_id, embed, "channel_delete")
+        await self.send_webhook(channel.guild.id, embed, "channel_delete")
     @commands.Cog.listener()
     async def on_guild_role_create(self, role):
         if role.guild.id not in self.bot.logging_cache.keys():
             return
         embed = discord.Embed(color=self.bot.color, title="Role Created", description=f"**Role name:** {role.name}\n**Color:** {str(channel.color)}", timestamp=channel.created_at)
         embed.set_footer(text=f"Channel ID: {channel.id}")
-        await self.send_webhook(guild_id, embed, "role_delete")
+        await self.send_webhook(role.guild.id, embed, "role_delete")
 
 
     @commands.Cog.listener()
@@ -152,7 +152,7 @@ class logging(commands.Cog):
             return
         embed = discord.Embed(color=self.bot.color, title="Role Deleted", description=f"**Role name:** {role.name}\n**Color:** {str(channel.color)}", timestamp=channel.created_at)
         embed.set_footer(text=f"Channel ID: {channel.id}")
-        await self.send_webhook(guild_id, embed, "role_delete")
+        await self.send_webhook(role.guild.id, embed, "role_delete")
     @commands.Cog.listener()
     async def on_guild_update(self, before, after):
         if before.afk_channel != after.afk_channel:
@@ -238,7 +238,7 @@ class logging(commands.Cog):
         if payload.cached_message:
             return
         embed = discord.Embed(color=self.bot.color, title="Message Edited", description=f"The message is too old I can't find the content", timestamp=datetime.datetime.utcnow())
-        await self.send_webhook(guild_id, embed, "message_edit")
+        await self.send_webhook(payload.guild_id, embed, "message_edit")
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
         before_content = before.content or  "message don't have content could be a attachment or embed"
@@ -246,7 +246,7 @@ class logging(commands.Cog):
         embed = discord.Embed(color=self.bot.color, title="Message Deleted", timestamp=datetime.datetime.utcnow())
         embed.add_field(name="Before", value=f"**Content:** {before_content}")
         embed.add_field(name="After", value=f"**Content:** {after_content}")
-        await self.send_webhook(guild_id, embed, "message_edit")
+        await self.send_webhook(after.guild.id, embed, "message_edit")
     @commands.Cog.listener()
     async def on_raw_bulk_message_delete(self, payload):
         ids = "\n".join(payload.message_ids)
@@ -260,10 +260,10 @@ class logging(commands.Cog):
         if message:
             content = message.content or  "message don't have content could be a attachment or embed"
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"**Content:** {content}", timestamp=datetime.datetime.utcnow())
-            await self.send_webhook(guild_id, embed, "message_delete")
+            await self.send_webhook(message.guild.id, embed, "message_delete")
         else:
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"The message is too old I can't find the content", timestamp=datetime.datetime.utcnow())
-            await self.send_webhook(guild_id, embed, "message_delete")
+            await self.send_webhook(payload.guild_id, embed, "message_delete")
 
 
     
