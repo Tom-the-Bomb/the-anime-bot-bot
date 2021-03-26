@@ -78,28 +78,56 @@ class logging(commands.Cog):
         ...
     @commands.Cog.listener()
     async def on_guild_emojis_update(self, guild, before, after):
-        ...
+        if len(before) < len(after):
+            new_emojis = [str(i) for i in after if i not in before]
+            embed = discord.Embed(color=self.bot.color, title="New Emojis Added", description=f"{', '.join(new_emojis)}", timestamp=datetime.datetime.utcnow())
+            await self.send_webhook(invite.guild.id, embed)
+        else:
+            removed_mojis = [str(i) for i in before if i not in after]
+            
+
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
-        ...
+        if nick and before.nick != after.nick:
+            embed = discord.Embed(color=self.bot.color, title="Nickname Changed", description=f"", timestamp=datetime.datetime.utcnow())
+            await self.send_webhook(invite.guild.id, embed)
+        if before.roles != after.roles:
+            if len(before.roles) < len(after.roles):
+                roles = set(before.roles)
+                new_roles = [i for i in after.roles not in roles]
+                embed = discord.Embed(color=self.bot.color, title="Role Added", description=f"Member: {member.mention}\nRoles: {', '.join(new_roles)}", timestamp=datetime.datetime.utcnow())
+                return await self.send_webhook(invite.guild.id, embed)
+            else:
+                roles = set(after.roles)
+                removed_roles = [i for i in before.roles not in roles]
+                embed = discord.Embed(color=self.bot.color, title="Role Removed", description=f"Member: {member.mention}\nRoles: {', '.join(removed_roles)}", timestamp=datetime.datetime.utcnow())
+                return await self.send_webhook(invite.guild.id, embed)
     @commands.Cog.listener()
     async def on_member_ban(self, guild, user):
-        ...
+        embed = discord.Embed(color=self.bot.color, title="Member Banned", description=f"User: {str(user)} {user.mention} ({user.id})", timestamp=datetime.datetime.utcnow())
+        await self.send_webhook(invite.guild.id, embed)
     @commands.Cog.listener()
     async def on_member_unban(self, guild, user):
-        ...
+        embed = discord.Embed(color=self.bot.color, title="Member Unbanned", description=f"User: {str(user)} {user.mention} ({user.id})", timestamp=datetime.datetime.utcnow())
+        await self.send_webhook(invite.guild.id, embed)
     @commands.Cog.listener()
     async def on_invite_create(self, invite):
-        ...
+        embed = discord.Embed(color=self.bot.color, title="Invite Deleted", description=f"Invite ID: {invite.id}\nInvite URL: {invite.url}", timestamp=invite.created_at)
+        await self.send_webhook(invite.guild.id, embed)
     @commands.Cog.listener()
     async def on_invite_delete(self, invite):
-        ...
+        embed = discord.Embed(color=self.bot.color, title="Invite Created", description=f"Invite ID: {invite.id}\nInvite URL: {invite.url}", timestamp=invite.created_at)
+        await self.send_webhook(invite.guild.id, embed)
     @commands.Cog.listener()
     async def on_member_join(self, member):
-        ...
+        embed = discord.Embed(color=self.bot.color, title="Member joined", description=f"{member.mention} just joined. We now have {member.guild.member_count} members. Account Created at: {humanize.precisedelta(member.created_at)} ago")
+        embed.set_footer(text=f"ID: {member.id}", timestamp=datetime.datetime.now())
+        await self.send_webhook(member.guild.id, embed)
     @commands.Cog.listener()
     async def on_member_remove(self, member):
-        embed = discord.Embed(color=self.bot.color)
+        embed = discord.Embed(color=self.bot.color, title="Member left", description=f"{member.mention} just left. We now have {member.guild.member_count} members. Account Created at: {humanize.precisedelta(member.created_at)} ago")
+        embed.set_footer(text=f"ID: {member.id}", timestamp=datetime.datetime.now())
+        await self.send_webhook(member.guild.id, embed)
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
         if not before.channel:
