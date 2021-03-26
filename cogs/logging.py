@@ -78,21 +78,21 @@ class logging(commands.Cog):
         """
         if ctx.guild.id not in self.bot.logging_cache.keys():
             return await ctx.send("Logging is not enabled")
-        if not self.bot.logging_cache[ctx.guild.id].get(event):
+        if self.bot.logging_cache[ctx.guild.id].get(event) == None:
             return await ctx.send("That not a valid event")
         if self.bot.logging_cache[ctx.guild.id][event]:
             self.bot.logging_cache[ctx.guild.id][event] = False
-            await self.bot.db.execute("UPDATE logging SET $1 = $2 WHERE guild_id = $3", event, False, ctx.guild.id)
+            await self.bot.db.execute(f"UPDATE logging SET {event} = $1 WHERE guild_id = $2", False, ctx.guild.id)
             return await ctx.send(f"{event} has been turn off")
         else:
             self.bot.logging_cache[ctx.guild.id][event] = True
-            await self.bot.db.execute("UPDATE logging SET $1 = $2 WHERE guild_id = $3", event, True, ctx.guild.id)
+            await self.bot.db.execute(f"UPDATE logging SET {event} = $1 WHERE guild_id = $2", True, ctx.guild.id)
             return await ctx.send(f"{event} has been turn on")
 
     async def send_message(self, channel_id, embed):
         async with ratelimiter.RateLimiter(max_calls=5, period=8):
             channel = self.bot.get_channel(channel_id)
-            await channel.send("The Anime Bot Logging No webhook mode ON", embed=embed)
+            await channel.send(embed=embed)
 
     async def send_webhook(self, guild_id, embed, event):
         if guild_id not in self.bot.logging_cache.keys():
