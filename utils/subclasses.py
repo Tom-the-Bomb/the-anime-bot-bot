@@ -203,6 +203,8 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     self.loop.create_task(self.create_cache())
     self.url_regex = re.compile(r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+", re.IGNORECASE)
     self.before_invoke(self.before_invoke_)
+    self.logging_cache = {}
+    self.logging_webhook_cache = []
     self.utils = utils
     self.deleted_message_cache = LimitedSizeDict()
     self.concurrency = []
