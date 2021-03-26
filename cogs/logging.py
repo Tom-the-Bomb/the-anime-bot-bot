@@ -264,10 +264,10 @@ class logging(commands.Cog):
     async def on_raw_message_delete(self, payload):
         if not payload.guild_id:
             return
-        if message.webhook_id:
-            return
         message = payload.cached_message
         if message:
+            if message.webhook_id:
+                return
             content = message.content or  "message don't have content could be a attachment or embed"
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"**Content:** {content}", timestamp=datetime.datetime.utcnow())
             await self.send_webhook(message.guild.id, embed, "message_delete")
