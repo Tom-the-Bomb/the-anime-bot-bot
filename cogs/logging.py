@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import humanize
+import ratelimiter
 import datetime
 
 class logging(commands.Cog):
@@ -28,13 +28,21 @@ class logging(commands.Cog):
         await ctx.send(embed=discord.Embed(color=self.bot.color, description=settings))
     @logging.command()
     @commands.has_permissions(manage_guild=True)
-    async def setup(self, ctx, channel:discord.TextChannel):
+    async def setup(self, ctx, channel:discord.TextChannel, nowebhook=False):
         """
         Setup logging:
         Usage:
         ovo logging setup #logging
+        or if you don't want the bot to send message with webhook:
+        ovo logging setup #logging True
+        note that normal message will be slower then webhooks
         """
         if ctx.guild.id not in self.bot.logging_cache.keys():
+            if nowebhook:
+                logging = await self.bot.db.fetchrow("INSERT INTO logging (guild_id, channel_id, webhook, channel_create, channel_update, channel_delete, role_create, role_update, role_delete, guild_update, emojis_update, member_update, member_ban, member_unban, invite_change, member_join, member_leave, voice_channel_change, message_delete, message_edit) VALUES ($1, $2, $3, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4, $4) RETURNING *;", ctx.guild.id, channel.id, "nowebhook", True)
+                self.bot.logging_cache[ctx.guild.id] = dict(logging.items())
+                return await ctx.send(f"Success, logging is enabled in this server, logging channel is {channel.mention} and no webhook is enabled")
+
             try:
                 webhook = await channel.create_webhook(name="The Anime Bot logging", avatar=await self.bot.user.avatar_url_as(format="png").read(), reason="The Anime Bot logging")
             except discord.HTTPException:
@@ -81,7 +89,10 @@ class logging(commands.Cog):
             await self.bot.db.execute("UPDATE logging SET $1 = $2 WHERE guild_id = $3", event, True, ctx.guild.id)
             return await ctx.send(f"{event} has been turn on")
 
-
+    async def send_message(self, channel_id, embed):
+        async with ratelimiter.RateLimiter(max_calls=5, period=8):
+            channel = self.bot.get_channel(channel_id)
+            await channel.send("The Anime Bot Logging No webhook mode ON", embed=embed)
 
     async def send_webhook(self, guild_id, embed, event):
         if guild_id not in self.bot.logging_cache.keys():
@@ -89,6 +100,8 @@ class logging(commands.Cog):
         if self.bot.logging_cache[guild_id][event] == False:
             return
         webhook_url = self.bot.logging_cache[guild_id]["webhook"]
+        if webhook_url == "nowebhook":
+            return await self.send_message(channel_id, embed)
         channel_id = self.bot.logging_cache[guild_id]["channel_id"]
         webhook = discord.Webhook.from_url(webhook_url, adapter=discord.AsyncWebhookAdapter(self.bot.session))
         try:
