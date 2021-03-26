@@ -92,7 +92,7 @@ class logging(commands.Cog):
     async def send_message(self, channel_id, embed):
         async with ratelimiter.RateLimiter(max_calls=5, period=8):
             channel = self.bot.get_channel(channel_id)
-            await channel.send(embed=embed)
+            await channel.send("logging no webhook mode ON", embed=embed)
 
     async def send_webhook(self, guild_id, embed, event):
         if guild_id not in self.bot.logging_cache.keys():
@@ -280,6 +280,8 @@ class logging(commands.Cog):
         message = payload.cached_message
         if message:
             if message.webhook_id:
+                return
+            if message.content == "logging no webhook mode ON":
                 return
             content = message.content or  "message don't have content could be a attachment or embed"
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"**Content:** {content}", timestamp=datetime.datetime.utcnow())
