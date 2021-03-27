@@ -1,5 +1,6 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, tasks
+import asyncio
 import warnings
 warnings.filterwarnings("ignore")
 from contextlib import suppress
@@ -14,6 +15,7 @@ import time
 class socket(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.save_socket.start()
         self.bot.codes = {
             1: "HEARTBEAT",
             2: "IDENTIFY",
@@ -28,6 +30,14 @@ class socket(commands.Cog):
             11: "HEARTBEAT_ACK",
             12: "GUILD_SYNC"
         }
+
+    @tasks.loop(minutes=1)
+    async def save_socket(self):
+        await self.bot.wait_until_ready()
+        await asyncio.sleep(5)
+        for i, (n,v) in enumerate(self.bot.socket_stats.most_common()):
+            await self.bot.db.execute("INSERT INTO socket VALUES ($1, $2) ON CONFLICT (name) DO UPDATE SET count = $2", n, v)
+
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
