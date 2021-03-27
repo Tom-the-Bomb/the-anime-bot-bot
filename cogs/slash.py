@@ -11,7 +11,7 @@ class slash(commands.Cog):
     @cog_ext.cog_slash(name="ping")
     async def ping(self, ctx):
         start = time.perf_counter()
-        await ctx.respond()
+        await ctx.defer()
         end = time.perf_counter()
         final_latency = end - start
         start=time.perf_counter()
