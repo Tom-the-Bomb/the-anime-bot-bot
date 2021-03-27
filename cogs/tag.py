@@ -1,5 +1,12 @@
 import discord
 from discord.ext import commands
+from menus import menus
+
+class TagMenuSource(menus.ListPageSource):
+    def __init__(self, data):
+        super().__init__(data, per_page=5)
+    async def format_page(self, menu, entries):
+        return {"embed": discord.Embed(color=menu.ctx.bot.color, title="Tags", description="\n".join(entries))}
 
 class tag(commands.Cog):
     def __init__(self, bot):
@@ -23,7 +30,11 @@ class tag(commands.Cog):
             return await ctx.send("Tag not found")
         await ctx.send(tags["tag_content"])
         await self.bot.db.execute("UPDATE tags SET uses = uses + 1 WHERE tag_name = $1", name)
-
+    @tag.command()
+    async def all(self, ctx):
+        tags = await self.bot.db.fetch("SELECT tag_name FROM tags")
+        pages = menus.MenuPages(source=TagMenuSource([i["tag_name"] for i in tags]), clear_reactions_after=True)
+        await pages.start(ctx)
     @tag.command()
     async def edit(self, ctx, name, *, content):
         tags = await self.bot.db.fetch("SELECT * FROM tags WHERE tag_name = $1 AND author_id = $2", name, ctx.author.id)
