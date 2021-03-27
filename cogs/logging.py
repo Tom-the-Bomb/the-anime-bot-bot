@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import humanize
 import ratelimiter
 import datetime
 
