@@ -274,7 +274,6 @@ class logging(commands.Cog):
         if not payload.data.get("guild_id"):
             return
         embed = discord.Embed(color=self.bot.color, title="Message Edited", description=f"The message is too old I can't find the content", timestamp=datetime.datetime.utcnow())
-        print(payload.data)
         embed.set_footer(text=f"User ID: {payload.data['author']['id']} Message ID: {payload.message_id}")
         await self.send_webhook(payload.data.get("guild_id"), embed, "message_edit")
     @commands.Cog.listener()
