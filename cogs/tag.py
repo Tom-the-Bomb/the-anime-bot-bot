@@ -4,7 +4,7 @@ from menus import menus
 
 class TagMenuSource(menus.ListPageSource):
     def __init__(self, data):
-        super().__init__(data, per_page=5)
+        super().__init__(data, per_page=10)
     async def format_page(self, menu, entries):
         return {"embed": discord.Embed(color=menu.ctx.bot.color, title="Tags", description="\n".join(entries))}
 
@@ -33,7 +33,7 @@ class tag(commands.Cog):
     @tag.command()
     async def all(self, ctx):
         tags = await self.bot.db.fetch("SELECT tag_name FROM tags")
-        pages = menus.MenuPages(source=TagMenuSource([i["tag_name"] for i in tags]), clear_reactions_after=True)
+        pages = menus.MenuPages(source=TagMenuSource([i["tag_name"] for i in tags]), delete_message_after=True)
         await pages.start(ctx)
     @tag.command()
     async def edit(self, ctx, name, *, content):
