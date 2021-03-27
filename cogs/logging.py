@@ -95,7 +95,7 @@ class logging(commands.Cog):
             return await ctx.send(f"{event} has been turn on")
 
     async def send_message(self, channel_id, embed):
-        async with ratelimiter:
+        async with self.ratelimiter:
             channel = self.bot.get_channel(channel_id)
             await channel.send("logging no webhook mode ON", embed=embed)
 
@@ -109,7 +109,7 @@ class logging(commands.Cog):
         if webhook_url == "nowebhook":
             return await self.send_message(channel_id, embed)
         webhook = discord.Webhook.from_url(webhook_url, adapter=discord.AsyncWebhookAdapter(self.bot.session))
-        async with ratelimiter:
+        async with self.ratelimiter:
             try:
                 message = await webhook.send(embed=embed, username="The Anime Bot logging", avatar_url=str(self.bot.user.avatar_url_as(format="png")))
             except discord.NotFound:
