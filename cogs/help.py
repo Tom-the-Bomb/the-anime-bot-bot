@@ -30,6 +30,7 @@ class HelpCommand(commands.HelpCommand):
         await self.context.send(embed=embed)
 
     async def send_cog_help(self, cog):
+        await self.context.send("sending cog help")
         lists = []
         commands_ = await self.filter_commands(cog.get_commands(), sort=True)
         lists_ = []
