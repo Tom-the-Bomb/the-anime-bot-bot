@@ -29,7 +29,7 @@ class commandsusage(commands.Cog):
         for i, (n, v) in enumerate(self.bot.commandsusages.most_common()):
             counter += 1
             lists.append(f"`{counter}. {n:<20} {v}`")
-        pages = menus.MenuPages(source=CommandsUsageMenu(lists), clear_reactions_after=True)
+        pages = menus.MenuPages(source=CommandsUsageMenu(lists), delete_message_after=True)
         await pages.start(ctx)
 
 def setup(bot):
