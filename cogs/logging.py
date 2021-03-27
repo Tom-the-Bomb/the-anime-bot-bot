@@ -291,7 +291,7 @@ class logging(commands.Cog):
                 return
             content = message.content or  "message don't have content could be a attachment or embed"
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"**Content:** {content}", timestamp=datetime.datetime.utcnow())
-            embed.set_author(name=str(message.author), icon_url=str(message.author.avatar_url(format="png")))
+            embed.set_author(name=str(message.author), icon_url=str(message.author.avatar_url_as(format="png")))
             await self.send_webhook(message.guild.id, embed, "message_delete")
         else:
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"The message is too old I can't find the content", timestamp=datetime.datetime.utcnow())
