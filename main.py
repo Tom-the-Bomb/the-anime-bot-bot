@@ -34,11 +34,6 @@ slash = SlashCommand(bot, sync_commands=True,
                      sync_on_cog_reload=True, override_type=True)
 
 
-@slash.slash(name="wtf", guild_ids=[786359602241470464])
-async def wtf(ctx):
-    await ctx.respond()
-    await ctx.send("wtf wtf")
-
 bot.owner_ids = [
     711057339360477184, 590323594744168494
 ]

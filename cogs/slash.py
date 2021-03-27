@@ -8,19 +8,14 @@ class slash(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @cog_ext.cog_slash(name="test", guild_ids=[786359602241470464])
-    async def test(self, ctx):
-        await ctx.respond()
-        await ctx.send("test test")
     @cog_ext.cog_slash(name="ping")
     async def ping(self, ctx):
-        embed = await discord.Embed(color=self.bot.color)
+        embed = discord.Embed(color=self.bot.color)
         embed.set_author(name="ping")
         embed.add_field(name="<:stab:744345955637395586>  websocket latency",
                         value=f"```{round(self.bot.latency * 1000)} ms ```")
         await ctx.respond()
         await ctx.send(embed=embed)
-
 
 def setup(bot):
     bot.add_cog(slash(bot))
