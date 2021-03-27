@@ -183,6 +183,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     commandsusage = await self.db.fetch("SELECT * FROM commandsusage")
     for i in commandsusage:
       self.commandsusages[i["command"]] = i["usages"]
+      self.command_counter += i["usages"]
 
         
   async def chunk_(self, ctx):
