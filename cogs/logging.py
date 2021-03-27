@@ -6,7 +6,7 @@ import datetime
 class logging(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.c = ratelimiter.RateLimiter(max_calls=5, period=8)
+        self.ratelimiter = ratelimiter.RateLimiter(max_calls=5, period=8)
         self.events = [
                 "channel_create", "channel_update", "channel_delete", "role_create", "role_update", "role_delete", "guild_update", "emojis_update", "member_update", "member_ban", "member_unban", "invite_change", "member_join", "member_leave", "voice_channel_change", "message_delete", "message_edit"
         ]
