@@ -6,6 +6,10 @@ import datetime
 class logging(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.c = ratelimiter.RateLimiter(max_calls=5, period=8)
+        self.events = [
+            "guild_id", "channel_id", "webhook", "channel_create", "channel_update", "channel_delete", "role_create", "role_update", "role_delete", "guild_update", "emojis_update", "member_update", "member_ban", "member_unban", "invite_change", "member_join", "member_leave", "voice_channel_change", "message_delete", "message_edit"
+        ]
         self.bot.loop.create_task(self.make_cache())
 
     async def make_cache(self):
@@ -79,7 +83,8 @@ class logging(commands.Cog):
         if ctx.guild.id not in self.bot.logging_cache.keys():
             return await ctx.send("Logging is not enabled")
         if self.bot.logging_cache[ctx.guild.id].get(event) == None:
-            return await ctx.send("That not a valid event")
+            events = "\n".join(self.events)
+            return await ctx.send("That not a valid event a list of valid events ")
         if self.bot.logging_cache[ctx.guild.id][event]:
             self.bot.logging_cache[ctx.guild.id][event] = False
             await self.bot.db.execute(f"UPDATE logging SET {event} = $1 WHERE guild_id = $2", False, ctx.guild.id)
@@ -90,7 +95,7 @@ class logging(commands.Cog):
             return await ctx.send(f"{event} has been turn on")
 
     async def send_message(self, channel_id, embed):
-        async with ratelimiter.RateLimiter(max_calls=5, period=8):
+        async with ratelimiter:
             channel = self.bot.get_channel(channel_id)
             await channel.send("logging no webhook mode ON", embed=embed)
 
@@ -104,17 +109,18 @@ class logging(commands.Cog):
         if webhook_url == "nowebhook":
             return await self.send_message(channel_id, embed)
         webhook = discord.Webhook.from_url(webhook_url, adapter=discord.AsyncWebhookAdapter(self.bot.session))
-        try:
-            message = await webhook.send(embed=embed, username="The Anime Bot logging", avatar_url=str(self.bot.user.avatar_url_as(format="png")))
-        except discord.NotFound:
-            channel = self.bot.get_channel(channel_id)
-            webhooks = await channel.webhooks()
-            if not webhooks:
-                webhook = await channel.create_webhook(name="The Anime Bot logging", avatar=await self.bot.user.avatar_url_as(format="png").read(), reason="The Anime Bot logging")
+        async with ratelimiter:
+            try:
                 message = await webhook.send(embed=embed, username="The Anime Bot logging", avatar_url=str(self.bot.user.avatar_url_as(format="png")))
-                await self.bot.db.execute("UPDATE logging SET webhook = $1, WHERE guild_id = $2", webhook.url, channel.guild.id)
-            webhook = random.choice(webhooks)
-            message = await webhook.send(embed=embed, username="The Anime Bot logging", avatar_url=str(self.bot.user.avatar_url_as(format="png")))
+            except discord.NotFound:
+                channel = self.bot.get_channel(channel_id)
+                webhooks = await channel.webhooks()
+                if not webhooks:
+                    webhook = await channel.create_webhook(name="The Anime Bot logging", avatar=await self.bot.user.avatar_url_as(format="png").read(), reason="The Anime Bot logging")
+                    message = await webhook.send(embed=embed, username="The Anime Bot logging", avatar_url=str(self.bot.user.avatar_url_as(format="png")))
+                    await self.bot.db.execute("UPDATE logging SET webhook = $1, WHERE guild_id = $2", webhook.url, channel.guild.id)
+                webhook = random.choice(webhooks)
+                message = await webhook.send(embed=embed, username="The Anime Bot logging", avatar_url=str(self.bot.user.avatar_url_as(format="png")))
 
     @commands.Cog.listener()
     async def on_guild_channel_create(self, channel):
