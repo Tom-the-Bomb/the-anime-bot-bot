@@ -280,7 +280,7 @@ class logging(commands.Cog):
         embed = discord.Embed(color=self.bot.color, title="Bulk messages deleted", description=f"Message Ids: \n{ids}")
         await self.send_webhook(payload.guild_id, embed, "message_delete")
     @commands.Cog.listener()
-    async def on_raw_message_delete(self, payload, ctx):
+    async def on_raw_message_delete(self, payload):
         if not payload.guild_id:
             return
         message = payload.cached_message
@@ -291,7 +291,6 @@ class logging(commands.Cog):
                 return
             content = message.content or  "message don't have content could be a attachment or embed"
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"**Content:** {content}", timestamp=datetime.datetime.utcnow())
-            embed.set_author(name=f"{ctx.author}", icon_url=f"{ctx.author.avatar_url}")
             await self.send_webhook(message.guild.id, embed, "message_delete")
         else:
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"The message is too old I can't find the content", timestamp=datetime.datetime.utcnow())
