@@ -271,9 +271,9 @@ class logging(commands.Cog):
         before_content = before.content or  "message don't have content could be a attachment or embed"
         after_content = after.content or  "message don't have content could be a attachment or embed"
         embed = discord.Embed(color=self.bot.color, title="Message Edited", timestamp=datetime.datetime.utcnow())
-        embed.set_author(name=str(message.author), icon_url=str(message.author.avatar_url_as(static_format="png")))
         embed.add_field(name="Before", value=f"**Content:** {before_content}")
         embed.add_field(name="After", value=f"**Content:** {after_content}")
+        embed.set_author(name=str(message.author), icon_url=str(message.author.avatar_url_as(static_format="png")))
         await self.send_webhook(after.guild.id, embed, "message_edit")
     @commands.Cog.listener()
     async def on_raw_bulk_message_delete(self, payload):
