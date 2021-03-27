@@ -227,11 +227,11 @@ class logging(commands.Cog):
         await self.send_webhook(guild.id, embed, "member_unban")
     @commands.Cog.listener()
     async def on_invite_create(self, invite):
-        embed = discord.Embed(color=self.bot.color, title="Invite Deleted", description=f"Invite ID: {invite.id}\nInvite URL: {invite.url}", timestamp=invite.created_at)
+        embed = discord.Embed(color=self.bot.color, title="Invite Created", description=f"Invite ID: {invite.id}\nInvite URL: {invite.url}", timestamp=invite.created_at)
         await self.send_webhook(invite.guild.id, embed, "invite_change")
     @commands.Cog.listener()
     async def on_invite_delete(self, invite):
-        embed = discord.Embed(color=self.bot.color, title="Invite Created", description=f"Invite ID: {invite.id}\nInvite URL: {invite.url}", timestamp=invite.created_at)
+        embed = discord.Embed(color=self.bot.color, title="Invite Deleted", description=f"Invite ID: {invite.id}\nInvite URL: {invite.url}", timestamp=invite.created_at)
         await self.send_webhook(invite.guild.id, embed, "invite_change")
     @commands.Cog.listener()
     async def on_member_join(self, member):
