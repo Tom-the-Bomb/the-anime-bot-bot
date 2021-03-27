@@ -263,7 +263,6 @@ class logging(commands.Cog):
         if not payload.data.get("guild_id"):
             return
         embed = discord.Embed(color=self.bot.color, title="Message Edited", description=f"The message is too old I can't find the content", timestamp=datetime.datetime.utcnow())
-        embed.set_author(name=f"{ctx.author}", icon_url=f"{ctx.author.avatar_url}")
         await self.send_webhook(payload.guild_id, embed, "message_edit")
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
@@ -274,7 +273,6 @@ class logging(commands.Cog):
         embed = discord.Embed(color=self.bot.color, title="Message Edited", timestamp=datetime.datetime.utcnow())
         embed.add_field(name="Before", value=f"**Content:** {before_content}")
         embed.add_field(name="After", value=f"**Content:** {after_content}")
-        embed.set_author(name=f"{ctx.author}", icon_url=f"{ctx.author.avatar_url}")
         await self.send_webhook(after.guild.id, embed, "message_edit")
     @commands.Cog.listener()
     async def on_raw_bulk_message_delete(self, payload):
@@ -293,7 +291,6 @@ class logging(commands.Cog):
                 return
             content = message.content or  "message don't have content could be a attachment or embed"
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"**Content:** {content}", timestamp=datetime.datetime.utcnow())
-            embed.set_author(name=f"{ctx.author}", icon_url=f"{ctx.author.avatar_url}")
             await self.send_webhook(message.guild.id, embed, "message_delete")
         else:
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"The message is too old I can't find the content", timestamp=datetime.datetime.utcnow())
