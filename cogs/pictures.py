@@ -23,6 +23,9 @@ authorizationthing = (config.ksoft)
 class pictures(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
+        self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
+
 
     async def get_url(self, ctx, thing, **kwargs):
         avatar = kwargs.get("avatar", True)
@@ -93,7 +96,7 @@ class pictures(commands.Cog):
         return url
 
     async def cdn_(self, url):
-        async with ratelimiter.RateLimiter(max_calls=3, period=7):
+        async with self.cdn_ratelimiter:
             async with self.bot.session.get(url) as resp:
                 if "image" not in resp.content_type:
                     return "Invalid image"
@@ -103,7 +106,7 @@ class pictures(commands.Cog):
                 async with self.bot.session.post("https://idevision.net/api/cdn", headers={"Authorization": config.idevision, "File-Name": ree.split(str(resp.url).split("/")[-1])[0]}, data=BytesIO(await resp.read())) as resp:
                     return (await resp.json())["url"]
     async def ocr_(self, url):
-        async with ratelimiter.RateLimiter(max_calls=2, period=10):
+        async with self.ocr_ratelimiter:
             async with self.bot.session.get(url) as resp:
                 if "image" not in resp.content_type:
                     return "Invalid image"
