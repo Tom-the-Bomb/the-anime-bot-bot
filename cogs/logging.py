@@ -254,15 +254,15 @@ class logging(commands.Cog):
     async def on_voice_state_update(self, member, before, after):
         if not before.channel:
             embed = discord.Embed(color=self.bot.color, title="Joined voice channel", description=f"{member.display_name} joined voice channel {after.channel.mention}")
-            embed.set_footer(text=f"User ID: {after.id}")
+            embed.set_footer(text=f"User ID: {member.id}")
             await self.send_webhook(member.guild.id, embed, "voice_channel_change")
         if not after.channel:
             embed = discord.Embed(color=self.bot.color, title="Left voice channel", description=f"{member.display_name} left voice channel {before.channel.mention}")
-            embed.set_footer(text=f"User ID: {after.id}")
+            embed.set_footer(text=f"User ID: {member.id}")
             await self.send_webhook(member.guild.id, embed, "voice_channel_change")
         if before.channel != after.channel:
             embed = discord.Embed(color=self.bot.color, title="Changed voice channel", description=f"{member.display_name} changed voice channel from {before.channel.mention} to {after.channel.mention}")
-            embed.set_footer(text=f"User ID: {after.id}")
+            embed.set_footer(text=f"User ID: {member.id}")
             await self.send_webhook(member.guild.id, embed, "voice_channel_change")
         
             
