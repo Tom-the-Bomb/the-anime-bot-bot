@@ -18,9 +18,11 @@ class HelpCommand(commands.HelpCommand):
         return f"{self.clean_prefix}{command.qualified_name} {command.signature}"
 
     async def send_group_help(self, group):
-        embed = discord.Embed(color=self.context.bot.color, title=f"{self.clean_prefix}{group.qualified_name}",
-                              description=group.short_doc or "oh seems like my owner is too lazy to add help for this command sorry")
-        await self.context.send(embed=embed)
+        lists = []
+        for i in group.walk_commands():
+            lists.append(self.get_command_signature(i))
+        pages = menus.MenuPages(source=HelpMenuSource(lists), delete_message_after=True)
+        await pages.start(self.context)
 
     async def send_command_help(self, command):
         embed = discord.Embed(color=self.context.bot.color, title=self.get_command_signature(command),
@@ -55,7 +57,22 @@ class HelpCommand(commands.HelpCommand):
 
         **Available Modules are:**
         ```
-        {cogs}
+        fun
+        utility
+        moderations
+        chat
+        owners
+        Music
+        others
+        animes
+        todo
+        tag
+        commandsusage
+        events
+        pictures
+        logging
+        socket
+        
         ```
         """)
         embed.set_thumbnail(url=str(self.context.me.avatar_url_as(format="png")))
