@@ -205,33 +205,40 @@ class logging(commands.Cog):
     async def on_member_update(self, before, after):
         if before.nick != after.nick:
             embed = discord.Embed(color=self.bot.color, title="Nickname Changed", description=f"Before Nickname: {before.nick}\nAfter Nickname: {after.nick}", timestamp=datetime.datetime.utcnow())
+            embed.set_footer(text=f"User ID: {after.id}")
             await self.send_webhook(after.guild.id, embed, "member_update")
         if before.roles != after.roles:
             if len(before.roles) < len(after.roles):
                 roles = set(before.roles)
                 new_roles = [i.mention for i in after.roles if i not in roles]
                 embed = discord.Embed(color=self.bot.color, title="Role Added", description=f"Member: {after.mention}\nRoles: {', '.join(new_roles)}", timestamp=datetime.datetime.utcnow())
+                embed.set_footer(text=f"User ID: {after.id}")
                 return await self.send_webhook(after.guild.id, embed, "member_update")
             else:
                 roles = set(after.roles)
                 removed_roles = [i.mention for i in before.roles if i not in roles]
                 embed = discord.Embed(color=self.bot.color, title="Role Removed", description=f"Member: {after.mention}\nRoles: {', '.join(removed_roles)}", timestamp=datetime.datetime.utcnow())
+                embed.set_footer(text=f"User ID: {after.id}")
                 return await self.send_webhook(after.guild.id, embed, "member_update")
     @commands.Cog.listener()
     async def on_member_ban(self, guild, user):
         embed = discord.Embed(color=self.bot.color, title="Member Banned", description=f"User: {str(user)} {user.mention} ({user.id})", timestamp=datetime.datetime.utcnow())
+        embed.set_footer(text=f"User ID: {user.id}")
         await self.send_webhook(guild.id, embed, "member_ban")
     @commands.Cog.listener()
     async def on_member_unban(self, guild, user):
         embed = discord.Embed(color=self.bot.color, title="Member Unbanned", description=f"User: {str(user)} {user.mention} ({user.id})", timestamp=datetime.datetime.utcnow())
+        embed.set_footer(text=f"User ID: {user.id}")
         await self.send_webhook(guild.id, embed, "member_unban")
     @commands.Cog.listener()
     async def on_invite_create(self, invite):
         embed = discord.Embed(color=self.bot.color, title="Invite Created", description=f"Invite ID: {invite.id}\nInvite URL: {invite.url}", timestamp=invite.created_at)
+        embed.set_footer(text=f"User ID: {invite.inviter.id}")
         await self.send_webhook(invite.guild.id, embed, "invite_change")
     @commands.Cog.listener()
     async def on_invite_delete(self, invite):
         embed = discord.Embed(color=self.bot.color, title="Invite Deleted", description=f"Invite ID: {invite.id}\nInvite URL: {invite.url}", timestamp=datetime.datetime.utcnow())
+        embed.set_footer(text=f"User ID: {invite.inviter.id}")
         await self.send_webhook(invite.guild.id, embed, "invite_change")
     @commands.Cog.listener()
     async def on_member_join(self, member):
@@ -247,12 +254,15 @@ class logging(commands.Cog):
     async def on_voice_state_update(self, member, before, after):
         if not before.channel:
             embed = discord.Embed(color=self.bot.color, title="Joined voice channel", description=f"{member.display_name} joined voice channel {after.channel.mention}")
+            embed.set_footer(text=f"User ID: {after.id}")
             await self.send_webhook(member.guild.id, embed, "voice_channel_change")
         if not after.channel:
             embed = discord.Embed(color=self.bot.color, title="Left voice channel", description=f"{member.display_name} left voice channel {before.channel.mention}")
+            embed.set_footer(text=f"User ID: {after.id}")
             await self.send_webhook(member.guild.id, embed, "voice_channel_change")
         if before.channel != after.channel:
             embed = discord.Embed(color=self.bot.color, title="Changed voice channel", description=f"{member.display_name} changed voice channel from {before.channel.mention} to {after.channel.mention}")
+            embed.set_footer(text=f"User ID: {after.id}")
             await self.send_webhook(member.guild.id, embed, "voice_channel_change")
         
             
@@ -263,6 +273,7 @@ class logging(commands.Cog):
         if not payload.data.get("guild_id"):
             return
         embed = discord.Embed(color=self.bot.color, title="Message Edited", description=f"The message is too old I can't find the content", timestamp=datetime.datetime.utcnow())
+        embed.set_footer(text=f"User ID: {payload.get('author').get('id')} Message ID: {payload.message_id}")
         await self.send_webhook(payload.guild_id, embed, "message_edit")
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
@@ -274,6 +285,7 @@ class logging(commands.Cog):
         embed.add_field(name="Before", value=f"**Content:** {before_content}")
         embed.add_field(name="After", value=f"**Content:** {after_content}")
         embed.set_author(name=str(after.author), icon_url=str(after.author.avatar_url_as(static_format="png")))
+        embed.set_footer(text=f"User ID: {after.id} Message ID: {after.id}")
         await self.send_webhook(after.guild.id, embed, "message_edit")
     @commands.Cog.listener()
     async def on_raw_bulk_message_delete(self, payload):
@@ -293,6 +305,7 @@ class logging(commands.Cog):
             content = message.content or  "message don't have content could be a attachment or embed"
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"**Content:** {content}", timestamp=datetime.datetime.utcnow())
             embed.set_author(name=str(message.author), icon_url=str(message.author.avatar_url_as(static_format="png")))
+            embed.set_footer(text=f"User ID: {message.author.id} Message ID: {message.id}")
             await self.send_webhook(message.guild.id, embed, "message_delete")
         else:
             embed = discord.Embed(color=self.bot.color, title="Message Deleted", description=f"The message is too old I can't find the content", timestamp=datetime.datetime.utcnow())
