@@ -84,7 +84,7 @@ class logging(commands.Cog):
             return await ctx.send("Logging is not enabled")
         if self.bot.logging_cache[ctx.guild.id].get(event) == None:
             events = "\n".join(self.events)
-            return await ctx.send(f"That not a valid event a list of valid events {events}")
+            return await ctx.send(f"That not a valid event a list of valid events \n{events}")
         if self.bot.logging_cache[ctx.guild.id][event]:
             self.bot.logging_cache[ctx.guild.id][event] = False
             await self.bot.db.execute(f"UPDATE logging SET {event} = $1 WHERE guild_id = $2", False, ctx.guild.id)
