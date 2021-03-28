@@ -4,6 +4,8 @@ import os
 import re
 import zipfile
 
+import collections
+
 from fake_useragent import UserAgent
 
 ua = UserAgent()
@@ -448,7 +450,6 @@ class utility(commands.Cog):
         supprted language:
         wk, bash, brainfuck, c, cpp, clojure, crystal, csharp, d, dash, deno, elixir, emacs, elisp, go, haskell, java, jelly, julia, kotlin, lisp, lolcode, lua, nasm, nasm64, nim, node, osabie, paradoc, perl, php, python2, python3, ruby, rust, scala, swift, typescript, zig
         """
-        Codeblock = collections.namedtuple('Codeblock', 'language content')
         if not code.startswith('`'):
             code = code
         else:
