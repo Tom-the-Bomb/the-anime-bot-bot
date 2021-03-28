@@ -458,14 +458,14 @@ class utility(commands.Cog):
             in_language = False
             in_code = False
             language = []
-            code = []
+            code_ = []
 
-            for char in argument:
+            for char in code:
                 if char == '`' and not in_code and not in_language:
                     backticks += 1
                 if last and last[-1] == '`' and char != '`' or in_code and ''.join(last) != '`' * backticks:
                     in_code = True
-                    code.append(char)
+                    code_.append(char)
                 if char == '\n':
                     in_language = False
                     in_code = True
@@ -478,9 +478,9 @@ class utility(commands.Cog):
 
                 last.append(char)
 
-            if not code and not language:
-                code[:] = last
-            code = ''.join(code[len(language):-backticks])
+            if not code_ and not language:
+                code_[:] = last
+            code = ''.join(code_[len(language):-backticks])
         js = {
             "language": lang,
             "source": code
