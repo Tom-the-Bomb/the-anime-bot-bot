@@ -449,7 +449,7 @@ class utility(commands.Cog):
         wk, bash, brainfuck, c, cpp, clojure, crystal, csharp, d, dash, deno, elixir, emacs, elisp, go, haskell, java, jelly, julia, kotlin, lisp, lolcode, lua, nasm, nasm64, nim, node, osabie, paradoc, perl, php, python2, python3, ruby, rust, scala, swift, typescript, zig
         """
         if code.startswith("```"):
-            code = " ".join(code.split("\n")[1:]))
+            code = " ".join(code.split("\n")[1:])
             code.strip("`")
         js = {
             "language": lang,
