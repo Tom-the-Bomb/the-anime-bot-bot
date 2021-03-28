@@ -460,7 +460,7 @@ class utility(commands.Cog):
                 js = await resp.json()
                 if resp.status == 400:
                     return await ctx.send(js["message"])
-                return await ctx.send(f"```{lang}\n{resp['output']}\n```")
+                return await ctx.send(f"```{lang}\n{js['output']}\n```")
 
     @commands.command()
     @commands.has_permissions(manage_emojis=True)
