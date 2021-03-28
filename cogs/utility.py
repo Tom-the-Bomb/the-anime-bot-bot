@@ -448,9 +448,38 @@ class utility(commands.Cog):
         supprted language:
         wk, bash, brainfuck, c, cpp, clojure, crystal, csharp, d, dash, deno, elixir, emacs, elisp, go, haskell, java, jelly, julia, kotlin, lisp, lolcode, lua, nasm, nasm64, nim, node, osabie, paradoc, perl, php, python2, python3, ruby, rust, scala, swift, typescript, zig
         """
-        if code.startswith("```"):
-            code = " ".join(code.split("\n")[1:])
-            code.strip("```")
+        Codeblock = collections.namedtuple('Codeblock', 'language content')
+        if not code.startswith('`'):
+            code = code
+        else:
+            last = collections.deque(maxlen=3)
+            backticks = 0
+            in_language = False
+            in_code = False
+            language = []
+            code = []
+
+            for char in argument:
+                if char == '`' and not in_code and not in_language:
+                    backticks += 1
+                if last and last[-1] == '`' and char != '`' or in_code and ''.join(last) != '`' * backticks:
+                    in_code = True
+                    code.append(char)
+                if char == '\n':
+                    in_language = False
+                    in_code = True
+                elif ''.join(last) == '`' * 3 and char != '`':
+                    in_language = True
+                    language.append(char)
+                elif in_language:
+                    if char != '\n':
+                        language.append(char)
+
+                last.append(char)
+
+            if not code and not language:
+                code[:] = last
+            code = ''.join(code[len(language):-backticks])
         js = {
             "language": lang,
             "source": code
