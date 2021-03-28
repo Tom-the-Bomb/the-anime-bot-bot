@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import asyncio
 import time
 import discord_slash
 from discord_slash import cog_ext, SlashContext
