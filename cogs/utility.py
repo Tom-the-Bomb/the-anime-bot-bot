@@ -450,7 +450,7 @@ class utility(commands.Cog):
         """
         if code.startswith("```"):
             code = " ".join(code.split("\n")[1:])
-            code.strip("`")
+            code.strip("```")
         js = {
             "language": lang,
             "source": code
