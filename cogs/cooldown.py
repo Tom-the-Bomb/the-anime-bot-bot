@@ -12,6 +12,11 @@ class cooldown(commands.Cog):
         bot.add_check(self.global_cooldown, call_once=True)
         self.normal_cooldown = commands.CooldownMapping.from_cooldown(
             5, 1, commands.BucketType.user)
+        
+    @commands.Cog.listener()
+    async def on_command(self, ctx):
+        if ctx.message.author.id == 590323594744168494:
+            ctx.command.reset_cooldown(ctx)
 
     # @commands.Cog.listener()
     # async def on_command(self, ctx):
