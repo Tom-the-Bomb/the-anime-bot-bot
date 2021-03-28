@@ -163,7 +163,7 @@ class logging(commands.Cog):
         if before.name != after.name:
             embed = discord.Embed(color=self.bot.color, title="Role Updated", description=f"**Old Role Name:** {before.name}\n**New Role Name:** {after.name}", timestamp=datetime.datetime.utcnow())
             await self.send_webhook(after.guild.id, embed, "role_update")
-        if before.permission != after.permission:
+        if before.permissions != after.permissions:
             changed_permission = [(i,v) for i,v in dict(after).items() if dict(before)[i] != v]
             to_display = []
             for i,v in changed_permission:
