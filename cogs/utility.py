@@ -459,8 +459,8 @@ class utility(commands.Cog):
             async with self.bot.session.post("https://emkc.org/api/v1/piston/execute", json=js) as resp:
                 js = await resp.json()
                 if resp.status == 400:
-                    return await ctx.send(js["message"])
-                return await ctx.send(f"```{lang}\n{js['output']}\n```")
+                    return await ctx.send("Language not supported" if js["message"] == "Supplied language is not supported by Piston" else js["message"])
+                return await ctx.send(f"```{lang}\n{js['output'].replace("code.code", "cogs/eval.py")}\n```")
 
     @commands.command()
     @commands.has_permissions(manage_emojis=True)
