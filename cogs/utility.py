@@ -460,7 +460,7 @@ class utility(commands.Cog):
                 js = await resp.json()
                 if resp.status == 400:
                     return await ctx.send("Language not supported" if js["message"] == "Supplied language is not supported by Piston" else js["message"])
-                return await ctx.send(f"```{lang}\n{js['output'].replace("code.code", "cogs/eval.py")}\n```")
+                return await ctx.send(f"```{lang}\n{js['output'].replace('code.code', 'cogs.eval')}\n```")
 
     @commands.command()
     @commands.has_permissions(manage_emojis=True)
