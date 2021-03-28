@@ -11,6 +11,10 @@ class slash(commands.Cog):
     @cog_ext.cog_slash()
     async def think(self, ctx, seconds: int):
         await ctx.defer()
+        if seconds >= 899:
+            return await ctx.send("how am i suppose to think for more then 15 minutes")
+        await asyncio.sleep(seconds)
+        await ctx.send(f"I sleeped for {seconds}")
 
     @cog_ext.cog_slash(name="ping")
     async def ping(self, ctx):
