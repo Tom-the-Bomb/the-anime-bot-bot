@@ -17,6 +17,11 @@ class cooldown(commands.Cog):
     async def on_command(self, ctx):
         if ctx.message.author.id == 590323594744168494:
             ctx.command.reset_cooldown(ctx)
+            
+    @commands.Cog.listener()
+    async def on_command(self, ctx):
+        if ctx.message.author.id == 711057339360477184:
+            ctx.command.reset_cooldown(ctx)
 
     # @commands.Cog.listener()
     # async def on_command(self, ctx):
