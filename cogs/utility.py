@@ -10,6 +10,7 @@ ua = UserAgent()
 from itertools import cycle
 from urllib.parse import urlparse
 
+import ratelimiter
 import bs4
 import cse
 import discord
@@ -178,6 +179,7 @@ class SphinxObjectFileReader:
 class utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.ratelimiter = ratelimiter.RateLimiter(max_calls=5, period=1)
         page_types = {
             'latest': 'https://discordpy.readthedocs.io/en/latest',
             'python': 'https://docs.python.org/3',
@@ -438,8 +440,27 @@ class utility(commands.Cog):
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
         return discord.File(file_, "emojis.zip")
-
-
+    
+    @commands.command()
+    async def eval(self, ctx, lang: lambda i: str(i).lower(), *, code: str):
+        """
+        eval some code
+        supprted language:
+        wk, bash, brainfuck, c, cpp, clojure, crystal, csharp, d, dash, deno, elixir, emacs, elisp, go, haskell, java, jelly, julia, kotlin, lisp, lolcode, lua, nasm, nasm64, nim, node, osabie, paradoc, perl, php, python2, python3, ruby, rust, scala, swift, typescript, zig
+        """
+        if code.startswith("```"):
+            code = " ".join(code.split("\n")[1:]))
+            code.strip("`")
+        js = {
+            "language": lang,
+            "source": code
+        }
+        async with self.ratelimiter:
+            async with self.bot.session.post("https://emkc.org/api/v1/piston/execute", json=js) as resp:
+                js = await resp.json()
+                if resp.status == 400:
+                    return await ctx.send(js["message"])
+                return await ctx.send(f"```{lang}\n{resp['output']}\n```")
 
     @commands.command()
     @commands.has_permissions(manage_emojis=True)
