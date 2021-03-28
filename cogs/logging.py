@@ -14,6 +14,7 @@ class logging(commands.Cog):
         self.bot.loop.create_task(self.make_cache())
 
     async def make_cache(self):
+        await self.bot.wait_until_ready()
         logs = await self.bot.db.fetch("SELECT * FROM logging")
         if logs:
             for i in logs:
