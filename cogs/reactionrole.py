@@ -45,7 +45,7 @@ class reactionrole(commands.Cog):
             self.bot.reactionrole_cache[ctx.guild.id][message_id] = {emoji: role.id}
         else:
             self.bot.reactionrole_cache[ctx.guild.id][message_id][emoji] = role.id
-        await bot.db.execute("INSERT INTO reactionrole VALUES ($1, $2) ON CONFLICT DO UPDATE SET roles = $2", ctx.guild.id, json.dumps(self.bot.reactionrole_cache[ctx.guild.id][message_id]))
+        await self.bot.db.execute("INSERT INTO reactionrole VALUES ($1, $2) ON CONFLICT DO UPDATE SET roles = $2", ctx.guild.id, json.dumps(self.bot.reactionrole_cache[ctx.guild.id][message_id]))
         await ctx.send(f"Sucess role is {role.mention}, message id is {message_id}, reaction is {str(reaction)}")
         
     @commands.Cog.listener()
