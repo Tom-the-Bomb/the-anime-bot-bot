@@ -8,7 +8,7 @@ class reactionrole(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.reactionrole_cache = {}
-        self.ratelimiter = ratelimiter.Ratelimiter(max_calls=5, period=10)
+        self.ratelimiter = ratelimiter.RateLimiter(max_calls=5, period=10)
         self.bot.loop.create_task(self.make_cache())
 
     async def make_cache(self):
