@@ -1,8 +1,7 @@
 import discord
 from discord.ext import commands
+import typing
 import ratelimiter
-import copy
-import datetime
 
 
 class reactionrole(commands.Cog):
