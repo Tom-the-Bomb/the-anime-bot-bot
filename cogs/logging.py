@@ -50,7 +50,14 @@ class logging(commands.Cog):
                 return await ctx.send(f"Success, logging is enabled in this server, logging channel is {channel.mention} and no webhook is enabled")
 
             try:
-                webhook = await channel.create_webhook(name="The Anime Bot logging", avatar=await self.bot.user.avatar_url_as(format="png").read(), reason="The Anime Bot logging")
+                webhook = None
+                webhooks = await channel.webhooks()
+                for i in webhooks:
+                    if i.name == "The Anime Bot logging":
+                        webhook = i
+                        break
+                if not webhook:
+                    webhook = await channel.create_webhook(name="The Anime Bot logging", avatar=await self.bot.user.avatar_url_as(format="png").read(), reason="The Anime Bot logging")
             except discord.HTTPException:
                 if await channel.webhooks():
                     webhook = random.choice(await channel.webhooks())
