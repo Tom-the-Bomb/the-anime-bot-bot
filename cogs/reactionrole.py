@@ -86,7 +86,7 @@ class reactionrole(commands.Cog):
     async def on_raw_reaction_remove(self, payload):
         """Removes a role based on a reaction emoji."""
         # Make sure that the message the user is reacting to is the one we care about
-         if not payload.guild_id:
+        if not payload.guild_id:
             return
         if payload.guild_id not in self.bot.reactionrole_cache.keys():
             return
