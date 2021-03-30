@@ -107,7 +107,7 @@ class pictures(commands.Cog):
             async with self.bot.session.get(url) as resp:
                 if "image" not in resp.content_type:
                     return "Invalid image"
-                async with self.bot.session.get("https://idevision.net/api/public/ocr", headers={"Authorization": config.idevision}, data=resp.content) as resp:
+                async with self.bot.session.get(f"https://idevision.net/api/public/ocr?filetype={resp.content_type[1]}", headers={"Authorization": config.idevision}, data=resp.content) as resp:
                     return (await resp.json())["data"]
     @staticmethod
     @asyncexe()
