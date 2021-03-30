@@ -31,7 +31,7 @@ class animes(commands.Cog):
                 embed = discord.Embed(color=self.bot.color, title=anime["english"], description=anime["description"])
                 embed.add_field(name="Infos", value=f"Japanese: {anime['japanese']}\nType: {anime['type']}\nEpisodes: {anime['episodes']}\nStudios: {anime['studios']}\nGenres: {anime['genres']}\nRatings: {anime['rating']}")
                 embed.add_field(name="Rankings", value=f"Ranked: {anime['ranked']}\nPopularity: {anime['popularity']}\nMembers: {anime['members']}\nFavorites: {anime['favorites']}")
-                embed.add.field(name="Characters and Actor", value="\n".join([f"Character: {i['character']} - Voice Actor: {i['voice_actor']}" for i in anime["characters_and_actor"]]))
+                embed.add_field(name="Characters and Actor", value="\n".join([f"Character: {i['character']} - Voice Actor: {i['voice_actor']}" for i in anime["characters_and_actor"]]))
                 embed.set_image(url=anime["img_src"])
                 embed_list.append(embed)
             pages = menus.MenuPages(source=AnimeMenuSource(embed_list), delete_message_after=True)
