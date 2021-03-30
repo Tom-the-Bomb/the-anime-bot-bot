@@ -100,21 +100,15 @@ class pictures(commands.Cog):
             async with self.bot.session.get(url) as resp:
                 if "image" not in resp.content_type:
                     return "Invalid image"
-                # with aiohttp.MultipartWriter() as writer:
-                #     p = writer.append(resp.content, {"Content-Type": resp.content_type})
-                #     p.set_content_disposition("attachment", filename=str(resp.url).split("/")[-1])
-                async with self.bot.session.post("https://idevision.net/api/cdn", headers={"Authorization": config.idevision, "File-Name": ree.split(str(resp.url).split("/")[-1])[0]}, data=BytesIO(await resp.read())) as resp:
+                async with self.bot.session.post("https://idevision.net/api/cdn", headers={"Authorization": config.idevision, "File-Name": ree.split(str(resp.url).split("/")[-1])[0]}, data=resp.content) as resp:
                     return (await resp.json())["url"]
     async def ocr_(self, url):
         async with self.ocr_ratelimiter:
             async with self.bot.session.get(url) as resp:
                 if "image" not in resp.content_type:
                     return "Invalid image"
-                with aiohttp.MultipartWriter() as writer:
-                    p = writer.append(resp.content, {"Content-Type": resp.content_type})
-                    p.set_content_disposition("attachment", filename="picture.png")
-                    async with self.bot.session.get("https://idevision.net/api/public/ocr", headers={"Authorization": config.idevision}, data=writer) as resp:
-                        return (await resp.json())["data"]
+                async with self.bot.session.get("https://idevision.net/api/public/ocr", headers={"Authorization": config.idevision}, data=resp.content) as resp:
+                    return (await resp.json())["data"]
     @staticmethod
     @asyncexe()
     def run_polaroid(image1, method, *args, **kwargs):
