@@ -66,4 +66,9 @@ aliases TEXT []
 )
 
 CREATE TABLE IF NOT EXISTS todos(
+author_id BIGINT NOT NULL,
+content TEXT NOT NULL,
+created_at timestamp NOT NULL,
+message_id BIGINT NOT NULL,
+jump_url TEXT NOT NULL
 )
