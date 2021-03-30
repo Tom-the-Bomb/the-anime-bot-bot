@@ -23,7 +23,7 @@ class animes(commands.Cog):
     @commands.command()
     async def searchanime(self, ctx, *, search: lambda x: urllib.parse.quote_plus(x)):
         async with self.bot.session.get(
-                f"https://crunchy-bot.live/api/anime/details?terms={search}&limit=15"
+                f"https://crunchy-bot.live/api/anime/details?terms={search}"
         ) as resp:
             animes = await resp.json()
             embed_list = []
