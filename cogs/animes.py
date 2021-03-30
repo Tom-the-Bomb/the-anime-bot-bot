@@ -1,6 +1,7 @@
 import json
 from io import BytesIO
-import urllibmport bs4
+import urllib
+import bs4
 import random
 from utils.asyncstuff import asyncexe
 
