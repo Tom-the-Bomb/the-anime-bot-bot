@@ -32,7 +32,7 @@ class animes(commands.Cog):
                 embed.add_field(name="Infos", value=f"Japanese: {anime['japanese']}\nType: {anime['type']}\nEpisodes: {anime['episodes']}\nStudios: {anime['studios']}\nGenres: {anime['genres']}\nRatings: {anime['rating']}")
                 embed.add_field(name="Rankings", value=f"Ranked: {anime['ranked']}\nPopularity: {anime['popularity']}\nMembers: {anime['members']}\nFavorites: {anime['favorites']}")
                 embed.add_field(name="Characters and Actor", value="\n".join([f"Character: {i['character']} - Actor: {i.get('voice_actor') if i.get('voice_actor') else i.get('actor')}" for i in anime["characters_and_actor"]]).replace("||", "\||"))
-                embed.set_image(url=anime["img_src"])
+                embed.set_image(url=anime["img_src"]) if anime.get("img_src") else ...
                 embed_list.append(embed)
             pages = menus.MenuPages(source=AnimeMenuSource(embed_list), delete_message_after=True)
             await pages.start(ctx)
