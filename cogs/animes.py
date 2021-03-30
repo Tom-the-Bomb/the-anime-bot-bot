@@ -1,23 +1,41 @@
 import json
 from io import BytesIO
-import bs4
+import urllibmport bs4
 import random
 from utils.asyncstuff import asyncexe
+
+from menus import menus
 
 import discord
 from discord.ext import commands
 
+class AnimeMenuSource(menus.ListPageSource):
+    def __init__(self, data):
+        super().__init__(data, per_page=10)
+    async def format_page(self, menu, entries):
+        return {"embed": entries[menu.current_page]}
 
 class animes(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
     @commands.command()
-    async def searchanime(self, ctx, *, search):
+    async def searchanime(self, ctx, *, search: lambda x: urllib.parse.quote_plus(x)):
         async with self.bot.session.get(
-                f"https://crunchy-bot.live/api/anime/details?terms={search}"
+                f"https://crunchy-bot.live/api/anime/details?terms={search}&limit=15"
         ) as resp:
-            print(await resp.json())
+            animes = await resp.json()
+            embed_list = []
+            for anime in animes:
+                embed = discord.Embed(color=self.bot.color, title=anime["english"], description=anime["description"])
+                embed.add_field(name="Infos", value=f"Japanese: {anime['japanese']}\nType: {anime['type']}\nEpisodes: {anime['episodes']}\nStudios: {anime['studios']}\nGenres: {anime['genres']}\nRatings: {anime['rating']}")
+                embed.add_field(name="Rankings", value=f"Ranked: {anime['ranked']}\nPopularity: {anime['popularity']}\nMembers: {anime['members']}\nFavorites: {anime['favorites']}")
+                embed.add.field(name="Characters and Actor", value="\n".join([f"Character: {i['character']} - Voice Actor: {i['voice_actor']}" for i in anime["characters_and_actor"]]))
+                embed.set_image(url=anime["img_src"])
+                embed_list.append(embed)
+            pages = menus.MenuPages(source=AnimeMenuSource(embed_list), delete_message_after=True)
+            await pages.start(ctx)
+            
 
     @commands.command()
     async def weebpicture(self, ctx):
