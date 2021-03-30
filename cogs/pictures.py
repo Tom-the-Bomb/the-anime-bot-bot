@@ -378,8 +378,7 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.braille(url)
-            num = len(image) - 2000
-            await ctx.send(image[:-num])
+            await ctx.send(image)
 
     @commands.command(aliases=["dot"])
     async def dots(self,
