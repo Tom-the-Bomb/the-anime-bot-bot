@@ -556,7 +556,7 @@ class events(commands.Cog):
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MaxConcurrencyReached):
             embed = self.embed(f"Command is already running please wait untill it finsh it can only be used {error.number} per {error.per}")
-            return await ctx.send()
+            return await ctx.send(embed=embed)
         elif isinstance(error, commands.CommandOnCooldown):
             embed = self.embed(
                 f"dude chill try again in {round(error.retry_after)} seconds")
