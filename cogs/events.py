@@ -555,7 +555,7 @@ class events(commands.Cog):
                 f"You are missing `{error.param.name}` argument")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MaxConcurrencyReached):
-            embed = self.embed(f"Command is already running please wait untill it finsh it can only be used {error.number} per {error.per}")
+            embed = self.embed(f"Command is already running please wait untill it finsh it can only be used {error.number} per {error.per}".replace("BucketType", ""))
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.CommandOnCooldown):
             embed = self.embed(

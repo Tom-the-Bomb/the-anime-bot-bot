@@ -72,9 +72,9 @@ class owners(commands.Cog):
         stdout, stderr = await proc.communicate()
 
         if stdout:
-            await ctx.send(f'[stdout]\n{stdout.decode()}')
+            await ctx.send(f'```py\n{stdout.decode()}\n```')
         if stderr:
-            await ctx.send(f'[stderr]\n{stderr.decode()}')
+            await ctx.send(f'```py\n{stderr.decode()}\n```')
     
     @commands.command()
     @commands.is_owner()
