@@ -186,7 +186,6 @@ class utility(commands.Cog):
             'latest': 'https://discordpy.readthedocs.io/en/latest',
             'python': 'https://docs.python.org/3',
             'asyncpg': "https://magicstack.github.io/asyncpg/current/",
-            "aiohttp": "https://docs.aiohttp.org/en/stable/"
         }
         bot.loop.create_task(
             self.build_rtfm_lookup_table(page_types=page_types))
@@ -255,7 +254,6 @@ class utility(commands.Cog):
             'latest': 'https://discordpy.readthedocs.io/en/latest',
             'python': 'https://docs.python.org/3',
             'asyncpg': "https://magicstack.github.io/asyncpg/current/",
-            "aiohttp": "https://docs.aiohttp.org/en/stable/"
         }
         if obj is None:
             await ctx.send(page_types[key])
@@ -745,10 +743,6 @@ class utility(commands.Cog):
     @rtfm.command(name="asyncpg", aliases=["apg"])
     async def rtfm_asyncpg(self, ctx, *, thing: str = None):
         await self.uhh_rtfm_pls(ctx, "asyncpg", thing)
-
-    @rtfm.command(name="aiohttp")
-    async def rtfm_aiohttp(self, ctx, *, thing: str = None):
-        await self.uhh_rtfm_pls(ctx, "aiohttp", thing)
 
     @commands.command(aliases=["fm"])
     async def firstmsg(self, ctx, *, channel: discord.TextChannel = None):
