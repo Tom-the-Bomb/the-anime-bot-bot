@@ -499,6 +499,8 @@ class events(commands.Cog):
         error = getattr(error, 'original', error)
         if isinstance(error, ignored):
             return
+        if isinstance(error, commands.CheckFailure):
+            return
         if isinstance(error, commands.DisabledCommand):
             embed = await self.embed(f"{ctx.command} has been disabled.")
             return await ctx.send(embed=embed)
