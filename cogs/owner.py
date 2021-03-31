@@ -99,8 +99,8 @@ class owners(commands.Cog):
 
         stdout, stderr = await proc.communicate()
 
-        stdout = f'{stdout.decode()}' if not stdout == b'' else "\u200b"
-        stderr = f'\n{stderr.decode()}' if not stderr == b'' else "\u200b"
+        stdout = f'{stdout.decode()}' if not stdout == b'' else ""
+        stderr = f'\n{stderr.decode()}' if not stderr == b'' else ""
         return await ctx.send(embed=discord.Embed(color=self.bot.color, title="Pulling from GitHub...", description=f"```\n{stdout}\n{stderr}\n```"))
 
 
