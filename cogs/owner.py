@@ -93,7 +93,7 @@ class owners(commands.Cog):
     @commands.is_owner()
     async def pull(self, ctx):
         proc = await asyncio.create_subprocess_shell(
-        cmd,
+        "git pull",
         stdout=asyncio.subprocess.PIPE,
         stderr=asyncio.subprocess.PIPE)
 
