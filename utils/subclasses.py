@@ -196,7 +196,11 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
           await ctx.guild.chunk()
 
   async def before_invoke_(self, ctx):
-    await ctx.command._max_concurrency.release()
+    try:
+      if ctx.message.author.id in [590323594744168494, 711057339360477184]:
+        await ctx.command._max_concurrency.release()
+    except:
+      pass
     await ctx.trigger_typing() if not ctx.command.qualified_name.startswith("jishaku")
     ctx.bot.loop.create_task(self.chunk_(ctx))
   def run(self, *args, **kwargs):
