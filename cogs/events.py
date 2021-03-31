@@ -483,11 +483,11 @@ class events(commands.Cog):
         print(len(self.bot.guilds))
         print('Logged in as:\n{0.user.name}\n{0.user.id}'.format(self.bot))
         
-        @staticmethod
-        def embed(text):
-        return discord.Embed(color=0xFF0000,
-                              title="An error occured",
-                              description=text)
+    @staticmethod
+    def embed(text):
+    return discord.Embed(color=0xFF0000,
+                            title="An error occured",
+                            description=text)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx, error):
