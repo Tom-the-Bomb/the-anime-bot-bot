@@ -186,7 +186,6 @@ class utility(commands.Cog):
             'latest': 'https://discordpy.readthedocs.io/en/latest',
             'python': 'https://docs.python.org/3',
             'asyncpg': "https://magicstack.github.io/asyncpg/current/",
-            "zaneapi": "https://docs.zaneapi.com/en/latest/",
             "aiohttp": "https://docs.aiohttp.org/en/stable/"
         }
         bot.loop.create_task(
@@ -256,7 +255,6 @@ class utility(commands.Cog):
             'latest': 'https://discordpy.readthedocs.io/en/latest',
             'python': 'https://docs.python.org/3',
             'asyncpg': "https://magicstack.github.io/asyncpg/current/",
-            "zaneapi": "https://docs.zaneapi.com/en/latest/",
             "aiohttp": "https://docs.aiohttp.org/en/stable/"
         }
         if obj is None:
@@ -747,10 +745,6 @@ class utility(commands.Cog):
     @rtfm.command(name="asyncpg", aliases=["apg"])
     async def rtfm_asyncpg(self, ctx, *, thing: str = None):
         await self.uhh_rtfm_pls(ctx, "asyncpg", thing)
-
-    @rtfm.command(name="zaneapi")
-    async def rtfm_zaneapi(self, ctx, *, thing: str = None):
-        await self.uhh_rtfm_pls(ctx, "zaneapi", thing)
 
     @rtfm.command(name="aiohttp")
     async def rtfm_aiohttp(self, ctx, *, thing: str = None):
