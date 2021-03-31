@@ -482,10 +482,9 @@ class events(commands.Cog):
             name=f"{len(self.bot.guilds)} guilds"))
         print(len(self.bot.guilds))
         print('Logged in as:\n{0.user.name}\n{0.user.id}'.format(self.bot))
-
-    @staticmethod
-    @asyncexe()
-    def embed(text):
+        
+        @staticmethod
+        def embed(text):
         return discord.Embed(color=0xFF0000,
                               title="An error occured",
                               description=text)
@@ -502,42 +501,42 @@ class events(commands.Cog):
         if isinstance(error, commands.CheckFailure):
             return
         if isinstance(error, commands.DisabledCommand):
-            embed = await self.embed(f"{ctx.command} has been disabled.")
+            embed = self.embed(f"{ctx.command} has been disabled.")
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.NSFWChannelRequired):
-            embed = await self.embed(
+            embed = self.embed(
                 "this command must be used in NSFW channel")
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.errors.UserNotFound):
-            embed = await self.embed("User not found")
+            embed = self.embed("User not found")
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.errors.MemberNotFound):
-            embed = await self.embed("Member not found")
+            embed = self.embed("Member not found")
             return await ctx.send(embed=embed)
         elif isinstance(error, asyncio.TimeoutError):
-            embed = await self.embed("timeout")
+            embed = self.embed("timeout")
             return await ctx.send(embed=embed)
         elif isinstance(error, discord.errors.Forbidden):
-            embed = await self.embed(error.text)
+            embed = self.embed(error.text)
             return await ctx.send(embed=embed)
         elif isinstance(error, discord.errors.HTTPException):
-            embed = await self.embed(f"HTTPException {error.text}")
+            embed = self.embed(f"HTTPException {error.text}")
             return await ctx.send(embed=embed)
         elif isinstance(error, GlobalCooldown):
-            embed = await self.embed(
+            embed = self.embed(
                 f"You have hit the global ratelimit try again in {round(error.retry_after)} seconds"
             )
             return await ctx.send(embed=embed)
         elif isinstance(error, aiozaneapi.GatewayError):
-            embed = await self.embed("Zane api have a error")
+            embed = self.embed("Zane api have a error")
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.errors.NotOwner):
-            embed = await self.embed(
+            embed = self.embed(
                 "You must be the bot owner to use this command")
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.NoPrivateMessage):
             try:
-                embed = await self.embed(
+                embed = self.embed(
                     "{ctx.command} can not be used in Private Messages.")
                 await ctx.author.send(embed=embed)
             except discord.HTTPException:
@@ -545,35 +544,38 @@ class events(commands.Cog):
         elif isinstance(error, AttributeError):
             return
         elif isinstance(error, commands.errors.InvalidEndOfQuotedStringError):
-            embed = await self.embed(
+            embed = self.embed(
                 "Make sure to put a space between the quotes")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.ConversionError):
-            embed = await self.embed(f"Unable to convert {error.converter}")
+            embed = self.embed(f"Unable to convert {error.converter}")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.BadArgument):
-            embed = await self.embed(f"Unable to convert")
+            embed = self.embed(f"Unable to convert")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MissingRequiredArgument):
-            embed = await self.embed(
+            embed = self.embed(
                 f"You are missing `{error.param.name}` argument")
             await ctx.send(embed=embed)
+        elif isinstance(error, commands.MaxConcurrencyReached):
+            embed = self.embed(f"Command is already running please wait untill it finsh it can only be used {error.number} per {error.per}")
+            return await ctx.send()
         elif isinstance(error, commands.CommandOnCooldown):
-            embed = await self.embed(
+            embed = self.embed(
                 f"dude chill try again in {round(error.retry_after)} seconds")
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.BotMissingPermissions):
-            embed = await self.embed(
+            embed = self.embed(
                 f"Bot is missing {', '.join(error.missing_perms)} to do that")
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.MissingPermissions):
-            embed = await self.embed("you do not have permission to do that")
+            embed = self.embed("you do not have permission to do that")
             await ctx.reply(embed=embed)
         elif isinstance(error, asyncdagpi.errors.BadUrl):
-            embed = await self.embed("You did not pass in the right arguments")
+            embed = self.embed("You did not pass in the right arguments")
             await ctx.reply(embed=embed)
         elif isinstance(error, asyncdagpi.errors.ApiError):
-            embed = await self.embed("The image API have a error")
+            embed = self.embed("The image API have a error")
             await ctx.reply(embed=embed)
         else:
             await self.bot.db.execute("INSERT INTO errors (error, message, created_at, author_name, command) VALUES ($1, $2, $3, $4, $5)", ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)), ctx.message.content, ctx.message.created_at, str(ctx.author), ctx.command.qualified_name)
