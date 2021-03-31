@@ -196,7 +196,8 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
           await ctx.guild.chunk()
 
   async def before_invoke_(self, ctx):
-    await ctx.trigger_typing()
+    await ctx.command._max_concurrency.release()
+    await ctx.trigger_typing() if not ctx.command.qualified_name.startswith("jishaku")
     ctx.bot.loop.create_task(self.chunk_(ctx))
   def run(self, *args, **kwargs):
     # self.ipc.start()
