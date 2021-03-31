@@ -101,7 +101,7 @@ class owners(commands.Cog):
 
         stdout = f'{stdout.decode()}' if not stdout == b'' else "\u200b"
         stderr = f'\n{stderr.decode()}' if not stderr == b'' else "\u200b"
-        return await ctx.send(embed=discord.Embed(color=self.bot.color, title="Pulling from GitHub...", description=f"```\n{stdout if not stdout == b''}\n{stderr if not stderr == b''}\n```"))
+        return await ctx.send(embed=discord.Embed(color=self.bot.color, title="Pulling from GitHub...", description=f"```\n{stdout}\n{stderr}\n```"))
 
 
     @classmethod
