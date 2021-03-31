@@ -43,6 +43,8 @@ class MyMenu(menus.Menu, timeout=9223372036854775807):
 class owners(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+    async def cog_check(self, ctx):
+        return ctx.author.id in self.bot.owner_ids
 
     def cleanup_code(self, content):
         """Automatically removes code blocks from the code."""
