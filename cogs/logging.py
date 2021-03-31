@@ -140,9 +140,9 @@ class logging(commands.Cog):
         await self.send_webhook(channel.guild.id, embed, "channel_create")
     @commands.Cog.listener()
     async def on_guild_channel_update(self, before, after):
-        if channel.guild.id not in self.bot.logging_cache.keys():
+        if after.guild.id not in self.bot.logging_cache.keys():
             return
-        embed = discord.Embed(color=self.bot.color, title="Channel Updated", timestamp=channel.created_at)
+        embed = discord.Embed(color=self.bot.color, title="Channel Updated", timestamp=after.created_at)
         embed.set_footer(text=f"Channel ID: {after.id}")
         return await self.send_webhook(after.guild.id, embed, "channel_update")
 
@@ -264,15 +264,15 @@ class logging(commands.Cog):
         if not before.channel:
             embed = discord.Embed(color=self.bot.color, title="Joined voice channel", description=f"{member.display_name} joined voice channel {after.channel.mention}")
             embed.set_footer(text=f"User ID: {member.id}")
-            await self.send_webhook(member.guild.id, embed, "voice_channel_change")
+            return await self.send_webhook(member.guild.id, embed, "voice_channel_change")
         if not after.channel:
             embed = discord.Embed(color=self.bot.color, title="Left voice channel", description=f"{member.display_name} left voice channel {before.channel.mention}")
             embed.set_footer(text=f"User ID: {member.id}")
-            await self.send_webhook(member.guild.id, embed, "voice_channel_change")
+            return await self.send_webhook(member.guild.id, embed, "voice_channel_change")
         if before.channel != after.channel:
             embed = discord.Embed(color=self.bot.color, title="Changed voice channel", description=f"{member.display_name} changed voice channel from {before.channel.mention} to {after.channel.mention}")
             embed.set_footer(text=f"User ID: {member.id}")
-            await self.send_webhook(member.guild.id, embed, "voice_channel_change")
+            return await self.send_webhook(member.guild.id, embed, "voice_channel_change")
         
             
     @commands.Cog.listener()

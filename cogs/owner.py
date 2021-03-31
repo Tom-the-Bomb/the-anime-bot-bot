@@ -59,9 +59,20 @@ class owners(commands.Cog):
     # async def on_ready(self):
     #   task = asyncio.create_task(self.reactionreload())
     
-    @asyncexe()
-    def pull_(self):
-        return subprocess.check_output("git pull", shell=True).decode('utf-8')
+    
+    @commands.command()
+    async def viewlog(self, ctx):
+        proc = await asyncio.create_subprocess_shell(
+        "systemctl status animebot",
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE)
+
+        stdout, stderr = await proc.communicate()
+
+        if stdout:
+            await ctx.send(f'[stdout]\n{stdout.decode()}')
+        if stderr:
+            await ctx.send(f'[stderr]\n{stderr.decode()}')
     
     @commands.command()
     @commands.is_owner()
@@ -81,7 +92,16 @@ class owners(commands.Cog):
     @commands.command(aliases=['sync'])
     @commands.is_owner()
     async def pull(self, ctx):
-        return await ctx.send(embed=discord.Embed(color=self.bot.color, title="Pulling from GitHub...", description=f"```\n{await self.pull_()}\n```"))
+        proc = await asyncio.create_subprocess_shell(
+        cmd,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE)
+
+        stdout, stderr = await proc.communicate()
+
+        stdout = f'{stdout.decode()}' if not stdout == b'' else "\u200b"
+        stderr = f'\n{stderr.decode()}' if not stderr == b'' else "\u200b"
+        return await ctx.send(embed=discord.Embed(color=self.bot.color, title="Pulling from GitHub...", description=f"```\n{stdout if not stdout == b''}\n{stderr if not stderr == b''}\n```"))
 
 
     @classmethod
