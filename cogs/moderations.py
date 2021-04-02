@@ -95,7 +95,7 @@ class moderations(commands.Cog):
             old_bad_words.append(word)
             await self.bot.db.execute("UPDATE bad_words SET words = $2 WHERE guild_id = $1", ctx.guild.id, self.bot.bad_word_cache[ctx.guild.id])
         await ctx.message.delete()
-        await ctx.send("Success")
+        await ctx.send("Success", delete_after=5)
 
     @commands.command()
     @commands.has_permissions(manage_messages=True)
