@@ -99,8 +99,9 @@ class pictures(commands.Cog):
     async def bot_cdn(self, url):
         async with self.bot_cdn_ratelimiter:
             async with self.bot.session.get(url) as resp:
-                if "image" not in resp.content_type or "webm" not in resp.content_type:
-                    return "Invalid image"
+                if "image" not in resp.content_type:
+                    if "webm" not in resp.content_type:
+                        return "Invalid image"
                 async with self.bot.session.post("hhttps://theanimebot.is-ne.at/upload", data={"image": await resp.read()}) as resp:
                     return (await resp.json())["url"]
 
