@@ -6,6 +6,15 @@ from utils.fuzzy import finder
 class moderations(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.bot.loop.create_task(self.build_cache())
+
+    async def build_cache(self):
+        await self.bot.wait_until_ready()
+        bad_words = await self.bot.db.fetch("SELECT * FROM bad_words")
+        if not bad_words:
+            return
+        for i in bad_words:
+            self.bot_bad_word_cache[i["guild_id"]] = i["words"]
 
     # @commands.command()
     # @commands.has_permissions(manage_messages=True)
@@ -40,6 +49,50 @@ class moderations(commands.Cog):
     #     embed = discord.Embed(color=self.bot.color)
     #     embed.add_field(name=f"`{user}` have been muted", value=f"with reason: `{reason}`")
     #     return await ctx.send(embed=embed)
+
+    @commands.Cog.listener()
+    async def on_message_edit(self, before, message):
+        if message.guild.id not in self.bot_bad_word_cache.keys():
+            return
+        bad_words = self.bot_bad_word_cache[message.guild.id]
+        for i in bad_words:
+            if i in message.content:
+                try:
+                    await message.delete()
+                except:
+                    pass
+
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.guild.id not in self.bot_bad_word_cache.keys():
+            return
+        bad_words = self.bot_bad_word_cache[message.guild.id]
+        for i in bad_words:
+            if i in message.content:
+                try:
+                    await message.delete()
+                except:
+                    pass
+
+    @commands.group()
+    @commands.has_permissions(manage_messages=True)
+    async def badword(self, ctx):
+        if ctx.guild.id not in self.bot_bad_word_cache.keys():
+            return await ctx.send("logging is not enabled")
+        await ctx.author.send(", ".join(self.bot_bad_word_cache[ctx.guild.id]))
+        await ctx.send("I have dmed you the list of bad words of this server")
+
+    @badword.command()
+    @commands.has_permissions(manage_messages=True)
+    async def add(self, ctx, *, word):
+        if ctx.guild.id not in self.bot_bad_word_cache.keys():
+            self.bot_bad_word_cache[ctx.guild.id] = [word]
+            await self.bot.db.execute("INSERT INTO bad_words VALUES ($1, $2)", ctx.guild.id, self.bot_bad_word_cache[ctx.guild.id])
+            await ctx.send("Success")
+        else:
+            old_bad_words = self.bot_bad_word_cache[ctx.guild.id]
+            old_bad_words.append(word)
+            await self.bot.db.execute("UPDATE bad_words SET words = $2 WHERE guild_id = $1", ctx.guild.id, self.bot_bad_word_cache[ctx.guild.id])
 
     @commands.command()
     @commands.has_permissions(manage_messages=True)
