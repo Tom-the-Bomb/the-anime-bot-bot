@@ -90,6 +90,8 @@ class moderations(commands.Cog):
             await self.bot.db.execute("INSERT INTO bad_words VALUES ($1, $2)", ctx.guild.id, self.bot.bad_word_cache[ctx.guild.id])
             await ctx.send("Success")
         else:
+            if word in self.bot.bad_word_cache[ctx.guild.id]:
+                return await ctx.send("already in bad word list")
             old_bad_words = self.bot.bad_word_cache[ctx.guild.id]
             old_bad_words.append(word)
             await self.bot.db.execute("UPDATE bad_words SET words = $2 WHERE guild_id = $1", ctx.guild.id, self.bot.bad_word_cache[ctx.guild.id])
