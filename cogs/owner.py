@@ -54,12 +54,15 @@ class owners(commands.Cog):
 
         # remove `foo`
         return content.strip('` \n')
-    
-    # self.reactionreload.start()
-
-    # @commands.Cog.listener()
-    # async def on_ready(self):
-    #   task = asyncio.create_task(self.reactionreload())
+  
+    @commands.Cog.listener()
+    async def on_raw_reaction_add(self, payload):
+        if payload.user_id == 590323594744168494 and payload.emoji.name == "\U0001f6ae":
+            try:
+                await self.bot.http.delete_message(payload.channel_id, payload.message_id, reason="delete reaction detected")
+            except:
+                pass
+            
     
     
     @commands.command()
