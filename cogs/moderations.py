@@ -52,6 +52,8 @@ class moderations(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_message_edit(self, payload):
+        if not payload.data.get("guild_id"):
+            return
         if payload.data.get("guild_id") not in self.bot.bad_word_cache.keys():
             return
         bad_words = self.bot.bad_word_cache[payload.data.get("guild_id")]
@@ -66,6 +68,8 @@ class moderations(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
+        if not message.guild:
+            return
         if message.guild.id not in self.bot.bad_word_cache.keys():
             return
         bad_words = self.bot.bad_word_cache[message.guild.id]
