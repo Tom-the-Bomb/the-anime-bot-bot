@@ -103,7 +103,7 @@ class pictures(commands.Cog):
                 if "image" not in resp.content_type:
                     if "webm" not in resp.content_type:
                         return "Invalid image"
-                async with self.bot.session.post("https://theanimebot.is-ne.at/upload", data={"image": await resp.read()}, "noembed": True) as resp:
+                async with self.bot.session.post("https://theanimebot.is-ne.at/upload", data={"image": await resp.read(), "noembed": True}) as resp:
                     if resp.status != 200:
                         return "something went wrong"
                     js = await resp.json()
