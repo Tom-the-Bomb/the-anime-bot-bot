@@ -60,7 +60,7 @@ class moderations(commands.Cog):
         for i in bad_words:
             if i.lower() in payload.data.get("content"):
                 try:
-                    await self.bot.http.delete_message(payload.data.get("channel_id"), payload.data.get("message_id"), reason="Bad word detected")
+                    await self.bot.http.delete_message(payload.data.get("channel_id"), payload.data.get("id"), reason="Bad word detected")
                 except:
                     pass
 
