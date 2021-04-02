@@ -74,7 +74,7 @@ class moderations(commands.Cog):
                 except:
                     pass
 
-    @commands.group()
+    @commands.group(invoke_without_command=True)
     @commands.has_permissions(manage_messages=True)
     async def badword(self, ctx):
         if ctx.guild.id not in self.bot.bad_word_cache.keys():
