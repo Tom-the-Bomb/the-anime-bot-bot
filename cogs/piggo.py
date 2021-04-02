@@ -10,15 +10,15 @@ class reactionrole(commands.Cog):
         self.unnie_message_id = 826236025789349918
         self.unnie_emoji_to_role = {
             727995475117998111: 810336158008737792,
-            796132269312049152:,
-            798756695949705257:,
-            777815702437494784:,
-            658386618205470780:,
-            665825427197001743:,
-            741017487994519633:,
-            515993072031498260:,
-            588504238494187525:,
-            810349419802132481:
+            796132269312049152: 826201074817957919,
+            798756695949705257: 812094102673817640,
+            777815702437494784: 810375644121923584,
+            658386618205470780: 810337057544077363,
+            665825427197001743: 810337124271783956,
+            741017487994519633: 810337691282571304,
+            515993072031498260: 812476108900663306,
+            588504238494187525: 826204966749863978,
+            810349419802132481: 826207728322084915
         }
         self.pig_role_message_id = 812050921714089996
         self.pig_emoji_to_role = {
@@ -114,11 +114,11 @@ class reactionrole(commands.Cog):
     async def on_raw_reaction_add(self, payload):
         """Gives a role based on a reaction emoji."""
         # Make sure that the message the user is reacting to is the one we care about
-        if payload.message_id != self.role_message_id:
+        if payload.message_id != self.unnie_message_id:
             return
 
         try:
-            role_id = self.emoji_to_role[payload.emoji.id
+            role_id = self.unnie_emoji_to_role[payload.emoji.id
                                          or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
@@ -145,11 +145,11 @@ class reactionrole(commands.Cog):
     async def on_raw_reaction_remove(self, payload):
         """Removes a role based on a reaction emoji."""
         # Make sure that the message the user is reacting to is the one we care about
-        if payload.message_id != self.role_message_id:
+        if payload.message_id != self.unnie_message_id:
             return
 
         try:
-            role_id = self.emoji_to_role[payload.emoji.id
+            role_id = self.unnie_emoji_to_role[payload.emoji.id
                                          or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
