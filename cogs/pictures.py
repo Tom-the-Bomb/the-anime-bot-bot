@@ -104,7 +104,7 @@ class pictures(commands.Cog):
                         return "Invalid image"
                 async with self.bot.session.post("https://theanimebot.is-ne.at/upload", data={"image": await resp.read()}) as resp:
                     js = await resp.json()
-                    return js.get("thumb") js.get("url")
+                    return js.get("thumb") or js.get("url")
 
     async def cdn_(self, url):
         async with self.cdn_ratelimiter:
