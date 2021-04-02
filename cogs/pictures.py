@@ -99,12 +99,18 @@ class pictures(commands.Cog):
     async def bot_cdn(self, url):
         async with self.bot_cdn_ratelimiter:
             async with self.bot.session.get(url) as resp:
+                content = resp.content_type
                 if "image" not in resp.content_type:
                     if "webm" not in resp.content_type:
                         return "Invalid image"
                 async with self.bot.session.post("https://theanimebot.is-ne.at/upload", data={"image": await resp.read()}) as resp:
+                    if resp.status != 200:
+                        return "something went wrong"
                     js = await resp.json()
-                    return js.get("thumb") or js.get("url")
+                    extension = content.split("/")[1]
+                    if extension in ["vnd.microsoft.icon", "x-icon"]:
+                        extension = ".ico"
+                    return f"{js.get('url') + extension}\nOriginal URL incase that one not working: {js.get('url')}"
 
     async def cdn_(self, url):
         async with self.cdn_ratelimiter:
@@ -160,7 +166,7 @@ class pictures(commands.Cog):
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]=None):
         url = await self.get_url(ctx, thing)
-        await ctx.send(f"<{await self.bot_cdn(url)}>")
+        await ctx.send(f"{await self.bot_cdn(url)}")
 
     @commands.command()
     async def cdn(self, ctx, thing: typing.Union[discord.Member, discord.User,
