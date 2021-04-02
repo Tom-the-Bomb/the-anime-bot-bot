@@ -23,6 +23,7 @@ authorizationthing = (config.ksoft)
 class pictures(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.bot_cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=1, period=6)
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
 
@@ -94,6 +95,14 @@ class pictures(commands.Cog):
                     raise commands.CommandError("Invalid Picture")
         url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
+    
+    async def bot_cdn(self, url):
+        async with self.bot_cdn_ratelimiter:
+            async with self.bot.session.get(url) as resp:
+                if "image" not in resp.content_type or "webm" not in resp.content_type:
+                    return "Invalid image"
+                async with self.bot.session.post("hhttps://theanimebot.is-ne.at/upload", data={"image": await resp.read()}) as resp:
+                    return (await resp.json())["url"]
 
     async def cdn_(self, url):
         async with self.cdn_ratelimiter:
@@ -143,6 +152,13 @@ class pictures(commands.Cog):
                        save_all=True, duration=3, loop=0)
         igif.seek(0)
         return igif
+    
+    @commands.command()
+    async def botcdn(self, ctx, thing: typing.Union[discord.Member, discord.User,
+                                                discord.PartialEmoji,
+                                                discord.Emoji, str]=None):
+        url = await self.get_url(ctx, thing)
+        await ctx.send(f"<{await self.bot_cdn(url)}>")
 
     @commands.command()
     async def cdn(self, ctx, thing: typing.Union[discord.Member, discord.User,
