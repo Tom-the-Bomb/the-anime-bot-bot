@@ -56,7 +56,7 @@ class moderations(commands.Cog):
             return
         bad_words = self.bot.bad_word_cache[message.guild.id]
         for i in bad_words:
-            if i in message.content:
+            if i.lower() in message.content.lower():
                 try:
                     await message.delete()
                 except:
@@ -68,7 +68,7 @@ class moderations(commands.Cog):
             return
         bad_words = self.bot.bad_word_cache[message.guild.id]
         for i in bad_words:
-            if i in message.content:
+            if i.lower() in message.content.lower():
                 try:
                     await message.delete()
                 except:
