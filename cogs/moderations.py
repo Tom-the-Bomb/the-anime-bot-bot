@@ -51,14 +51,16 @@ class moderations(commands.Cog):
     #     return await ctx.send(embed=embed)
 
     @commands.Cog.listener()
-    async def on_message_edit(self, before, message):
-        if message.guild.id not in self.bot.bad_word_cache.keys():
+    async def on_raw_message_edit(self, payload):
+        if payload.data.get("guild_id") not in self.bot.bad_word_cache.keys():
             return
-        bad_words = self.bot.bad_word_cache[message.guild.id]
+        bad_words = self.bot.bad_word_cache[payload.data.get("guild_id")]
+        if not payload.data.get("content"):
+            return
         for i in bad_words:
-            if i.lower() in message.content.lower():
+            if i.lower() in payload.data.get("content"):
                 try:
-                    await message.delete()
+                    await self.bot.http.delete_message(payload.data.get("channel_id"), payload.data.get("message_id"), reason="Bad word detected")
                 except:
                     pass
 
@@ -70,7 +72,7 @@ class moderations(commands.Cog):
         for i in bad_words:
             if i.lower() in message.content.lower():
                 try:
-                    await message.delete()
+                    await self.bot.http.delete_message(message.channel.id, message.id, reason="Bad word detected")
                 except:
                     pass
 
