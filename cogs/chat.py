@@ -1,5 +1,5 @@
 import discord
-from discord.ext import commmands
+from discord.ext import commands
 from utils.subclasses import AnimeContext
 from matplotlib import pyplot as plt
 from utils.asyncstuff import asyncexe
