@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from utils.subclasses import AnimeContext
 import datetime
 from menus import menus
 from jishaku.paginators import PaginatorEmbedInterface, PaginatorInterface
@@ -18,7 +19,7 @@ class todo(commands.Cog):
     async def todo(self, ctx):
         pass
     @todo.command()
-    async def swap(self, ctx, task1: int, task2: int):
+    async def swap(self, ctx: AnimeContext, task1: int, task2: int):
         todos = await self.bot.db.fetch("SELECT * FROM todos WHERE author_id = $1 ORDER BY created_at", ctx.author.id)
         if task1 > len(todos) or task2 > len(todos) or todos is None:
             return await ctx.send("You can't swap tasks you don't have")
@@ -28,7 +29,7 @@ class todo(commands.Cog):
         await self.bot.db.execute("UPDATE todos SET created_at = $1 WHERE created_at = $2", task_1["created_at"], task_2["created_at"])
         return await ctx.send(embed=discord.Embed(color=self.bot.color, title="Swap tasks", description=f"Succesfully swapped task {task1} and {task2}"))
     @todo.command()
-    async def remove(self, ctx, index: commands.Greedy[int]):
+    async def remove(self, ctx: AnimeContext, index: commands.Greedy[int]):
         todos = await self.bot.db.fetch("SELECT * FROM todos WHERE author_id = $1 ORDER BY created_at", ctx.author.id)
         if todos is None:
             return await ctx.send("You can't remove tasks you don't have")
@@ -54,7 +55,7 @@ class todo(commands.Cog):
         pages = menus.MenuPages(source=TodoMenuSource(lists), delete_message_after=True)
         await pages.start(ctx)
     @todo.command()
-    async def multiadd(self, ctx, *, contents):
+    async def multiadd(self, ctx: AnimeContext, *, contents):
         """
         Add multiple tasks at once split by ,
         Example:
@@ -70,7 +71,7 @@ class todo(commands.Cog):
         
         
     @todo.command()
-    async def add(self, ctx, *, content):
+    async def add(self, ctx: AnimeContext, *, content):
         await self.bot.db.execute("INSERT INTO todos (author_id, content, created_at, message_id, jump_url) VALUES ($1, $2, $3, $4, $5)", ctx.author.id, content, ctx.message.created_at, ctx.message.id, ctx.message.jump_url)
         todos = await self.bot.db.fetch("SELECT * FROM todos WHERE author_id = $1", ctx.author.id)
         return await ctx.send(embed=discord.Embed(color=self.bot.color, title="Successfully added new todo", description=f"{len(todos)} - {content}"))

@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from utils.subclasses import AnimeContext
 import humanize
 import ratelimiter
 import datetime
@@ -34,7 +35,7 @@ class logging(commands.Cog):
         await ctx.send(embed=discord.Embed(color=self.bot.color, description=settings))
     @logging.command()
     @commands.has_permissions(manage_guild=True)
-    async def setup(self, ctx, channel:discord.TextChannel, nowebhook=False):
+    async def setup(self, ctx: AnimeContext, channel:discord.TextChannel, nowebhook=False):
         """
         Setup logging:
         Usage:
@@ -83,7 +84,7 @@ class logging(commands.Cog):
 
     @logging.command()
     @commands.has_permissions(manage_guild=True)
-    async def toggle(self, ctx, event:str):
+    async def toggle(self, ctx: AnimeContext, event:str):
         """
         Toggle a certain event
         Usage:

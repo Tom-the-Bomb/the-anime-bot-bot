@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from utils.subclasses import AnimeContext
 from menus import menus
 
 class TagMenuSource(menus.ListPageSource):
@@ -24,7 +25,7 @@ class tag(commands.Cog):
             
 
     @commands.group(invoke_without_command=True)
-    async def tag(self, ctx, *, name):
+    async def tag(self, ctx: AnimeContext, *, name):
         tags = await self.bot.db.fetchrow("SELECT * FROM tags WHERE tag_name = $1", name)
         if not tags:
             return await ctx.send("Tag not found")
@@ -36,21 +37,21 @@ class tag(commands.Cog):
         pages = menus.MenuPages(source=TagMenuSource([i["tag_name"] for i in tags]), delete_message_after=True)
         await pages.start(ctx)
     @tag.command()
-    async def edit(self, ctx, name, *, content):
+    async def edit(self, ctx: AnimeContext, name, *, content):
         tags = await self.bot.db.fetch("SELECT * FROM tags WHERE tag_name = $1 AND author_id = $2", name, ctx.author.id)
         if not tags:
             return await ctx.send("Tag not found or you don't own the tag")
         await self.bot.db.execute("UPDATE tags SET tag_content = $2 WHERE tag_name = $1", name, content)
         await ctx.send(f"Edited tag `{name}`")
     @tag.command()
-    async def remove(self, ctx, *, name):
+    async def remove(self, ctx: AnimeContext, *, name):
         tags = await self.bot.db.fetch("SELECT * FROM tags WHERE tag_name = $1 AND author_id = $2", name, ctx.author.id)
         if not tags:
             return await ctx.send("Tag not found or you don't own the tag")
         await self.bot.db.execute("DELETE FROM tags WHERE tag_name = $1", name)
         await ctx.send(f"Deleted tag `{name}`")
     @tag.command()
-    async def add(self, ctx, name, *, content):
+    async def add(self, ctx: AnimeContext, name, *, content):
         tags = await self.bot.db.fetch("SELECT * FROM tags")
         for i in tags:
             if name == i["tag_name"]:

@@ -14,24 +14,24 @@ class cooldown(commands.Cog):
             5, 1, commands.BucketType.user)
         
     @commands.Cog.listener()
-    async def on_command(self, ctx):
+    async def on_command(self, ctx: AnimeContext):
         if ctx.message.author.id in [590323594744168494, 711057339360477184]:
             ctx.command.reset_cooldown(ctx)
             
     # @commands.Cog.listener()
-    # async def on_command(self, ctx):
+    # async def on_command(self, ctx: AnimeContext):
     #     if not ctx.message.id in self.bot.concurrency:
     #         self.bot.concurrency.append(ctx.author.id)
 
     # @commands.Cog.listener()
-    # async def on_command_error(self, ctx, error):
+    # async def on_command_error(self, ctx: AnimeContext, error):
     #     self.bot.concurrency.remove(ctx.author.id)
 
     # @commands.Cog.listener()
-    # async def on_command_completion(self, ctx):
+    # async def on_command_completion(self, ctx: AnimeContext):
     #     self.bot.concurrency.remove(ctx.author.id)
 
-    # async def global_concurrency(self, ctx):
+    # async def global_concurrency(self, ctx: AnimeContext):
     #     if ctx.author.id in self.bot.concurrency:
     #         raise MaxGlobalConcurrencyReached()
     #     else:

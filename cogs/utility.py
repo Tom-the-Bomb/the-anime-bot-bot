@@ -21,6 +21,7 @@ import pyqrcode
 import requests
 from bs4 import BeautifulSoup
 from discord.ext import commands
+from utils.subclasses import AnimeContext
 from translate import Translator
 
 google_api_1 = str(os.getenv("google_api_1"))
@@ -65,7 +66,7 @@ class googlemenu(menus.Menu):
         self.datas = kwargs.pop("datas")
         super().__init__(*args, **kwargs)
 
-    async def send_initial_message(self, ctx, channel):
+    async def send_initial_message(self, ctx: AnimeContext, channel):
         embed = discord.Embed(
             color=self.bot.color,
             title=self.datas[self.counter].title,
@@ -249,7 +250,7 @@ class utility(commands.Cog):
                 stream = SphinxObjectFileReader(await resp.read())
                 cache[key] = self.parse_object_inv(stream, page)
         self.bot._rtfm_cache = cache
-    async def uhh_rtfm_pls(self, ctx, key, obj):
+    async def uhh_rtfm_pls(self, ctx: AnimeContext, key, obj):
         page_types = {
             'latest': 'https://discordpy.readthedocs.io/en/latest',
             'python': 'https://docs.python.org/3',
@@ -440,7 +441,7 @@ class utility(commands.Cog):
         return discord.File(file_, "emojis.zip")
     
     @commands.command()
-    async def eval(self, ctx, lang: lambda i: str(i).lower(), *, code: str):
+    async def eval(self, ctx: AnimeContext, lang: lambda i: str(i).lower(), *, code: str):
         """
         eval some code
         supprted language:
@@ -490,7 +491,7 @@ class utility(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(manage_emojis=True)
-    async def zipemoji(self, ctx, compression_method: lambda x: str(x).upper()="DEFLATED"):
+    async def zipemoji(self, ctx: AnimeContext, compression_method: lambda x: str(x).upper()="DEFLATED"):
         """
         Zip all emojis in this server it could take a while since we try to compress it as small as we can
         if you have 7zip installed on your computer choose LZMA compression method is way faster and the file will be way smaller
@@ -511,7 +512,7 @@ class utility(commands.Cog):
         await ctx.send(file=await self.zip_emojis(emojis, method))
 
     @commands.command()
-    async def ip(self, ctx, ip):
+    async def ip(self, ctx: AnimeContext, ip):
         async with self.bot.session.get("https://api.ksoft.si/kumo/geoip", headers = {"Authorization": config.ksoft}, params = {"ip": ip}) as resp:
             res = await resp.json()
             if res.get("message"):
@@ -520,7 +521,7 @@ class utility(commands.Cog):
             await ctx.send(f"```json\n{json.dumps(res, indent=4)}\n```")
     
     @commands.command()
-    async def pypi(self, ctx, name):
+    async def pypi(self, ctx: AnimeContext, name):
         async with self.bot.session.get(f"https://pypi.org/pypi/{name}/json") as resp:
             if resp.status == 404:
                 return await ctx.send(f"We are unable to find that package")
@@ -543,14 +544,14 @@ class utility(commands.Cog):
             embed.add_field(name="Author", value=Author, inline=False)
             await ctx.send(embed=embed)
     @commands.group(invoke_without_command=True)
-    async def qrcode(self, ctx, *, thing):
+    async def qrcode(self, ctx: AnimeContext, *, thing):
         q = pyqrcode.create(thing)
         pic = BytesIO()
         q.png(pic, scale=6)
         pic.seek(0)
         await ctx.send(file=discord.File(pic, "qrcode.png"))
     @qrcode.command(name="decode")
-    async def qrcode_decode(self, ctx, *, link):
+    async def qrcode_decode(self, ctx: AnimeContext, *, link):
         if link.startswith("https"):
             async with self.bot.session.get(link) as resp:
                 byte_ = await resp.read()
@@ -567,13 +568,13 @@ class utility(commands.Cog):
     def txt_(thing):
         return discord.File(BytesIO(thing.encode("utf-8")), "something.txt")
     @commands.command()
-    async def txt(self, ctx, *, anything:str=None):
+    async def txt(self, ctx: AnimeContext, *, anything:str=None):
         if anything.startswith("https://mystb.in/"):
             return await ctx.send(file=await self.txt_(str(await self.bot.mystbin.get(anything))))
         await ctx.send(file=await self.txt_(anything))
 
     @commands.command()
-    async def mystbin(self, ctx, *, code:str=None):
+    async def mystbin(self, ctx: AnimeContext, *, code:str=None):
         if ctx.message.reference:
             if ctx.message.reference.cached_message:
                 if (
@@ -619,11 +620,11 @@ class utility(commands.Cog):
             await ctx.send(str(await self.bot.mystbin.post(code)))
 
     @commands.command()
-    async def replacespace(self, ctx, emoji, *, thing):
+    async def replacespace(self, ctx: AnimeContext, emoji, *, thing):
         await ctx.send(thing.replace(" ", emoji), allowed_mentions=discord.AllowedMentions.none())
 
     @commands.command()
-    async def redirectcheck(self, ctx, *, website):
+    async def redirectcheck(self, ctx: AnimeContext, *, website):
         website = website.strip("<>")
         async with self.bot.session.get(website) as resp:
             soup = BeautifulSoup(await resp.text(), features="lxml")
@@ -643,7 +644,7 @@ class utility(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def translate(self, ctx, from_lang, to_lang, *, thing):
+    async def translate(self, ctx: AnimeContext, from_lang, to_lang, *, thing):
         """
         put " " between your word if you are translating only one word
     Translate text languages are in ISO 639-1 you may google to find the right language code or find them here https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
@@ -684,7 +685,7 @@ class utility(commands.Cog):
 
 
     @commands.command()
-    async def google(self, ctx, *, thing: str):
+    async def google(self, ctx: AnimeContext, *, thing: str):
         params = {
             "key": next(self.bot.cse_lists),
             "cx": "0013301c62cb228c5",
@@ -716,7 +717,7 @@ class utility(commands.Cog):
         # await interface.send_to(ctx)
 
     @commands.command()
-    async def make_embed(self, ctx, *, thing: json.loads):
+    async def make_embed(self, ctx: AnimeContext, *, thing: json.loads):
         """
     Make a embed from json. Link to make it https://leovoel.github.io/embed-visualizer/
     """
@@ -730,22 +731,22 @@ class utility(commands.Cog):
                         "read_the_fucking_manual", "rtfd",
                         "read_the_fucking_doc", "read_tfm", "read_tfd"
                     ])
-    async def rtfm(self, ctx, *, thing: str = None):
+    async def rtfm(self, ctx: AnimeContext, *, thing: str = None):
         """
     Get the link to the discord.py's manual or python's manual
     """
         await self.uhh_rtfm_pls(ctx, "latest", thing)
 
     @rtfm.command(name="py", aliases=["python"])
-    async def rtfm_py(self, ctx, *, thing: str = None):
+    async def rtfm_py(self, ctx: AnimeContext, *, thing: str = None):
         await self.uhh_rtfm_pls(ctx, "python", thing)
 
     @rtfm.command(name="asyncpg", aliases=["apg"])
-    async def rtfm_asyncpg(self, ctx, *, thing: str = None):
+    async def rtfm_asyncpg(self, ctx: AnimeContext, *, thing: str = None):
         await self.uhh_rtfm_pls(ctx, "asyncpg", thing)
 
     @commands.command(aliases=["fm"])
-    async def firstmsg(self, ctx, *, channel: discord.TextChannel = None):
+    async def firstmsg(self, ctx: AnimeContext, *, channel: discord.TextChannel = None):
         """
     The first message send in that channel
     """
@@ -775,7 +776,7 @@ class utility(commands.Cog):
             await ctx.send(embed=msg.embeds[0])
 
     @commands.command()
-    async def art(self, ctx, *, thing: str):
+    async def art(self, ctx: AnimeContext, *, thing: str):
         """
     transform your text into ascii art
     """
@@ -796,7 +797,7 @@ class utility(commands.Cog):
                 raise e
 
     @commands.command()
-    async def math(self, ctx, *, thing: str):
+    async def math(self, ctx: AnimeContext, *, thing: str):
         """
       Calculate some math
       """
@@ -821,7 +822,7 @@ class utility(commands.Cog):
 
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def auditlog(self, ctx, limit=100, *, datatype=None):
+    async def auditlog(self, ctx: AnimeContext, limit=100, *, datatype=None):
         """
     Shows you the audit logs actions
     The max limit of it is 5000
@@ -873,7 +874,7 @@ class utility(commands.Cog):
         await interface.send_to(ctx)
 
     @commands.command()
-    async def emojiinfo(self, ctx, *, emoji):
+    async def emojiinfo(self, ctx: AnimeContext, *, emoji):
         """
     Shows emoji info
     """
@@ -912,7 +913,7 @@ class utility(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command()
-    async def parsetoken(self, ctx, token: str):
+    async def parsetoken(self, ctx: AnimeContext, token: str):
         """
     Parse a discord token
     """
@@ -940,7 +941,7 @@ class utility(commands.Cog):
     #   await ctx.send(file=discord.File(fp=buffer, filename="wordcloud.png"))
 
     @commands.command()
-    async def convert(self, ctx, amount: float, from_: lambda x: str(x).upper(), to: lambda x: str(x).upper()):
+    async def convert(self, ctx: AnimeContext, amount: float, from_: lambda x: str(x).upper(), to: lambda x: str(x).upper()):
         """
     Convert from one currency to another. Currency code are listed here https://en.wikipedia.org/wiki/ISO_4217#Active_codes
     """
@@ -950,7 +951,7 @@ class utility(commands.Cog):
                 return await ctx.send(res.get("message"))
             await ctx.send(f"{amount} {from_.upper()} is equal to {res.get('pretty')}")
     @commands.command()
-    async def charinfo(self, ctx, *, characters: str):
+    async def charinfo(self, ctx: AnimeContext, *, characters: str):
         """Shows you information about a number of characters.
         No more then 25 characters at a time.
         """
@@ -969,7 +970,7 @@ class utility(commands.Cog):
         await interface.send_to(ctx)
 
     @commands.command(aliases=["guildinfo", "gi", "si"])
-    async def serverinfo(self, ctx, guild=None):
+    async def serverinfo(self, ctx: AnimeContext, guild=None):
         """
       Shows you the guild's informations.
     """
@@ -1011,7 +1012,7 @@ class utility(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command(aliases=["cbo"])
-    async def choosebestof(self, ctx, times: Optional[str],
+    async def choosebestof(self, ctx: AnimeContext, times: Optional[str],
                            *choices: commands.clean_content):
         """Chooses between multiple choices x times. to choose multiple stuff you shouse use double quote
         """
@@ -1026,7 +1027,7 @@ class utility(commands.Cog):
         message = await ctx.reply(embed=embed)
 
         builder = await self.bot.loop.run_in_executor(None,
-                                                      self.choosebstofcal, ctx,
+                                                      self.choosebstofcal, ctx: AnimeContext,
                                                       times, choices)
         embed = discord.Embed(color=self.bot.color,
                               description="\n".join(builder))
@@ -1164,7 +1165,7 @@ class utility(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command()
-    async def avatar(self, ctx, member: typing.Union[discord.User, str] = None):
+    async def avatar(self, ctx: AnimeContext, member: typing.Union[discord.User, str] = None):
         """
     shows a members's avatar
 

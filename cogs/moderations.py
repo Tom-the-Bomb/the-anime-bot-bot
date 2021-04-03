@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from utils.subclasses import AnimeContext
 from utils.fuzzy import finder
 
 
@@ -19,7 +20,7 @@ class moderations(commands.Cog):
     # @commands.command()
     # @commands.has_permissions(manage_messages=True)
     # @commands.bot_has_permissions(manage_roles=True)
-    # async def unmute(self, ctx, user: discord.Member, *, reason="None"):
+    # async def unmute(self, ctx: AnimeContext, user: discord.Member, *, reason="None"):
     #   if finder("Muted", user.roles, key=lambda t: t.name, lazy=False)[:3] == []:
     #     return await ctx.send("user not muted")
     #   role = finder("Muted", user.roles, key=lambda t: t.name, lazy=False)[0]
@@ -30,7 +31,7 @@ class moderations(commands.Cog):
     # @commands.command()
     # @commands.has_permissions(manage_messages=True)
     # @commands.bot_has_permissions(manage_roles=True)
-    # async def mute(self, ctx, user: discord.Member, *, reason="None"):
+    # async def mute(self, ctx: AnimeContext, user: discord.Member, *, reason="None"):
     #   permissions=discord.Permissions.text()
     #   permissions.send_messages=False
     #   if finder("Muted", user.roles, key=lambda t: t.name, lazy=False)[:3] != []:
@@ -90,7 +91,7 @@ class moderations(commands.Cog):
 
     @badword.command()
     @commands.has_permissions(manage_messages=True)
-    async def add(self, ctx, *, word):
+    async def add(self, ctx: AnimeContext, *, word):
         if ctx.guild.id not in self.bot.bad_word_cache.keys():
             self.bot.bad_word_cache[ctx.guild.id] = [word]
             await self.bot.db.execute("INSERT INTO bad_words VALUES ($1, $2)", ctx.guild.id, self.bot.bad_word_cache[ctx.guild.id])
@@ -105,7 +106,7 @@ class moderations(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(manage_messages=True)
-    async def warn(self, ctx, user: discord.Member, *, reason):
+    async def warn(self, ctx: AnimeContext, user: discord.Member, *, reason):
         if user.id == 590323594744168494:
             return await ctx.send("nope")
         embed = discord.Embed(color=self.bot.color)
@@ -120,7 +121,7 @@ class moderations(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_messages=True)
     @commands.bot_has_permissions(manage_messages=True)
-    async def purge(self, ctx, limit: int):
+    async def purge(self, ctx: AnimeContext, limit: int):
         await ctx.trigger_typing()
         counts = await ctx.channel.purge(limit=limit)
         await ctx.send(content=f" purged {len(counts)} messages",
@@ -129,7 +130,7 @@ class moderations(commands.Cog):
     @commands.command()
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
-    async def kick(self, ctx, member: discord.Member, *, reason=None):
+    async def kick(self, ctx: AnimeContext, member: discord.Member, *, reason=None):
         if member.id == 590323594744168494:
             return await ctx.reply("hmm nope not gonna do that")
         if ctx.author.top_role < member.top_role:
@@ -141,7 +142,7 @@ class moderations(commands.Cog):
     @commands.command()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def ban(self, ctx, member: discord.Member, *, reason=None):
+    async def ban(self, ctx: AnimeContext, member: discord.Member, *, reason=None):
         if member.id == 590323594744168494:
             return await ctx.reply("hmm nope not gonna do that")
         if ctx.author.top_role < member.top_role:
@@ -153,7 +154,7 @@ class moderations(commands.Cog):
     @commands.command()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def unban(self, ctx, *, member):
+    async def unban(self, ctx: AnimeContext, *, member):
         await ctx.trigger_typing()
         member = discord.Object(id=member.id)
         try:

@@ -2,6 +2,7 @@ from collections import Counter
 
 import discord
 from discord.ext import commands
+from utils.subclasses import AnimeContext
 
 from menus import menus
 
@@ -18,12 +19,12 @@ class commandsusage(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_command_completion(self, ctx):
+    async def on_command_completion(self, ctx: AnimeContext):
         self.bot.command_counter += 1
         self.bot.commandsusages[ctx.command.qualified_name] += 1
-        await self.bot.db.execute("INSERT INTO commandsusage VALUES ($1, $2) ON CONFLICT (command) DO UPDATE SET usages = commandsusage.usages + 1", ctx.command.qualified_name, 1)
+        await self.bot.db.execute("INSERT INTO commandsusage VALUES ($1, $2) ON CONFLICT (command) DO UPDATE SET usages = commandsusage.usages + 1", ctx: AnimeContext.command.qualified_name, 1)
     @commands.command()
-    async def commandusage(self, ctx):
+    async def commandusage(self, ctx: AnimeContext):
         counter = 0
         lists = [f"Total {self.bot.command_counter} commands invoked"]
         for i, (n, v) in enumerate(self.bot.commandsusages.most_common()):

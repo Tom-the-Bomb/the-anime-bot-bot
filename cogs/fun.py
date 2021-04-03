@@ -1,4 +1,5 @@
 import asyncio
+from utils.subclasses import AnimeContext
 import config
 import json
 import os
@@ -80,7 +81,7 @@ class fun(commands.Cog):
         self.bot = bot
         self.talk_channels = []
     
-    async def get_url(self, ctx, thing):
+    async def get_url(self, ctx: AnimeContext, thing):
         if ctx.message.reference:
             if ctx.message.reference.cached_message:
                 if ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "image":
@@ -205,7 +206,7 @@ class fun(commands.Cog):
             return from_bottom(text)
 
     @commands.command()
-    async def caption(self, ctx, thing: typing.Union[discord.Member, discord.User,
+    async def caption(self, ctx: AnimeContext, thing: typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str] = None):
         url = await self.get_url(ctx, thing)
@@ -222,7 +223,7 @@ class fun(commands.Cog):
             await ctx.send(embed=embed, file=discord.File(bytes_, "caption.png"))
     
     @commands.command()
-    async def ship(self, ctx, user_1: typing.Union[discord.Member, discord.User], user_2: typing.Union[discord.Member, discord.User]):
+    async def ship(self, ctx: AnimeContext, user_1: typing.Union[discord.Member, discord.User], user_2: typing.Union[discord.Member, discord.User]):
         random.seed(user_1.id + user_2.id + 34 + 35 + 69)
         amount = int(str(random.randint(0, 100))[0]) if len(str(random.randint(0, 100))) >= 2 else 1
         embed = discord.Embed(color=self.bot.color, description=f"{user_1.name} + {user_2.name} = **{random.randint(0, 100)}**%\n{'<a:rooLove:744346239075877518>'* amount}")
@@ -230,7 +231,7 @@ class fun(commands.Cog):
 
 
     @commands.command()
-    async def pic(self, ctx, animal: str):
+    async def pic(self, ctx: AnimeContext, animal: str):
         async with self.bot.session.get(f"https://some-random-api.ml/img/{animal}") as resp:
             if resp.status == 404:
                 return await ctx.send("we can't find picture of that animal")
@@ -240,7 +241,7 @@ class fun(commands.Cog):
                 await ctx.send(file=discord.File(pic, filename=animal+".png"))
 
     @commands.command()
-    async def fact(self, ctx, animal: str):
+    async def fact(self, ctx: AnimeContext, animal: str):
         async with self.bot.session.get(f"https://some-random-api.ml/facts/{animal}") as resp:
             if resp.status == 404:
                 return await ctx.send("we can't find fact about that animal")
@@ -248,7 +249,7 @@ class fun(commands.Cog):
             await ctx.send(fact["fact"])
 
     @commands.command()
-    async def http(self, ctx, *, code: str = "404"):
+    async def http(self, ctx: AnimeContext, *, code: str = "404"):
         async with self.bot.session.get(
                 f"https://http.cat/{code}") as resp:
             buffer = await resp.read()
@@ -275,7 +276,7 @@ class fun(commands.Cog):
         await message.edit(embed=embed)
 
     @commands.command(aliases=["balls"])
-    async def ball(self, ctx, *, question):
+    async def ball(self, ctx: AnimeContext, *, question):
         await ctx.send(self.bot.ball.response(question))
 
     # @commands.command()
@@ -320,7 +321,7 @@ class fun(commands.Cog):
 
     @commands.command()
     @commands.max_concurrency(1, commands.BucketType.user)
-    async def latest(self, ctx, user: discord.Member = None):
+    async def latest(self, ctx: AnimeContext, user: discord.Member = None):
         async with ctx.typing():
             user1 = user
             if user1 is None:
@@ -351,7 +352,7 @@ class fun(commands.Cog):
 
     @commands.command(aliases=["rm"])
     @commands.max_concurrency(1, commands.BucketType.user)
-    async def randommessage(self, ctx, limit=300):
+    async def randommessage(self, ctx: AnimeContext, limit=300):
         limit = min(limit, 10000)
         if limit <= 0:
             limit = 300
@@ -401,7 +402,7 @@ class fun(commands.Cog):
                 await ctx.send(embed=msg.embeds[0])
 
     @commands.command()
-    async def reddit(self, ctx, *, text):
+    async def reddit(self, ctx: AnimeContext, *, text):
         await ctx.trigger_typing()
         link, title, nsfw, image = await self.reddit_(text)
         if nsfw == True:
@@ -415,7 +416,7 @@ class fun(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command()
-    async def bottomdecode(self, ctx, *, text):
+    async def bottomdecode(self, ctx: AnimeContext, *, text):
         bottoms = await self.bot.loop.run_in_executor(None, self.bottoms,
                                                       "from_bottom", text)
         if len(bottoms) > 500:
@@ -423,7 +424,7 @@ class fun(commands.Cog):
         await ctx.send(bottoms)
 
     @commands.command()
-    async def bottomencode(self, ctx, *, text):
+    async def bottomencode(self, ctx: AnimeContext, *, text):
         bottoms = await self.bot.loop.run_in_executor(None, self.bottoms,
                                                       "to_bottom", text)
         if len(bottoms) > 500:
@@ -441,13 +442,13 @@ class fun(commands.Cog):
                                               "\U0001f7e8").replace("9", "")
 
     @commands.command(aliases=["grid", "toemoji"])
-    async def renderemoji(self, ctx, *, codes: int):
+    async def renderemoji(self, ctx: AnimeContext, *, codes: int):
         codes_ = await self.bot.loop.run_in_executor(None, self.render_emoji,
                                                      str(codes))
         await ctx.reply(codes_)
 
     @commands.command()
-    async def urban(self, ctx, *, search: str):
+    async def urban(self, ctx: AnimeContext, *, search: str):
         if ctx.channel.nsfw == False:
             lists = [
                 "dick", "pussy", "horny", "porn", "cum", "cunt", "cock",
@@ -524,7 +525,7 @@ class fun(commands.Cog):
                 return False
 
     @talk.error
-    async def talk_error(self, ctx, error):
+    async def talk_error(self, ctx: AnimeContext, error):
         if isinstance(error, commands.errors.MaxConcurrencyReached):
             embed = discord.Embed(
                 color=0x00ff6a,
@@ -532,7 +533,7 @@ class fun(commands.Cog):
             return await ctx.reply(embed=embed)
 
     @commands.command()
-    async def sob(self, ctx, level: int = 1):
+    async def sob(self, ctx: AnimeContext, level: int = 1):
         if level > 70:
             embed = discord.Embed(
                 color=0x00ff6a,
@@ -572,7 +573,7 @@ class fun(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def tenor(self, ctx, *, search):
+    async def tenor(self, ctx: AnimeContext, *, search):
         gif = await self.tenor_(search)
         async with self.bot.session.get(gif) as resp:
             gif = BytesIO(await resp.read())            
@@ -581,7 +582,7 @@ class fun(commands.Cog):
         await ctx.send(embed=embed, file=discord.File(gif, f"{search}.gif"))
 
     @commands.command(aliases=["sw", "speedwatch"])
-    async def speedwatcher(self, ctx, member: discord.Member = None):
+    async def speedwatcher(self, ctx: AnimeContext, member: discord.Member = None):
         member1 = member
         if member1 is None:
             member1 = ctx.author
@@ -620,7 +621,7 @@ class fun(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def hug(self, ctx, member: discord.Member = None):
+    async def hug(self, ctx: AnimeContext, member: discord.Member = None):
         gif = await self.hug_()
         member1 = member
         if member1 is None:
@@ -641,7 +642,7 @@ class fun(commands.Cog):
 
 
     @commands.command()
-    async def tts(self, ctx, lang="en", *, text="enter something "):
+    async def tts(self, ctx: AnimeContext, lang="en", *, text="enter something "):
         async with ctx.typing():
             file = await self.tts_(text, lang)
             await ctx.send(file=file)
@@ -748,7 +749,7 @@ class fun(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command()
-    async def decode(self, ctx, *, text):
+    async def decode(self, ctx: AnimeContext, *, text):
         await ctx.trigger_typing()
         text1 = text
         key = config.key
@@ -764,7 +765,7 @@ class fun(commands.Cog):
             await ctx.send("You provided a invalid link")
 
     @commands.command()
-    async def encode(self, ctx, *, text: str):
+    async def encode(self, ctx: AnimeContext, *, text: str):
         await ctx.trigger_typing()
         key = config.key
         f = Fernet(key)
@@ -777,7 +778,7 @@ class fun(commands.Cog):
         await ctx.reply(new_token)
 
     @commands.command()
-    async def ovoly(self, ctx, *, text):
+    async def ovoly(self, ctx: AnimeContext, *, text):
         ovo = text.replace("l",
                            "v").replace("L",
                                         "v").replace("r",
@@ -785,7 +786,7 @@ class fun(commands.Cog):
         await ctx.reply(f"{ovo} ovo")
 
     @commands.command()
-    async def roast(self, ctx, member: discord.Member = None):
+    async def roast(self, ctx: AnimeContext, member: discord.Member = None):
         if member is None:
             member = ctx.author
         if member == self.bot.user or member.id == 590323594744168494:

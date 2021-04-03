@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from utils.subclasses import AnimeContext
 import typing
 import ratelimiter
 
@@ -22,7 +23,7 @@ class reactionrole(commands.Cog):
     async def reactionrole(self, ctx):
         ...
     @reactionrole.command()
-    async def add(self, ctx, role: discord.Role, message_id: int, reaction: typing.Union[discord.Emoji, discord.PartialEmoji, str]):
+    async def add(self, ctx: AnimeContext, role: discord.Role, message_id: int, reaction: typing.Union[discord.Emoji, discord.PartialEmoji, str]):
         """
         Reaction Role is currently in beta so bugs are expected
         Adding a existing reaction role message will override it

@@ -16,6 +16,7 @@ import discord
 import humanize
 import psutil
 from discord.ext import commands
+from utils.subclasses import AnimeContext
 # from github import Github
 from utils.asyncstuff import asyncexe
 from utils.embed import embedbase
@@ -45,7 +46,7 @@ class others(commands.Cog):
       await ctx.send(embed=embed)
         
     @commands.command()
-    async def emojioptions(self, ctx, enabled:bool):
+    async def emojioptions(self, ctx: AnimeContext, enabled:bool):
       await self.bot.db.execute("INSERT INTO emojioptions (user_id, enabled) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET enabled = $2 WHERE emojioptions.user_id = $1 ", ctx.author.id, enabled)
       self.bot.emojioptions[ctx.author.id] = enabled
       await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"you have set emoji auto response to {enabled}"))
@@ -73,7 +74,7 @@ class others(commands.Cog):
         await ctx.send("https://discord.gg/bUpF6d6bP9")
 
     @commands.command(aliases=["randomtoken"])
-    async def randombottoken(self, ctx, user: discord.User = None):
+    async def randombottoken(self, ctx: AnimeContext, user: discord.User = None):
         """
     Generate a completely random token from a server member THE TOKEN IS NOT VALID so don't be scared
     """
@@ -103,7 +104,7 @@ class others(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def emoji(self, ctx, *, search: str = None):
+    async def emoji(self, ctx: AnimeContext, *, search: str = None):
         lists = []
         paginator = WrappedPaginator(max_size=500, prefix="", suffix="")
         if search != None:
@@ -146,7 +147,7 @@ class others(commands.Cog):
         await ctx.send(embed=embed)
 
     @commands.command()
-    async def source(self, ctx, *, command: str = None):
+    async def source(self, ctx: AnimeContext, *, command: str = None):
         embed = discord.Embed(color=self.bot.color)
         embed.add_field(
             name="source of the bot",
@@ -182,7 +183,7 @@ class others(commands.Cog):
         # await ctx.send(final_url)
 
     @commands.command()
-    async def charles(self, ctx, *, text):
+    async def charles(self, ctx: AnimeContext, *, text):
         await ctx.trigger_typing()
         res = await self.bot.session.post('https://bin.charles-bot.com/documents',
                                  data=text)
@@ -193,7 +194,7 @@ class others(commands.Cog):
         await ctx.send(f"https://bin.charles-bot.com/{data['key']}")
 
     @commands.command()
-    async def type(self, ctx, seconds: int):
+    async def type(self, ctx: AnimeContext, seconds: int):
         """
   the bot will type for the time u provide yes idk what i made the max is 5 minute :O
     """
@@ -205,7 +206,7 @@ class others(commands.Cog):
 
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def raw(self, ctx, message_id: int, channel_id: int = None):
+    async def raw(self, ctx: AnimeContext, message_id: int, channel_id: int = None):
         await ctx.trigger_typing()
         raw = await self.bot.http.get_message(channel_id or ctx.channel.id,
                                               message_id)
@@ -320,7 +321,7 @@ class others(commands.Cog):
     @prefix.command(name="remove")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
-    async def prefix_remove(self, ctx, prefix_to_remove: str):
+    async def prefix_remove(self, ctx: AnimeContext, prefix_to_remove: str):
         """
         Remove a prefix for your server
         Example:
@@ -343,7 +344,7 @@ class others(commands.Cog):
     @prefix.command(name="add")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
-    async def prefix_add(self, ctx, prefixforbot: str):
+    async def prefix_add(self, ctx: AnimeContext, prefixforbot: str):
         """
         Add a new prefix for your server
         Example:
@@ -364,7 +365,7 @@ class others(commands.Cog):
 
     @commands.command()
     @commands.cooldown(1, 60, commands.BucketType.user)
-    async def suggest(self, ctx, *, suggestion):
+    async def suggest(self, ctx: AnimeContext, *, suggestion):
         await ctx.trigger_typing()
         channel = self.bot.get_channel(792568174167326720)
         embed = await embedbase.embed(self, ctx)
@@ -506,7 +507,7 @@ class others(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command()
-    async def countdown(self, ctx, count_to: int):
+    async def countdown(self, ctx: AnimeContext, count_to: int):
         if str(ctx.channel.id) in self.countdownused:
             await ctx.send("this channel already have a countdown started")
             return

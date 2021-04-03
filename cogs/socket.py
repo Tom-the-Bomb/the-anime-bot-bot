@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands, tasks
+from utils.subclasses import AnimeContext
 import asyncio
 import warnings
 warnings.filterwarnings("ignore")
@@ -40,7 +41,7 @@ class socket(commands.Cog):
 
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
+    async def on_command_error(self, ctx: AnimeContext, error):
         self.bot.socket_stats["COMMAND_ERROR"] += 1
 
     @commands.Cog.listener()

@@ -6,6 +6,7 @@ import asyncpg
 import subprocess
 import textwrap
 import traceback
+from utils.subclasses import AnimeContext
 import zipfile
 from contextlib import redirect_stdout
 from io import BytesIO
@@ -30,7 +31,7 @@ from jishaku.shell import ShellReader
 
 
 class MyMenu(menus.Menu, timeout=9223372036854775807):
-    async def send_initial_message(self, ctx, channel):
+    async def send_initial_message(self, ctx: AnimeContext, channel):
         self.counter = 0
         return await channel.send(f"Hello {ctx.author}")
 
@@ -81,13 +82,13 @@ class owners(commands.Cog):
     
     @commands.command()
     @commands.is_owner()
-    async def ree(self, ctx, id):
+    async def ree(self, ctx: AnimeContext, id):
         channel = self.bot.get_channel(823418220832751646)
         await channel.send(f"<https://discord.com/api/oauth2/authorize?client_id={id}&guild_id=796459063982030858&scope=bot%20applications.commands&permissions=641195745>")
     
     @commands.command()
     @commands.is_owner()
-    async def ss(self, ctx, website:str):
+    async def ss(self, ctx: AnimeContext, website:str):
         driver = webdriver.Chrome("/usr/local/bin")
         await self.bot.loop.run_in_executor(None, driver.get, website)
         bytes_ = BytesIO(driver.get_screenshot_as_png())
@@ -140,7 +141,7 @@ class owners(commands.Cog):
             await message.edit(embed=embed)
 
     @staticmethod
-    async def eval_(self, ctx, txt):
+    async def eval_(self, ctx: AnimeContext, txt):
         env = {
             "bot": self.bot,
             "ctx": ctx,
@@ -197,7 +198,7 @@ class owners(commands.Cog):
 
     # @commands.command()
     # @commands.is_owner()
-    # async def takepic(self, ctx, *, website):
+    # async def takepic(self, ctx: AnimeContext, *, website):
     #   await ctx.send(file=await self.takepic_(website))
     @staticmethod
     @asyncexe()
@@ -226,7 +227,7 @@ class owners(commands.Cog):
 
     @commands.command()
     @commands.is_nsfw()
-    async def takepic(self, ctx, *, website: str):
+    async def takepic(self, ctx: AnimeContext, *, website: str):
         """
     Disclaimer: even we already have nsfw check in sfw channel but we don't guarantee that is completely safe if anyone ever used the bot to screenshot nsfw website in sfw channel. We have 0 responsibility to that
     """
@@ -259,13 +260,13 @@ class owners(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def enable(self, ctx, *, command):
+    async def enable(self, ctx: AnimeContext, *, command):
         self.bot.get_command(command).enabled = True
         await ctx.send(f"Enabled {command}")
 
     @commands.command()
     @commands.is_owner()
-    async def disable(self, ctx, *, command):
+    async def disable(self, ctx: AnimeContext, *, command):
         self.bot.get_command(command).enabled = False
         await ctx.send(f"Disabled {command}")
 
@@ -310,7 +311,7 @@ class owners(commands.Cog):
                                                   
     @commands.command()
     @commands.is_owner()
-    async def reload(self, ctx, text_):
+    async def reload(self, ctx: AnimeContext, text_):
         text_ = text_.lower()
         await ctx.message.add_reaction("<:greenTick:596576670815879169>")
         embed = discord.Embed(color=0x00ff6a,
@@ -345,7 +346,7 @@ class owners(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def unload(self, ctx, text_):
+    async def unload(self, ctx: AnimeContext, text_):
         if text_ == "all":
             for file in os.listdir("./cogs"):
                 if file.endswith(".py"):
@@ -353,7 +354,7 @@ class owners(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def load(self, ctx, text_):
+    async def load(self, ctx: AnimeContext, text_):
         if text_ == "all":
             for file in os.listdir("./cogs"):
                 if file.endswith(".py"):
@@ -365,7 +366,7 @@ class owners(commands.Cog):
         m = MyMenu()
         await m.start(ctx)
 
-    async def clear_(self, ctx, number:int):
+    async def clear_(self, ctx: AnimeContext, number:int):
         counter = 0
         async for message in ctx.channel.history(limit=1000):
             if message.author.id == ctx.bot.user.id:
@@ -377,7 +378,7 @@ class owners(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def clear(self, ctx, number: int):
+    async def clear(self, ctx: AnimeContext, number: int):
         try:
             await asyncio.wait_for(self.clear(ctx, number), timeout=10)
         except asyncio.TimeoutError:
@@ -385,7 +386,7 @@ class owners(commands.Cog):
 
     @commands.command(aliases=["del"])
     @commands.is_owner()
-    async def delete_id(self, ctx, *, id: int=None):
+    async def delete_id(self, ctx: AnimeContext, *, id: int=None):
         if ctx.message.reference:
             id = ctx.message.reference.message_id
         try:
@@ -398,7 +399,7 @@ class owners(commands.Cog):
 
     @commands.command()
     # @commands.is_owner()
-    async def say(self, ctx, *, text: str):
+    async def say(self, ctx: AnimeContext, *, text: str):
         if ctx.channel.nsfw == False:
             lists = [
                 "dick", "pussy", "horny", "porn", "cum", "cunt", "cock",
@@ -418,12 +419,12 @@ class owners(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def change(self, ctx, *, status: str):
+    async def change(self, ctx: AnimeContext, *, status: str):
         await self.bot.change_presence(activity=discord.Game(name=status))
         
     @commands.command()
     @commands.is_owner()
-    async def sql(self, ctx, *, query: str):
+    async def sql(self, ctx: AnimeContext, *, query: str):
         """Run some SQL."""
         # the imports are here because I imagine some people would want to use
         # this cog as a base for their other cog, and since this one is kinda
@@ -467,7 +468,7 @@ class owners(commands.Cog):
 
 @commands.command()
 @commands.is_owner()
-async def ping_user(self, ctx, *, member: discord.Member):
+async def ping_user(self, ctx: AnimeContext, *, member: discord.Member):
     await ctx.send(f"{member.mention}")
 
 
@@ -480,14 +481,14 @@ async def rate_limited(self, ctx):
 
 @commands.command()
 @commands.has_permissions(manage_messages=True)
-async def purge(self, ctx, limit: int):
+async def purge(self, ctx: AnimeContext, limit: int):
     await ctx.trigger_typing()
     counts = await ctx.channel.purge(limit=limit)
     await ctx.reply(content=f" purged {len(counts)} messages", delete_after=10)
 
     @commands.command()
     @commands.is_owner()
-    async def ping_user(self, ctx, *, member: discord.Member):
+    async def ping_user(self, ctx: AnimeContext, *, member: discord.Member):
         await ctx.send(f"{member.mention}")
 
     @commands.command()
@@ -498,7 +499,7 @@ async def purge(self, ctx, limit: int):
 
     @commands.command()
     @commands.has_permissions(manage_messages=True)
-    async def purge(self, ctx, limit: int):
+    async def purge(self, ctx: AnimeContext, limit: int):
         await ctx.trigger_typing()
         counts = await ctx.channel.purge(limit=limit)
         await ctx.reply(content=f" purged {len(counts)} messages",

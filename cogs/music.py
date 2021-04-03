@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from utils.subclasses import AnimeContext
 import asyncio
 import humanize
 import datetime
@@ -35,7 +36,7 @@ class Player(wavelink.Player):
         return embed
 
 
-    async def start(self, ctx, song):
+    async def start(self, ctx: AnimeContext, song):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if not player.is_connected:
             await ctx.invoke(self.connect_)
@@ -126,7 +127,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send(embed=player.make_embed(player.now_playing))
     
     @commands.command(aliases=['vol'])
-    async def volume(self, ctx, volume:int=100):
+    async def volume(self, ctx: AnimeContext, volume:int=100):
         if volume < 0 or volume > 100:
             return await ctx.send("volume must be between 0 to 100")
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
@@ -135,7 +136,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         
 
     @commands.command()
-    async def join(self, ctx, vc: discord.VoiceChannel = None):
+    async def join(self, ctx: AnimeContext, vc: discord.VoiceChannel = None):
         if not vc:
             if ctx.author.voice:
                 channel = ctx.author.voice.channel
@@ -157,7 +158,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send("looped")
 
     @commands.command()
-    async def fastforward(self, ctx, seconnds:int):
+    async def fastforward(self, ctx: AnimeContext, seconnds:int):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         seek_position = player.position + (seconds * 1000)
         await player.seek(seek_position)
@@ -171,7 +172,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send("disconnected")
 
     @commands.command()
-    async def equalizer(self, ctx, name:lambda x: x.lower()):
+    async def equalizer(self, ctx: AnimeContext, name:lambda x: x.lower()):
         equalizers = {
             "none": wavelink.Equalizer.flat(),
             "boost": wavelink.Equalizer.boost(),
@@ -193,7 +194,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send(f"equalizer setted to {name}")
 
     @commands.command()
-    async def play(self, ctx, *, music):
+    async def play(self, ctx: AnimeContext, *, music):
         tracks = await self.bot.wavelink.get_tracks(f'ytsearch:{music}')
 
         if not tracks:

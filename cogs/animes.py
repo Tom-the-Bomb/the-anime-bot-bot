@@ -1,5 +1,6 @@
 import json
 from io import BytesIO
+from utils.subclasses import AnimeContext
 import urllib
 import bs4
 import random
@@ -11,7 +12,7 @@ import discord
 from discord.ext import commands
 
 class AnimeMenuSource(menus.ListPageSource):
-    def __init__(self, data):
+    def __init__(self, data: list):
         super().__init__(data, per_page=10)
     async def format_page(self, menu, entries):
         return {"embed": entries[menu.current_page]}
@@ -21,7 +22,7 @@ class animes(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def searchanime(self, ctx, *, search: lambda x: urllib.parse.quote_plus(x)):
+    async def searchanime(self, ctx: AnimeContext: AnimeContext, *, search: lambda x: urllib.parse.quote_plus(x)):
         async with self.bot.session.get(
                 f"https://crunchy-bot.live/api/anime/details?terms={search}"
         ) as resp:
@@ -39,14 +40,14 @@ class animes(commands.Cog):
             
 
     @commands.command()
-    async def weebpicture(self, ctx):
+    async def weebpicture(self, ctx: AnimeContext: AnimeContext):
         async with self.bot.session.get(
                 "https://neko.weeb.services/") as resp:
             buffer = BytesIO(await resp.read())
             await ctx.send(file=discord.File(fp=buffer, filename="anime.png"))
 
     @commands.command()
-    async def animememes(self, ctx):
+    async def animememes(self, ctx: AnimeContext):
         """
     Anime memes from reddit
     """
@@ -84,7 +85,7 @@ class animes(commands.Cog):
 
     @commands.command(aliases=["animequotes"],
                       brief=" new new anime quote from the web ")
-    async def animequote(self, ctx):
+    async def animequote(self, ctx: AnimeContext):
         await ctx.trigger_typing()
         num = random.randint(1, 7830)
         async with self.bot.session.get(f"https://www.less-real.com/quotes/{num}") as resp:

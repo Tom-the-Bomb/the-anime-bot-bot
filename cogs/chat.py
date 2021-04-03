@@ -1,5 +1,6 @@
 import discord
-from discord.ext import commands
+from discord.ext import commmands
+from utils.subclasses import AnimeContext
 from matplotlib import pyplot as plt
 from utils.asyncstuff import asyncexe
 from collections import Counter
@@ -24,7 +25,7 @@ class chat(commands.Cog):
         plt.savefig("chatgraph.png")
         return
     @commands.command()
-    async def chatgraph(self, ctx, *, limit:int=500):
+    async def chatgraph(self, ctx: AnimeContext, *, limit:int=500):
         limit = min(limit, 10000)
         await ctx.send("Collecting might take long")
         msg = Counter()

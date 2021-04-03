@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from utils.subclasses import AnimeContext
 import re
 import ratelimiter
 import config
@@ -28,7 +29,7 @@ class pictures(commands.Cog):
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
 
 
-    async def get_url(self, ctx, thing, **kwargs):
+    async def get_url(self, ctx: AnimeContext, thing, **kwargs):
         avatar = kwargs.get("avatar", True)
         check = kwargs.get("check", True)
         if ctx.message.reference:
@@ -159,20 +160,20 @@ class pictures(commands.Cog):
         return igif
     
     @commands.command()
-    async def botcdn(self, ctx, thing: typing.Union[discord.Member, discord.User,
+    async def botcdn(self, ctx: AnimeContext, thing: typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]=None):
         url = await self.get_url(ctx, thing)
         await ctx.send(f"{await self.bot_cdn(url)}")
 
     @commands.command()
-    async def cdn(self, ctx, thing: typing.Union[discord.Member, discord.User,
+    async def cdn(self, ctx: AnimeContext, thing: typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]=None):
         url = await self.get_url(ctx, thing)
         await ctx.send(f"<{await self.cdn_(url)}>")
     @commands.command()
-    async def ocr(self, ctx, thing: typing.Union[discord.Member, discord.User,
+    async def ocr(self, ctx: AnimeContext, thing: typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]=None):
         url = await self.get_url(ctx, thing)
@@ -187,7 +188,7 @@ class pictures(commands.Cog):
         await ctx.send(file=discord.File(buffer, "aww.png"))
 
     @commands.command()
-    async def womancat(self, ctx, woman: typing.Optional[typing.Union[discord.Member, discord.User,
+    async def womancat(self, ctx: AnimeContext, woman: typing.Optional[typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
                                                 discord.Emoji, str]], cat: typing.Optional[typing.Union[discord.Member, discord.User,
                                                 discord.PartialEmoji,
@@ -199,7 +200,7 @@ class pictures(commands.Cog):
                                         filename=f"woman_yelling_at_cat.png"))
 
     @commands.command()
-    async def circle(self, ctx, background_color="white", circle_color="blue"):
+    async def circle(self, ctx: AnimeContext, background_color="white", circle_color="blue"):
         igif = await self.circle_(background_color, circle_color)
         await ctx.send(file=discord.File(igif, "circle.gif"))
 
@@ -224,7 +225,7 @@ class pictures(commands.Cog):
             filename=f"among_us_{name}_{color}_{imposter}.png"))
 
     @commands.command()
-    async def randompicture(self, ctx, *, seed: str = None):
+    async def randompicture(self, ctx: AnimeContext, *, seed: str = None):
         if seed:
             async with self.bot.session.get(
                     f"https://picsum.photos/seed/{seed}/3840/2160") as resp:
@@ -236,7 +237,7 @@ class pictures(commands.Cog):
         await ctx.send(file=discord.File(pic, filename="randompicture.png"))
 
     @commands.command()
-    async def dym(self, ctx, up, bottom):
+    async def dym(self, ctx: AnimeContext, up, bottom):
         """
     Google do you mean picture
     Usage: ovo dym \"anime bot is bad bot\" \"anime bot is good bot\"
@@ -275,7 +276,7 @@ class pictures(commands.Cog):
         await ctx.send(embed=embed, file=image)
 
     @commands.group(invoke_without_command=True)
-    async def supreme(self, ctx, *, text: str = "enter something here"):
+    async def supreme(self, ctx: AnimeContext, *, text: str = "enter something here"):
         embed = discord.Embed(color=0x00ff6a).set_image(
             url="attachment://alex.png")
         image = discord.File(
@@ -283,7 +284,7 @@ class pictures(commands.Cog):
         await ctx.send(embed=embed, file=image)
 
     @supreme.command(name="dark")
-    async def supreme_dark(self, ctx, *, text: str = "enter something here"):
+    async def supreme_dark(self, ctx: AnimeContext, *, text: str = "enter something here"):
         embed = discord.Embed(color=0x00ff6a).set_image(
             url="attachment://alex.png")
         image = discord.File(
@@ -291,7 +292,7 @@ class pictures(commands.Cog):
         await ctx.send(embed=embed, file=image)
 
     @commands.command()
-    async def archive(self, ctx, *, text):
+    async def archive(self, ctx: AnimeContext, *, text):
         embed = discord.Embed(color=0x00ff6a).set_image(
             url="attachment://alex.png")
         image = discord.File(
@@ -955,7 +956,7 @@ class pictures(commands.Cog):
         image.save("profile.jpg")
 
     @commands.command()
-    async def scared(self, ctx, author: discord.Member = None):
+    async def scared(self, ctx: AnimeContext, author: discord.Member = None):
         await ctx.trigger_typing()
         if author is None:
             author = ctx.author

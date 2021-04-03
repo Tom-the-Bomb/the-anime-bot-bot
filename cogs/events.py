@@ -1,4 +1,5 @@
 from utils.asyncstuff import asyncexe
+from utils.subclasses import AnimeContext
 import prettify_exceptions
 from menus import menus
 import humanize
@@ -477,7 +478,7 @@ class events(commands.Cog):
         return discord.Embed(color=0xFF0000, title="An error occured", description=text)
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
+    async def on_command_error(self, ctx: AnimeContext, error):
         if hasattr(ctx.command, 'on_error'):
             return
 
@@ -576,7 +577,7 @@ class events(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def errors(self, ctx, id:int=None):
+    async def errors(self, ctx: AnimeContext, id:int=None):
         if not id:
             lists = []
             errors = await self.bot.db.fetch("SELECT * FROM errors")

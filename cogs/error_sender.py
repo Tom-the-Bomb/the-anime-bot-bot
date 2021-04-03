@@ -1,4 +1,5 @@
 import aiohttp
+from utils.subclasses import AnimeContext
 import config
 import prettify_exceptions
 import discord
@@ -13,7 +14,7 @@ class error_sender(commands.Cog):
         self.bot = bot
 
     @commands.Cog.listener()
-    async def on_command_error(self, ctx, error):
+    async def on_command_error(self, ctx: AnimeContext, error):
         if isinstance(error, commands.CommandNotFound):
             return
         if not ctx.guild:
