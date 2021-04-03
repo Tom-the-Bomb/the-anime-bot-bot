@@ -373,17 +373,7 @@ class events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_message_edit(self, payload):
-        if not payload.cached_message:
-            channel = self.bot.get_channel(payload.channel_id)
-            try:
-                message = await channel.fetch_message(payload.message.id)
-                if message:
-                    if message.embeds != []:
-                        return
-                        await self.bot.process_commands(message)
-
-            except:
-                pass
+        pass
     @staticmethod
     @asyncexe()
     def on_message_edit_(self, old):
