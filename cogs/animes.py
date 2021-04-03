@@ -22,7 +22,7 @@ class animes(commands.Cog):
         self.bot = bot
 
     @commands.command()
-    async def searchanime(self, ctx: AnimeContext: AnimeContext, *, search: lambda x: urllib.parse.quote_plus(x)):
+    async def searchanime(self, ctx: AnimeContext, *, search: lambda x: urllib.parse.quote_plus(x)):
         async with self.bot.session.get(
                 f"https://crunchy-bot.live/api/anime/details?terms={search}"
         ) as resp:
@@ -40,7 +40,7 @@ class animes(commands.Cog):
             
 
     @commands.command()
-    async def weebpicture(self, ctx: AnimeContext: AnimeContext):
+    async def weebpicture(self, ctx: AnimeContext):
         async with self.bot.session.get(
                 "https://neko.weeb.services/") as resp:
             buffer = BytesIO(await resp.read())
