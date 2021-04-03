@@ -485,8 +485,6 @@ class events(commands.Cog):
         error = getattr(error, 'original', error)
         if isinstance(error, ignored):
             return
-        if isinstance(error, commands.CheckFailure):
-            return
         if isinstance(error, commands.DisabledCommand):
             embed = self.embed(f"{ctx.command} has been disabled.")
             return await ctx.send(embed=embed)
@@ -564,6 +562,8 @@ class events(commands.Cog):
         elif isinstance(error, asyncdagpi.errors.ApiError):
             embed = self.embed("The image API have a error")
             await ctx.reply(embed=embed)
+        elif isinstance(error, commands.CheckFailure):
+            return
         else:
             await self.bot.db.execute("INSERT INTO errors (error, message, created_at, author_name, command) VALUES ($1, $2, $3, $4, $5)", ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)), ctx.message.content, ctx.message.created_at, str(ctx.author), ctx.command.qualified_name)
             embed = discord.Embed(color=0xFF0000,
