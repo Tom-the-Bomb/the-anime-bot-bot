@@ -75,9 +75,9 @@ class owners(commands.Cog):
         stdout, stderr = await proc.communicate()
 
         if stdout:
-            await ctx.send(f'```py\n{stdout.decode()}\n```')
+            await ctx.send(f'```py\n{stdout.decode()c}\n```')
         if stderr:
-            await ctx.send(f'```py\n{stderr.decode()}\n```')
+            await ctx.send(f'```py\n{stderr.decode().replace("jadonvps", "secrect")}\n```')
     
     @commands.command()
     @commands.is_owner()
