@@ -14,7 +14,9 @@ class web(commands.Cog):
         self.func.start(bot)
 
     async def main(self):
-        async with self.bot.session.ws_connect("wss://gateway.botlist.space") as ws:
+        async with self.bot.session.ws_connect(
+            "wss://gateway.botlist.space"
+        ) as ws:
             self.bot.loop.create_task(self.identify(ws))
             self.bot.loop.create_task(self.heartbeat(ws))
             async for _ in ws:
@@ -24,19 +26,13 @@ class web(commands.Cog):
         payload = {
             "op": 0,
             "t": time.time(),
-            "d": {
-                "tokens": [os.getenv("botlist_space")]
-            }
+            "d": {"tokens": [os.getenv("botlist_space")]},
         }
         await ws.send_json(payload)
 
     async def heartbeat(self, ws):
         while True:
-            payload = {
-                "op": 1,
-                "t": time.time(),
-                "d": {}
-            }
+            payload = {"op": 1, "t": time.time(), "d": {}}
             await ws.send_json(payload)
             await asyncio.sleep(45)
 
@@ -44,7 +40,8 @@ class web(commands.Cog):
     async def func(self, bot):
         try:
             async with bot.session.get(
-                    "https://api.botlist.space/v1/bots") as resp:
+                "https://api.botlist.space/v1/bots"
+            ) as resp:
                 bot.botlist = await resp.text()
         except:
             pass

@@ -24,7 +24,7 @@ from csv import writer
 import discord
 from discord.ext import commands, tasks
 
-logging.getLogger('asyncio').setLevel(logging.CRITICAL)
+logging.getLogger("asyncio").setLevel(logging.CRITICAL)
 
 authorizationdeal = str(os.getenv("gists"))
 
@@ -61,13 +61,16 @@ class events(commands.Cog):
         data = {
             "public": False,
             "description": date,
-            "files": {
-                "discord.log": {
-                    "content": content
-                }
-            }
+            "files": {"discord.log": {"content": content}},
         }
-        async with self.bot.session.post("https://api.github.com/gists", headers={"Authorization": f"{authorizationdeal}", "Accept": "application/vnd.github.inertia-preview+json"}, data=json.dumps(data)) as resp:
+        async with self.bot.session.post(
+            "https://api.github.com/gists",
+            headers={
+                "Authorization": f"{authorizationdeal}",
+                "Accept": "application/vnd.github.inertia-preview+json",
+            },
+            data=json.dumps(data),
+        ) as resp:
             pass
 
     @tasks.loop(seconds=30)
@@ -76,23 +79,32 @@ class events(commands.Cog):
         with open("socket.csv", "a") as f:
             writer_object = writer(f)
 
-            writer_object.writerow([self.bot.socket_stats["MESSAGE_CREATE"],
-                                    self.bot.socket_stats["GUILD_MEMBER_UPDATE"], self.bot.socket_stats["TYPING_START"]])
+            writer_object.writerow(
+                [
+                    self.bot.socket_stats["MESSAGE_CREATE"],
+                    self.bot.socket_stats["GUILD_MEMBER_UPDATE"],
+                    self.bot.socket_stats["TYPING_START"],
+                ]
+            )
 
             f.close()
 
     @tasks.loop(minutes=1)
     async def status(self, bot):
         await bot.wait_until_ready()
-        await bot.change_presence(activity=discord.Game(
-            name=f"{len(bot.guilds)} guilds and {len(bot.users)} users"))
+        await bot.change_presence(
+            activity=discord.Game(
+                name=f"{len(bot.guilds)} guilds and {len(bot.users)} users"
+            )
+        )
 
     @tasks.loop(minutes=5)
     async def update(self, bot):
         try:
             await bot.wait_until_ready()
             message = bot.get_channel(809204640054640641).get_partial_message(
-                809205344814891040)
+                809205344814891040
+            )
             current_time = time.time()
             lists = []
             difference = int(current_time - bot.start_time) / 60
@@ -100,8 +112,7 @@ class events(commands.Cog):
                 f"Received {bot.socket_receive} {bot.socket_receive//difference} per minute"
             )
             for i, (n, v) in enumerate(bot.socket_stats.most_common()):
-                lists.append(
-                    f"{n:<30} {v:<20} {round(v/difference, 3)} /minute")
+                lists.append(f"{n:<30} {v:<20} {round(v/difference, 3)} /minute")
             lists = "\n".join(lists)
             await message.edit(content=f"```\n{lists}\n```")
         except:
@@ -110,43 +121,49 @@ class events(commands.Cog):
     @tasks.loop(minutes=1)
     async def post(self, bot):
         await bot.wait_until_ready()
-        await bot.session.post("https://top.gg/api/bots/787927476177076234/stats",
-                               headers={"Authorization": topgg},
-                               data={
-                                   "server_count": len(bot.guilds)
-                               })
+        await bot.session.post(
+            "https://top.gg/api/bots/787927476177076234/stats",
+            headers={"Authorization": topgg},
+            data={"server_count": len(bot.guilds)},
+        )
         await bot.session.post(
             "https://discordbotlist.com/api/v1/bots/anime-quotepic-bot/stats",
             headers={"Authorization": discord_bot_list},
             data={
                 "voice_connections": len(bot.voice_clients),
                 "users": len(bot.users),
-                "guilds": len(bot.guilds)
-            })
-        async with bot.session.post("https://api.discordextremelist.xyz/v2/bot/787927476177076234/stats",
-                                    headers={
-                                        "Authorization": discord_extreme_list,
-                                        "Content-Type": "application/json"
-                                    },
-                                    data=json.dumps({
-                "guildCount": len(bot.guilds),
-                                        })) as resp:
+                "guilds": len(bot.guilds),
+            },
+        )
+        async with bot.session.post(
+            "https://api.discordextremelist.xyz/v2/bot/787927476177076234/stats",
+            headers={
+                "Authorization": discord_extreme_list,
+                "Content-Type": "application/json",
+            },
+            data=json.dumps(
+                {
+                    "guildCount": len(bot.guilds),
+                }
+            ),
+        ) as resp:
             pass
         await bot.session.post(
             "https://botsfordiscord.com/api/bot/787927476177076234",
             headers={
                 "Content-Type": "application/json",
-                "Authorization": bots_for_discord
+                "Authorization": bots_for_discord,
             },
-            data=json.dumps({"server_count": len(bot.guilds)}))
+            data=json.dumps({"server_count": len(bot.guilds)}),
+        )
         await bot.session.post(
             "https://api.botlist.space/v1/bots/787927476177076234",
             headers={
                 "Authorization": botlist_space,
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
-            data=json.dumps(
-                {"server_count": len(bot.guilds)}))
+            data=json.dumps({"server_count": len(bot.guilds)}),
+        )
 
     @commands.Cog.listener()
     async def on_command_completion(self, ctx):
@@ -427,15 +444,18 @@ class events(commands.Cog):
                 f"Hii there why u ping me smh oh i mean hii my prefix is `{', '.join(self.bot.prefixes[message.guild.id])}` "
             )
             self.bot._message_cache[message.id] = message_
-        if message.content.startswith(";;") and not message.author.bot and self.bot.emojioptions.get(message.author.id) == True:
+        if (
+            message.content.startswith(";;")
+            and not message.author.bot
+            and self.bot.emojioptions.get(message.author.id) == True
+        ):
             lists = []
             msg = message.content.replace(" ", "")
             emojis = msg.split(";;")
             for i in emojis:
                 if i == "":
                     continue
-                e = finder(i, self.bot.emojis,
-                           key=lambda i: i.name, lazy=False)
+                e = finder(i, self.bot.emojis, key=lambda i: i.name, lazy=False)
                 if e == []:
                     continue
                 e = e[0]
@@ -473,29 +493,29 @@ class events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.bot.change_presence(activity=discord.Game(
-            name=f"{len(self.bot.guilds)} guilds"))
+        await self.bot.change_presence(
+            activity=discord.Game(name=f"{len(self.bot.guilds)} guilds")
+        )
         print(len(self.bot.guilds))
-        print('Logged in as:\n{0.user.name}\n{0.user.id}'.format(self.bot))
+        print("Logged in as:\n{0.user.name}\n{0.user.id}".format(self.bot))
 
     def embed(self, text):
         return discord.Embed(color=0xFF0000, title="An error occured", description=text)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: AnimeContext, error):
-        if hasattr(ctx.command, 'on_error'):
+        if hasattr(ctx.command, "on_error"):
             return
 
-        ignored = (commands.CommandNotFound)
-        error = getattr(error, 'original', error)
+        ignored = commands.CommandNotFound
+        error = getattr(error, "original", error)
         if isinstance(error, ignored):
             return
         if isinstance(error, commands.DisabledCommand):
             embed = self.embed(f"{ctx.command} has been disabled.")
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.NSFWChannelRequired):
-            embed = self.embed(
-                "this command must be used in NSFW channel")
+            embed = self.embed("this command must be used in NSFW channel")
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.errors.UserNotFound):
             embed = self.embed("User not found")
@@ -521,21 +541,18 @@ class events(commands.Cog):
             embed = self.embed("Zane api have a error")
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.errors.NotOwner):
-            embed = self.embed(
-                "You must be the bot owner to use this command")
+            embed = self.embed("You must be the bot owner to use this command")
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.NoPrivateMessage):
             try:
-                embed = self.embed(
-                    "{ctx.command} can not be used in Private Messages.")
+                embed = self.embed("{ctx.command} can not be used in Private Messages.")
                 await ctx.author.send(embed=embed)
             except discord.HTTPException:
                 pass
         elif isinstance(error, AttributeError):
             return
         elif isinstance(error, commands.errors.InvalidEndOfQuotedStringError):
-            embed = self.embed(
-                "Make sure to put a space between the quotes")
+            embed = self.embed("Make sure to put a space between the quotes")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.ConversionError):
             embed = self.embed(f"Unable to convert {error.converter}")
@@ -544,20 +561,24 @@ class events(commands.Cog):
             embed = self.embed(f"Unable to convert")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MissingRequiredArgument):
-            embed = self.embed(
-                f"You are missing `{error.param.name}` argument")
+            embed = self.embed(f"You are missing `{error.param.name}` argument")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MaxConcurrencyReached):
             embed = self.embed(
-                f"Command is already running please wait untill it finsh it can only be used {error.number} per {error.per}".replace("BucketType", ""))
+                f"Command is already running please wait untill it finsh it can only be used {error.number} per {error.per}".replace(
+                    "BucketType", ""
+                )
+            )
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.CommandOnCooldown):
             embed = self.embed(
-                f"dude chill try again in {round(error.retry_after)} seconds")
+                f"dude chill try again in {round(error.retry_after)} seconds"
+            )
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.BotMissingPermissions):
             embed = self.embed(
-                f"Bot is missing {', '.join(error.missing_perms)} to do that")
+                f"Bot is missing {', '.join(error.missing_perms)} to do that"
+            )
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.MissingPermissions):
             embed = self.embed("you do not have permission to do that")
@@ -571,9 +592,22 @@ class events(commands.Cog):
         elif isinstance(error, commands.CheckFailure):
             return
         else:
-            await self.bot.db.execute("INSERT INTO errors (error, message, created_at, author_name, command) VALUES ($1, $2, $3, $4, $5)", ''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)), ctx.message.content, ctx.message.created_at, str(ctx.author), ctx.command.qualified_name)
-            embed = discord.Embed(color=0xFF0000,
-                                  description=f"[Traceback]({await ctx.paste(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))})```py\n{error}```")
+            await self.bot.db.execute(
+                "INSERT INTO errors (error, message, created_at, author_name, command) VALUES ($1, $2, $3, $4, $5)",
+                "".join(
+                    prettify_exceptions.DefaultFormatter().format_exception(
+                        type(error), error, error.__traceback__
+                    )
+                ),
+                ctx.message.content,
+                ctx.message.created_at,
+                str(ctx.author),
+                ctx.command.qualified_name,
+            )
+            embed = discord.Embed(
+                color=0xFF0000,
+                description=f"[Traceback]({await ctx.paste(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))})```py\n{error}```",
+            )
             await ctx.send(embed=embed)
             # # print(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
             # print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
@@ -588,15 +622,25 @@ class events(commands.Cog):
             errors = await self.bot.db.fetch("SELECT * FROM errors")
             for i in errors:
                 lists.append(f"{i['error_id']}\n{i['message']}")
-            embed = discord.Embed(color=self.bot.color,
-                                  description="\n".join(lists))
+            embed = discord.Embed(color=self.bot.color, description="\n".join(lists))
             return await ctx.send(embed=embed)
         else:
-            error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
-            embed = discord.Embed(color=self.bot.color, description=f"```py\n{error['error']}\n```" if len(f"```py\n{error['error']}\n```") <= 2048 else await ctx.paste(error["error"]))
+            error = await self.bot.db.fetchrow(
+                "SELECT * FROM errors WHERE error_id = $1", id
+            )
+            embed = discord.Embed(
+                color=self.bot.color,
+                description=f"```py\n{error['error']}\n```"
+                if len(f"```py\n{error['error']}\n```") <= 2048
+                else await ctx.paste(error["error"]),
+            )
             embed.add_field(name="message", value=error["message"])
-            embed.add_field(name="created_at", value=humanize.naturaldelta(
-                error["created_at"]-datetime.timedelta(hours=8)))
+            embed.add_field(
+                name="created_at",
+                value=humanize.naturaldelta(
+                    error["created_at"] - datetime.timedelta(hours=8)
+                ),
+            )
             embed.add_field(name="Author name", value=error["author_name"])
             embed.add_field(name="command", value=error["command"])
             return await ctx.send(embed=embed)

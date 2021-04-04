@@ -17,7 +17,7 @@ class reactionrole(commands.Cog):
             675167362366046238: 810337057544077363,
             788473301214822410: 810337124271783956,
             701513799869530173: 810337691282571304,
-            615241758670061568: 810359228006793246
+            615241758670061568: 810359228006793246,
         }
 
     def cog_check(self, ctx):
@@ -30,7 +30,10 @@ class reactionrole(commands.Cog):
         )
 
         def check(m):
-            return m.guild.id == 810331898278182952 and m.author.id == ctx.author.id
+            return (
+                m.guild.id == 810331898278182952
+                and m.author.id == ctx.author.id
+            )
 
         m = await self.bot.wait_for("message", check=check, timeout=120)
         for i in ctx.guild.roles:
@@ -47,7 +50,8 @@ class reactionrole(commands.Cog):
         role_ = await ctx.guild.create_role(
             name=f"{m.content}({ctx.author.id})",
             color=discord.Color.random(),
-            mentionable=True)
+            mentionable=True,
+        )
         await ctx.send(f"I have created a role {role_.mention} for you")
         await ctx.author.add_roles(role_, reason="Wattpad command")
 
@@ -58,32 +62,37 @@ class reactionrole(commands.Cog):
             if not msg:
                 return
             embed = discord.Embed(color=self.bot.color)
-            embed.set_author(name=msg.author.display_name,
-                             icon_url=str(msg.author.avatar_url))
-            embed.add_field(name="Message delete",
-                            value=f"Message: {msg.content}")
+            embed.set_author(
+                name=msg.author.display_name,
+                icon_url=str(msg.author.avatar_url),
+            )
+            embed.add_field(
+                name="Message delete", value=f"Message: {msg.content}"
+            )
             await self.bot.get_channel(811829054293934130).send(embed=embed)
             self.bot.deleted_message_cache.pop(payload.message_id)
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
         if member.guild.id == 810331898278182952:
-            embed = discord.Embed(color=self.bot.color,
-                                  timestamp=datetime.datetime.utcnow())
+            embed = discord.Embed(
+                color=self.bot.color, timestamp=datetime.datetime.utcnow()
+            )
             embed.add_field(
                 name="Member leave",
-                value=f"<:bsd_chuuyasob:810406446457159680> {member.mention} just left. We now have {member.guild.member_count} members"
+                value=f"<:bsd_chuuyasob:810406446457159680> {member.mention} just left. We now have {member.guild.member_count} members",
             )
             await self.bot.get_channel(811815859982172211).send(embed=embed)
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
         if member.guild.id == 810331898278182952:
-            embed = discord.Embed(color=self.bot.color,
-                                  timestamp=datetime.datetime.utcnow())
+            embed = discord.Embed(
+                color=self.bot.color, timestamp=datetime.datetime.utcnow()
+            )
             embed.add_field(
                 name="Member join",
-                value=f"<:bsd_dazaisparkle:810407099883454534> Welcome, {member.mention} We now have {member.guild.member_count} members"
+                value=f"<:bsd_dazaisparkle:810407099883454534> Welcome, {member.mention} We now have {member.guild.member_count} members",
             )
             await self.bot.get_channel(811815047898464266).send(embed=embed)
 
@@ -95,7 +104,9 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.emoji_to_role[payload.emoji.id or payload.emoji.name]
+            role_id = self.emoji_to_role[
+                payload.emoji.id or payload.emoji.name
+            ]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -125,7 +136,9 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.emoji_to_role[payload.emoji.id or payload.emoji.name]
+            role_id = self.emoji_to_role[
+                payload.emoji.id or payload.emoji.name
+            ]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return

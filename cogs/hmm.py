@@ -13,7 +13,7 @@ class reactionrole(commands.Cog):
         self.emoji_to_role = {
             "\U0001f33b": 812116205540081714,
             "\U0001f339": 812116259012476959,
-            "\U0001f33c": 812116231737966622
+            "\U0001f33c": 812116231737966622,
         }
 
     def cog_check(self, ctx):
@@ -41,8 +41,9 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.emoji_to_role[payload.emoji.id
-                                         or payload.emoji.name]
+            role_id = self.emoji_to_role[
+                payload.emoji.id or payload.emoji.name
+            ]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -72,8 +73,9 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.emoji_to_role[payload.emoji.id
-                                         or payload.emoji.name]
+            role_id = self.emoji_to_role[
+                payload.emoji.id or payload.emoji.name
+            ]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return

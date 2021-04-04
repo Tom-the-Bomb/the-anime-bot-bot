@@ -63,7 +63,11 @@ class moderations(commands.Cog):
         for i in bad_words:
             if i.lower() in payload.data.get("content"):
                 try:
-                    await self.bot.http.delete_message(payload.data.get("channel_id"), payload.data.get("id"), reason="Bad word detected")
+                    await self.bot.http.delete_message(
+                        payload.data.get("channel_id"),
+                        payload.data.get("id"),
+                        reason="Bad word detected",
+                    )
                 except:
                     pass
 
@@ -77,7 +81,11 @@ class moderations(commands.Cog):
         for i in bad_words:
             if i.lower() in message.content.lower():
                 try:
-                    await self.bot.http.delete_message(message.channel.id, message.id, reason="Bad word detected")
+                    await self.bot.http.delete_message(
+                        message.channel.id,
+                        message.id,
+                        reason="Bad word detected",
+                    )
                 except:
                     pass
 
@@ -94,13 +102,21 @@ class moderations(commands.Cog):
     async def add(self, ctx: AnimeContext, *, word):
         if ctx.guild.id not in self.bot.bad_word_cache.keys():
             self.bot.bad_word_cache[ctx.guild.id] = [word]
-            await self.bot.db.execute("INSERT INTO bad_words VALUES ($1, $2)", ctx.guild.id, self.bot.bad_word_cache[ctx.guild.id])
+            await self.bot.db.execute(
+                "INSERT INTO bad_words VALUES ($1, $2)",
+                ctx.guild.id,
+                self.bot.bad_word_cache[ctx.guild.id],
+            )
         else:
             if word in self.bot.bad_word_cache[ctx.guild.id]:
                 return await ctx.send("already in bad word list")
             old_bad_words = self.bot.bad_word_cache[ctx.guild.id]
             old_bad_words.append(word)
-            await self.bot.db.execute("UPDATE bad_words SET words = $2 WHERE guild_id = $1", ctx.guild.id, self.bot.bad_word_cache[ctx.guild.id])
+            await self.bot.db.execute(
+                "UPDATE bad_words SET words = $2 WHERE guild_id = $1",
+                ctx.guild.id,
+                self.bot.bad_word_cache[ctx.guild.id],
+            )
         await ctx.message.delete()
         await ctx.send("Success", delete_after=5)
 
@@ -110,12 +126,14 @@ class moderations(commands.Cog):
         if user.id == 590323594744168494:
             return await ctx.send("nope")
         embed = discord.Embed(color=self.bot.color)
-        embed.add_field(name=f"`{user}` have been warned",
-                        value=f"with reason: `{reason}`")
+        embed.add_field(
+            name=f"`{user}` have been warned", value=f"with reason: `{reason}`"
+        )
         await ctx.send(embed=embed)
         embed = discord.Embed(color=self.bot.color)
-        embed.add_field(name=f"You have been warned",
-                        value=f"with reason: `{reason}`")
+        embed.add_field(
+            name=f"You have been warned", value=f"with reason: `{reason}`"
+        )
         await user.send(embed=embed)
 
     @commands.command()
@@ -124,13 +142,16 @@ class moderations(commands.Cog):
     async def purge(self, ctx: AnimeContext, limit: int):
         await ctx.trigger_typing()
         counts = await ctx.channel.purge(limit=limit)
-        await ctx.send(content=f" purged {len(counts)} messages",
-                       delete_after=10)
+        await ctx.send(
+            content=f" purged {len(counts)} messages", delete_after=10
+        )
 
     @commands.command()
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
-    async def kick(self, ctx: AnimeContext, member: discord.Member, *, reason=None):
+    async def kick(
+        self, ctx: AnimeContext, member: discord.Member, *, reason=None
+    ):
         if member.id == 590323594744168494:
             return await ctx.reply("hmm nope not gonna do that")
         if ctx.author.top_role < member.top_role:
@@ -142,7 +163,9 @@ class moderations(commands.Cog):
     @commands.command()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def ban(self, ctx: AnimeContext, member: discord.Member, *, reason=None):
+    async def ban(
+        self, ctx: AnimeContext, member: discord.Member, *, reason=None
+    ):
         if member.id == 590323594744168494:
             return await ctx.reply("hmm nope not gonna do that")
         if ctx.author.top_role < member.top_role:

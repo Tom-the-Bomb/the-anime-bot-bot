@@ -13,22 +13,35 @@ class HelpMenuSource(menus.ListPageSource):
         super().__init__(data, per_page=10)
 
     async def format_page(self, menu, entries):
-        return {"embed": discord.Embed(color=menu.ctx.bot.color, title=f"Help command", description="\n".join(entries))}
+        return {
+            "embed": discord.Embed(
+                color=menu.ctx.bot.color,
+                title="Help command",
+                description="\n".join(entries),
+            )
+        }
 
 
 class HelpCommand(commands.HelpCommand):
     def get_command_signature(self, command):
-        return f"{self.clean_prefix}{command.qualified_name} {command.signature}"
+        return (
+            f"{self.clean_prefix}{command.qualified_name} {command.signature}"
+        )
 
     async def send_group_help(self, group):
         lists = [self.get_command_signature(i) for i in group.walk_commands()]
-        pages = menus.MenuPages(source=HelpMenuSource(
-            lists), delete_message_after=True)
+        pages = menus.MenuPages(
+            source=HelpMenuSource(lists), delete_message_after=True
+        )
         await pages.start(self.context)
 
     async def send_command_help(self, command):
-        embed = discord.Embed(color=self.context.bot.color, title=self.get_command_signature(command),
-                              description=command.help or "oh seems like my owner is too lazy to add help for this command sorry")
+        embed = discord.Embed(
+            color=self.context.bot.color,
+            title=self.get_command_signature(command),
+            description=command.help
+            or "oh seems like my owner is too lazy to add help for this command sorry",
+        )
         await self.context.send(embed=embed)
 
     async def send_cog_help(self, cog):
@@ -41,14 +54,17 @@ class HelpCommand(commands.HelpCommand):
             else:
                 lists_.append(self.get_command_signature(i))
         lists = [f"**{i}**" for i in lists_]
-        pages = menus.MenuPages(source=HelpMenuSource(
-            lists), delete_message_after=True)
+        pages = menus.MenuPages(
+            source=HelpMenuSource(lists), delete_message_after=True
+        )
         await pages.start(self.context)
 
     async def send_bot_help(self, mapping):
         cogs = "\n".join(self.context.bot.cogs.keys())
 
-        embed = discord.Embed(color=self.context.bot.color, description=f"""
+        embed = discord.Embed(
+            color=self.context.bot.color,
+            description=f"""
         Hi Welcome to The Anime bot's help command
         You can use the following commands
 
@@ -74,9 +90,11 @@ pictures
 logging
 socket
         ```
-        """)
+        """,
+        )
         embed.set_thumbnail(
-            url=str(self.context.me.avatar_url_as(format="png")))
+            url=str(self.context.me.avatar_url_as(format="png"))
+        )
         await self.context.send(embed=embed)
         # is_working = True
         # dicts = {

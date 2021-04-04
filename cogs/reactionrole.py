@@ -18,14 +18,21 @@ class reactionrole(commands.Cog):
             for i in roles:
                 self.bot.reactionrole_cache[i["guild_id"]] = {}
                 self.bot.reactionrole_cache[i["guild_id"]] = json.loads(
-                    i["roles"])
+                    i["roles"]
+                )
 
     @commands.group()
     async def reactionrole(self, ctx):
         ...
 
     @reactionrole.command()
-    async def add(self, ctx: AnimeContext, role: discord.Role, message_id: int, reaction: typing.Union[discord.Emoji, discord.PartialEmoji, str]):
+    async def add(
+        self,
+        ctx: AnimeContext,
+        role: discord.Role,
+        message_id: int,
+        reaction: typing.Union[discord.Emoji, discord.PartialEmoji, str],
+    ):
         """
         Reaction Role is currently in beta so bugs are expected
         Adding a existing reaction role message will override it
@@ -46,11 +53,20 @@ class reactionrole(commands.Cog):
         if not self.bot.reactionrole_cache.get(ctx.guild.id):
             self.bot.reactionrole_cache[ctx.guild.id] = {}
             self.bot.reactionrole_cache[ctx.guild.id][message_id] = {
-                emoji: role.id}
+                emoji: role.id
+            }
         else:
-            self.bot.reactionrole_cache[ctx.guild.id][message_id][emoji] = role.id
-        await self.bot.db.execute("INSERT INTO reactionrole VALUES ($1, $2) ON CONFLICT DO UPDATE SET roles = $2", ctx.guild.id, json.dumps(self.bot.reactionrole_cache[ctx.guild.id][message_id]))
-        await ctx.send(f"Sucess role is {role.mention}, message id is {message_id}, reaction is {str(reaction)}")
+            self.bot.reactionrole_cache[ctx.guild.id][message_id][
+                emoji
+            ] = role.id
+        await self.bot.db.execute(
+            "INSERT INTO reactionrole VALUES ($1, $2) ON CONFLICT DO UPDATE SET roles = $2",
+            ctx.guild.id,
+            json.dumps(self.bot.reactionrole_cache[ctx.guild.id][message_id]),
+        )
+        await ctx.send(
+            f"Sucess role is {role.mention}, message id is {message_id}, reaction is {str(reaction)}"
+        )
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
@@ -63,7 +79,8 @@ class reactionrole(commands.Cog):
 
         try:
             role_id = self.bot.reactionrole_cache[payload.guild_id][
-                payload.message_id][payload.emoji.id or payload.emoji.name]
+                payload.message_id
+            ][payload.emoji.id or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -81,7 +98,9 @@ class reactionrole(commands.Cog):
         try:
             # Finally add the role
             async with self.ratelimiter:
-                await payload.member.add_roles(role, reason="The Anime Bot reaction role")
+                await payload.member.add_roles(
+                    role, reason="The Anime Bot reaction role"
+                )
         except discord.HTTPException:
             # If we want to do something in case of errors we'd do it here.
             pass
@@ -97,7 +116,8 @@ class reactionrole(commands.Cog):
 
         try:
             role_id = self.bot.reactionrole_cache[payload.guild_id][
-                payload.message_id][payload.emoji.id or payload.emoji.name]
+                payload.message_id
+            ][payload.emoji.id or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -120,7 +140,9 @@ class reactionrole(commands.Cog):
         try:
             # Finally, remove the role
             async with self.ratelimiter:
-                await member.remove_roles(role, reason="The Anime Bot reaction role")
+                await member.remove_roles(
+                    role, reason="The Anime Bot reaction role"
+                )
         except discord.HTTPException:
             # If we want to do something in case of errors we'd do it here.
             pass

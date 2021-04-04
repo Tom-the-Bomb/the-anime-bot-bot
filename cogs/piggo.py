@@ -19,7 +19,7 @@ class reactionrole(commands.Cog):
             741017487994519633: 810337691282571304,
             515993072031498260: 812476108900663306,
             588504238494187525: 826204966749863978,
-            810349419802132481: 826207728322084915
+            810349419802132481: 826207728322084915,
         }
         self.pig_role_message_id = 812050921714089996
         self.pig_emoji_to_role = {
@@ -41,7 +41,7 @@ class reactionrole(commands.Cog):
             798949802322427955: 812057852550185041,
             694419633150885909: 812058369279787018,
             800088895722225685: 812058369807876166,
-            691499259438170152: 811804360107360267
+            691499259438170152: 811804360107360267,
         }
 
     @commands.Cog.listener()
@@ -52,8 +52,9 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.pig_emoji_to_role[payload.emoji.id
-                                             or payload.emoji.name]
+            role_id = self.pig_emoji_to_role[
+                payload.emoji.id or payload.emoji.name
+            ]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -83,8 +84,9 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.pig_emoji_to_role[payload.emoji.id
-                                             or payload.emoji.name]
+            role_id = self.pig_emoji_to_role[
+                payload.emoji.id or payload.emoji.name
+            ]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -119,8 +121,9 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.unnie_emoji_to_role[payload.emoji.id
-                                               or payload.emoji.name]
+            role_id = self.unnie_emoji_to_role[
+                payload.emoji.id or payload.emoji.name
+            ]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -150,8 +153,9 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.unnie_emoji_to_role[payload.emoji.id
-                                               or payload.emoji.name]
+            role_id = self.unnie_emoji_to_role[
+                payload.emoji.id or payload.emoji.name
+            ]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return

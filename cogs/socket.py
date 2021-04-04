@@ -10,6 +10,7 @@ from discord.ext import commands, tasks
 from utils.subclasses import AnimeContext
 import asyncio
 import warnings
+
 warnings.filterwarnings("ignore")
 
 
@@ -29,7 +30,7 @@ class socket(commands.Cog):
             9: "INVALIDATE_SESSION",
             10: "HELLO",
             11: "HEARTBEAT_ACK",
-            12: "GUILD_SYNC"
+            12: "GUILD_SYNC",
         }
 
     @tasks.loop(minutes=1)
@@ -37,7 +38,11 @@ class socket(commands.Cog):
         await self.bot.wait_until_ready()
         await asyncio.sleep(5)
         for i, (n, v) in enumerate(self.bot.socket_stats.most_common()):
-            await self.bot.db.execute("INSERT INTO socket VALUES ($1, $2) ON CONFLICT (name) DO UPDATE SET count = $2", n, v)
+            await self.bot.db.execute(
+                "INSERT INTO socket VALUES ($1, $2) ON CONFLICT (name) DO UPDATE SET count = $2",
+                n,
+                v,
+            )
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: AnimeContext, error):
@@ -49,13 +54,13 @@ class socket(commands.Cog):
         if msg.get("op") != 0:
             self.bot.socket_stats[self.bot.codes[msg.get("op")]] += 1
         else:
-            self.bot.socket_stats[msg.get('t')] += 1
+            self.bot.socket_stats[msg.get("t")] += 1
 
     @commands.group(invoke_without_command=True)
     async def socket(self, ctx):
         """
-    Status of socket
-    """
+        Status of socket
+        """
         current_time = time.time()
         lists = []
         difference = int(current_time - self.bot.start_time) / 60
@@ -64,9 +69,9 @@ class socket(commands.Cog):
         )
         for i, (n, v) in enumerate(self.bot.socket_stats.most_common()):
             lists.append(f"{n:<30} {v:<15} {round(v/difference, 3)} /minute")
-        paginator = commands.Paginator(max_size=500,
-                                       prefix="```",
-                                       suffix="```")
+        paginator = commands.Paginator(
+            max_size=500, prefix="```", suffix="```"
+        )
         for i in lists:
             paginator.add_line(i)
         interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)

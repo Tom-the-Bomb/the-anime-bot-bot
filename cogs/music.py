@@ -29,16 +29,25 @@ class Player(wavelink.Player):
         self.queue_position = 0
 
     def make_embed(self, track):
-        embed = discord.Embed(color=0x00ff6a, title="Now playing",
-                              description=f"now playing: **{track.title}**")
+        embed = discord.Embed(
+            color=0x00FF6A,
+            title="Now playing",
+            description=f"now playing: **{track.title}**",
+        )
         embed.set_thumbnail(url=track.thumb) if track.thumb else ...
         embed.add_field(name="requester", value=track.requester)
-        embed.add_field(name='Duration', value=humanize.precisedelta(
-            datetime.timedelta(milliseconds=int(track.length))))
-        embed.add_field(name="youtube link",
-                        value=track.uri) if track.uri else ...
         embed.add_field(
-            name="author", value=track.author) if track.author else ...
+            name="Duration",
+            value=humanize.precisedelta(
+                datetime.timedelta(milliseconds=int(track.length))
+            ),
+        )
+        embed.add_field(
+            name="youtube link", value=track.uri
+        ) if track.uri else ...
+        embed.add_field(
+            name="author", value=track.author
+        ) if track.author else ...
         return embed
 
     async def start(self, ctx: AnimeContext, song):
@@ -98,16 +107,18 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
     async def start_nodes(self):
         await self.bot.wait_until_ready()
-        node = await self.bot.wavelink.initiate_node(host="127.0.0.1",
-                                                     port=2333,
-                                                     rest_uri="http://127.0.0.1:2333",
-                                                     password="youshallnotpass",
-                                                     identifier="MAIN",
-                                                     region="us_central")
+        node = await self.bot.wavelink.initiate_node(
+            host="127.0.0.1",
+            port=2333,
+            rest_uri="http://127.0.0.1:2333",
+            password="youshallnotpass",
+            identifier="MAIN",
+            region="us_central",
+        )
 
-    @wavelink.WavelinkMixin.listener('on_track_stuck')
-    @wavelink.WavelinkMixin.listener('on_track_end')
-    @wavelink.WavelinkMixin.listener('on_track_exception')
+    @wavelink.WavelinkMixin.listener("on_track_stuck")
+    @wavelink.WavelinkMixin.listener("on_track_end")
+    @wavelink.WavelinkMixin.listener("on_track_exception")
     async def on_node_event(self, node, event):
         await event.player.do_next()
 
@@ -118,20 +129,24 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         if not player.is_connected:
             return True
         if not ctx.author.voice:
-            await ctx.send("You must be in a voice channel to use this command.")
+            await ctx.send(
+                "You must be in a voice channel to use this command."
+            )
             return False
         if ctx.author.voice.channel.id != player.channel_id:
-            await ctx.send("You must be in the same voice channel as me to use this command.")
+            await ctx.send(
+                "You must be in the same voice channel as me to use this command."
+            )
             return False
         return True
 
-    @commands.command(aliases=['np', 'currentsong'])
+    @commands.command(aliases=["np", "currentsong"])
     async def now(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
 
         await ctx.send(embed=player.make_embed(player.now_playing))
 
-    @commands.command(aliases=['vol'])
+    @commands.command(aliases=["vol"])
     async def volume(self, ctx: AnimeContext, volume: int = 100):
         if volume < 0 or volume > 100:
             return await ctx.send("volume must be between 0 to 100")
@@ -145,7 +160,9 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             if ctx.author.voice:
                 channel = ctx.author.voice.channel
             else:
-                return await ctx.send("you are not connected to any voice channel")
+                return await ctx.send(
+                    "you are not connected to any voice channel"
+                )
         else:
             channel = vc
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
@@ -166,9 +183,11 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         seek_position = player.position + (seconds * 1000)
         await player.seek(seek_position)
-        await ctx.send(f"Fast forwarded {seconds} Current position: {humanize.precisedelta(datetime.timedelta(milliseconds=10))}")
+        await ctx.send(
+            f"Fast forwarded {seconds} Current position: {humanize.precisedelta(datetime.timedelta(milliseconds=10))}"
+        )
 
-    @commands.command(aliases=['dc', 'disconnect', 'stop'])
+    @commands.command(aliases=["dc", "disconnect", "stop"])
     async def leave(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         await player.destroy()
@@ -180,16 +199,18 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             "none": wavelink.Equalizer.flat(),
             "boost": wavelink.Equalizer.boost(),
             "metal": wavelink.Equalizer.metal(),
-            "piano": wavelink.Equalizer.piano()
+            "piano": wavelink.Equalizer.piano(),
         }
         if not name in equalizers.keys():
-            return await ctx.send("""
+            return await ctx.send(
+                """
                 `none` - Resets the equalizer
                 `boost` - Boost equalizer. This equalizer emphasizes punchy bass and crisp mid-high tones. Not suitable for tracks with deep/low bass.
                 `metal` - Experimental metal/rock equalizer. Expect clipping on bassy songs.
                 `piano` - Piano equalizer. Suitable for piano tracks, or tacks with an emphasis on female vocals. Could also be used as a bass cutoff.
                 From https://wavelink.readthedocs.io/en/latest/wavelink.html#equalizer
-            """)
+            """
+            )
 
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         await player.set_eq(equalizers.get(name))
@@ -198,10 +219,12 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
     @commands.command()
     async def play(self, ctx: AnimeContext, *, music):
-        tracks = await self.bot.wavelink.get_tracks(f'ytsearch:{music}')
+        tracks = await self.bot.wavelink.get_tracks(f"ytsearch:{music}")
 
         if not tracks:
-            return await ctx.send('Could not find any songs with that query. maybe you made a typo?')
+            return await ctx.send(
+                "Could not find any songs with that query. maybe you made a typo?"
+            )
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if not player.is_connected:
             await ctx.invoke(self.join)
@@ -211,14 +234,16 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             for track in tracks.tracks:
                 track = Track(track.id, track.info, requester=ctx.author)
                 player.queue.append(track)
-            playlist_name = tracks.data['playlistInfo']['name']
-            await ctx.send(f"Added playlist `{playlist_name}` with `{len(tracks.tracks)}` songs to the queue. ")
+            playlist_name = tracks.data["playlistInfo"]["name"]
+            await ctx.send(
+                f"Added playlist `{playlist_name}` with `{len(tracks.tracks)}` songs to the queue. "
+            )
         else:
             track = Track(tracks[0].id, tracks[0].info, requester=ctx.author)
             player.queue.append(track)
             await ctx.send(f"Added `{track}` to the queue.")
 
-    @commands.command(aliases=['resume'])
+    @commands.command(aliases=["resume"])
     async def unpause(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if not player.is_paused:

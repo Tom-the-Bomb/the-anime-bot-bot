@@ -6,7 +6,8 @@ import config
 import prettify_exceptions
 import discord
 import os
-webhook_url = (config.webhookurl)
+
+webhook_url = config.webhookurl
 
 
 class error_sender(commands.Cog):
@@ -23,18 +24,26 @@ class error_sender(commands.Cog):
         else:
             server = "Server"
             name = ctx.guild.name
-        fields = [["Error", error], ["Author", ctx.author], [server, name],
-                  ["Message", ctx.message.content]]
-        embed = discord.Embed(color=0xFF0000, title="An error occured",
-                              description=f"```py\n{''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__))}\n```")
+        fields = [
+            ["Error", error],
+            ["Author", ctx.author],
+            [server, name],
+            ["Message", ctx.message.content],
+        ]
+        embed = discord.Embed(
+            color=0xFF0000,
+            title="An error occured",
+            description=f"```py\n{''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__))}\n```",
+        )
         [
-            embed.add_field(name=f"**{n}**",
-                            value=f"```py\n{v}```",
-                            inline=False) for n, v in fields
+            embed.add_field(
+                name=f"**{n}**", value=f"```py\n{v}```", inline=False
+            )
+            for n, v in fields
         ]
         webhook = Webhook.from_url(
-            webhook_url,
-            adapter=AsyncWebhookAdapter(self.bot.session))
+            webhook_url, adapter=AsyncWebhookAdapter(self.bot.session)
+        )
         return await webhook.send(embed=embed)
 
 

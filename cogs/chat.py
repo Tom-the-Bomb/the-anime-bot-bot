@@ -4,7 +4,6 @@ from utils.subclasses import AnimeContext
 from matplotlib import pyplot as plt
 from utils.asyncstuff import asyncexe
 from collections import Counter
-import numpy as np
 
 
 class chat(commands.Cog):
@@ -19,10 +18,10 @@ class chat(commands.Cog):
         for i, (n, v) in enumerate(msg.most_common()):
             author.append(n)
             count.append(v)
-        fig = plt.figure(figsize=(10, 7), facecolor="black")
+        plt.figure(figsize=(10, 7), facecolor="black")
         patches, texts = plt.pie(count, labels=author)
         plt.legend(loc="best", title="User names")
-        plt.axis('equal')
+        plt.axis("equal")
         plt.tight_layout()
         plt.savefig("chatgraph.png")
         return
@@ -35,7 +34,7 @@ class chat(commands.Cog):
         counter = 0
         async for message in ctx.channel.history(limit=limit):
             counter += 1
-            if message.author.bot == True:
+            if message.author.bot:
                 continue
             msg[message.author.name] += 1
         await self.graph_(msg)
