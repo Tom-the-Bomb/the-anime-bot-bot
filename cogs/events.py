@@ -1,18 +1,12 @@
 from utils.asyncstuff import asyncexe
 from utils.subclasses import AnimeContext
 import prettify_exceptions
-from menus import menus
 import humanize
 import datetime
 import aiofile
 import asyncdagpi
 import aiozaneapi
-import aiohttp
-import traceback
-import sys
-import subprocess
 from utils.subclasses import GlobalCooldown
-import asyncpg
 from utils.fuzzy import finder
 import time
 import os
@@ -55,7 +49,14 @@ class events(commands.Cog):
     async def gists(self):
         await self.bot.wait_until_ready()
         date = datetime.datetime.now() - datetime.timedelta(hours=8)
-        date = f"{date.month} {date.day} {date.year} {date.hour}:{date.minute}:{date.second}"
+        date = (
+            f"{date.month} "
+            f"{date.day} "
+            f"{date.year} "
+            f"{date.hour}:"
+            f"{date.minute}:"
+            f"{date.second}"
+            )
         async with aiofile.async_open("discord.log", "r") as f:
             content = await f.read()
         data = {

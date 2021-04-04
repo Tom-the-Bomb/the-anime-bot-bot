@@ -1,12 +1,8 @@
-from collections import Counter
-
 import discord
 from discord.ext import commands
 from utils.subclasses import AnimeContext
 
 from menus import menus
-
-from jishaku.paginators import PaginatorInterface, PaginatorEmbedInterface
 
 
 class CommandsUsageMenu(menus.ListPageSource):
@@ -17,7 +13,7 @@ class CommandsUsageMenu(menus.ListPageSource):
         return {
             "embed": discord.Embed(
                 color=menu.ctx.bot.color,
-                title=f"Command Usage",
+                title="Command Usage",
                 description="\n".join(entries),
             )
         }
@@ -32,7 +28,11 @@ class commandsusage(commands.Cog):
         self.bot.command_counter += 1
         self.bot.commandsusages[ctx.command.qualified_name] += 1
         await self.bot.db.execute(
-            "INSERT INTO commandsusage VALUES ($1, $2) ON CONFLICT (command) DO UPDATE SET usages = commandsusage.usages + 1",
+            (
+                "INSERT INTO commandsusage VALUES ($1, $2)"
+                " ON CONFLICT (command) "
+                "DO UPDATE SET usages = commandsusage.usages + 1"
+            ),
             ctx.command.qualified_name,
             1,
         )

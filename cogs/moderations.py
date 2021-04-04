@@ -20,35 +20,35 @@ class moderations(commands.Cog):
     # @commands.command()
     # @commands.has_permissions(manage_messages=True)
     # @commands.bot_has_permissions(manage_roles=True)
-    # async def unmute(self, ctx: AnimeContext, user: discord.Member, *, reason="None"):
-    #   if finder("Muted", user.roles, key=lambda t: t.name, lazy=False)[:3] == []:
+    # async def unmute(self, ctx: AnimeContext, user: discord.Member, *, reason="None"):# noqa: E501
+    #   if finder("Muted", user.roles, key=lambda t: t.name, lazy=False)[:3] == []:# noqa: E501
     #     return await ctx.send("user not muted")
     #   role = finder("Muted", user.roles, key=lambda t: t.name, lazy=False)[0]
-    #   await user.remove_roles(role, reason=f"{ctx.author}: {reason} ({ctx.author.id})")
+    #   await user.remove_roles(role, reason=f"{ctx.author}: {reason} ({ctx.author.id})")# noqa: E501
     #   embed = discord.Embed(color=self.bot.color)
-    #   embed.add_field(name=f"`{user}` have been unmuted", value=f"with reason: `{reason}`")
+    #   embed.add_field(name=f"`{user}` have been unmuted", value=f"with reason: `{reason}`")# noqa: E501
     #   return await ctx.send(embed=embed)
     # @commands.command()
     # @commands.has_permissions(manage_messages=True)
     # @commands.bot_has_permissions(manage_roles=True)
-    # async def mute(self, ctx: AnimeContext, user: discord.Member, *, reason="None"):
+    # async def mute(self, ctx: AnimeContext, user: discord.Member, *, reason="None"):# noqa: E501
     #   permissions=discord.Permissions.text()
     #   permissions.send_messages=False
-    #   if finder("Muted", user.roles, key=lambda t: t.name, lazy=False)[:3] != []:
+    #   if finder("Muted", user.roles, key=lambda t: t.name, lazy=False)[:3] != []:# noqa: E501
     #     return await ctx.send("user already muted")
-    #   if finder("Muted", ctx.guild.roles, key=lambda t: t.name, lazy=False)[:3] == []:
-    #     role = await ctx.guild.create_role(name="Muted", permissions=permissions, reason="Muted role")
-    #     await user.add_roles(role, reason=f"{ctx.author}: {reason} ({ctx.author.id})")
+    #   if finder("Muted", ctx.guild.roles, key=lambda t: t.name, lazy=False)[:3] == []:# noqa: E501
+    #     role = await ctx.guild.create_role(name="Muted", permissions=permissions, reason="Muted role")# noqa: E501
+    #     await user.add_roles(role, reason=f"{ctx.author}: {reason} ({ctx.author.id})")# noqa: E501
     #     embed = discord.Embed(color=self.bot.color)
-    #     embed.add_field(name=f"`{user}` have been muted", value=f"with reason: `{reason}`")
+    #     embed.add_field(name=f"`{user}` have been muted", value=f"with reason: `{reason}`")# noqa: E501
     #     return await ctx.send(embed=embed)
     #   else:
-    #     role = finder("Muted", ctx.guild.roles, key=lambda t: t.name, lazy=False)[0]
+    #     role = finder("Muted", ctx.guild.roles, key=lambda t: t.name, lazy=False)[0]# noqa: E501
     #     if role.permissions != permissions:
     #       await role.edit(permissions=permissions)
-    #     await user.add_roles(role, reason=f"{ctx.author}: {reason} ({ctx.author.id})")
+    #     await user.add_roles(role, reason=f"{ctx.author}: {reason} ({ctx.author.id})")# noqa: E501
     #     embed = discord.Embed(color=self.bot.color)
-    #     embed.add_field(name=f"`{user}` have been muted", value=f"with reason: `{reason}`")
+    #     embed.add_field(name=f"`{user}` have been muted", value=f"with reason: `{reason}`")# noqa: E501
     #     return await ctx.send(embed=embed)
 
     @commands.Cog.listener()
