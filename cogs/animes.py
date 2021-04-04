@@ -40,39 +40,38 @@ class animes(commands.Cog):
                 embed = discord.Embed(
                     color=self.bot.color,
                     title=anime["english"],
-                    description=anime["description"]
+                    description=anime["description"],
                 )
                 embed.add_field(
                     name="Infos",
-                    value=(f"Japanese: {anime['japanese']}\n"
-                            f"Type: {anime['type']}\n"
-                            f"Episodes: {anime['episodes']}\n"
-                            f"Studios: {anime['studios']}\n"
-                            f"Genres: {anime['genres']}\n"
-                            f"Ratings: {anime['rating']}"
-                        )
+                    value=(
+                        f"Japanese: {anime['japanese']}\n"
+                        f"Type: {anime['type']}\n"
+                        f"Episodes: {anime['episodes']}\n"
+                        f"Studios: {anime['studios']}\n"
+                        f"Genres: {anime['genres']}\n"
+                        f"Ratings: {anime['rating']}"
+                    ),
                 )
                 embed.add_field(
                     name="Rankings",
                     value=(
                         (
-                        f"Ranked: {anime['ranked']}\n"
-                        f"Popularity: {anime['popularity']}\n"
-                        f"Members: {anime['members']}\n"
-                        f"Favorites: {anime['favorites']}"
+                            f"Ranked: {anime['ranked']}\n"
+                            f"Popularity: {anime['popularity']}\n"
+                            f"Members: {anime['members']}\n"
+                            f"Favorites: {anime['favorites']}"
                         )
+                    )
                 )
                 characters = []
                 for i in anime["characters_and_actor"]:
                     if i.get("voice_actor"):
-                        actor = i.get('voice_actor')
+                        actor = i.get("voice_actor")
                     else:
-                        actor = i.get('actor')
+                        actor = i.get("actor")
                     characters.append(
-                        (
-                            f"Character: {i['character']} - Actor: "
-                            f"{actor}"
-                        )
+                        (f"Character: {i['character']} - Actor: " f"{actor}")
                     )
                 embed.add_field(
                     name="Characters and Actor",
@@ -119,7 +118,8 @@ class animes(commands.Cog):
         embed.set_footer(
             text=(
                 f"requested by {ctx.author} response time:"
-                f"{round(self.bot.latency * 1000)} ms"),
+                f"{round(self.bot.latency * 1000)} ms"
+            ),
             icon_url=ctx.author.avatar_url,
         )
         await ctx.reply(embed=embed)
