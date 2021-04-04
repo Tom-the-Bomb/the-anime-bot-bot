@@ -1,5 +1,7 @@
 from utils.asyncstuff import asyncexe
 from utils.subclasses import AnimeContext
+import tracemalloc
+import gc
 import prettify_exceptions
 import humanize
 import datetime
@@ -36,6 +38,7 @@ class events(commands.Cog):
         self.bot = bot
         self.bot.ws_recieved = 0
         self.bot.send = 0
+        self.clean_up.start()
         self.gists.start()
         self.status.start(bot)
         self.graph.start()
@@ -44,6 +47,11 @@ class events(commands.Cog):
         # self.post.start()
         self.errors_list = []
         self.bot.counter = 0
+
+    @tasks.loop(minutes=1)
+    async def clean_up(self):
+        gc.collect()
+        tracemalloc.clear_traces()
 
     @tasks.loop(minutes=30)
     async def gists(self):
