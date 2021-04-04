@@ -17,11 +17,13 @@ class reactionrole(commands.Cog):
         if roles:
             for i in roles:
                 self.bot.reactionrole_cache[i["guild_id"]] = {}
-                self.bot.reactionrole_cache[i["guild_id"]] = json.loads(i["roles"])
+                self.bot.reactionrole_cache[i["guild_id"]] = json.loads(
+                    i["roles"])
 
     @commands.group()
     async def reactionrole(self, ctx):
         ...
+
     @reactionrole.command()
     async def add(self, ctx: AnimeContext, role: discord.Role, message_id: int, reaction: typing.Union[discord.Emoji, discord.PartialEmoji, str]):
         """
@@ -43,12 +45,13 @@ class reactionrole(commands.Cog):
                 return await ctx.send("Invalid Emoji")
         if not self.bot.reactionrole_cache.get(ctx.guild.id):
             self.bot.reactionrole_cache[ctx.guild.id] = {}
-            self.bot.reactionrole_cache[ctx.guild.id][message_id] = {emoji: role.id}
+            self.bot.reactionrole_cache[ctx.guild.id][message_id] = {
+                emoji: role.id}
         else:
             self.bot.reactionrole_cache[ctx.guild.id][message_id][emoji] = role.id
         await self.bot.db.execute("INSERT INTO reactionrole VALUES ($1, $2) ON CONFLICT DO UPDATE SET roles = $2", ctx.guild.id, json.dumps(self.bot.reactionrole_cache[ctx.guild.id][message_id]))
         await ctx.send(f"Sucess role is {role.mention}, message id is {message_id}, reaction is {str(reaction)}")
-        
+
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         """Gives a role based on a reaction emoji."""
@@ -59,7 +62,8 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.bot.reactionrole_cache[payload.guild_id][payload.message_id][payload.emoji.id or payload.emoji.name]
+            role_id = self.bot.reactionrole_cache[payload.guild_id][
+                payload.message_id][payload.emoji.id or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -92,7 +96,8 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.bot.reactionrole_cache[payload.guild_id][payload.message_id][payload.emoji.id or payload.emoji.name]
+            role_id = self.bot.reactionrole_cache[payload.guild_id][
+                payload.message_id][payload.emoji.id or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return

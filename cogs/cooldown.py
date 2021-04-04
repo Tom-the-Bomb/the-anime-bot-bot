@@ -5,6 +5,8 @@ from utils.subclasses import AnimeContext, GlobalCooldown
 # class MaxGlobalConcurrencyReached(commands.CommandError):
 #     def __init__(self):
 #         super().__init__("There can only be one command running at a time")
+
+
 class cooldown(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -12,12 +14,12 @@ class cooldown(commands.Cog):
         bot.add_check(self.global_cooldown, call_once=True)
         self.normal_cooldown = commands.CooldownMapping.from_cooldown(
             5, 1, commands.BucketType.user)
-        
+
     @commands.Cog.listener()
     async def on_command(self, ctx: AnimeContext):
         if ctx.message.author.id in [590323594744168494, 711057339360477184]:
             ctx.command.reset_cooldown(ctx)
-            
+
     # @commands.Cog.listener()
     # async def on_command(self, ctx: AnimeContext):
     #     if not ctx.message.id in self.bot.concurrency:

@@ -1,3 +1,43 @@
+from jishaku.paginators import PaginatorEmbedInterface, PaginatorInterface
+from utils.format import plural
+from utils.asyncstuff import asyncexe
+from utils import fuzzy
+from twemoji_parser import emoji_to_url
+from pyfiglet import Figlet
+from PIL import Image, ImageFont
+from menus import menus
+from currency_converter import CurrencyConverter
+import numpy as np
+import humanize
+import aiohttp
+from typing import Optional
+from io import BytesIO
+from datetime import datetime
+from contextlib import suppress
+from collections import Counter
+import zlib
+import unicodedata
+import typing
+import random as rng
+import random
+import json
+import io
+import decimal
+import base64
+import ast
+from translate import Translator
+from utils.subclasses import AnimeContext
+from discord.ext import commands
+from bs4 import BeautifulSoup
+import requests
+import pyqrcode
+import flags
+import discord
+import cse
+import bs4
+import ratelimiter
+from urllib.parse import urlparse
+from itertools import cycle
 import asyncio
 import config
 import os
@@ -9,54 +49,11 @@ import collections
 from fake_useragent import UserAgent
 
 ua = UserAgent()
-from itertools import cycle
-from urllib.parse import urlparse
 
-import ratelimiter
-import bs4
-import cse
-import discord
-import flags
-import pyqrcode
-import requests
-from bs4 import BeautifulSoup
-from discord.ext import commands
-from utils.subclasses import AnimeContext
-from translate import Translator
 
 google_api_1 = str(os.getenv("google_api_1"))
 google_api_2 = str(os.getenv("google_api_2"))
 google_api_3 = str(os.getenv("google_api_3"))
-import ast
-import base64
-import decimal
-import io
-import json
-import random
-import random as rng
-import re
-import typing
-import unicodedata
-import zlib
-from collections import Counter
-from contextlib import suppress
-from datetime import datetime
-from io import BytesIO
-from typing import Optional
-
-import aiohttp
-import humanize
-import numpy as np
-from currency_converter import CurrencyConverter
-from menus import menus
-from PIL import Image, ImageFont
-from pyfiglet import Figlet
-from twemoji_parser import emoji_to_url
-from utils import fuzzy
-from utils.asyncstuff import asyncexe
-from utils.format import plural
-
-from jishaku.paginators import PaginatorEmbedInterface, PaginatorInterface
 
 
 class googlemenu(menus.Menu):
@@ -70,14 +67,12 @@ class googlemenu(menus.Menu):
         embed = discord.Embed(
             color=self.bot.color,
             title=self.datas[self.counter].title,
-            description=
-            f"{self.datas[self.counter].snippet or ''}\n{self.datas[self.counter].link}"
+            description=f"{self.datas[self.counter].snippet or ''}\n{self.datas[self.counter].link}"
         )
         # if self.datas[self.counter].image != None and self.datas[self.counter].image.startswith("http"):
         #   embed.set_image(url=self.datas[self.counter].image)
         embed.set_footer(
-            text=
-            f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}"
+            text=f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}"
         )
         return await channel.send(embed=embed)
 
@@ -89,14 +84,12 @@ class googlemenu(menus.Menu):
         embed = discord.Embed(
             color=self.bot.color,
             title=self.datas[self.counter].title,
-            description=
-            f"{self.datas[self.counter].snippet or ''}\n{self.datas[self.counter].link}"
+            description=f"{self.datas[self.counter].snippet or ''}\n{self.datas[self.counter].link}"
         )
         # if self.datas[self.counter].image != None and self.datas[self.counter].image.startswith("http"):
         #   embed.set_image(url=self.datas[self.counter].image)
         embed.set_footer(
-            text=
-            f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}"
+            text=f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}"
         )
         await self.message.edit(embed=embed)
 
@@ -108,15 +101,14 @@ class googlemenu(menus.Menu):
         embed = discord.Embed(
             color=self.bot.color,
             title=self.datas[self.counter].title,
-            description=
-            f"{self.datas[self.counter].snippet or ''}\n{self.datas[self.counter].link}"
+            description=f"{self.datas[self.counter].snippet or ''}\n{self.datas[self.counter].link}"
         )
         # if self.datas[self.counter].image != None and self.datas[self.counter].image.startswith("http"):             embed.set_image(url=self.datas[self.counter].image)
         embed.set_footer(
-            text=
-            f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}"
+            text=f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}"
         )
         await self.message.edit(embed=embed)
+
     @menus.button('\N{BLACK SQUARE FOR STOP}\ufe0f')
     async def on_stop(self, payload):
         self.stop()
@@ -149,19 +141,26 @@ transformer = Transformer()
 class nogooderror(Exception):
     pass
 
+
 """
 This Source Code Form is subject to the terms of the Mozilla Public
 License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
+
+
 class SphinxObjectFileReader:
     BUFSIZE = 16 * 1024
+
     def __init__(self, buffer):
         self.stream = io.BytesIO(buffer)
+
     def readline(self):
         return self.stream.readline().decode('utf-8')
+
     def skipline(self):
         self.stream.readline()
+
     def read_compressed_chunks(self):
         decompressor = zlib.decompressobj()
         while True:
@@ -170,6 +169,7 @@ class SphinxObjectFileReader:
                 break
             yield decompressor.decompress(chunk)
         yield decompressor.flush()
+
     def read_compressed_lines(self):
         buf = b''
         for chunk in self.read_compressed_chunks():
@@ -179,6 +179,8 @@ class SphinxObjectFileReader:
                 yield buf[:pos].decode('utf-8')
                 buf = buf[pos + 1:]
                 pos = buf.find(b'\n')
+
+
 class utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -194,6 +196,7 @@ class utility(commands.Cog):
         bot.cse2 = cse.Search(api_key=google_api_2)
         bot.cse3 = cse.Search(api_key=google_api_3)
         bot.cse_lists = cycle([google_api_1, google_api_2, google_api_3])
+
     def parse_object_inv(self, stream, url):
         # key: URL
         # n.b.: key doesn't have `discord` or `discord.ext.commands` namespaces
@@ -239,6 +242,7 @@ class utility(commands.Cog):
                                   '').replace('discord.', '')
             result[f'{prefix}{key}'] = os.path.join(url, location)
         return result
+
     async def build_rtfm_lookup_table(self, page_types):
         cache = {}
         for key, page in page_types.items():
@@ -250,6 +254,7 @@ class utility(commands.Cog):
                 stream = SphinxObjectFileReader(await resp.read())
                 cache[key] = self.parse_object_inv(stream, page)
         self.bot._rtfm_cache = cache
+
     async def uhh_rtfm_pls(self, ctx, key, obj):
         page_types = {
             'latest': 'https://discordpy.readthedocs.io/en/latest',
@@ -274,6 +279,7 @@ class utility(commands.Cog):
                     obj = f'abc.Messageable.{name}'
                     break
         cache = list(self.bot._rtfm_cache[key].items())
+
         def transform(tup):
             return tup[0]
         matches = fuzzy.finder(obj, cache, key=lambda t: t[0], lazy=False)[:10]
@@ -287,7 +293,7 @@ class utility(commands.Cog):
         # await interface.send_to(ctx)
         e.description = '\n'.join(f'[{key}]({url})' for key, url in matches)
         await ctx.send(embed=e, reference=ctx.replied_reference)
-    
+
     @staticmethod
     def choosebstofcal(ctx, times, choices):
         if times is None:
@@ -303,6 +309,7 @@ class utility(commands.Cog):
                 f'**{index}. {elem} ** `({plural(count):time}, {count/times:.2%})`'
             )
         return builder
+
     @staticmethod
     def convertcal(amount, from_, to):
         c = CurrencyConverter(decimal=True)
@@ -330,7 +337,6 @@ class utility(commands.Cog):
                 status = i["status"]
                 lists.append(f"{name}: {status}")
         return lists
-
 
     async def get_status(self):
         lists = []
@@ -435,11 +441,11 @@ class utility(commands.Cog):
     def zip_emojis(emojis, method):
         file_ = BytesIO()
         with zipfile.ZipFile(file_, mode="w", compression=method, compresslevel=9) as zipfile_:
-            for n,v in emojis:
+            for n, v in emojis:
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
         return discord.File(file_, "emojis.zip")
-    
+
     @commands.command()
     async def eval(self, ctx, lang: lambda i: str(i).lower(), *, code: str):
         """
@@ -491,7 +497,7 @@ class utility(commands.Cog):
 
     @commands.command()
     @commands.has_permissions(manage_emojis=True)
-    async def zipemoji(self, ctx, compression_method: lambda x: str(x).upper()="DEFLATED"):
+    async def zipemoji(self, ctx, compression_method: lambda x: str(x).upper() = "DEFLATED"):
         """
         Zip all emojis in this server it could take a while since we try to compress it as small as we can
         if you have 7zip installed on your computer choose LZMA compression method is way faster and the file will be way smaller
@@ -513,13 +519,13 @@ class utility(commands.Cog):
 
     @commands.command()
     async def ip(self, ctx, ip):
-        async with self.bot.session.get("https://api.ksoft.si/kumo/geoip", headers = {"Authorization": config.ksoft}, params = {"ip": ip}) as resp:
+        async with self.bot.session.get("https://api.ksoft.si/kumo/geoip", headers={"Authorization": config.ksoft}, params={"ip": ip}) as resp:
             res = await resp.json()
             if res.get("message"):
                 return await ctx.send(res.get("message"))
             res.get("data").pop("apis")
             await ctx.send(f"```json\n{json.dumps(res, indent=4)}\n```")
-    
+
     @commands.command()
     async def pypi(self, ctx, name):
         async with self.bot.session.get(f"https://pypi.org/pypi/{name}/json") as resp:
@@ -538,11 +544,13 @@ class utility(commands.Cog):
             **Keywords:** {package.get("keywords") or "None"}
             **Documentation:** {package.get("project_urls").get("Documentation") or "None"}
             """
-            embed = discord.Embed(color=self.bot.color, title=package["name"], url=package["package_url"], description=package["summary"])
+            embed = discord.Embed(
+                color=self.bot.color, title=package["name"], url=package["package_url"], description=package["summary"])
             embed.set_thumbnail(url="https://i.imgur.com/8EI9rk0.png")
             embed.add_field(name="Package", value=Package, inline=False)
             embed.add_field(name="Author", value=Author, inline=False)
             await ctx.send(embed=embed)
+
     @commands.group(invoke_without_command=True)
     async def qrcode(self, ctx, *, thing):
         q = pyqrcode.create(thing)
@@ -550,6 +558,7 @@ class utility(commands.Cog):
         q.png(pic, scale=6)
         pic.seek(0)
         await ctx.send(file=discord.File(pic, "qrcode.png"))
+
     @qrcode.command(name="decode")
     async def qrcode_decode(self, ctx, *, link):
         if link.startswith("https"):
@@ -563,18 +572,20 @@ class utility(commands.Cog):
                 await ctx.send(data)
                 # qr = decode(pic)
                 # await ctx.send(qr.data)
+
     @staticmethod
     @asyncexe()
     def txt_(thing):
         return discord.File(BytesIO(thing.encode("utf-8")), "something.txt")
+
     @commands.command()
-    async def txt(self, ctx, *, anything:str=None):
+    async def txt(self, ctx, *, anything: str = None):
         if anything.startswith("https://mystb.in/"):
             return await ctx.send(file=await self.txt_(str(await self.bot.mystbin.get(anything))))
         await ctx.send(file=await self.txt_(anything))
 
     @commands.command()
-    async def mystbin(self, ctx, *, code:str=None):
+    async def mystbin(self, ctx, *, code: str = None):
         if ctx.message.reference:
             if ctx.message.reference.cached_message:
                 if (
@@ -594,9 +605,6 @@ class utility(commands.Cog):
                     message_ = await message.attachments[0].read()
                     message_ = message_.decode("utf-8")
                     return await ctx.send(str(await self.bot.mystbin.post(message_, syntax=message.attachments[0].filename.split(".")[1])))
-
-
-
 
         if code is None:
             message = ctx.message.attachments[0]
@@ -635,7 +643,6 @@ class utility(commands.Cog):
             if refresh:
                 return await ctx.send(f"`{refresh.get('content').lower().split('; url=')[1]}`")
             await ctx.send(f"`{resp.url}`")
-           
 
     @commands.command()
     async def mytime(self, ctx):
@@ -677,12 +684,12 @@ class utility(commands.Cog):
                 real_results = []
             for i in titles:
                 try:
-                    real_results.append(f"{titles[counter]}\n{results[counter]}\n")
+                    real_results.append(
+                        f"{titles[counter]}\n{results[counter]}\n")
                     counter += 1
                 except:
                     return real_results
             return real_results
-
 
     @commands.command()
     async def google(self, ctx, *, thing: str):
@@ -692,21 +699,21 @@ class utility(commands.Cog):
             "q": thing.replace(" ", "+"),
             "gl": "countryUS",
             "num": "10",
-            "safe": "off"  if ctx.channel.is_nsfw() else "active"
+            "safe": "off" if ctx.channel.is_nsfw() else "active"
         }
         async with self.bot.session.get(f"https://www.googleapis.com/customsearch/v1", params=params) as resp:
             results = []
             js = await resp.json()
             for i in js["items"]:
-                results.append(f"{i['title']}\n{i['link']}\n{i.get('snippet', 'No description')}\n")
+                results.append(
+                    f"{i['title']}\n{i['link']}\n{i.get('snippet', 'No description')}\n")
         paginator = commands.Paginator(prefix="", suffix="", max_size=2000)
         embed = discord.Embed(color=self.bot.color)
         for i in results:
             paginator.add_line(i)
-        interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author, embed=embed)
+        interface = PaginatorEmbedInterface(
+            ctx.bot, paginator, owner=ctx.author, embed=embed)
         await interface.send_to(ctx)
-
-
 
         # results = await self.google_(thing)
         # paginator = commands.Paginator(prefix="", suffix="", max_size=500)
@@ -801,7 +808,8 @@ class utility(commands.Cog):
         """
       Calculate some math
       """
-        thing = thing.replace(" ", "").replace("^", "**").replace("pi", "3.1415926535")
+        thing = thing.replace(" ", "").replace(
+            "^", "**").replace("pi", "3.1415926535")
         lists = ["\"", "\'", "()", ".."]
         if any(i in thing for i in lists):
             return await ctx.send("nope don't even think about it")
@@ -945,11 +953,12 @@ class utility(commands.Cog):
         """
     Convert from one currency to another. Currency code are listed here https://en.wikipedia.org/wiki/ISO_4217#Active_codes
     """
-        async with self.bot.session.get("https://api.ksoft.si/kumo/currency", headers = {"Authorization": config.ksoft}, params = {"from": from_, "to": to, "value": amount}) as resp:
+        async with self.bot.session.get("https://api.ksoft.si/kumo/currency", headers={"Authorization": config.ksoft}, params={"from": from_, "to": to, "value": amount}) as resp:
             res = await resp.json()
             if res.get("message"):
                 return await ctx.send(res.get("message"))
             await ctx.send(f"{amount} {from_.upper()} is equal to {res.get('pretty')}")
+
     @commands.command()
     async def charinfo(self, ctx, *, characters: str):
         """Shows you information about a number of characters.
@@ -1006,8 +1015,7 @@ class utility(commands.Cog):
         embed.set_author(name=guild_name)
         embed.add_field(
             name="Infos",
-            value=
-            f"**Categories Count**: {categories}\n**Channels Count**: {channels}\n**Created_at**: {created_at}\n**Default Role**: {default_role}\n**Emoji Count:** {emojis_count}\n**Features:** \n{features}\n**Description**: {description}\n**Emoji Limit**: {emoji_limit}\n**Guild Id**: {guild_id}\n**Guild Owner**: {guild_owner}\n**Guild Owner UserId**: {guild_owner_id}\n**Member Count**: {member_count}"
+            value=f"**Categories Count**: {categories}\n**Channels Count**: {channels}\n**Created_at**: {created_at}\n**Default Role**: {default_role}\n**Emoji Count:** {emojis_count}\n**Features:** \n{features}\n**Description**: {description}\n**Emoji Limit**: {emoji_limit}\n**Guild Id**: {guild_id}\n**Guild Owner**: {guild_owner}\n**Guild Owner UserId**: {guild_owner_id}\n**Member Count**: {member_count}"
         )
         await ctx.reply(embed=embed)
 
@@ -1099,8 +1107,7 @@ class utility(commands.Cog):
             embed.set_thumbnail(url=member1.avatar_url_as(static_format="png"))
             embed.add_field(
                 name="User",
-                value=
-                f"**Bot:** {bot}\n**Account Created at:** {created_at}\n**Nickname:** {nickname}\n**UserId:** {id}\n**Joined Server at:** {joined_at}\n**Boosted Server since since:** {premium_since}\n**Discord Staff:** {staff}\n**Discord Partner:** {partner}\n**Hypesquad:** {hypesquad}\n**Bug Hunter:** {bug_hunter}\n**Early Supporter:** {early_supporter}\n**Verified Bot:** {verified_bot}\n**Early Verified Bot Developer:** {verified_bot_developer}\n**Avatar Animated:** {avatar_animated}\n**Top Role:** {toprole}"
+                value=f"**Bot:** {bot}\n**Account Created at:** {created_at}\n**Nickname:** {nickname}\n**UserId:** {id}\n**Joined Server at:** {joined_at}\n**Boosted Server since since:** {premium_since}\n**Discord Staff:** {staff}\n**Discord Partner:** {partner}\n**Hypesquad:** {hypesquad}\n**Bug Hunter:** {bug_hunter}\n**Early Supporter:** {early_supporter}\n**Verified Bot:** {verified_bot}\n**Early Verified Bot Developer:** {verified_bot_developer}\n**Avatar Animated:** {avatar_animated}\n**Top Role:** {toprole}"
             )
         else:
             embed = discord.Embed(color=self.bot.color)
@@ -1152,13 +1159,11 @@ class utility(commands.Cog):
             embed.set_thumbnail(url=member1.avatar_url_as(static_format="png"))
             embed.add_field(
                 name="User",
-                value=
-                f"**Bot:** {bot}\n**Account Created at:** {created_at}\n**UserId:** {id}\n**Discord Staff:** {staff}\n**Discord Partner:** {partner}\n**Hypesquad:** {hypesquad}\n**Bug Hunter:** {bug_hunter}\n**Early Supporter:** {early_supporter}\n**Verified Bot:** {verified_bot}\n**Early Verified Bot Developer:** {verified_bot_developer}\n**Avatar Animated:** {avatar_animated}"
+                value=f"**Bot:** {bot}\n**Account Created at:** {created_at}\n**UserId:** {id}\n**Discord Staff:** {staff}\n**Discord Partner:** {partner}\n**Hypesquad:** {hypesquad}\n**Bug Hunter:** {bug_hunter}\n**Early Supporter:** {early_supporter}\n**Verified Bot:** {verified_bot}\n**Early Verified Bot Developer:** {verified_bot_developer}\n**Avatar Animated:** {avatar_animated}"
             )
 
         embed.set_footer(
-            text=
-            f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
+            text=f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
             icon_url=ctx.author.avatar_url)
         await ctx.reply(embed=embed)
 
@@ -1174,14 +1179,14 @@ class utility(commands.Cog):
         if member == "random":
             member1 = random.choice(ctx.guild.members)
         try:
-            embed = discord.Embed(color=self.bot.color, description=f"[webp]({str(member1.avatar_url_as(format='webp'))}) [jpeg]({str(member1.avatar_url_as(format='jpeg'))}) [png]({str(member1.avatar_url_as(format='png'))})" if not member1.is_avatar_animated() else f"[webp]({str(member1.avatar_url_as(format='webp'))}) [jpeg]({str(member1.avatar_url_as(format='jpeg'))}) [png]({str(member1.avatar_url_as(format='png'))}) [gif]({str(member1.avatar_url_as(format='gif'))})")
+            embed = discord.Embed(color=self.bot.color, description=f"[webp]({str(member1.avatar_url_as(format='webp'))}) [jpeg]({str(member1.avatar_url_as(format='jpeg'))}) [png]({str(member1.avatar_url_as(format='png'))})" if not member1.is_avatar_animated(
+            ) else f"[webp]({str(member1.avatar_url_as(format='webp'))}) [jpeg]({str(member1.avatar_url_as(format='jpeg'))}) [png]({str(member1.avatar_url_as(format='png'))}) [gif]({str(member1.avatar_url_as(format='gif'))})")
         except:
             raise commands.errors.UserNotFound(argument=member)
         format = ".gif" if member1.is_avatar_animated() else ".png"
         embed.set_image(url=f"attachment://{member1.id}{format}")
         embed.set_footer(
-            text=
-            f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
+            text=f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
             icon_url=ctx.author.avatar_url)
         await ctx.reply(embed=embed, file=discord.File(BytesIO(await member1.avatar_url_as(static_format="png").read()), f"{member1.id}{format}"))
 

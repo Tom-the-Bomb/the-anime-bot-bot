@@ -80,49 +80,56 @@ class fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.talk_channels = []
-    
+
     async def get_url(self, ctx: AnimeContext, thing):
         if ctx.message.reference:
             if ctx.message.reference.cached_message:
                 if ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "image":
                     url = ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    url = url.replace("cdn.discordapp.com",
+                                      "media.discordapp.net")
                     return url
                 elif ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "rich":
                     if ctx.message.reference.cached_message.embeds[0].image.proxy_url:
                         url = ctx.message.reference.cached_message.embeds[0].image.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        url = url.replace("cdn.discordapp.com",
+                                          "media.discordapp.net")
                         return url
                     elif ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url:
                         url = ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        url = url.replace("cdn.discordapp.com",
+                                          "media.discordapp.net")
                         return url
                 elif ctx.message.reference.cached_message.attachments and ctx.message.reference.cached_message.attachments[0].width and ctx.message.reference.cached_message.attachments[0].height:
                     url = ctx.message.reference.cached_message.attachments[0].proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    url = url.replace("cdn.discordapp.com",
+                                      "media.discordapp.net")
                     return url
             else:
                 message = await self.bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
                 if message.embeds and message.embeds[0].type == "image":
                     url = message.embeds[0].thumbnail.proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    url = url.replace("cdn.discordapp.com",
+                                      "media.discordapp.net")
                     return url
                 elif message.embeds and message.embeds[0].type == "rich":
                     if message.embeds[0].image.proxy_url:
                         url = message.embeds[0].image.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        url = url.replace("cdn.discordapp.com",
+                                          "media.discordapp.net")
                         return url
                     elif message.embeds[0].thumbnail.proxy_url:
                         url = message.embeds[0].thumbnail.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        url = url.replace("cdn.discordapp.com",
+                                          "media.discordapp.net")
                         return url
                 elif message.attachments and message.attachments[0].width and message.attachments[0].height:
                     url = message.attachments[0].proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    url = url.replace("cdn.discordapp.com",
+                                      "media.discordapp.net")
                     return url
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             return ctx.message.attachments[0].proxy_url.replace("cdn.discordapp.com", "media.discordapp.net")
-
 
         if thing is None:
             url = str(ctx.author.avatar_url_as(format="png"))
@@ -187,7 +194,7 @@ class fun(commands.Cog):
 
     async def reddit_(self, text):
         async with self.bot.session.get(
-                    f"https://meme-api.herokuapp.com/gimme/{text}") as resp:
+                f"https://meme-api.herokuapp.com/gimme/{text}") as resp:
             meme = await resp.text()
             meme = json.loads(meme)
             if meme["nsfw"] == True:
@@ -207,8 +214,8 @@ class fun(commands.Cog):
 
     @commands.command()
     async def caption(self, ctx: AnimeContext, thing: typing.Union[discord.Member, discord.User,
-                                                discord.PartialEmoji,
-                                                discord.Emoji, str] = None):
+                                                                   discord.PartialEmoji,
+                                                                   discord.Emoji, str] = None):
         url = await self.get_url(ctx, thing)
         data = {
             "Content": url,
@@ -221,14 +228,15 @@ class fun(commands.Cog):
             async with self.bot.session.get(url) as resp:
                 bytes_ = BytesIO(await resp.read())
             await ctx.send(embed=embed, file=discord.File(bytes_, "caption.png"))
-    
+
     @commands.command()
     async def ship(self, ctx: AnimeContext, user_1: typing.Union[discord.Member, discord.User], user_2: typing.Union[discord.Member, discord.User]):
         random.seed(user_1.id + user_2.id + 34 + 35 + 69)
-        amount = int(str(random.randint(0, 100))[0]) if len(str(random.randint(0, 100))) >= 2 else 1
-        embed = discord.Embed(color=self.bot.color, description=f"{user_1.name} + {user_2.name} = **{random.randint(0, 100)}**%\n{'<a:rooLove:744346239075877518>'* amount}")
+        amount = int(str(random.randint(0, 100))[0]) if len(
+            str(random.randint(0, 100))) >= 2 else 1
+        embed = discord.Embed(
+            color=self.bot.color, description=f"{user_1.name} + {user_2.name} = **{random.randint(0, 100)}**%\n{'<a:rooLove:744346239075877518>'* amount}")
         await ctx.send(embed=embed)
-
 
     @commands.command()
     async def pic(self, ctx: AnimeContext, animal: str):
@@ -576,7 +584,7 @@ class fun(commands.Cog):
     async def tenor(self, ctx: AnimeContext, *, search):
         gif = await self.tenor_(search)
         async with self.bot.session.get(gif) as resp:
-            gif = BytesIO(await resp.read())            
+            gif = BytesIO(await resp.read())
         embed = await embedbase.embed(self, ctx)
         embed.set_image(url=f"attachment://{search}.gif")
         await ctx.send(embed=embed, file=discord.File(gif, f"{search}.gif"))
@@ -639,7 +647,6 @@ class fun(commands.Cog):
         t.write_to_fp(buffer)
         buffer.seek(0)
         return discord.File(buffer, filename="audio.mp3")
-
 
     @commands.command()
     async def tts(self, ctx: AnimeContext, lang="en", *, text="enter something "):

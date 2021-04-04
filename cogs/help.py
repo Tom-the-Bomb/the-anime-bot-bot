@@ -7,9 +7,11 @@ from menus import menus
 from jishaku.paginators import PaginatorEmbedInterface
 from jishaku.models import copy_context_with
 
+
 class HelpMenuSource(menus.ListPageSource):
     def __init__(self, data):
         super().__init__(data, per_page=10)
+
     async def format_page(self, menu, entries):
         return {"embed": discord.Embed(color=menu.ctx.bot.color, title=f"Help command", description="\n".join(entries))}
 
@@ -20,7 +22,8 @@ class HelpCommand(commands.HelpCommand):
 
     async def send_group_help(self, group):
         lists = [self.get_command_signature(i) for i in group.walk_commands()]
-        pages = menus.MenuPages(source=HelpMenuSource(lists), delete_message_after=True)
+        pages = menus.MenuPages(source=HelpMenuSource(
+            lists), delete_message_after=True)
         await pages.start(self.context)
 
     async def send_command_help(self, command):
@@ -38,7 +41,8 @@ class HelpCommand(commands.HelpCommand):
             else:
                 lists_.append(self.get_command_signature(i))
         lists = [f"**{i}**" for i in lists_]
-        pages = menus.MenuPages(source=HelpMenuSource(lists), delete_message_after=True)
+        pages = menus.MenuPages(source=HelpMenuSource(
+            lists), delete_message_after=True)
         await pages.start(self.context)
 
     async def send_bot_help(self, mapping):
@@ -71,7 +75,8 @@ logging
 socket
         ```
         """)
-        embed.set_thumbnail(url=str(self.context.me.avatar_url_as(format="png")))
+        embed.set_thumbnail(
+            url=str(self.context.me.avatar_url_as(format="png")))
         await self.context.send(embed=embed)
         # is_working = True
         # dicts = {
@@ -95,6 +100,7 @@ socket
         # payload = await self.context.bot.wait_for("raw_reaction_add", check=check)
         # await self.context.bot.invoke(copy_context_with(self.context, content="ovo help " + dicts.get(payload.emoji.id)))
         # await message.delete()
+
 
 class help(commands.Cog):
     def __init__(self, bot):

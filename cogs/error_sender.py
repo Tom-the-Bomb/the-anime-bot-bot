@@ -1,3 +1,5 @@
+from discord.ext import commands
+from discord import AsyncWebhookAdapter, Webhook
 import aiohttp
 from utils.subclasses import AnimeContext
 import config
@@ -5,8 +7,6 @@ import prettify_exceptions
 import discord
 import os
 webhook_url = (config.webhookurl)
-from discord import AsyncWebhookAdapter, Webhook
-from discord.ext import commands
 
 
 class error_sender(commands.Cog):
@@ -25,7 +25,8 @@ class error_sender(commands.Cog):
             name = ctx.guild.name
         fields = [["Error", error], ["Author", ctx.author], [server, name],
                   ["Message", ctx.message.content]]
-        embed = discord.Embed(color=0xFF0000, title="An error occured", description=f"```py\n{''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__))}\n```")
+        embed = discord.Embed(color=0xFF0000, title="An error occured",
+                              description=f"```py\n{''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__))}\n```")
         [
             embed.add_field(name=f"**{n}**",
                             value=f"```py\n{v}```",

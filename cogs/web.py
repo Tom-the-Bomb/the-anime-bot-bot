@@ -12,6 +12,7 @@ class web(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.func.start(bot)
+
     async def main(self):
         async with self.bot.session.ws_connect("wss://gateway.botlist.space") as ws:
             self.bot.loop.create_task(self.identify(ws))
@@ -32,13 +33,12 @@ class web(commands.Cog):
     async def heartbeat(self, ws):
         while True:
             payload = {
-            "op": 1,
-            "t": time.time(),
-            "d": {}
+                "op": 1,
+                "t": time.time(),
+                "d": {}
             }
             await ws.send_json(payload)
             await asyncio.sleep(45)
-
 
     @tasks.loop(minutes=1)
     async def func(self, bot):
@@ -48,7 +48,6 @@ class web(commands.Cog):
                 bot.botlist = await resp.text()
         except:
             pass
-        
 
 
 def setup(bot):

@@ -1,16 +1,16 @@
+import time
+from collections import Counter
+from jishaku.paginators import PaginatorInterface
+from utils.asyncstuff import asyncexe
+import matplotlib.pyplot as plt
+import pandas as pd
+from contextlib import suppress
 import discord
 from discord.ext import commands, tasks
 from utils.subclasses import AnimeContext
 import asyncio
 import warnings
 warnings.filterwarnings("ignore")
-from contextlib import suppress
-import pandas as pd
-import matplotlib.pyplot as plt
-from utils.asyncstuff import asyncexe
-from jishaku.paginators import PaginatorInterface
-from collections import Counter
-import time
 
 
 class socket(commands.Cog):
@@ -36,9 +36,8 @@ class socket(commands.Cog):
     async def save_socket(self):
         await self.bot.wait_until_ready()
         await asyncio.sleep(5)
-        for i, (n,v) in enumerate(self.bot.socket_stats.most_common()):
+        for i, (n, v) in enumerate(self.bot.socket_stats.most_common()):
             await self.bot.db.execute("INSERT INTO socket VALUES ($1, $2) ON CONFLICT (name) DO UPDATE SET count = $2", n, v)
-
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: AnimeContext, error):

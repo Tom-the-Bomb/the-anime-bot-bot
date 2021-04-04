@@ -36,21 +36,20 @@ class others(commands.Cog):
         self.bot = bot
         self.countdownused = []
         self.thing = {}
-        
+
     @commands.command()
     async def owners(self, ctx):
-      embed = discord.Embed(color=self.bot.color, description=f"""
+        embed = discord.Embed(color=self.bot.color, description=f"""
       <:rooSip:824129426181980191> Owner: {str(self.bot.get_user(590323594744168494)) if self.bot.get_user(590323594744168494) else str(await self.bot.fetch_user(590323594744168494))}
       <:rooSellout:739614245343199234> Rich Co-owner: {str(self.bot.get_user(711057339360477184)) if self.bot.get_user(711057339360477184) else str(await self.bot.fetch_user(711057339360477184))}
 """)
-      await ctx.send(embed=embed)
-        
+        await ctx.send(embed=embed)
+
     @commands.command()
-    async def emojioptions(self, ctx: AnimeContext, enabled:bool):
-      await self.bot.db.execute("INSERT INTO emojioptions (user_id, enabled) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET enabled = $2 WHERE emojioptions.user_id = $1 ", ctx.author.id, enabled)
-      self.bot.emojioptions[ctx.author.id] = enabled
-      await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"you have set emoji auto response to {enabled}"))
-      
+    async def emojioptions(self, ctx: AnimeContext, enabled: bool):
+        await self.bot.db.execute("INSERT INTO emojioptions (user_id, enabled) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET enabled = $2 WHERE emojioptions.user_id = $1 ", ctx.author.id, enabled)
+        self.bot.emojioptions[ctx.author.id] = enabled
+        await ctx.send(embed=discord.Embed(color=self.bot.color, description=f"you have set emoji auto response to {enabled}"))
 
     @commands.command()
     async def votes(self, ctx):
@@ -58,7 +57,8 @@ class others(commands.Cog):
             js = await resp.json()
             js = js[:5]
             voters = [f"**{i.get('username')}**" for i in js]
-            embed = discord.Embed(color=self.bot.color, title="Top 5 Voters", description="\n".join(voters))
+            embed = discord.Embed(
+                color=self.bot.color, title="Top 5 Voters", description="\n".join(voters))
             embed.set_footer
             await ctx.send(embed=embed)
 
@@ -186,7 +186,7 @@ class others(commands.Cog):
     async def charles(self, ctx: AnimeContext, *, text):
         await ctx.trigger_typing()
         res = await self.bot.session.post('https://bin.charles-bot.com/documents',
-                                 data=text)
+                                          data=text)
         if res.status != 200:
             raise commands.CommandError(
                 f"charles bin down with status code {res.status}")
@@ -258,7 +258,7 @@ class others(commands.Cog):
         await ctx.trigger_typing()
         end = time.perf_counter()
         final_latency = end - start
-        start=time.perf_counter()
+        start = time.perf_counter()
         await self.bot.db.fetch("SELECT 1")
         postgres = time.perf_counter()-start
         postgres = round(postgres*1000)
@@ -266,7 +266,8 @@ class others(commands.Cog):
         embed.set_author(name="ping")
         embed.add_field(name="<:stab:744345955637395586>  websocket latency",
                         value=f"```{round(self.bot.latency * 1000)} ms ```")
-        embed.add_field(name="<:postgres:821095695746203689> Postgre sql latency", value=f"```{postgres} ms```")
+        embed.add_field(
+            name="<:postgres:821095695746203689> Postgre sql latency", value=f"```{postgres} ms```")
         embed.add_field(name="<a:typing:597589448607399949> API latency",
                         value=f"```{round(final_latency * 1000)} ms ```")
         # start1 = time.perf_counter()
@@ -313,11 +314,13 @@ class others(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
     async def prefix(self, ctx):
-            """
-            Shows prefixes and avaiable prefix commands
-            """
-            embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Current guild prefixes are: `{', '.join(self.bot.prefixes[ctx.guild.id])}`\n\nTo add a prefix run: {ctx.prefix}prefix add `prefix`\n\nTo remove a prefix run: {ctx.prefix}prefix remove `prefix`")
-            return await ctx.send(embed=embed)
+        """
+        Shows prefixes and avaiable prefix commands
+        """
+        embed = discord.Embed(color=self.bot.color, title="Change prefix",
+                              description=f"Current guild prefixes are: `{', '.join(self.bot.prefixes[ctx.guild.id])}`\n\nTo add a prefix run: {ctx.prefix}prefix add `prefix`\n\nTo remove a prefix run: {ctx.prefix}prefix remove `prefix`")
+        return await ctx.send(embed=embed)
+
     @prefix.command(name="remove")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
@@ -330,17 +333,17 @@ class others(commands.Cog):
         ovo prefix remove "prefixname "
         """
         if not prefix_to_remove in self.bot.prefixes[ctx.guild.id]:
-          return await ctx.send("This prefix don't exist maybe you made a typo? Case and space Sensitive")
+            return await ctx.send("This prefix don't exist maybe you made a typo? Case and space Sensitive")
         old_prefixes = await self.bot.db.fetchrow("SELECT * FROM prefix WHERE guild_id=$1", ctx.guild.id)
         old_prefixes = old_prefixes["prefix"]
         new_prefixes = old_prefixes
         new_prefixes.remove(prefix_to_remove)
         await self.bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET prefix = $2 WHERE prefix.guild_id = $1", ctx.guild.id, new_prefixes)
         self.bot.prefixes[ctx.guild.id] = new_prefixes
-        embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Succefully appended new prefix New prefixes are: {', '.join(new_prefixes)}")
+        embed = discord.Embed(color=self.bot.color, title="Change prefix",
+                              description=f"Succefully appended new prefix New prefixes are: {', '.join(new_prefixes)}")
         return await ctx.send(embed=embed)
-            
-                       
+
     @prefix.command(name="add")
     @commands.guild_only()
     @commands.has_permissions(manage_guild=True)
@@ -358,10 +361,9 @@ class others(commands.Cog):
         new_prefixes.append(prefixforbot)
         await self.bot.db.execute("INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET prefix = $2 WHERE prefix.guild_id = $1", ctx.guild.id, new_prefixes)
         self.bot.prefixes[ctx.guild.id] = new_prefixes
-        embed = discord.Embed(color=self.bot.color, title="Change prefix", description=f"Succefully appended new prefix New prefixes are: {', '.join(new_prefixes)}")
+        embed = discord.Embed(color=self.bot.color, title="Change prefix",
+                              description=f"Succefully appended new prefix New prefixes are: {', '.join(new_prefixes)}")
         return await ctx.send(embed=embed)
-        
-    
 
     @commands.command()
     @commands.cooldown(1, 60, commands.BucketType.user)

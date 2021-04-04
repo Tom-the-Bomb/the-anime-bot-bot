@@ -44,7 +44,6 @@ class reactionrole(commands.Cog):
             691499259438170152: 811804360107360267
         }
 
-
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         """Gives a role based on a reaction emoji."""
@@ -54,7 +53,7 @@ class reactionrole(commands.Cog):
 
         try:
             role_id = self.pig_emoji_to_role[payload.emoji.id
-                                         or payload.emoji.name]
+                                             or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -85,7 +84,7 @@ class reactionrole(commands.Cog):
 
         try:
             role_id = self.pig_emoji_to_role[payload.emoji.id
-                                         or payload.emoji.name]
+                                             or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -111,6 +110,7 @@ class reactionrole(commands.Cog):
         except discord.HTTPException:
             # If we want to do something in case of errors we'd do it here.
             pass
+
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         """Gives a role based on a reaction emoji."""
@@ -120,7 +120,7 @@ class reactionrole(commands.Cog):
 
         try:
             role_id = self.unnie_emoji_to_role[payload.emoji.id
-                                         or payload.emoji.name]
+                                               or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -151,7 +151,7 @@ class reactionrole(commands.Cog):
 
         try:
             role_id = self.unnie_emoji_to_role[payload.emoji.id
-                                         or payload.emoji.name]
+                                               or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return

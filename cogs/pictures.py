@@ -24,10 +24,10 @@ authorizationthing = (config.ksoft)
 class pictures(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.bot_cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=1, period=6)
+        self.bot_cdn_ratelimiter = ratelimiter.RateLimiter(
+            max_calls=1, period=6)
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
-
 
     async def get_url(self, ctx: AnimeContext, thing, **kwargs):
         avatar = kwargs.get("avatar", True)
@@ -36,43 +36,50 @@ class pictures(commands.Cog):
             if ctx.message.reference.cached_message:
                 if ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "image":
                     url = ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    url = url.replace("cdn.discordapp.com",
+                                      "media.discordapp.net")
                     return url
                 elif ctx.message.reference.cached_message.embeds and ctx.message.reference.cached_message.embeds[0].type == "rich":
                     if ctx.message.reference.cached_message.embeds[0].image.proxy_url:
                         url = ctx.message.reference.cached_message.embeds[0].image.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        url = url.replace("cdn.discordapp.com",
+                                          "media.discordapp.net")
                         return url
                     elif ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url:
                         url = ctx.message.reference.cached_message.embeds[0].thumbnail.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        url = url.replace("cdn.discordapp.com",
+                                          "media.discordapp.net")
                         return url
                 elif ctx.message.reference.cached_message.attachments and ctx.message.reference.cached_message.attachments[0].width and ctx.message.reference.cached_message.attachments[0].height:
                     url = ctx.message.reference.cached_message.attachments[0].proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    url = url.replace("cdn.discordapp.com",
+                                      "media.discordapp.net")
                     return url
             else:
                 message = await self.bot.get_channel(ctx.message.reference.channel_id).fetch_message(ctx.message.reference.message_id)
                 if message.embeds and message.embeds[0].type == "image":
                     url = message.embeds[0].thumbnail.proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    url = url.replace("cdn.discordapp.com",
+                                      "media.discordapp.net")
                     return url
                 elif message.embeds and message.embeds[0].type == "rich":
                     if message.embeds[0].image.proxy_url:
                         url = message.embeds[0].image.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        url = url.replace("cdn.discordapp.com",
+                                          "media.discordapp.net")
                         return url
                     elif message.embeds[0].thumbnail.proxy_url:
                         url = message.embeds[0].thumbnail.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                        url = url.replace("cdn.discordapp.com",
+                                          "media.discordapp.net")
                         return url
                 elif message.attachments and message.attachments[0].width and message.attachments[0].height:
                     url = message.attachments[0].proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    url = url.replace("cdn.discordapp.com",
+                                      "media.discordapp.net")
                     return url
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             return ctx.message.attachments[0].proxy_url.replace("cdn.discordapp.com", "media.discordapp.net")
-
 
         if thing is None and avatar:
             url = str(ctx.author.avatar_url_as(format="png"))
@@ -96,7 +103,7 @@ class pictures(commands.Cog):
                     raise commands.CommandError("Invalid Picture")
         url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
-    
+
     async def bot_cdn(self, url):
         async with self.bot_cdn_ratelimiter:
             async with self.bot.session.get(url) as resp:
@@ -117,6 +124,7 @@ class pictures(commands.Cog):
                     return "Invalid image"
                 async with self.bot.session.post("https://idevision.net/api/cdn", headers={"Authorization": config.idevision, "File-Name": ree.split(str(resp.url).split("/")[-1])[0]}, data=resp.content) as resp:
                     return (await resp.json())["url"]
+
     async def ocr_(self, url):
         async with self.ocr_ratelimiter:
             async with self.bot.session.get(url) as resp:
@@ -124,6 +132,7 @@ class pictures(commands.Cog):
                     return "Invalid image"
                 async with self.bot.session.get(f"https://idevision.net/api/public/ocr?filetype={resp.content_type[1]}", headers={"Authorization": config.idevision}, data=resp.content) as resp:
                     return (await resp.json())["data"]
+
     @staticmethod
     @asyncexe()
     def run_polaroid(image1, method, *args, **kwargs):
@@ -132,12 +141,10 @@ class pictures(commands.Cog):
         method1(*args, **kwargs)
         return discord.File(BytesIO(im.save_bytes()), filename=f"{method}.png")
 
-    
     async def polaroid_(self, image, method, *args, **kwargs):
         async with self.bot.session.get(image) as resp:
             image1 = await resp.read()
         return await self.run_polaroid(image1, method, *args, **kwargs)
-
 
     @staticmethod
     @asyncexe()
@@ -158,29 +165,31 @@ class pictures(commands.Cog):
                        save_all=True, duration=3, loop=0)
         igif.seek(0)
         return igif
-    
+
     @commands.command()
     async def botcdn(self, ctx: AnimeContext, thing: typing.Union[discord.Member, discord.User,
-                                                discord.PartialEmoji,
-                                                discord.Emoji, str]=None):
+                                                                  discord.PartialEmoji,
+                                                                  discord.Emoji, str] = None):
         url = await self.get_url(ctx, thing)
         await ctx.send(f"{await self.bot_cdn(url)}")
 
     @commands.command()
     async def cdn(self, ctx: AnimeContext, thing: typing.Union[discord.Member, discord.User,
-                                                discord.PartialEmoji,
-                                                discord.Emoji, str]=None):
+                                                               discord.PartialEmoji,
+                                                               discord.Emoji, str] = None):
         url = await self.get_url(ctx, thing)
         await ctx.send(f"<{await self.cdn_(url)}>")
+
     @commands.command()
     async def ocr(self, ctx: AnimeContext, thing: typing.Union[discord.Member, discord.User,
-                                                discord.PartialEmoji,
-                                                discord.Emoji, str]=None):
+                                                               discord.PartialEmoji,
+                                                               discord.Emoji, str] = None):
         url = await self.get_url(ctx, thing)
         await ctx.send(f"```\n{await self.ocr_(url)}\n```")
+
     @commands.command()
     async def aww(self, ctx):
-        async with self.bot.session.get("https://api.ksoft.si/images/random-aww", headers = {"Authorization": authorizationthing}) as resp:
+        async with self.bot.session.get("https://api.ksoft.si/images/random-aww", headers={"Authorization": authorizationthing}) as resp:
             res = await resp.json()
             link = res.get("image_url")
             async with self.bot.session.get(link) as resp:
@@ -189,15 +198,15 @@ class pictures(commands.Cog):
 
     @commands.command()
     async def womancat(self, ctx: AnimeContext, woman: typing.Optional[typing.Union[discord.Member, discord.User,
-                                                discord.PartialEmoji,
-                                                discord.Emoji, str]], cat: typing.Optional[typing.Union[discord.Member, discord.User,
-                                                discord.PartialEmoji,
-                                                discord.Emoji, str]]):
+                                                                                    discord.PartialEmoji,
+                                                                                    discord.Emoji, str]], cat: typing.Optional[typing.Union[discord.Member, discord.User,
+                                                                                                                                            discord.PartialEmoji,
+                                                                                                                                            discord.Emoji, str]]):
         url = await self.get_url(ctx, woman)
         url1 = await self.get_url(ctx, cat)
         pic = await self.bot.vacefron_api.woman_yelling_at_cat(woman=url, cat=url1)
         await ctx.send(file=discord.File(await pic.read(),
-                                        filename=f"woman_yelling_at_cat.png"))
+                                         filename=f"woman_yelling_at_cat.png"))
 
     @commands.command()
     async def circle(self, ctx: AnimeContext, background_color="white", circle_color="blue"):
@@ -475,7 +484,7 @@ class pictures(commands.Cog):
     async def floor(self,
                     ctx,
                     thing: commands.Greedy[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
-                                        discord.Emoji, str]] = None):
+                                                        discord.Emoji, str]] = None):
         async with ctx.channel.typing():
             if not thing:
                 url = await self.get_url(ctx, thing)
@@ -483,7 +492,7 @@ class pictures(commands.Cog):
                 embed = discord.Embed(color=0x00ff6a).set_image(
                     url="attachment://floor.gif")
                 return await ctx.send(file=discord.File(fp=image, filename="floor.gif"),
-                            embed=embed)
+                                      embed=embed)
 
             if len(thing) > 10:
                 return await ctx.send("the max is 10")
@@ -493,7 +502,7 @@ class pictures(commands.Cog):
                 embed = discord.Embed(color=0x00ff6a).set_image(
                     url="attachment://floor.gif")
                 await ctx.send(file=discord.File(fp=image, filename="floor.gif"),
-                            embed=embed)
+                               embed=embed)
 
     # @commands.command()
     # async def rainbow(self, ctx):
@@ -577,20 +586,22 @@ class pictures(commands.Cog):
 
     @commands.command()
     async def invert(self,
-                      ctx,
-                      thing: typing.Union[discord.Member, discord.User, discord.PartialEmoji,
-                                          discord.Emoji, str] = None):
+                     ctx,
+                     thing: typing.Union[discord.Member, discord.User, discord.PartialEmoji,
+                                         discord.Emoji, str] = None):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
         await ctx.reply(file=await self.polaroid_(url, "invert"))
+
     @commands.command()
     async def oil(self,
-                      ctx,
-                      thing: typing.Optional[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
-                                          discord.Emoji, str]]):
+                  ctx,
+                  thing: typing.Optional[typing.Union[discord.Member, discord.User, discord.PartialEmoji,
+                                                      discord.Emoji, str]]):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
         await ctx.reply(file=await self.polaroid_(url, "oil", 3, 30))
+
     @commands.command()
     async def rainbow(self,
                       ctx,

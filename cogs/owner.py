@@ -44,6 +44,7 @@ class MyMenu(menus.Menu, timeout=9223372036854775807):
 class owners(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+
     async def cog_check(self, ctx):
         return ctx.author.id in self.bot.owner_ids
 
@@ -55,7 +56,7 @@ class owners(commands.Cog):
 
         # remove `foo`
         return content.strip('` \n')
-  
+
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         if payload.user_id == 590323594744168494 and payload.emoji.name == "\U0001f6ae":
@@ -63,15 +64,13 @@ class owners(commands.Cog):
                 await self.bot.http.delete_message(payload.channel_id, payload.message_id, reason="delete reaction detected")
             except:
                 pass
-            
-    
-    
+
     @commands.command()
     async def viewlog(self, ctx):
         proc = await asyncio.create_subprocess_shell(
-        "systemctl status animebot",
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE)
+            "systemctl status animebot",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE)
 
         stdout, stderr = await proc.communicate()
 
@@ -79,36 +78,35 @@ class owners(commands.Cog):
             await ctx.send(f'```py\n{stdout.decode().replace("jadonvps", "secrect")}\n```')
         if stderr:
             await ctx.send(f'```py\n{stderr.decode().replace("jadonvps", "secrect")}\n```')
-    
+
     @commands.command()
     @commands.is_owner()
     async def ree(self, ctx: AnimeContext, id):
         channel = self.bot.get_channel(823418220832751646)
         await channel.send(f"<https://discord.com/api/oauth2/authorize?client_id={id}&guild_id=796459063982030858&scope=bot%20applications.commands&permissions=641195745>")
-    
+
     @commands.command()
     @commands.is_owner()
-    async def ss(self, ctx: AnimeContext, website:str):
+    async def ss(self, ctx: AnimeContext, website: str):
         driver = webdriver.Chrome("/usr/local/bin")
         await self.bot.loop.run_in_executor(None, driver.get, website)
         bytes_ = BytesIO(driver.get_screenshot_as_png())
         file = discord.File(bytes_, filename="screnshot.png")
         await ctx.send(file=file)
-    
+
     @commands.command(aliases=['sync'])
     @commands.is_owner()
     async def pull(self, ctx):
         proc = await asyncio.create_subprocess_shell(
-        "git pull",
-        stdout=asyncio.subprocess.PIPE,
-        stderr=asyncio.subprocess.PIPE)
+            "git pull",
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE)
 
         stdout, stderr = await proc.communicate()
 
         stdout = f'{stdout.decode()}' if not stdout == b'' else ""
         stderr = f'\n{stderr.decode()}' if not stderr == b'' else ""
         return await ctx.send(embed=discord.Embed(color=self.bot.color, title="Pulling from GitHub...", description=f"```\n{stdout}\n{stderr}\n```"))
-
 
     @classmethod
     def check(self, payload):
@@ -205,7 +203,7 @@ class owners(commands.Cog):
     def zip_emojis(emojis):
         file_ = BytesIO()
         with zipfile.ZipFile(file_, mode="w", compression=zipfile.ZIP_BZIP2, compresslevel=9) as zipfile_:
-            for n,v in emojis:
+            for n, v in emojis:
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
         return discord.File(file_, "emojis.zip")
@@ -241,7 +239,8 @@ class owners(commands.Cog):
                 )
             soup = BeautifulSoup(await resp.text(), features="lxml")
             canonical = soup.find('link', {'rel': 'canonical'})
-            website_ = str(resp.real_url) if canonical is None else str(canonical['href'])
+            website_ = str(resp.real_url) if canonical is None else str(
+                canonical['href'])
         if ctx.channel.nsfw == False:
             lists = [
                 "dick", "pussy", "horny", "porn", "cum", "cunt", "cock",
@@ -254,7 +253,7 @@ class owners(commands.Cog):
         if any(i in website_ for i in lists2):
             return await ctx.send("can not screenshot that website")
         async with self.bot.session.get(
-                    f"https://image.thum.io/get/png/{website}") as resp:
+                f"https://image.thum.io/get/png/{website}") as resp:
             pic = BytesIO(await resp.read())
         await ctx.send(file=discord.File(pic, f"website_{website}.png"))
 
@@ -308,7 +307,7 @@ class owners(commands.Cog):
 
             await interface.add_line(
                 f"\n[status] Return code {reader.close_code}")
-                                                  
+
     @commands.command()
     @commands.is_owner()
     async def reload(self, ctx: AnimeContext, text_):
@@ -366,7 +365,7 @@ class owners(commands.Cog):
         m = MyMenu()
         await m.start(ctx)
 
-    async def clear_(self, ctx: AnimeContext, number:int):
+    async def clear_(self, ctx: AnimeContext, number: int):
         counter = 0
         async for message in ctx.channel.history(limit=1000):
             if message.author.id == ctx.bot.user.id:
@@ -386,7 +385,7 @@ class owners(commands.Cog):
 
     @commands.command(aliases=["del"])
     @commands.is_owner()
-    async def delete_id(self, ctx: AnimeContext, *, id: int=None):
+    async def delete_id(self, ctx: AnimeContext, *, id: int = None):
         if ctx.message.reference:
             id = ctx.message.reference.message_id
         try:
@@ -421,7 +420,7 @@ class owners(commands.Cog):
     @commands.is_owner()
     async def change(self, ctx: AnimeContext, *, status: str):
         await self.bot.change_presence(activity=discord.Game(name=status))
-        
+
     @commands.command()
     @commands.is_owner()
     async def sql(self, ctx: AnimeContext, *, query: str):

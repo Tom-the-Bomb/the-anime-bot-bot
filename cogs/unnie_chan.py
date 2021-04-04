@@ -72,8 +72,7 @@ class reactionrole(commands.Cog):
                                   timestamp=datetime.datetime.utcnow())
             embed.add_field(
                 name="Member leave",
-                value=
-                f"<:bsd_chuuyasob:810406446457159680> {member.mention} just left. We now have {member.guild.member_count} members"
+                value=f"<:bsd_chuuyasob:810406446457159680> {member.mention} just left. We now have {member.guild.member_count} members"
             )
             await self.bot.get_channel(811815859982172211).send(embed=embed)
 
@@ -84,8 +83,7 @@ class reactionrole(commands.Cog):
                                   timestamp=datetime.datetime.utcnow())
             embed.add_field(
                 name="Member join",
-                value=
-                f"<:bsd_dazaisparkle:810407099883454534> Welcome, {member.mention} We now have {member.guild.member_count} members"
+                value=f"<:bsd_dazaisparkle:810407099883454534> Welcome, {member.mention} We now have {member.guild.member_count} members"
             )
             await self.bot.get_channel(811815047898464266).send(embed=embed)
 

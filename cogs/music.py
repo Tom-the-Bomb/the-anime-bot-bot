@@ -6,6 +6,7 @@ import humanize
 import datetime
 import wavelink
 
+
 class Track(wavelink.Track):
     __slots__ = ("requester",)
 
@@ -13,6 +14,7 @@ class Track(wavelink.Track):
         super().__init__(*args)
 
         self.requester = kwargs.get("requester")
+
 
 class Player(wavelink.Player):
     def __init__(self, *args, **kwargs):
@@ -25,16 +27,19 @@ class Player(wavelink.Player):
         self.loop = False
         self.queue = []
         self.queue_position = 0
-    
+
     def make_embed(self, track):
-        embed = discord.Embed(color=0x00ff6a, title="Now playing", description=f"now playing: **{track.title}**")
+        embed = discord.Embed(color=0x00ff6a, title="Now playing",
+                              description=f"now playing: **{track.title}**")
         embed.set_thumbnail(url=track.thumb) if track.thumb else ...
         embed.add_field(name="requester", value=track.requester)
-        embed.add_field(name='Duration', value=humanize.precisedelta(datetime.timedelta(milliseconds=int(track.length))))
-        embed.add_field(name="youtube link", value=track.uri) if track.uri else ...
-        embed.add_field(name="author", value=track.author) if track.author else ...
+        embed.add_field(name='Duration', value=humanize.precisedelta(
+            datetime.timedelta(milliseconds=int(track.length))))
+        embed.add_field(name="youtube link",
+                        value=track.uri) if track.uri else ...
+        embed.add_field(
+            name="author", value=track.author) if track.author else ...
         return embed
-
 
     async def start(self, ctx: AnimeContext, song):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
@@ -55,7 +60,6 @@ class Player(wavelink.Player):
         await self.play(self.now_playing)
         self.ctx = ctx
         self.started = True
-
 
     async def do_next(self):
         if self.repeat:
@@ -91,15 +95,16 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     async def destroy_players(self):
         for i in self.bot.wavelink.players.values():
             await i.destroy()
+
     async def start_nodes(self):
         await self.bot.wait_until_ready()
         node = await self.bot.wavelink.initiate_node(host="127.0.0.1",
-                                              port=2333,
-                                              rest_uri="http://127.0.0.1:2333",
-                                              password="youshallnotpass",
-                                              identifier="MAIN",
-                                              region="us_central")
-        
+                                                     port=2333,
+                                                     rest_uri="http://127.0.0.1:2333",
+                                                     password="youshallnotpass",
+                                                     identifier="MAIN",
+                                                     region="us_central")
+
     @wavelink.WavelinkMixin.listener('on_track_stuck')
     @wavelink.WavelinkMixin.listener('on_track_end')
     @wavelink.WavelinkMixin.listener('on_track_exception')
@@ -123,17 +128,16 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     @commands.command(aliases=['np', 'currentsong'])
     async def now(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
-        
+
         await ctx.send(embed=player.make_embed(player.now_playing))
-    
+
     @commands.command(aliases=['vol'])
-    async def volume(self, ctx: AnimeContext, volume:int=100):
+    async def volume(self, ctx: AnimeContext, volume: int = 100):
         if volume < 0 or volume > 100:
             return await ctx.send("volume must be between 0 to 100")
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         await player.set_volume(volume)
-        await ctx.send(f"Volume is now {volume}") 
-        
+        await ctx.send(f"Volume is now {volume}")
 
     @commands.command()
     async def join(self, ctx: AnimeContext, vc: discord.VoiceChannel = None):
@@ -158,12 +162,11 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send("looped")
 
     @commands.command()
-    async def fastforward(self, ctx: AnimeContext, seconnds:int):
+    async def fastforward(self, ctx: AnimeContext, seconnds: int):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         seek_position = player.position + (seconds * 1000)
         await player.seek(seek_position)
         await ctx.send(f"Fast forwarded {seconds} Current position: {humanize.precisedelta(datetime.timedelta(milliseconds=10))}")
-
 
     @commands.command(aliases=['dc', 'disconnect', 'stop'])
     async def leave(self, ctx):
@@ -172,7 +175,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send("disconnected")
 
     @commands.command()
-    async def equalizer(self, ctx: AnimeContext, name:lambda x: x.lower()):
+    async def equalizer(self, ctx: AnimeContext, name: lambda x: x.lower()):
         equalizers = {
             "none": wavelink.Equalizer.flat(),
             "boost": wavelink.Equalizer.boost(),
@@ -227,6 +230,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     async def skip(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         await player.stop()
+
     @commands.command()
     async def pause(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
@@ -234,6 +238,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             return await ctx.send("player already paused")
         await player.set_pause(True)
         await ctx.send("Paused player")
+
 
 def setup(bot):
     bot.add_cog(Music(bot))
