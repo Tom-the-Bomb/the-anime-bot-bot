@@ -51,6 +51,7 @@ class animes(commands.Cog):
                             f"Genres: {anime['genres']}\n"
                             f"Ratings: {anime['rating']}"
                         )
+                )
                 embed.add_field(
                     name="Rankings",
                     value=(
