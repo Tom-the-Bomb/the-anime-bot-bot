@@ -86,7 +86,7 @@ class animes(commands.Cog):
         ) as resp:
             meme = await resp.text()
             meme = json.loads(meme)
-            if meme["nsfw"]
+            if meme["nsfw"]:
                 return True
             link = meme["postLink"]
             title = meme["title"]
