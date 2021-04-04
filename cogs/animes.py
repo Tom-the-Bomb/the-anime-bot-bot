@@ -53,10 +53,12 @@ class animes(commands.Cog):
                         )
                 embed.add_field(
                     name="Rankings",
-                    value=f"Ranked: {anime['ranked']}\n"
-                    f"Popularity: {anime['popularity']}\n"
-                    f"Members: {anime['members']}\n"
-                    f"Favorites: {anime['favorites']}"
+                    value=(
+                        f"Ranked: {anime['ranked']}\n"
+                        f"Popularity: {anime['popularity']}\n"
+                        f"Members: {anime['members']}\n"
+                        f"Favorites: {anime['favorites']}"
+                    )
                 )
                 characters = []
                 for i in anime["characters_and_actor"]:
