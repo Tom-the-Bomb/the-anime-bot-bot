@@ -537,7 +537,7 @@ class utility(commands.Cog):
                         else js["message"]
                     )
                 result = f"```{lang}\n{js['output'].replace('code.code', 'cogs.eval')}\n```"
-                if result >= 1900 or len(result.split("\n")) >= 40:
+                if len(result) >= 1900 or len(result.split("\n")) >= 40:
                     return await ctx.send(await ctx.paste(result))
                 
                 return await ctx.send(
