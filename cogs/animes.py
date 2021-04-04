@@ -40,24 +40,39 @@ class animes(commands.Cog):
                 embed = discord.Embed(
                     color=self.bot.color,
                     title=anime["english"],
-                    description=anime["description"],
+                    description=anime["description"]
                 )
                 embed.add_field(
                     name="Infos",
-                    value=f"Japanese: {anime['japanese']}\nType: {anime['type']}\nEpisodes: {anime['episodes']}\nStudios: {anime['studios']}\nGenres: {anime['genres']}\nRatings: {anime['rating']}",
-                )
+                    value=(f"Japanese: {anime['japanese']}\n"
+                            f"Type: {anime['type']}\n"
+                            f"Episodes: {anime['episodes']}\n"
+                            f"Studios: {anime['studios']}\n"
+                            f"Genres: {anime['genres']}\n"
+                            f"Ratings: {anime['rating']}"
+                        )
                 embed.add_field(
                     name="Rankings",
-                    value=f"Ranked: {anime['ranked']}\nPopularity: {anime['popularity']}\nMembers: {anime['members']}\nFavorites: {anime['favorites']}",
+                    value=f"Ranked: {anime['ranked']}\n"
+                    f"Popularity: {anime['popularity']}\n"
+                    f"Members: {anime['members']}\n"
+                    f"Favorites: {anime['favorites']}"
                 )
+                characters = []
+                for i in anime["characters_and_actor"]:
+                    if i.get("voice_actor"):
+                        actor = i.get('voice_actor')
+                    else:
+                        actor = i.get('actor')
+                    characters.append(
+                        (
+                            f"Character: {i['character']} - Actor: "
+                            f"{actor}"
+                        )
+                    )
                 embed.add_field(
                     name="Characters and Actor",
-                    value="\n".join(
-                        [
-                            f"Character: {i['character']} - Actor: {i.get('voice_actor') if i.get('voice_actor') else i.get('actor')}"
-                            for i in anime["characters_and_actor"]
-                        ]
-                    ).replace("||", "\||"),
+                    value="\n".join(characters).replace("||", "\||"),
                     inline=False,
                 )
                 embed.set_image(url=anime["img_src"]) if anime.get(
@@ -98,7 +113,9 @@ class animes(commands.Cog):
         embed.set_author(name=title, url=link)
         embed.set_image(url=image)
         embed.set_footer(
-            text=f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
+            text=(
+                f"requested by {ctx.author} response time:"
+                f"{round(self.bot.latency * 1000)} ms"),
             icon_url=ctx.author.avatar_url,
         )
         await ctx.reply(embed=embed)
