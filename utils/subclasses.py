@@ -201,7 +201,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
         await ctx.command._max_concurrency.release()
     except:
       pass
-    await ctx.trigger_typing() if not ctx.command.qualified_name.startswith("jishaku")
+    await ctx.trigger_typing()
     ctx.bot.loop.create_task(self.chunk_(ctx))
   def run(self, *args, **kwargs):
     # self.ipc.start()
