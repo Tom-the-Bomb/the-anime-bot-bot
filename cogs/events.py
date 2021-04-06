@@ -50,8 +50,8 @@ class events(commands.Cog):
 
     @tasks.loop(minutes=1)
     async def clean_up(self):
-        gc.collect()
-        tracemalloc.clear_traces()
+        asyncio.to_thread(gc.collect)
+        asyncio.to_thread(tracemalloc.clear_traces)
 
     @tasks.loop(minutes=30)
     async def gists(self):
