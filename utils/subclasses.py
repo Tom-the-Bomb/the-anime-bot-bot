@@ -154,7 +154,7 @@ class AnimeBot(commands.Bot):
     self.command_list = []
     super().__init__(command_prefix=prefix_get, 
 max_messages=1000,
-connector = self.connector
+connector = self.connector,
 intents=intents, 
 description="""
 |_   _| |__   ___     / \   _ __ (_)_ __ ___   ___  | __ )  ___ | |_ 
