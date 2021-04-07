@@ -147,12 +147,14 @@ class LimitedSizeDict(OrderedDict):
             
 class AnimeBot(commands.Bot):
   def __init__(self):
+    self.connector = aiohttp.TCPConnector(limit=200)
     intents = discord.Intents.default()
     intents.members=True
     # self.ipc = ipc.Server(self, secret_key=ipc_key)
     self.command_list = []
     super().__init__(command_prefix=prefix_get, 
-max_messages=5000, 
+max_messages=1000,
+connector = self.connector
 intents=intents, 
 description="""
 |_   _| |__   ___     / \   _ __ (_)_ __ ___   ___  | __ )  ___ | |_ 
@@ -228,7 +230,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     self.socket_stats = Counter()
     self.command_counter = 0
     self.commandsusages = Counter()
-    self.session = aiohttp.ClientSession(headers={"User-Agent": f"python-requests/2.25.1 The Anime Bot/1.1.0 Python/{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]} aiohttp/{aiohttp.__version__}"})
+    self.session = aiohttp.ClientSession(headers={"User-Agent": f"python-requests/2.25.1 The Anime Bot/1.1.0 Python/{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]} aiohttp/{aiohttp.__version__}"}, connector=self.connector)
     self.mystbin = mystbin.Client(session=self.session)
     self.vacefron_api=vacefron.Client(session=self.session, loop=self.loop)
     self.dag = Client(api_token, session=self.session, loop=self.loop)
