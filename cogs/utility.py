@@ -959,13 +959,16 @@ class utility(commands.Cog):
             return await ctx.send("nope don't even think about it")
         if "**" in thing:
             return await ctx.send("Power not supported")
-        result = str(
+        try:
+            result = str(
             await self.bot.loop.run_in_executor(None, self.calc, thing)
-        )
+            )
+        except:
+            return await ctx.send(math.nan)
         if "None" in result:
-            raise RuntimeError("Access denied")
+            return await ctx.send(math.nan)
         if "Ellipsis" in result:
-            raise RuntimeError("Access denied")
+            return await ctx.send(math.nan)
         if len(result) > 1068:
             await ctx.send(str(await self.bot.mystbin.post(result)))
         else:
