@@ -950,7 +950,7 @@ class utility(commands.Cog):
         thing = (
             thing.replace(" ", "")
             .replace("^", "**")
-            .replace("pi", math.pi)
+            .replace("pi", str(math.pi))
         )
         lists = ['"', "'", "()", ".."]
         if any(i in thing for i in lists):
