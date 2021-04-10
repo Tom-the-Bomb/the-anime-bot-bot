@@ -1,4 +1,5 @@
 from jishaku.paginators import PaginatorEmbedInterface, PaginatorInterface
+import math
 from utils.format import plural
 from utils.asyncstuff import asyncexe
 from utils import fuzzy
@@ -942,14 +943,14 @@ class utility(commands.Cog):
                 raise e
 
     @commands.command()
-    async def math(self, ctx, *, thing: str):
+    async def math(self, ctx, *, thing: lambda x: str(x).lower()):
         """
         Calculate some math
         """
         thing = (
             thing.replace(" ", "")
             .replace("^", "**")
-            .replace("pi", "3.1415926535")
+            .replace("pi", math.pi)
         )
         lists = ['"', "'", "()", ".."]
         if any(i in thing for i in lists):
