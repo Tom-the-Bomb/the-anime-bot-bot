@@ -14,6 +14,7 @@ from io import BytesIO
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
+import contextlib
 import import_expression
 import inspect
 import asyncio
@@ -220,26 +221,18 @@ class owners(commands.Cog):
             "asyncio": asyncio,
             "aiohttp": aiohttp
         }
-        env.update(globals())
-        # modules = import_expression.find_imports(code)
-        # if modules:
-        #     imported_modules = {}
-        #     for i in modules:
-        #         try:
-        #             imported_modules[i] = __import__(i)
-        #         except:
-        #             return await ctx.send(f"can not import modules {i}")
-        #     env.update(imported_modules)
-        to_execute = f"async def execute():\n{textwrap.indent(code, '  ')}"
+        env.update(globals())        to_execute = f"async def execute():\n{textwrap.indent(code, '  ')}"
         try:
             import_expression.exec(to_execute, env)
         except Exception as e:
             return await ctx.send(e)
         to_execute = env["execute"]
+        f = io.StringIO()
         try:
-            result = await to_execute()
+            with contextlib.redirect_stdout(f):
+                result = await to_execute()
         except Exception as e:
-            return await ctx.send(e)
+            return await ctx.send(f"{f.getvalue()}\n{e}")
         if not result:
             return await ctx.send("\u200b")
         await ctx.send(result)
