@@ -240,6 +240,8 @@ class owners(commands.Cog):
             result = await to_execute()
         except Exception as e:
             return await ctx.send(e)
+        if not result:
+            return await ctx.send("\u200b")
         await ctx.send(result)
 
     # @staticmethod
