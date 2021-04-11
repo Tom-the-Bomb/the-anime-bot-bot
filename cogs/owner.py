@@ -12,8 +12,9 @@ from contextlib import redirect_stdout
 from io import BytesIO
 
 from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
+from selenium.webdriver.firefox.options import options
 
+import collections
 import contextlib
 import import_expression
 import inspect
