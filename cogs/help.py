@@ -118,6 +118,12 @@ socket
         # payload = await self.context.bot.wait_for("raw_reaction_add", check=check)
         # await self.context.bot.invoke(copy_context_with(self.context, content="ovo help " + dicts.get(payload.emoji.id)))
         # await message.delete()
+    async def command_not_found(self, string: str):
+        matches = difflib.get_close_matches(string, self.context.bot.command_list)
+        if not matches:
+            return f"Command '{string}' is not found."
+        commands_found = "\n".join(matches[:3])
+        return f"Command '{string}' is not found. Did you mean:\n{commands_found}"
 
 
 class help(commands.Cog):
