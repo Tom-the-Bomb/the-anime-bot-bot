@@ -230,7 +230,7 @@ class owners(commands.Cog):
                 except:
                     return await ctx.send(f"can not import modules {i}")
             env.update(imported_modules)
-        to_execute = f"async def execute():\n{textwrap.indent(body, '  ')}"
+        to_execute = f"async def execute():\n{textwrap.indent(code, '  ')}"
         try:
             exec(to_execute, env)
         except Exception as e:
