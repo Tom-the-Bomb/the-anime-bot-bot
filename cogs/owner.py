@@ -420,7 +420,9 @@ class owners(commands.Cog):
         m = MyMenu()
         await m.start(ctx)
 
-    async def clear_(self, ctx: AnimeContext, number: int):
+    @commands.command()
+    @commands.is_owner()
+    async def clear(self, ctx: AnimeContext, number: int):
         counter = 0
         async for message in ctx.channel.history(limit=1000):
             if message.author.id == ctx.bot.user.id:
@@ -428,15 +430,6 @@ class owners(commands.Cog):
                 counter += 1
                 if counter >= number:
                     break
-        await ctx.send(f"cleared {counter} messages")
-
-    @commands.command()
-    @commands.is_owner()
-    async def clear(self, ctx: AnimeContext, number: int):
-        try:
-            await asyncio.wait_for(self.clear(ctx, number), timeout=10)
-        except asyncio.TimeoutError:
-            await ctx.send("guess what retarded discord ratelimit me again")
 
     @commands.command(aliases=["del"])
     @commands.is_owner()
