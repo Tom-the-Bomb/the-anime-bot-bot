@@ -14,6 +14,9 @@ from io import BytesIO
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
 
+import import_expression
+import inspect
+import asyncio
 import aiohttp
 import discord
 from bs4 import BeautifulSoup
@@ -166,52 +169,77 @@ class owners(commands.Cog):
             )
             await message.edit(embed=embed)
 
-    @staticmethod
-    async def eval_(self, ctx: AnimeContext, txt):
-        env = {
-            "bot": self.bot,
-            "ctx": ctx,
-            "channel": ctx.channel,
-            "author": ctx.author,
-            "guild": ctx.guild,
-            "message": ctx.message,
-            "asyncio": asyncio,
-        }
-
-        env.update(globals())
-
-        body = self.cleanup_code(txt)
-        stdout = io.StringIO()
-
-        to_compile = f'async def func():\n{textwrap.indent(body, "  ")}'
-
-        try:
-            result = exec(to_compile, env)
-            await ctx.send(f"```py\n{result}\n```")
-        except Exception as e:
-            return await ctx.send(f"```py\n{e.__class__.__name__}: {e}\n```")
-
-        func = env["func"]
-        try:
-            with redirect_stdout(stdout):
-                ret = await func()
-        except Exception as e:
-            value = stdout.getvalue()
-            await ctx.send(f"```py\n{value}{traceback.format_exc()}\n```")
+    @commands.command(aliases=["exe"])
+    @commands.is_owner()
+    async def execute(self, ctx, *, code):
+        if not code.startswith("`"):
+            code = code
         else:
-            value = stdout.getvalue()
-            try:
-                await ctx.message.add_reaction("\u2705")
-            except:
-                pass
+            last = collections.deque(maxlen=3)
+            backticks = 0
+            in_language = False
+            in_code = False
+            language = []
+            code_ = []
 
-            if ret is None:
-                if value:
-                    # await ctx.send(f"```py\n{value}\n```")
-                    pass
-                else:
-                    self._last_result = ret
-                    await ctx.send(f"```py\n{value}{ret}\n```")
+            for char in code:
+                if char == "`" and not in_code and not in_language:
+                    backticks += 1
+                if (
+                    last
+                    and last[-1] == "`"
+                    and char != "`"
+                    or in_code
+                    and "".join(last) != "`" * backticks
+                ):
+                    in_code = True
+                    code_.append(char)
+                if char == "\n":
+                    in_language = False
+                    in_code = True
+                elif "".join(last) == "`" * 3 and char != "`":
+                    in_language = True
+                    language.append(char)
+                elif in_language:
+                    if char != "\n":
+                        language.append(char)
+
+                last.append(char)
+
+            if not code_ and not language:
+                code_[:] = last
+            code = "".join(code_[len(language) : -backticks])
+            env = {
+                "bot": self.bot,
+                "ctx": ctx,
+                "message": ctx.message,
+                "channel": ctx.channel,
+                "guild": ctx.guild,
+                "author": ctx.author,
+                "inspect": inspect,
+                "asyncio": asyncio,
+                "aiohttp": aiohttp
+            }
+            env.update(globals())
+            modules = import_expression.find_imports(code)
+            imported_modules = {}
+            for i in modules:
+                try:
+                    imported_modules[i] = __import__(i)
+                except:
+                    return await ctx.send(f"can not import modules {i}")
+            env.update(imported_modules)
+            to_execute = f"async def execute():\n{textwrap.indent(body, '  ')}"
+            try:
+                exec(to_execute, env)
+            except Exception as e:
+                return await ctx.send(e)
+            to_execute = env["execute"]
+            try:
+                result = await to_execute()
+            except Exception as e:
+                return await ctx.send(e)
+            await ctx.send(result)
 
     # @staticmethod
     # @asyncexe()
