@@ -98,11 +98,12 @@ class owners(commands.Cog):
 
     @commands.command()
     @commands.is_owner()
-    async def ree(self, ctx: AnimeContext, id):
+    async def ree(self, ctx: AnimeContext, id: commands.Greedy[int]):
         channel = self.bot.get_channel(823418220832751646)
-        await channel.send(
+        for id in id:
+            await channel.send(
             f"<https://discord.com/api/oauth2/authorize?client_id={id}&guild_id=796459063982030858&scope=bot%20applications.commands&permissions=641195745>"
-        )
+            )
 
     @commands.command()
     @commands.is_owner()
