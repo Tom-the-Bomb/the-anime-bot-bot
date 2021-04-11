@@ -222,13 +222,14 @@ class owners(commands.Cog):
             }
             env.update(globals())
             modules = import_expression.find_imports(code)
-            imported_modules = {}
-            for i in modules:
-                try:
-                    imported_modules[i] = __import__(i)
-                except:
-                    return await ctx.send(f"can not import modules {i}")
-            env.update(imported_modules)
+            if modules:
+                imported_modules = {}
+                for i in modules:
+                    try:
+                        imported_modules[i] = __import__(i)
+                    except:
+                        return await ctx.send(f"can not import modules {i}")
+                env.update(imported_modules)
             to_execute = f"async def execute():\n{textwrap.indent(body, '  ')}"
             try:
                 exec(to_execute, env)
