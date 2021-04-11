@@ -221,7 +221,8 @@ class owners(commands.Cog):
             "asyncio": asyncio,
             "aiohttp": aiohttp
         }
-        env.update(globals())        to_execute = f"async def execute():\n{textwrap.indent(code, '  ')}"
+        env.update(globals())        
+        to_execute = f"async def execute():\n{textwrap.indent(code, '  ')}"
         try:
             import_expression.exec(to_execute, env)
         except Exception as e:
@@ -232,7 +233,7 @@ class owners(commands.Cog):
             with contextlib.redirect_stdout(f):
                 result = await to_execute()
         except Exception as e:
-            return await ctx.send(f"{f.getvalue()}\n{e}")
+            return await ctx.send(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```")
         if not result:
             return await ctx.send("\u200b")
         await ctx.send(result)
