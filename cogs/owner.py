@@ -235,9 +235,9 @@ class owners(commands.Cog):
                 result = await to_execute()
         except Exception as e:
             return await ctx.send(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```")
-        if not result:
+        if not result and not f.getvalue():
             return await ctx.send("\u200b")
-        await ctx.send(result)
+        await ctx.send(f"{f.getvalue()}\n{result})
 
     # @staticmethod
     # @asyncexe()
