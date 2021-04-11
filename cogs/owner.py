@@ -237,6 +237,7 @@ class owners(commands.Cog):
             return await ctx.send(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```")
         if not result and not f.getvalue():
             return await ctx.send("\u200b")
+        result = result or ""
         await ctx.send(f"{f.getvalue()}\n{result}")
 
     # @staticmethod
