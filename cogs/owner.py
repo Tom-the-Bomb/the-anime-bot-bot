@@ -209,38 +209,38 @@ class owners(commands.Cog):
             if not code_ and not language:
                 code_[:] = last
             code = "".join(code_[len(language) : -backticks])
-            env = {
-                "bot": self.bot,
-                "ctx": ctx,
-                "message": ctx.message,
-                "channel": ctx.channel,
-                "guild": ctx.guild,
-                "author": ctx.author,
-                "inspect": inspect,
-                "asyncio": asyncio,
-                "aiohttp": aiohttp
-            }
-            env.update(globals())
-            modules = import_expression.find_imports(code)
-            if modules:
-                imported_modules = {}
-                for i in modules:
-                    try:
-                        imported_modules[i] = __import__(i)
-                    except:
-                        return await ctx.send(f"can not import modules {i}")
-                env.update(imported_modules)
-            to_execute = f"async def execute():\n{textwrap.indent(body, '  ')}"
-            try:
-                exec(to_execute, env)
-            except Exception as e:
-                return await ctx.send(e)
-            to_execute = env["execute"]
-            try:
-                result = await to_execute()
-            except Exception as e:
-                return await ctx.send(e)
-            await ctx.send(result)
+        env = {
+            "bot": self.bot,
+            "ctx": ctx,
+            "message": ctx.message,
+            "channel": ctx.channel,
+            "guild": ctx.guild,
+            "author": ctx.author,
+            "inspect": inspect,
+            "asyncio": asyncio,
+            "aiohttp": aiohttp
+        }
+        env.update(globals())
+        modules = import_expression.find_imports(code)
+        if modules:
+            imported_modules = {}
+            for i in modules:
+                try:
+                    imported_modules[i] = __import__(i)
+                except:
+                    return await ctx.send(f"can not import modules {i}")
+            env.update(imported_modules)
+        to_execute = f"async def execute():\n{textwrap.indent(body, '  ')}"
+        try:
+            exec(to_execute, env)
+        except Exception as e:
+            return await ctx.send(e)
+        to_execute = env["execute"]
+        try:
+            result = await to_execute()
+        except Exception as e:
+            return await ctx.send(e)
+        await ctx.send(result)
 
     # @staticmethod
     # @asyncexe()
