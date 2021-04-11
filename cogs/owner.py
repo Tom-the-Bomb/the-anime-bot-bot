@@ -428,8 +428,10 @@ class owners(commands.Cog):
             if message.author.id == ctx.bot.user.id:
                 await message.delete()
                 counter += 1
-                if counter >= number:
+            if counter >= number:
                     break
+        await ctx.send(f"cleared {number} messages")
+
 
     @commands.command(aliases=["del"])
     @commands.is_owner()
