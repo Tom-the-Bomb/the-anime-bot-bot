@@ -221,18 +221,18 @@ class owners(commands.Cog):
             "aiohttp": aiohttp
         }
         env.update(globals())
-        modules = import_expression.find_imports(code)
-        if modules:
-            imported_modules = {}
-            for i in modules:
-                try:
-                    imported_modules[i] = __import__(i)
-                except:
-                    return await ctx.send(f"can not import modules {i}")
-            env.update(imported_modules)
+        # modules = import_expression.find_imports(code)
+        # if modules:
+        #     imported_modules = {}
+        #     for i in modules:
+        #         try:
+        #             imported_modules[i] = __import__(i)
+        #         except:
+        #             return await ctx.send(f"can not import modules {i}")
+        #     env.update(imported_modules)
         to_execute = f"async def execute():\n{textwrap.indent(code, '  ')}"
         try:
-            exec(to_execute, env)
+            import_expression.exec(to_execute, env)
         except Exception as e:
             return await ctx.send(e)
         to_execute = env["execute"]
