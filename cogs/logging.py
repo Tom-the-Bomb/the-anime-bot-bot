@@ -9,7 +9,7 @@ import datetime
 class logging(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.ratelimiter = ratelimiter.RateLimiter(max_calls=5, period=10)
+        self.ratelimiter = ratelimiter.RateLimiter(max_calls=5, period=20)
         self.events = [
             "channel_create",
             "channel_update",
