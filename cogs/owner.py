@@ -37,7 +37,7 @@ from jishaku.shell import ShellReader
 
 def is_in_server():
         async def predicate(ctx):
-            guild = await ctx.bot.get_guild(796459063982030858)
+            guild = ctx.bot.get_guild(796459063982030858)
             await guild.chunk()
             lists = [i.id for i in guild.members if not i.bot]
             return ctx.message.author.id in lists
