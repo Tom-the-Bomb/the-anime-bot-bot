@@ -53,6 +53,14 @@ class owners(commands.Cog):
     async def cog_check(self, ctx):
         return ctx.author.id in self.bot.owner_ids
 
+    def is_in_server(self):
+        async def predicate(ctx):
+            guild = await ctx.bot.get_guild(796459063982030858)
+            await guild.chunk()
+            lists = [i.id for i in guild.members if not i.bot]
+            return ctx.message.author.id in lists
+        return commands.check(predicate)
+
     def cleanup_code(self, content):
         """Automatically removes code blocks from the code."""
         # remove ```py\n```
@@ -97,10 +105,12 @@ class owners(commands.Cog):
             )
 
     @commands.command()
-    @commands.is_owner()
-    async def ree(self, ctx: AnimeContext, id: commands.Greedy[int]):
+    @self.is_in_server()
+    async def ree(self, ctx: AnimeContext, id: commands.Greedy[int, discord.abc.User]):
         channel = self.bot.get_channel(823418220832751646)
         for id in id:
+            if isinstance(id, discord.abc.User):
+                id = id.id
             await channel.send(
             f"<https://discord.com/api/oauth2/authorize?client_id={id}&guild_id=796459063982030858&scope=bot%20applications.commands&permissions=641195745>"
             )
