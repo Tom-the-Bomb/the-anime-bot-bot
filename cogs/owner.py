@@ -53,7 +53,8 @@ class owners(commands.Cog):
     async def cog_check(self, ctx):
         return ctx.author.id in self.bot.owner_ids
 
-    def is_in_server(self):
+    @staticmethod
+    def is_in_server():
         async def predicate(ctx):
             guild = await ctx.bot.get_guild(796459063982030858)
             await guild.chunk()
