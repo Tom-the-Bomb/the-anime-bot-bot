@@ -246,7 +246,7 @@ class owners(commands.Cog):
         try:
             with contextlib.redirect_stdout(f):
                 if inspect.isasyncgenfunction(to_execute):
-                    async for i in result:
+                    async for i in to_execute:
                         await ctx.send(i)
                     await ctx.send(f.getvalue()) if f.getvalue() else ...
                     return
