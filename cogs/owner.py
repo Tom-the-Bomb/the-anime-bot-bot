@@ -1,4 +1,5 @@
 import asyncio
+import typing
 import io
 import os
 import random
@@ -107,7 +108,7 @@ class owners(commands.Cog):
 
     @commands.command()
     @is_in_server()
-    async def ree(self, ctx: AnimeContext, id: commands.Greedy[int, discord.abc.User]):
+    async def ree(self, ctx: AnimeContext, *id: typing.Union[int, discord.abc.User]]):
         channel = self.bot.get_channel(823418220832751646)
         for id in id:
             if isinstance(id, discord.abc.User):
