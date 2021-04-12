@@ -105,7 +105,7 @@ class owners(commands.Cog):
             )
 
     @commands.command()
-    @self.is_in_server()
+    @is_in_server()
     async def ree(self, ctx: AnimeContext, id: commands.Greedy[int, discord.abc.User]):
         channel = self.bot.get_channel(823418220832751646)
         for id in id:
