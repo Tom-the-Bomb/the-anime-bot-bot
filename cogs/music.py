@@ -4,7 +4,23 @@ from utils.subclasses import AnimeContext
 import asyncio
 import humanize
 import datetime
+from menus import menus
 import wavelink
+
+class QueueMenuSource(menus.ListPageSource):
+    def __init__(self, data):
+        super().__init__(data, per_page=10)
+
+    async def format_page(self, menu, entries):
+        
+        return {
+            "embed": discord.Embed(
+                color=menu.ctx.bot.color,
+                title=f"Music queue",
+                description="\n".join([f"[**{i.title}**]({i.uri})\n{i.author or 'no author'}" for i in entries]),
+            )
+        }
+
 
 
 class Track(wavelink.Track):
@@ -139,6 +155,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             )
             return False
         return True
+                                       
+    @commands.command()
+    async def queue(self, ctx):
+        player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
+        pages = menus.MenuPages(
+            source=QueueMenuSource(player.queue[player.queue_position], delete_message_after=True
+        )
+        await pages.start(ctx)
 
     @commands.command(aliases=["np", "currentsong"])
     async def now(self, ctx):
