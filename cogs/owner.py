@@ -60,7 +60,10 @@ class owners(commands.Cog):
         self.bot = bot
 
     async def cog_check(self, ctx):
-        return ctx.author.id in self.bot.owner_ids
+       if ctx.author.id not in self.bot.owner_ids:
+            raise commands.NotOwner
+        else:
+             return False
 
 
     def cleanup_code(self, content):
@@ -227,6 +230,8 @@ class owners(commands.Cog):
         env = {
             "bot": self.bot,
             "ctx": ctx,
+            "discord": discord,
+            "commands": commands,
             "message": ctx.message,
             "channel": ctx.channel,
             "guild": ctx.guild,
