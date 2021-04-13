@@ -75,10 +75,16 @@ class Player(wavelink.Player):
                 track = Track(track.id, track.info, requester=ctx.author)
                 self.queue.append(track)
             self.now_playing = song.tracks[0]
+            playlist_name = song.data["playlistInfo"]["name"]
+            await ctx.send(
+                f"Added playlist `{playlist_name}` with `{len(song.tracks)}` songs to the queue. "
+            )
+            
         else:
             track = Track(song[0].id, song[0].info, requester=ctx.author)
             self.queue.append(track)
             self.now_playing = track
+            await ctx.send(f"Added `{track}` to the queue.")
 
         await ctx.send(embed=self.make_embed(track))
         self.queue_position += 1
