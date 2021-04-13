@@ -86,7 +86,7 @@ class Player(wavelink.Player):
             self.now_playing = track
             await ctx.send(f"Added `{track}` to the queue.")
 
-        await ctx.send(embed=self.make_embed(self.now_playing))
+        await ctx.send(embed=self.make_embed(Track(self.now_playing.id, self.now_playing.info, requester=ctx.author)))
         self.queue_position += 1
         await self.play(self.now_playing)
         self.ctx = ctx
