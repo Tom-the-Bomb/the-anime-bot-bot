@@ -219,7 +219,10 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
     @commands.command()
     async def play(self, ctx: AnimeContext, *, music):
-        tracks = await self.bot.wavelink.get_tracks(f"ytsearch:{music}")
+        if self.bot.url_regex.fullmatch(music):
+            tracks = await self.bot.wavelink.get_tracks(music)
+        else:
+            tracks = await self.bot.wavelink.get_tracks(f"ytsearch:{music}")
 
         if not tracks:
             return await ctx.send(
