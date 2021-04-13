@@ -60,10 +60,10 @@ class owners(commands.Cog):
         self.bot = bot
 
     async def cog_check(self, ctx):
-       if ctx.author.id not in self.bot.owner_ids:
+        if ctx.author.id not in self.bot.owner_ids:
             raise commands.NotOwner
         else:
-             return False
+            return False
 
 
     def cleanup_code(self, content):
