@@ -63,7 +63,7 @@ class owners(commands.Cog):
         if ctx.author.id not in self.bot.owner_ids:
             raise commands.NotOwner
         else:
-            return False
+            return True
 
 
     def cleanup_code(self, content):
