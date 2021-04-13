@@ -160,7 +160,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     async def queue(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         pages = menus.MenuPages(
-            source=QueueMenuSource(player.queue[player.queue_position], delete_message_after=True
+            source=QueueMenuSource(player.queue[player.queue_position]), delete_message_after=True
         )
         await pages.start(ctx)
 
