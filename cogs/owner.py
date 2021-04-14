@@ -35,14 +35,6 @@ from jishaku.features.baseclass import Feature
 from jishaku.paginators import PaginatorInterface, WrappedPaginator
 from jishaku.shell import ShellReader
 
-def is_in_server():
-        async def predicate(ctx):
-            guild = ctx.bot.get_guild(796459063982030858)
-            await guild.chunk()
-            lists = [i.id for i in guild.members if not i.bot]
-            return ctx.message.author.id in lists
-        return commands.check(predicate)
-
 
 class MyMenu(menus.Menu, timeout=9223372036854775807):
     async def send_initial_message(self, ctx: AnimeContext, channel):
@@ -109,16 +101,6 @@ class owners(commands.Cog):
                 f'```py\n{stderr.decode().replace("jadonvps", "secrect")}\n```'
             )
 
-    @commands.command()
-    @is_in_server()
-    async def ree(self, ctx: AnimeContext, *id: typing.Union[int, discord.abc.User]):
-        channel = self.bot.get_channel(823418220832751646)
-        for id in id:
-            if isinstance(id, discord.abc.User):
-                id = id.id
-            await channel.send(
-            f"<https://discord.com/api/oauth2/authorize?client_id={id}&guild_id=796459063982030858&scope=bot%20applications.commands&permissions=641195745>"
-            )
 
     @commands.command()
     @commands.is_owner()
