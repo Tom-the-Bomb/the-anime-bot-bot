@@ -74,7 +74,7 @@ class Player(wavelink.Player):
             for track in song.tracks:
                 track = Track(track.id, track.info, requester=ctx.author)
                 self.queue.append(track)
-            self.now_playing = song.tracks[0]
+            self.now_playing = Track(song.tracks[0].id, song.tracks[0].info, requester=ctx.author)
             playlist_name = song.data["playlistInfo"]["name"]
             await ctx.send(
                 f"Added playlist `{playlist_name}` with `{len(song.tracks)}` songs to the queue. "
