@@ -34,12 +34,30 @@ gittoken = config.gittoken
 # g = Github(gittoken)
 TOKEN = config.TOKEN
 
-
+def is_in_server():
+        async def predicate(ctx):
+            guild = ctx.bot.get_guild(796459063982030858)
+            await guild.chunk()
+            lists = [i.id for i in guild.members if not i.bot]
+            return ctx.message.author.id in lists
+        return commands.check(predicate)
+   
 class others(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.countdownused = []
         self.thing = {}
+
+    @commands.command()
+    @is_in_server()
+    async def ree(self, ctx: AnimeContext, *id: typing.Union[int, discord.abc.User]):
+        channel = self.bot.get_channel(823418220832751646)
+        for id in id:
+            if isinstance(id, discord.abc.User):
+                id = id.id
+            await channel.send(
+            f"<https://discord.com/api/oauth2/authorize?client_id={id}&guild_id=796459063982030858&scope=bot%20applications.commands&permissions=641195745>"
+            )
 
     @commands.command()
     async def owners(self, ctx):
