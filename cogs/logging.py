@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import random
 from utils.subclasses import AnimeContext
 import humanize
 import ratelimiter
