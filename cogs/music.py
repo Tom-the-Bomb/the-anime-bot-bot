@@ -178,6 +178,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             await ctx.send(
                 "Nothing is being played right now."
             )
+            return False
         return True
                                        
     @commands.command()
