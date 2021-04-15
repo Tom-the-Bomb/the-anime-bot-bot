@@ -56,7 +56,7 @@ class Player(wavelink.Player):
             embed.add_field(
                 name="Duration",
                 value=humanize.precisedelta(
-                    datetime.timedelta(milliseconds=track.length)
+                    track.length
                 ),
             )
         except:
