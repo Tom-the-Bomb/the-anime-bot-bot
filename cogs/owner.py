@@ -139,36 +139,6 @@ class owners(commands.Cog):
             and payload.emoji.name == "\{NBLACK UNIVERSAL RECYCLING SYMBOL}"
         )
 
-    @tasks.loop(minutes=1)
-    async def reactionreload(self):
-        while True:
-            payload = await self.bot.wait_for(
-                "raw_reaction_add", check=self.check
-            )
-            channel = self.bot.get_channel(payload.channel_id)
-            embed = discord.Embed(
-                color=0x00FF6A, description=f"<a:loading:747680523459231834>"
-            )
-            message = await channel.send(embed=embed)
-            list_ = []
-            for file in os.listdir("./cogs"):
-                if file.endswith(".py"):
-                    try:
-                        self.bot.reload_extension(f"cogs.{file[:-3]}")
-                        self.list.append(file[:-3])
-                    except Exception as e:
-                        embed = discord.Embed(
-                            color=0xFF0000,
-                            description=f"Error while reloading cogs \n {e}",
-                        )
-                        return await message.edit(embed=embed)
-            text = "\n <:greenTick:596576670815879169>".join(list_)
-            embed = discord.Embed(
-                color=0x00FF6A,
-                description=f"Reloaded All Cogs \n <:greenTick:596576670815879169> {text}",
-            )
-            await message.edit(embed=embed)
-
     @commands.command(aliases=["exe"])
     @commands.is_owner()
     async def execute(self, ctx, *, code):
