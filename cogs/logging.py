@@ -561,7 +561,7 @@ class logging(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_bulk_message_delete(self, payload):
-        ids = "\n".join(payload.message_ids)
+        ids = "\n".join([str(i) for i in payload.message_ids])
         embed = discord.Embed(
             color=self.bot.color,
             title="Bulk messages deleted",
