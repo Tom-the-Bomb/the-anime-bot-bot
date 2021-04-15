@@ -167,6 +167,8 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 "You must be in a voice channel to use this command."
             )
             return False
+        if ctx.command.qualified_name in ["play", "join"]:
+            return True
         if ctx.author.voice.channel.id != player.channel_id:
             await ctx.send(
                 "You must be in the same voice channel as me to use this command."
