@@ -174,6 +174,10 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 "You must be in the same voice channel as me to use this command."
             )
             return False
+        if ctx.command.qualified_name != "play" and player.now_playing is None:
+            await ctx.send(
+                "Nothing is being played right now."
+            )
         return True
                                        
     @commands.command()
