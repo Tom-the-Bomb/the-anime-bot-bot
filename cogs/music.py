@@ -48,28 +48,35 @@ class Player(wavelink.Player):
         embed = discord.Embed(
             color=0x00FF6A,
             title="Now playing",
-            description=f"now playing: **{track.title}**",
+            description=f"Now playing: **{track.title}**",
         )
         embed.set_thumbnail(url=track.thumb) if track.thumb else ...
         embed.add_field(name="requester", value=track.requester)
-        try:
+        if track.is_stream:
             embed.add_field(
                 name="Duration",
-                value=humanize.precisedelta(
-                    datetime.timedelta(milliseconds=track.length)
-                ),
+                value="Live Stream"
             )
-        except:
-            embed.add_field(
-                name="Duration",
-                value="Duration too long possibly a live stream"
-            )
+        else:
+            try:
+                embed.add_field(
+                    name="Duration",
+                    value=humanize.precisedelta(
+                        datetime.timedelta(milliseconds=track.length)
+                    ),
+                )
+            except:
+                embed.add_field(
+                    name="Duration",
+                    value="Duration too long to display."
+                )
         embed.add_field(
-            name="url", value=track.uri
+            name="Url", value=track.uri
         ) if track.uri else ...
         embed.add_field(
-            name="author", value=track.author
+            name="Author", value=track.author
         ) if track.author else ...
+        footer = f"Youtube ID: {track.ytid or 'None'} Identifier: {track.identifier or 'None'}"
         return embed
 
     async def start(self, ctx: AnimeContext, song):
@@ -206,11 +213,20 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send(f"Connected to {channel.name}")
 
     @commands.command()
+    async def repeat(self, ctx):
+        player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
+        if player.repeat:
+            player.repeat = False
+            return await ctx.send("Unrepeated")
+        player.repeat = True
+        await ctx.send("Repeating the current song")
+                                       
+    @commands.command()
     async def loop(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if player.loop:
             player.loop = False
-            return await ctx.send("unlooped")
+            return await ctx.send("Unlooped")
         player.loop = True
         await ctx.send("looped")
 
