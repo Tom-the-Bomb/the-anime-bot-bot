@@ -162,8 +162,6 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if not ctx.guild:
             raise commands.NoPrivateMessage
-        if not player.is_connected:
-            return True
         if not ctx.author.voice:
             await ctx.send(
                 "You must be in a voice channel to use this command."
