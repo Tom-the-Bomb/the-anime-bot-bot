@@ -51,7 +51,7 @@ class Player(wavelink.Player):
             description=f"Now playing: **{track.title}**",
         )
         embed.set_thumbnail(url=track.thumb) if track.thumb else ...
-        embed.add_field(name="requester", value=track.requester)
+        embed.add_field(name="Requester", value=track.requester)
         if track.is_stream:
             embed.add_field(
                 name="Duration",
@@ -71,7 +71,7 @@ class Player(wavelink.Player):
                     value="Duration too long to display."
                 )
         embed.add_field(
-            name="Url", value=track.uri
+            name="URL", value=track.uri
         ) if track.uri else ...
         embed.add_field(
             name="Author", value=track.author
