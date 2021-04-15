@@ -52,14 +52,20 @@ class Player(wavelink.Player):
         )
         embed.set_thumbnail(url=track.thumb) if track.thumb else ...
         embed.add_field(name="requester", value=track.requester)
+        try:
+            embed.add_field(
+                name="Duration",
+                value=humanize.precisedelta(
+                    datetime.timedelta(milliseconds=int(track.length))
+                ),
+            )
+        except:
+            embed.add_field(
+                name="Duration",
+                value="Duration too long possibly a live stream"
+            )
         embed.add_field(
-            name="Duration",
-            value=humanize.precisedelta(
-                datetime.timedelta(milliseconds=int(track.length))
-            ),
-        )
-        embed.add_field(
-            name="youtube link", value=track.uri
+            name="url", value=track.uri
         ) if track.uri else ...
         embed.add_field(
             name="author", value=track.author
