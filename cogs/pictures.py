@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import ujson
 from utils.subclasses import AnimeContext
 import re
 import ratelimiter
@@ -188,7 +189,7 @@ class pictures(commands.Cog):
         async with self.bot.session.post(
             "https://captionbot.azurewebsites.net/api/messages",
             headers={"Content-Type": "application/json; charset=utf-8"},
-            data=json.dumps(data),
+            data=ujson.dumps(data),
         ) as resp:
             text = await resp.text()
             embed = discord.Embed(color=self.bot.color, title=text)
