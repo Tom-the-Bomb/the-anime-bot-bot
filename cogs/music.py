@@ -127,23 +127,23 @@ class Player(wavelink.Player):
         await ctx.send(embed=self.make_embed(Track(self.now_playing.id, self.now_playing.info, requester=ctx.author)))
         self.queue_position += 1
         await self.play(self.now_playing)
-        await asyncio.sleep(3)
-        if not player.is_playing:
-            self.queue = []
-            new_track = await ctx.bot.wavelink.get_tracks(f"scsearch:{music}")
-            if new_track:
-                if isinstance(new_track, wavelink.TrackPlaylist):
-                    for track in new_track.tracks:
-                        track = Track(track.id, track.info, requester=ctx.author)
-                        self.queue.append(track)
-                    self.now_playing = Track(new_track.tracks[0].id, new_track.tracks[0].info, requester=ctx.author)
-                    playlist_name = new_track.data["playlistInfo"]["name"]
+        # await asyncio.sleep(3)
+        # if not player.is_playing:
+        #     self.queue = []
+        #     new_track = await ctx.bot.wavelink.get_tracks(f"scsearch:{music}")
+        #     if new_track:
+        #         if isinstance(new_track, wavelink.TrackPlaylist):
+        #             for track in new_track.tracks:
+        #                 track = Track(track.id, track.info, requester=ctx.author)
+        #                 self.queue.append(track)
+        #             self.now_playing = Track(new_track.tracks[0].id, new_track.tracks[0].info, requester=ctx.author)
+        #             playlist_name = new_track.data["playlistInfo"]["name"]
                     
-                else:
-                    track = Track(new_track[0].id, new_track[0].info, requester=ctx.author)
-                    self.queue.append(track)
-                    self.now_playing = track
-            await self.play(self.now_playing)
+        #         else:
+        #             track = Track(new_track[0].id, new_track[0].info, requester=ctx.author)
+        #             self.queue.append(track)
+        #             self.now_playing = track
+        #     await self.play(self.now_playing)
         self.ctx = ctx
         self.started = True
 
@@ -196,14 +196,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             )
         except:
             raise NoNodesAvaiable
-
+    @wavelink.WavelinkMixin.listener("on_track_exception")
+    async def on_node_event(self, node, event):
+        await event.player.ctx.send(event.error)
     @wavelink.WavelinkMixin.listener("on_track_stuck")
     @wavelink.WavelinkMixin.listener("on_track_end")
-    @wavelink.WavelinkMixin.listener("on_track_exception")
     async def on_node_event(self, node, event):
         async with event.player.retry:
             await event.player.do_next()
-            await asyncio.sleep(30)
 
     async def cog_check(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
@@ -374,6 +374,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             track = Track(tracks[0].id, tracks[0].info, requester=ctx.author)
             player.queue.append(track)
             await ctx.send(f"Added `{track}` to the queue.")
+        
 
     @commands.command(aliases=["resume"])
     async def unpause(self, ctx):
