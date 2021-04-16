@@ -32,67 +32,29 @@ class pictures(commands.Cog):
         avatar = kwargs.get("avatar", True)
         check = kwargs.get("check", True)
         if ctx.message.reference:
-            if ctx.message.reference.cached_message:
-                if (
-                    ctx.message.reference.cached_message.embeds
-                    and ctx.message.reference.cached_message.embeds[0].type == "image"
-                ):
-                    url = ctx.message.reference.cached_message.embeds[
-                        0
-                    ].thumbnail.proxy_url
+            message = ctx.message.reference.resolved
+            if message.embeds and message.embeds[0].type == "image":
+                url = message.embeds[0].thumbnail.proxy_url
+                url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                return url
+            elif message.embeds and message.embeds[0].type == "rich":
+                if message.embeds[0].image.proxy_url:
+                    url = message.embeds[0].image.proxy_url
                     url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
-                elif (
-                    ctx.message.reference.cached_message.embeds
-                    and ctx.message.reference.cached_message.embeds[0].type == "rich"
-                ):
-                    if ctx.message.reference.cached_message.embeds[0].image.proxy_url:
-                        url = ctx.message.reference.cached_message.embeds[
-                            0
-                        ].image.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                        return url
-                    elif ctx.message.reference.cached_message.embeds[
-                        0
-                    ].thumbnail.proxy_url:
-                        url = ctx.message.reference.cached_message.embeds[
-                            0
-                        ].thumbnail.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                        return url
-                elif (
-                    ctx.message.reference.cached_message.attachments
-                    and ctx.message.reference.cached_message.attachments[0].width
-                    and ctx.message.reference.cached_message.attachments[0].height
-                ):
-                    url = ctx.message.reference.cached_message.attachments[0].proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                    return url
-            else:
-                message = await self.bot.get_channel(
-                    ctx.message.reference.channel_id
-                ).fetch_message(ctx.message.reference.message_id)
-                if message.embeds and message.embeds[0].type == "image":
+                elif message.embeds[0].thumbnail.proxy_url:
                     url = message.embeds[0].thumbnail.proxy_url
                     url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
-                elif message.embeds and message.embeds[0].type == "rich":
-                    if message.embeds[0].image.proxy_url:
-                        url = message.embeds[0].image.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                        return url
-                    elif message.embeds[0].thumbnail.proxy_url:
-                        url = message.embeds[0].thumbnail.proxy_url
-                        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                        return url
-                elif (
-                    message.attachments
-                    and message.attachments[0].width
-                    and message.attachments[0].height
-                ):
-                    url = message.attachments[0].proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                    return url
+            elif (
+                message.attachments
+                and message.attachments[0].width
+                and message.attachments[0].height
+            ):
+                url = message.attachments[0].proxy_url
+                url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                return url
+               
         if (
             ctx.message.attachments
             and ctx.message.attachments[0].width
