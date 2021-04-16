@@ -215,8 +215,7 @@ class fun(commands.Cog):
         async with self.bot.session.get(
             "https://meme-api.herokuapp.com/gimme"
         ) as resp:
-            meme = await resp.text()
-            meme = json.loads(meme)
+            meme = await resp.json()
             if meme["nsfw"] == True:
                 return True
             link = meme["postLink"]
@@ -230,8 +229,7 @@ class fun(commands.Cog):
         async with self.bot.session.get(
             f"https://api.tenor.com/v1/search?q=animehug&key={tenor_API_key}&limit=50&contentfilter=low"
         ) as resp:
-            text = await resp.text()
-            text = json.loads(text)
+            text = await resp.json()
             for i in text["results"]:
                 for x in i["media"]:
                     gifs.append(x["gif"]["url"])
@@ -242,8 +240,7 @@ class fun(commands.Cog):
         async with self.bot.session.get(
             f"https://api.tenor.com/v1/search?q={search}&key={tenor_API_key}&limit=50&contentfilter=low"
         ) as resp:
-            text = await resp.text()
-            text = json.loads(text)
+            text = await resp.json()
             for i in text["results"]:
                 for x in i["media"]:
                     tenor_.append(x["gif"]["url"])
@@ -253,8 +250,7 @@ class fun(commands.Cog):
         async with self.bot.session.get(
             f"https://meme-api.herokuapp.com/gimme/{text}"
         ) as resp:
-            meme = await resp.text()
-            meme = json.loads(meme)
+            meme = await resp.json()
             if meme["nsfw"] == True:
                 return True
             link = meme["postLink"]

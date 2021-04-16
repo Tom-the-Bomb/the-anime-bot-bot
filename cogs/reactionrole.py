@@ -1,4 +1,5 @@
 import discord
+import orjson
 from discord.ext import commands
 from utils.subclasses import AnimeContext
 import typing
@@ -17,7 +18,7 @@ class reactionrole(commands.Cog):
         if roles:
             for i in roles:
                 self.bot.reactionrole_cache[i["guild_id"]] = {}
-                self.bot.reactionrole_cache[i["guild_id"]] = json.loads(
+                self.bot.reactionrole_cache[i["guild_id"]] = orjson.loads(
                     i["roles"]
                 )
 
@@ -62,7 +63,7 @@ class reactionrole(commands.Cog):
         await self.bot.db.execute(
             "INSERT INTO reactionrole VALUES ($1, $2) ON CONFLICT DO UPDATE SET roles = $2",
             ctx.guild.id,
-            json.dumps(self.bot.reactionrole_cache[ctx.guild.id][message_id]),
+            orjson.dumps(self.bot.reactionrole_cache[ctx.guild.id][message_id]),
         )
         await ctx.send(
             f"Sucess role is {role.mention}, message id is {message_id}, reaction is {str(reaction)}"

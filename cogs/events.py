@@ -1,4 +1,5 @@
 from utils.asyncstuff import asyncexe
+import orjson
 from utils.subclasses import AnimeContext
 import tracemalloc
 import gc
@@ -78,7 +79,7 @@ class events(commands.Cog):
                 "Authorization": f"{authorizationdeal}",
                 "Accept": "application/vnd.github.inertia-preview+json",
             },
-            data=json.dumps(data),
+            json=data,
         ) as resp:
             pass
 
@@ -150,11 +151,9 @@ class events(commands.Cog):
                 "Authorization": discord_extreme_list,
                 "Content-Type": "application/json",
             },
-            data=json.dumps(
-                {
+            json={
                     "guildCount": len(bot.guilds),
-                }
-            ),
+                },
         ) as resp:
             pass
         await bot.session.post(
@@ -163,7 +162,7 @@ class events(commands.Cog):
                 "Content-Type": "application/json",
                 "Authorization": bots_for_discord,
             },
-            data=json.dumps({"server_count": len(bot.guilds)}),
+            json={"server_count": len(bot.guilds)},
         )
         await bot.session.post(
             "https://api.botlist.space/v1/bots/787927476177076234",
@@ -171,7 +170,7 @@ class events(commands.Cog):
                 "Authorization": botlist_space,
                 "Content-Type": "application/json",
             },
-            data=json.dumps({"server_count": len(bot.guilds)}),
+            json={"server_count": len(bot.guilds)},
         )
 
     @commands.Cog.listener()
@@ -359,7 +358,7 @@ class events(commands.Cog):
     @commands.Cog.listener()
     async def on_socket_raw_send(self, payload):
         try:
-            payload = json.loads(payload)
+            payload = orjson.loads(payload)
         except:
             return
         if payload.get("op") == 2:

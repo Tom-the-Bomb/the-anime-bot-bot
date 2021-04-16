@@ -102,8 +102,7 @@ class animes(commands.Cog):
         async with self.bot.session.get(
             "https://meme-api.herokuapp.com/gimme/Animemes"
         ) as resp:
-            meme = await resp.text()
-            meme = json.loads(meme)
+            meme = await resp.json()
             if meme["nsfw"]:
                 return True
             link = meme["postLink"]
