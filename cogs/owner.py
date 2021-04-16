@@ -30,8 +30,7 @@ from selenium import webdriver
 from utils.asyncstuff import asyncexe
 from utils.embed import embedbase
 
-from jishaku.exception_handling import ReplResponseReactor
-from jishaku.features.baseclass import Feature
+from jishaku.exception_handling import ReactionProcedureTimer
 from jishaku.paginators import PaginatorInterface, WrappedPaginator
 from jishaku.shell import ShellReader
 
@@ -194,26 +193,27 @@ class owners(commands.Cog):
         }
         env.update(globals())        
         to_execute = f"async def execute():\n{textwrap.indent(code, '  ')}"
-        try:
-            import_expression.exec(to_execute, env)
-        except Exception as e:
-            return await ctx.send(e)
-        to_execute = env["execute"]
-        f = io.StringIO()
-        try:
-            with contextlib.redirect_stdout(f):
-                if inspect.isasyncgenfunction(to_execute):
-                    async for i in to_execute():
-                        await ctx.send(i)
-                    await ctx.send(f.getvalue()) if f.getvalue() else ...
-                    return
-                result = await to_execute()
-        except Exception as e:
-            return await ctx.send(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```")
-        if not result and not f.getvalue():
-            return await ctx.send("\u200b")
-        result = result or ""
-        await ctx.send(f"{f.getvalue()}\n{result}")
+        async with ReactionProcedureTimer:
+            try:
+                import_expression.exec(to_execute, env)
+            except Exception as e:
+                return await ctx.send(e)
+            to_execute = env["execute"]
+            f = io.StringIO()
+            try:
+                with contextlib.redirect_stdout(f):
+                    if inspect.isasyncgenfunction(to_execute):
+                        async for i in to_execute():
+                            await ctx.send(i)
+                        await ctx.send(f.getvalue()) if f.getvalue() else ...
+                        return
+                    result = await to_execute()
+            except Exception as e:
+                return await ctx.send(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```")
+            if not result and not f.getvalue():
+                return await ctx.send("\u200b")
+            result = result or ""
+            await ctx.send(f"{f.getvalue()}\n{result}")
 
     # @staticmethod
     # @asyncexe()
