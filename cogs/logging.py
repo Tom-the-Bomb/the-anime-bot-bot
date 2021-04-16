@@ -371,7 +371,7 @@ class logging(commands.Cog):
                 description=f"{', '.join(new_emojis)}",
                 timestamp=datetime.datetime.utcnow(),
             )
-            await self.send_webhook(after.guild.id, embed, "emojis_update")
+            await self.send_webhook(guild.id, embed, "emojis_update")
         else:
             c = [str(i) for i in before if i not in after]
             embed = discord.Embed(
@@ -380,7 +380,7 @@ class logging(commands.Cog):
                 description=f"{', '.join(removed_emojis)}",
                 timestamp=datetime.datetime.utcnow(),
             )
-            await self.send_webhook(after.guild.id, embed, "emojis_update")
+            await self.send_webhook(guild.id, embed, "emojis_update")
 
     @commands.Cog.listener()
     async def on_member_update(self, before, after):
