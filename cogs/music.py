@@ -159,7 +159,8 @@ class Player(wavelink.Player):
                 song = self.queue[self.queue_position]
             else:
                 await asyncio.sleep(10)
-                return await self.destroy()
+                if not self.is_playing:
+                    return await self.destroy()
 
         self.queue_position += 1
         self.now_playing = song
