@@ -1,5 +1,5 @@
 from utils.asyncstuff import asyncexe
-import orjson
+import ujson
 from utils.subclasses import AnimeContext
 import tracemalloc
 import gc
@@ -358,7 +358,7 @@ class events(commands.Cog):
     @commands.Cog.listener()
     async def on_socket_raw_send(self, payload):
         try:
-            payload = orjson.loads(payload)
+            payload = ujson.loads(payload)
         except:
             return
         if payload.get("op") == 2:

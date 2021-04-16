@@ -1,5 +1,5 @@
 import itertools
-import orjson
+import ujson
 import asyncpg
 import config
 import os
@@ -231,7 +231,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     self.socket_stats = Counter()
     self.command_counter = 0
     self.commandsusages = Counter()
-    self.session = aiohttp.ClientSession(headers={"User-Agent": f"python-requests/2.25.1 The Anime Bot/1.1.0 Python/{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]} aiohttp/{aiohttp.__version__}"}, connector=self.connector, json_serialize=orjson.dumps)
+    self.session = aiohttp.ClientSession(headers={"User-Agent": f"python-requests/2.25.1 The Anime Bot/1.1.0 Python/{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]} aiohttp/{aiohttp.__version__}"}, connector=self.connector, json_serialize=ujson.dumps)
     self.mystbin = mystbin.Client(session=self.session)
     self.vacefron_api=vacefron.Client(session=self.session, loop=self.loop)
     self.dag = Client(api_token, session=self.session, loop=self.loop)

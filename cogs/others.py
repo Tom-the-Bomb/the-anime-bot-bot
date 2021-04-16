@@ -1,5 +1,5 @@
 import asyncio
-import orjson
+import ujson
 import typing
 import config
 import base64
@@ -265,7 +265,7 @@ class others(commands.Cog):
         # raw = str(resp).replace("|", "\u200b|").replace("*", "\u200b*").replace("`", "\u200b`").replace("~", "\u200b~").replace(">", "\u200b>").replace('"', "'")
         # raw = json.loads(raw)
         # raw = json.dumps(raw, indent=4)
-        raw = orjson.dumps(raw, indent=4)
+        raw = ujson.dumps(raw, indent=4)
         raw = (
             raw.replace("|", "\u200b|")
             .replace("*", "\u200b*")
