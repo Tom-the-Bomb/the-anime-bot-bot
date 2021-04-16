@@ -190,6 +190,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 player.queue.append(track)
                 player.now_playing = track
                 await player.play(player.now_playing)
+                await player.ctx.send(embed=player.make_embed(player.now_playing))
             else:
                 await player.ctx.send("We are so sorry, Youtube have ratelimited us so we can't play anything. We have tried search on SoundCloud but we can't find anything please try a direct link to soundcloud.")
     @wavelink.WavelinkMixin.listener("on_track_stuck")
