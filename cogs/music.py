@@ -197,7 +197,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         except:
             raise NoNodesAvaiable
     @wavelink.WavelinkMixin.listener("on_track_exception")
-    async def on_node_event(self, node, event):
+    async def on_node_event_(self, node, event):
         await event.player.ctx.send(event.error)
     @wavelink.WavelinkMixin.listener("on_track_stuck")
     @wavelink.WavelinkMixin.listener("on_track_end")
