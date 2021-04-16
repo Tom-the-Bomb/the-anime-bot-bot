@@ -141,7 +141,7 @@ class Player(wavelink.Player):
                 return await self.destroy()
 
         self.queue_position += 1
-
+        self.now_playing = song
         await self.play(song)
         await self.ctx.send(embed=self.make_embed(song))
 
