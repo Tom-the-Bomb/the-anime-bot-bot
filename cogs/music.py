@@ -7,6 +7,9 @@ import datetime
 from menus import menus
 import wavelink
 
+class NoNodesAvaiable(Exception):
+    pass
+
 class QueueMenuSource(menus.ListPageSource):
     def __init__(self, data):
         super().__init__(data, per_page=10)
@@ -164,14 +167,17 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
     async def start_nodes(self):
         await self.bot.wait_until_ready()
-        node = await self.bot.wavelink.initiate_node(
-            host="127.0.0.1",
-            port=2333,
-            rest_uri="http://127.0.0.1:2333",
-            password="youshallnotpass",
-            identifier="MAIN",
-            region="us_central",
-        )
+        try:
+            node = await self.bot.wavelink.initiate_node(
+                host="127.0.0.1",
+                port=2333,
+                rest_uri="http://127.0.0.1:2333",
+                password="youshallnotpass",
+                identifier="MAIN",
+                region="us_central",
+            )
+        except:
+            raise NoNodesAvaiable
 
     @wavelink.WavelinkMixin.listener("on_track_stuck")
     @wavelink.WavelinkMixin.listener("on_track_end")
