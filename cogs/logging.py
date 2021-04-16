@@ -373,7 +373,7 @@ class logging(commands.Cog):
             )
             await self.send_webhook(guild.id, embed, "emojis_update")
         else:
-            c = [str(i) for i in before if i not in after]
+            removed_emojis = [str(i) for i in before if i not in after]
             embed = discord.Embed(
                 color=self.bot.color,
                 title="Emojis Removed",
