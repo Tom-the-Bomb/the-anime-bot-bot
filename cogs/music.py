@@ -104,7 +104,7 @@ class Player(wavelink.Player):
         embed.set_footer(text=footer)
         return embed
 
-    async def start(self, ctx: AnimeContext, song):
+    async def start(self, ctx: AnimeContext, song, music):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if not player.is_connected:
             await ctx.invoke(self.connect_)
@@ -127,6 +127,22 @@ class Player(wavelink.Player):
         await ctx.send(embed=self.make_embed(Track(self.now_playing.id, self.now_playing.info, requester=ctx.author)))
         self.queue_position += 1
         await self.play(self.now_playing)
+        await asyncio.sleep(3)
+        if not player.is_playing:
+            new_track = await ctx.bot.wavelink.get_tracks(f"scsearch:{music}"):
+            if new_track:
+                if isinstance(new_track, wavelink.TrackPlaylist):
+                    for track in new_track.tracks:
+                        track = Track(track.id, track.info, requester=ctx.author)
+                        self.queue.append(track)
+                    self.now_playing = Track(new_track.tracks[0].id, new_track.tracks[0].info, requester=ctx.author)
+                    playlist_name = new_track.data["playlistInfo"]["name"]
+                    
+                else:
+                    track = Track(new_track[0].id, new_track[0].info, requester=ctx.author)
+                    self.queue.append(track)
+                    self.now_playing = track
+            await self.play(self.now_playing)
         self.ctx = ctx
         self.started = True
 
@@ -343,7 +359,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         if not player.is_connected:
             await ctx.invoke(self.join)
         if not player.started:
-            return await player.start(ctx, tracks)
+            return await player.start(ctx, tracks, music)
         if isinstance(tracks, wavelink.TrackPlaylist):
             for track in tracks.tracks:
                 track = Track(track.id, track.info, requester=ctx.author)
