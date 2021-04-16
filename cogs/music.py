@@ -183,7 +183,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     async def on_node_event_(self, node, event):
         if "YouTube (429)" in event.error:
             player = event.player
-            new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{event.track.title}")
+            new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.query}")
             if new_track:
                 track = Track(new_track[0].id, new_track[0].info, requester=ctx.author)
                 player.queue.append(track)
@@ -350,6 +350,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 "Could not find any songs with that query. maybe you made a typo?"
             )
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
+        player.query = music
         if not player.is_connected:
             await ctx.invoke(self.join)
         if not player.started:
