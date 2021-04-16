@@ -96,7 +96,7 @@ class Player(wavelink.Player):
         embed.add_field(
             name="Author", value=track.author
         ) if track.author else ...
-        footer = f"Youtube ID: {track.ytid or 'None'} Identifier: {track.identifier or 'None'} ID: {track.id}"
+        footer = f"Youtube ID: {track.ytid or 'None'} Identifier: {track.identifier or 'None'}"
         embed.set_footer(text=footer)
         return embed
 
