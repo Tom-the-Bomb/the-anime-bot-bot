@@ -188,11 +188,13 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.query}")
             await player.ctx.send("2")
             if new_track:
+                await player.ctx.send("3")
                 track = Track(new_track[0].id, new_track[0].info, requester=ctx.author)
                 player.queue.append(track)
+                await player.ctx.send("4")
                 player.now_playing = track
                 await player.play(player.now_playing)
-                await player.ctx.send("3")
+                await player.ctx.send("5")
             else:
                 await player.ctx.send("We are so sorry, Youtube have ratelimited us so we can't play anything. We have tried search on SoundCloud but we can't find anything please try a direct link to soundcloud.")
     @wavelink.WavelinkMixin.listener("on_track_stuck")
