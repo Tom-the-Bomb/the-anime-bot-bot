@@ -45,11 +45,29 @@ class Player(wavelink.Player):
         self.queue_position = 0
 
     def make_embed(self, track):
+        
         embed = discord.Embed(
             color=0x00FF6A,
             title="Now playing",
-            description=f"Now playing: **{track.title}**",
+            description=f"Now playing: **{track.title}**\nVolume: {self.volume}",
         )
+        try:
+            duration = humanize.precisedelta(
+                        datetime.timedelta(milliseconds=track.length)
+                    )
+        except:
+            duration = "Duration too long"
+        try:
+            position = humanize.precisedelta(
+                        datetime.timedelta(milliseconds=self.position)
+                    )
+        except:
+            position = "Position too long"
+        try:
+            percentage = 100 / track.length * self.position
+            bar =  "`" + "⬜"*int(20/100*percentage) + "⬛"*int(20-(20/100*percentage)) + "`"
+        embed.description = embed.description += f"\nCurrent Position: {position} / {duration}" if not track.is_live else ...
+        embed.description = embed.description += f"\n{bar}" if not track.is_live else ...
         embed.set_thumbnail(url=track.thumb) if track.thumb else ...
         embed.add_field(name="Requester", value=track.requester)
         if track.is_stream:
@@ -76,7 +94,7 @@ class Player(wavelink.Player):
         embed.add_field(
             name="Author", value=track.author
         ) if track.author else ...
-        footer = f"Youtube ID: {track.ytid or 'None'} Identifier: {track.identifier or 'None'}"
+        footer = f"Youtube ID: {track.ytid or 'None'} Identifier: {track.identifier or 'None'} ID: {track.id}"
         embed.set_footer(text=footer)
         return embed
 
