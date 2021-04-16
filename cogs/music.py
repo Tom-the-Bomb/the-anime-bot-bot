@@ -36,6 +36,7 @@ class Player(wavelink.Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.now_playing = None
+        self.retry = asyncio.Lock()
         self.started = False
         self.is_waiting = True
         self.repeat = False
@@ -176,7 +177,9 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     @wavelink.WavelinkMixin.listener("on_track_end")
     @wavelink.WavelinkMixin.listener("on_track_exception")
     async def on_node_event(self, node, event):
-        await event.player.do_next()
+        async with event.player.retry:
+            await event.player.do_next()
+            await asyncio.sleep(30)
 
     async def cog_check(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
