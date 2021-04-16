@@ -40,6 +40,7 @@ class Player(wavelink.Player):
         super().__init__(*args, **kwargs)
         self.now_playing = None
         self.retry = asyncio.Lock()
+        self.query = None
         self.started = False
         self.is_waiting = True
         self.repeat = False
