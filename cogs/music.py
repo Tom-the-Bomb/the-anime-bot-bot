@@ -194,7 +194,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 player.now_playing = track
                 await player.play(player.now_playing)
                 await player.ctx.send(embed=player.make_embed(player.now_playing))
-                await player.ctx.send("Because of youtube ratelimited us we search the song on soundcloud so the result might be unexpected try to search more presice example include the author name etc")
+                await player.ctx.send("Because of youtube ratelimited us we search the song on soundcloud so the result might be unexpected try to search more precise example include the author name etc")
             else:
                 await player.ctx.send("We are so sorry, Youtube have ratelimited us so we can't play anything. We have tried search on SoundCloud but we can't find anything please try a direct link to soundcloud.")
     @wavelink.WavelinkMixin.listener("on_track_stuck")
