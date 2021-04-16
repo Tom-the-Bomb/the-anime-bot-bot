@@ -184,13 +184,17 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     async def on_node_event_(self, node, event):
         if "YouTube (429)" in event.error:
             player = event.player
-            new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.query}")
+            if player.bot.url_regex.fullmatch(player.query):
+                new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.track.title}")
+            else:
+                new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.query}")
             if new_track:
                 track = Track(new_track[0].id, new_track[0].info, requester=player.ctx.author)
                 player.queue.append(track)
                 player.now_playing = track
                 await player.play(player.now_playing)
                 await player.ctx.send(embed=player.make_embed(player.now_playing))
+                await player.ctx.send("Because of youtube ratelimited us we search the song on soundcloud so the result might be unexpected try to search more presice example include the author name etc")
             else:
                 await player.ctx.send("We are so sorry, Youtube have ratelimited us so we can't play anything. We have tried search on SoundCloud but we can't find anything please try a direct link to soundcloud.")
     @wavelink.WavelinkMixin.listener("on_track_stuck")
