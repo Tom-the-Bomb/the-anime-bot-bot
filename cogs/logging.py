@@ -296,7 +296,7 @@ class logging(commands.Cog):
             await self.send_webhook(after.guild.id, embed, "role_update")
         if before.permissions != after.permissions:
             changed_permission = [
-                (i, v) for i, v in dict(after).items() if dict(before)[i] != v
+                (i, v) for i, v in dict(after.permissions).items() if dict(before.permissions)[i] != v
             ]
             to_display = []
             for i, v in changed_permission:
