@@ -129,7 +129,7 @@ class Player(wavelink.Player):
         await self.play(self.now_playing)
         await asyncio.sleep(3)
         if not player.is_playing:
-            new_track = await ctx.bot.wavelink.get_tracks(f"scsearch:{music}"):
+            new_track = await ctx.bot.wavelink.get_tracks(f"scsearch:{music}")
             if new_track:
                 if isinstance(new_track, wavelink.TrackPlaylist):
                     for track in new_track.tracks:
