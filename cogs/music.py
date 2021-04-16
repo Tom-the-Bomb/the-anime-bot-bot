@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import ujson
 from utils.subclasses import AnimeContext
 import asyncio
 import humanize
@@ -157,6 +158,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         self.bot = bot
         if not hasattr(bot, "wavelink"):
             self.bot.wavelink = wavelink.Client(bot=self.bot)
+            self.bot.wavelink.set_serializer(ujson.dumps)
 
         self.bot.loop.create_task(self.start_nodes())
 
