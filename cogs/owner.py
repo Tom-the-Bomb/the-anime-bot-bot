@@ -193,7 +193,7 @@ class owners(commands.Cog):
         }
         env.update(globals())        
         to_execute = f"async def execute():\n{textwrap.indent(code, '  ')}"
-        async with ReactionProcedureTimer:
+        async with ReactionProcedureTimer(ctx.message, self.bot.loop):
             try:
                 import_expression.exec(to_execute, env)
             except Exception as e:
