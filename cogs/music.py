@@ -127,23 +127,6 @@ class Player(wavelink.Player):
         await ctx.send(embed=self.make_embed(Track(self.now_playing.id, self.now_playing.info, requester=ctx.author)))
         self.queue_position += 1
         await self.play(self.now_playing)
-        # await asyncio.sleep(3)
-        # if not player.is_playing:
-        #     self.queue = []
-        #     new_track = await ctx.bot.wavelink.get_tracks(f"scsearch:{music}")
-        #     if new_track:
-        #         if isinstance(new_track, wavelink.TrackPlaylist):
-        #             for track in new_track.tracks:
-        #                 track = Track(track.id, track.info, requester=ctx.author)
-        #                 self.queue.append(track)
-        #             self.now_playing = Track(new_track.tracks[0].id, new_track.tracks[0].info, requester=ctx.author)
-        #             playlist_name = new_track.data["playlistInfo"]["name"]
-                    
-        #         else:
-        #             track = Track(new_track[0].id, new_track[0].info, requester=ctx.author)
-        #             self.queue.append(track)
-        #             self.now_playing = track
-        #     await self.play(self.now_playing)
         self.ctx = ctx
         self.started = True
 
@@ -198,7 +181,26 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             raise NoNodesAvaiable
     @wavelink.WavelinkMixin.listener("on_track_exception")
     async def on_node_event_(self, node, event):
-        await event.player.ctx.send(event.error)
+        if event.error == "This IP address has been blocked by YouTube (429).":
+            player = event.player
+            if not player.is_playing:
+                player.queue = []
+                new_track = await ctx.bot.wavelink.get_tracks(f"scsearch:{event.track.title}")
+                if new_track:
+                    if isinstance(new_track, wavelink.TrackPlaylist):
+                        for track in new_track.tracks:
+                            track = Track(track.id, track.info, requester=ctx.author)
+                            player.queue.append(track)
+                        player.now_playing = Track(new_track.tracks[0].id, new_track.tracks[0].info, requester=ctx.author)
+                        playlist_name = new_track.data["playlistInfo"]["name"]
+                        
+                    else:
+                        track = Track(new_track[0].id, new_track[0].info, requester=ctx.author)
+                        player.queue.append(track)
+                        player.now_playing = track
+                    await player.play(player.now_playing)
+                else:
+                    await player.ctx.send("We are so sorry, Youtube have ratelimited us so we can't play anything. We have tried search on SoundCloud but we can't find anything please try a direct link to soundcloud.")
     @wavelink.WavelinkMixin.listener("on_track_stuck")
     @wavelink.WavelinkMixin.listener("on_track_end")
     async def on_node_event(self, node, event):
