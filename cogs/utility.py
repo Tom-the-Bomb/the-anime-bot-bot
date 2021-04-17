@@ -1231,7 +1231,7 @@ class utility(commands.Cog):
         if isinstance(member1, discord.Member):
             embed = discord.Embed(color=self.bot.color)
             embed.set_author(name=member1)
-            if member1.bot == True:
+            if member1.bot:
                 bot = "<:greenTick:596576670815879169>"
             else:
                 bot = "<:redTick:596576672149667840>"
@@ -1243,44 +1243,44 @@ class utility(commands.Cog):
                 premium_since = humanize.naturaldate(member1.premium_since)
             else:
                 premium_since = "Member not boosting server"
-            if member1.public_flags.staff == True:
+            if member1.public_flags.staff:
                 staff = "<:greenTick:596576670815879169>"
             else:
                 staff = "<:redTick:596576672149667840>"
-            if member1.public_flags.partner == True:
+            if member1.public_flags.partner:
                 partner = "<:greenTick:596576670815879169>"
             else:
                 partner = "<:redTick:596576672149667840>"
-            if member1.public_flags.hypesquad == False:
+            if not member1.public_flags.hypesquad:
                 hypesquad = "<:redTick:596576672149667840>"
-            if member1.public_flags.bug_hunter == True:
+            if member1.public_flags.bug_hunter:
                 bug_hunter = "<:greenTick:596576670815879169>"
             else:
                 bug_hunter = "<:redTick:596576672149667840>"
-            if member1.public_flags.hypesquad_bravery == True:
+            if member1.public_flags.hypesquad_bravery:
                 hypesquad = "Hypesquad Bravery"
-            if member1.public_flags.hypesquad_brilliance == True:
+            if member1.public_flags.hypesquad_brilliance:
                 hypesquad = "Hypesquad Brilliance"
-            if member1.public_flags.hypesquad_balance == True:
+            if member1.public_flags.hypesquad_balance:
                 hypesquad = "Hypesquad Balance"
-            if member1.public_flags.early_supporter == True:
+            if member1.public_flags.early_supporter:
                 early_supporter = "<:greenTick:596576670815879169>"
             else:
                 early_supporter = "<:redTick:596576672149667840>"
-            if member1.public_flags.bug_hunter_level_2 == True:
+            if member1.public_flags.bug_hunter_level_2:
                 bug_hunter = (
                     "<:greenTick:596576670815879169> Bug hunter level 2"
                 )
-            if member1.public_flags.verified_bot == True:
+            if member1.public_flags.verified_bot:
                 verified_bot = "<:greenTick:596576670815879169>"
             else:
                 verified_bot = "<:redTick:596576672149667840>"
-            if member1.public_flags.verified_bot_developer == True:
+            if member1.public_flags.verified_bot_developer:
                 verified_bot_developer = "<:greenTick:596576670815879169>"
             else:
                 verified_bot_developer = "<:redTick:596576672149667840>"
             toprole = member1.top_role.name
-            if member1.is_avatar_animated() == True:
+            if member1.is_avatar_animated():
                 avatar_animated = "<:greenTick:596576670815879169>"
             else:
                 avatar_animated = "<:redTick:596576672149667840>"
@@ -1298,43 +1298,43 @@ class utility(commands.Cog):
                 bot = "<:redTick:596576672149667840>"
             created_at = humanize.naturaldate(member1.created_at)
             id = member1.id
-            if member1.public_flags.staff == True:
+            if member1.public_flags.staff:
                 staff = "<:greenTick:596576670815879169>"
             else:
                 staff = "<:redTick:596576672149667840>"
-            if member1.public_flags.partner == True:
+            if member1.public_flags.partner:
                 partner = "<:greenTick:596576670815879169>"
             else:
                 partner = "<:redTick:596576672149667840>"
-            if member1.public_flags.hypesquad == False:
+            if not member1.public_flags.hypesquad:
                 hypesquad = "<:redTick:596576672149667840>"
-            if member1.public_flags.bug_hunter == True:
+            if member1.public_flags.bug_hunter:
                 bug_hunter = "<:greenTick:596576670815879169>"
             else:
                 bug_hunter = "<:redTick:596576672149667840>"
-            if member1.public_flags.hypesquad_bravery == True:
+            if member1.public_flags.hypesquad_bravery:
                 hypesquad = "Hypesquad Bravery"
-            if member1.public_flags.hypesquad_brilliance == True:
+            if member1.public_flags.hypesquad_brilliance:
                 hypesquad = "Hypesquad Brilliance"
-            if member1.public_flags.hypesquad_balance == True:
+            if member1.public_flags.hypesquad_balance:
                 hypesquad = "Hypesquad Balance"
-            if member1.public_flags.early_supporter == True:
+            if member1.public_flags.early_supporter:
                 early_supporter = "<:greenTick:596576670815879169>"
             else:
                 early_supporter = "<:redTick:596576672149667840>"
-            if member1.public_flags.bug_hunter_level_2 == True:
+            if member1.public_flags.bug_hunter_level_2:
                 bug_hunter = (
                     "<:greenTick:596576670815879169> Bug hunter level 2"
                 )
-            if member1.public_flags.verified_bot == True:
+            if member1.public_flags.verified_bot:
                 verified_bot = "<:greenTick:596576670815879169>"
             else:
                 verified_bot = "<:redTick:596576672149667840>"
-            if member1.public_flags.verified_bot_developer == True:
+            if member1.public_flags.verified_bot_developer:
                 verified_bot_developer = "<:greenTick:596576670815879169>"
             else:
                 verified_bot_developer = "<:redTick:596576672149667840>"
-            if member1.is_avatar_animated() == True:
+            if member1.is_avatar_animated():
                 avatar_animated = "<:greenTick:596576670815879169>"
             else:
                 avatar_animated = "<:redTick:596576672149667840>"
