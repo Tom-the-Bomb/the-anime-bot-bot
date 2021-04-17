@@ -133,6 +133,8 @@ class Player(wavelink.Player):
         self.started = True
 
     async def do_next(self):
+        if not any([not i.bot for i in self.bot.get_channel(self.channel.id).members]):
+            return await self.destory()
         if self.repeat:
             self.queue_position -= 1
 
@@ -207,7 +209,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
     async def cog_check(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
-        if ctx.command.qualified_name == "node_info":
+        if ctx.command.qualified_name in ["play", "join", "node_info"]:
             return True
         if not ctx.guild:
             raise commands.NoPrivateMessage
@@ -216,8 +218,6 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 "You must be in a voice channel to use this command."
             )
             return False
-        if ctx.command.qualified_name in ["play", "join"]:
-            return True
         if ctx.author.voice.channel.id != player.channel_id:
             await ctx.send(
                 "You must be in the same voice channel as me to use this command."
