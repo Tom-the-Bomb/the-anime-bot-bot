@@ -209,12 +209,12 @@ class owners(commands.Cog):
                         return
                     result = await to_execute()
             except Exception as e:
-                return await ctx.send(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```")
+                return await ctx.send(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```") if len(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```") <= 2000 else await ctx.send(await ctx.paste(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```"))
             if result == " " and not f.getvalue():
                 return await ctx.send("\u200b")
             result = result or ""
             if result or f.getvalue():
-                await ctx.send(f"{f.getvalue()}\n{result}")
+                await ctx.send(f"{f.getvalue()}\n{result}") if len(f"{f.getvalue()}\n{result}") <= 2000 else await ctx.send(await ctx.paste(f"{f.getvalue()}\n{result}"))
 
     # @staticmethod
     # @asyncexe()
