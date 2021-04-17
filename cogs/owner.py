@@ -427,7 +427,7 @@ class owners(commands.Cog):
     @commands.is_owner()
     async def clear(self, ctx: AnimeContext, number: int):
         counter = 0
-        async for message in ctx.channel.history(limit=1000):
+        async for message in ctx.channel.history(limit=100):
             if message.author.id == ctx.bot.user.id:
                 await message.delete()
                 counter += 1
