@@ -213,7 +213,8 @@ class owners(commands.Cog):
             if result == " " and not f.getvalue():
                 return await ctx.send("\u200b")
             result = result or ""
-            await ctx.send(f"{f.getvalue()}\n{result}")
+            if result or f.getvalue():
+                await ctx.send(f"{f.getvalue()}\n{result}")
 
     # @staticmethod
     # @asyncexe()
