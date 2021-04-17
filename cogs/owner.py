@@ -342,11 +342,11 @@ class owners(commands.Cog):
     @commands.is_owner()
     async def speedtest(self, ctx):
         async with ReplResponseReactor(ctx.message):
-            with ShellReader("speedtest-cli") as reader:
+            with ShellReader("speedtest-cli --simple") as reader:
                 prefix = "```" + reader.highlight
 
                 paginator = WrappedPaginator(prefix=prefix, max_size=1975)
-                paginator.add_line(f"{reader.ps1} 'speedtest-cli'\n")
+                paginator.add_line(f"{reader.ps1} 'speedtest-cli --simple'\n")
 
                 interface = PaginatorInterface(
                     ctx.bot, paginator, owner=ctx.author
