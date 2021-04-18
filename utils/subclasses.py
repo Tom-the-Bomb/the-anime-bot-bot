@@ -60,7 +60,6 @@ class AnimeContext(commands.Context):
     return embed
   async def ovoly(self, msg):
     ovo = msg.replace("l", "v").replace("L", "v").replace("r", "v").replace("R", "v")
-    print(self)
     return f"{ovo} ovo"
   async def get_paste(self, link):
     try:
@@ -83,6 +82,7 @@ class AnimeContext(commands.Context):
         return msg
       else:
         message = await super().send(content, **kwargs)
+        self.bot._message_cache[self.message.id] = message
         return message
     else:
       message = await super().send(content, **kwargs)
