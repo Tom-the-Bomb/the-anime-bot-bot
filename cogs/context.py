@@ -1,5 +1,5 @@
 import discord
-from discord.ext impot commands
+from discord.ext import commands
 from utils.subclasses import AnimeContext
 
 def setup(bot):
