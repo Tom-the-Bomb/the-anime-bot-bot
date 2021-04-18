@@ -336,7 +336,7 @@ class events(commands.Cog):
         if self.bot.to_delete_message_cache.get(payload.message_id):
             for i in self.bot.to_delete_message_cache.get(payload.message_id):
                 try:
-                    await self.bot.http.delete_message(payload.channel_id, payload.message_id)
+                    await self.bot.http.delete_message(payload.channel_id, i)
                 except:
                     pass
             del self.bot.to_delete_message_cache[payload.message_id]
