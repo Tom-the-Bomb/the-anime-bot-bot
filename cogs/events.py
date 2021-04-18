@@ -85,7 +85,7 @@ class events(commands.Cog):
 
     @tasks.loop(seconds=30)
     async def graph(self):
-        await self.wait_until_ready()
+        await self.bot.wait_until_ready()
         with open("socket.csv", "a") as f:
             writer_object = writer(f)
 
