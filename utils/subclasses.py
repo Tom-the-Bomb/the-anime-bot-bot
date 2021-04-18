@@ -76,32 +76,31 @@ class AnimeContext(commands.Context):
     if self.message.id in self.bot._message_cache:
       if self.message.edited_at:
         msg = self.bot._message_cache[self.message.id]
-        if content and "embed" in kwargs:
-          kwargs.pop("embed")
         await msg.edit(content=content, **kwargs)
         return msg
       else:
         message = await super().send(content, **kwargs)
-        self.bot._message_cache[self.message.id] = message
+        self.bot.to_delete_message_cache[self.message.id].append(message.id)
         return message
     else:
       message = await super().send(content, **kwargs)
       self.bot._message_cache[self.message.id] = message
+      self.bot.to_delete_message_cache[self.message.id] = [message.id]
       return message
   async def reply(self, content=None, **kwargs):
     if self.message.id in self.bot._message_cache:
       if self.message.edited_at:
         msg = self.bot._message_cache[self.message.id]
-        if content and "embed" in kwargs:
-          kwargs.pop("embed")
         await msg.edit(content=content, **kwargs)
         return msg
       else:
         message = await super().send(content, **kwargs)
+        self.bot.to_delete_message_cache[self.message.id].append(message.id)
         return message
     else:
       message = await super().reply(content, **kwargs)
       self.bot._message_cache[self.message.id] = message
+      self.bot.to_delete_message_cache[self.message.id] = [message.id]
       return message
 class AnimeMessage(discord.Message):
   pass
@@ -224,6 +223,7 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
     self.concurrency = []
     self.color = 0x00ff6a
     self.psutil_process = psutil.Process()
+    self.to_delete_message_cache = {}
     self._message_cache = {} 
     self.prefixes = {}
     self.socket_receive = 0

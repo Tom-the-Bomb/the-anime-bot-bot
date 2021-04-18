@@ -319,24 +319,21 @@ class events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_bulk_message_delete(self, payload):
-        pass
-
-    @staticmethod
-    @asyncexe()
-    def on_message_delete_(self, message):
-        self.bot._message_cache.pop(message.id)
+        for i in payload.message_ids:
+            if self.bot.to_delete_message_cache.get(i):
+                for i in self.bot.to_delete_message_cache.get(i):
+                    await self.bot.http.delete_message(payload.channel_id, i)
+                del self.bot.to_delete_message_cache[i]
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
-        try:
-            await self.bot._message_cache.get(message.id).delete()
-            await self.on_message_delete_(self, message)
-        except:
-            pass
-
+        pass
     @commands.Cog.listener()
     async def on_raw_message_delete(self, payload):
-        pass
+        if self.bot.to_delete_message_cache.get(payload.message_id):
+            for i in self.bot.to_delete_message_cache.get(payload.message_id):
+                await self.bot.http.delete_message(payload.channel_id, payload.message_id)
+            del self.bot.to_delete_message_cache[payload.message_id]
 
     @commands.Cog.listener()
     async def on_bulk_message_delete(self, messages):
