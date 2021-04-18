@@ -260,8 +260,8 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
   def get_message(self, message_id):
     return self._connection._get_message(message_id)
 
-  async def get_context(self, message, *, cls=AnimeContext):
-    return await super().get_context(message, cls=cls)
+  async def get_context(self, message, *, cls=None):
+    return await super().get_context(message, cls=self.context)
   async def is_ratelimited(self):
     result = await self.is_ws_ratelimited()
     return result
