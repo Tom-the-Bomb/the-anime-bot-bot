@@ -133,7 +133,7 @@ class Player(wavelink.Player):
         self.started = True
 
     async def do_next(self):
-        if not any([not i.bot for i in self.bot.get(self.channel_id).members]):
+        if not any([not i.bot for i in self.bot.get_channel(self.channel_id).members]):
             return await self.destory()
         if self.repeat:
             self.queue_position -= 1
