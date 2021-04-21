@@ -189,7 +189,10 @@ class pictures(commands.Cog):
         
     @commands.group(invoke_without_command=True)
     async def qr(self, ctx, *, thing):
-        pic = await self.qr_enc(thing)
+        try:
+            pic = await self.qr_enc(thing)
+        except:
+            return await ctx.send("Too big big")
         await ctx.send(file=discord.File(pic, "qrcode.png"))
 
     @qr.command(name="decode")
@@ -203,7 +206,10 @@ class pictures(commands.Cog):
         url = await self.get_url(ctx, thing)
         async with self.bot.session.get(url) as resp:
             bytes_ = BytesIO(await resp.read())
-            data = await self.qr_dec(bytes_)
+            try:
+                data = await self.qr_dec(bytes_)
+            except:
+                return await ctx.send("Can't regonize qrcode.")
             embed = discord.Embed(color=self.bot.color, description=data)
             await ctx.send(embed=embed)
             
