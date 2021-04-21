@@ -3,8 +3,7 @@ from discord.ext import commands
 import ujson
 from utils.subclasses import AnimeContext
 from qrcode.image.pure import PymagingImage
-import qrcode
-import pyzbar
+from pyzbar.pyzbar import decode
 import re
 import ratelimiter
 import config
@@ -183,8 +182,8 @@ class pictures(commands.Cog):
         return pic
     @asyncexe()
     def qr_dec(self, bytes_):
-        with Image.open(bytes_) as img:
-            data = pyzbar.pyzbar.decode(img).data.decode("utf-8")
+        with Image.open(bytes_):
+            data = decode(img).data.decode("utf-8")
             return data
         
     @commands.group(invoke_without_command=True)
