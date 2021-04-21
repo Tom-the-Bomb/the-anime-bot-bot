@@ -209,7 +209,7 @@ class pictures(commands.Cog):
             try:
                 data = await self.qr_dec(bytes_)
             except:
-                return await ctx.send("Can't regonize qrcode.")
+                return await ctx.send("Can't regonize qrcode")
             embed = discord.Embed(color=self.bot.color, description=data)
             await ctx.send(embed=embed)
             
