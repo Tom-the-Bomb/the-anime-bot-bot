@@ -184,7 +184,7 @@ class pictures(commands.Cog):
     @asyncexe()
     def qr_dec(self, bytes_):
         with Image.open(bytes_) as img:
-            data = pyzbar.decode(img).data.decode("utf-8")
+            data = pyzbar.pyzbar.decode(img).data.decode("utf-8")
             return data
         
     @commands.group(invoke_without_command=True)
