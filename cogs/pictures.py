@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import ujson
+import qrcode
 from utils.subclasses import AnimeContext
 from qrcode.image.pure import PymagingImage
 from pyzbar.pyzbar import decode
