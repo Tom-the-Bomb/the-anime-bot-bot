@@ -182,7 +182,7 @@ class pictures(commands.Cog):
         return pic
     @asyncexe()
     def qr_dec(self, bytes_):
-        with Image.open(bytes_):
+        with Image.open(bytes_) as img:
             data = decode(img).data.decode("utf-8")
             return data
         
