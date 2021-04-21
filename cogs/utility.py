@@ -621,7 +621,7 @@ class utility(commands.Cog):
     async def qr(self, ctx, *, thing):
         q = qrcode.make(thing, image_factory=PymagingImage)
         pic = BytesIO()
-        q.save(pic, "png")
+        q.save(pic)
         pic.seek(0)
         await ctx.send(file=discord.File(pic, "qrcode.png"))
 
