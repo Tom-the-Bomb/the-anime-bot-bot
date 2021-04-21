@@ -625,8 +625,8 @@ class utility(commands.Cog):
         pic.seek(0)
         await ctx.send(file=discord.File(pic, "qrcode.png"))
 
-    @qrcode.command(name="decode")
-    async def qrcode_decode(self, ctx, *, link):
+    @qr.command(name="decode")
+    async def qr_decode(self, ctx, *, link):
         if link.startswith("https"):
             async with self.bot.session.get(link) as resp:
                 byte_ = await resp.read()
