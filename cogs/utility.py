@@ -30,9 +30,6 @@ from translate import Translator
 from utils.subclasses import AnimeContext
 from discord.ext import commands
 from bs4 import BeautifulSoup
-from qrcode.image.pure import PymagingImage
-import qrcode
-import pyzbar
 import flags
 import discord
 import cse
@@ -616,28 +613,6 @@ class utility(commands.Cog):
             embed.add_field(name="Package", value=Package, inline=False)
             embed.add_field(name="Author", value=Author, inline=False)
             await ctx.send(embed=embed)
-
-    @commands.group(invoke_without_command=True)
-    async def qr(self, ctx, *, thing):
-        q = qrcode.make(thing, image_factory=PymagingImage)
-        pic = BytesIO()
-        q.save(pic)
-        pic.seek(0)
-        await ctx.send(file=discord.File(pic, "qrcode.png"))
-
-    @qr.command(name="decode")
-    async def qr_decode(self, ctx, *, link):
-        if link.startswith("https"):
-            async with self.bot.session.get(link) as resp:
-                byte_ = await resp.read()
-                byte_ = base64.b64decode
-                pic = np.frombuffer(byte_, dtype=np.uint8)
-                img = cv2.imread(pic, flags=1)
-                detector = cv2.QRCodeDetector()
-                data, bbox, straight_qrcode = detector.detectAndDecode(img)
-                await ctx.send(data)
-                # qr = decode(pic)
-                # await ctx.send(qr.data)
 
     @staticmethod
     @asyncexe()
