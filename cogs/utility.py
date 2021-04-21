@@ -30,8 +30,9 @@ from translate import Translator
 from utils.subclasses import AnimeContext
 from discord.ext import commands
 from bs4 import BeautifulSoup
-import requests
-import pyqrcode
+from qrcode.image.pure import PymagingImage
+import qrcode
+import pyzbar
 import flags
 import discord
 import cse
@@ -617,10 +618,10 @@ class utility(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.group(invoke_without_command=True)
-    async def qrcode(self, ctx, *, thing):
-        q = pyqrcode.create(thing)
+    async def qr(self, ctx, *, thing):
+        q = qrcode.make(thing, image_factory=PymagingImage)
         pic = BytesIO()
-        q.png(pic, scale=6)
+        q.save(pic, "png")
         pic.seek(0)
         await ctx.send(file=discord.File(pic, "qrcode.png"))
 
