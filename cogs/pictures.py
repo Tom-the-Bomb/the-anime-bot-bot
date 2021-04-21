@@ -2,6 +2,9 @@ import discord
 from discord.ext import commands
 import ujson
 from utils.subclasses import AnimeContext
+from qrcode.image.pure import PymagingImage
+import qrcode
+import pyzbar
 import re
 import ratelimiter
 import config
@@ -171,6 +174,40 @@ class pictures(commands.Cog):
         )
         igif.seek(0)
         return igif
+    @asyncexe()
+    def qr_enc(self, thing):
+        q = qrcode.make(thing, image_factory=PymagingImage)
+        pic = BytesIO()
+        q.save(pic)
+        pic.seek(0)
+        return pic
+    @asyncexe()
+    def qr_dec(self, bytes_):
+        with Image.open(bytes_) as img:
+            data = pyzbar.decode(img).data.decode("utf-8")
+            return data
+        
+    @commands.group(invoke_without_command=True)
+    async def qr(self, ctx, *, thing):
+        pic = await self.qr_enc(thing)
+        await ctx.send(file=discord.File(pic, "qrcode.png"))
+
+    @qr.command(name="decode")
+    async def qr_decode(self, ctx, thing: typing.Union[
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
+        ] = None,):
+        url = await self.get_url(ctx, thing)
+        async with self.bot.session.get(url) as resp:
+            bytes_ = BytesIO(await resp.read())
+            data = await self.qr_dec(bytes_)
+            embed = discord.Embed(color=self.bot.color, description=data)
+            await ctx.send(embed=embed)
+            
+        
     
     @commands.command()
     async def caption(
