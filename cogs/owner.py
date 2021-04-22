@@ -263,52 +263,16 @@ class owners(commands.Cog):
     @commands.is_nsfw()
     async def takepic(self, ctx: AnimeContext, *, website: str):
         """
-        Disclaimer: even we already have nsfw check in sfw channel but we don't guarantee that is completely safe if anyone ever used the bot to screenshot nsfw website in sfw channel. We have 0 responsibility to that
+        take picture of website
         """
         website = website.replace("<", "").replace(">", "")
         if not website.startswith("http"):
             return await ctx.send("not a valid website")
-        async with self.bot.session.get(website) as resp:
-            if resp.status != 200:
-                return await ctx.send(
-                    f"can not screenshot that website status code: `{resp.status}`"
-                )
-            soup = BeautifulSoup(await resp.text(), features="lxml")
-            canonical = soup.find("link", {"rel": "canonical"})
-            website_ = (
-                str(resp.real_url)
-                if canonical is None
-                else str(canonical["href"])
-            )
-        if ctx.channel.nsfw == False:
-            lists = [
-                "dick",
-                "pussy",
-                "horny",
-                "porn",
-                "cum",
-                "cunt",
-                "cock",
-                "penis",
-                "hole",
-                "fuck",
-                "shit",
-                "bitch",
-                "gore",
-                "nsfw",
-            ]
-            if any(i in website_ for i in lists):
-                return await ctx.send(
-                    "Can not search nsfw words in non nsfw channel"
-                )
-        lists2 = ["ip", "i+p", "ipv4", "ipv6"]
-        if any(i in website_ for i in lists2):
-            return await ctx.send("can not screenshot that website")
         async with self.bot.session.get(
             f"https://image.thum.io/get/png/{website}"
         ) as resp:
             pic = BytesIO(await resp.read())
-        await ctx.send(file=discord.File(pic, f"website_{website}.png"))
+        await ctx.send(file=discord.File(pic, f"website_screemshot_{website}.png"))
 
     @commands.command()
     @commands.is_owner()
