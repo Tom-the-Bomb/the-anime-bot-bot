@@ -99,17 +99,7 @@ class owners(commands.Cog):
             await ctx.send(
                 f'```py\n{stderr.decode().replace("jadonvps", "secrect")}\n```'
             )
-
-
-    @commands.command()
-    @commands.is_owner()
-    async def ss(self, ctx: AnimeContext, website: str):
-        driver = webdriver.Chrome("/home/cryptex/the-anime-bot-bot/chromedriver")
-        await self.bot.loop.run_in_executor(None, driver.get, website)
-        bytes_ = BytesIO(driver.get_screenshot_as_png())
-        file = discord.File(bytes_, filename="screnshot.png")
-        await ctx.send(file=file)
-
+           
     @commands.command(aliases=["sync"])
     @commands.is_owner()
     async def pull(self, ctx):
