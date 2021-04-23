@@ -328,8 +328,8 @@ class events(commands.Cog):
         pass
     @commands.Cog.listener()
     async def on_raw_message_delete(self, payload):
-        if payload.get("guild_id"):
-            if self.bot.get_channel(payload.channel_id).guild:
+        if self.bot.to_delete_message_cache.get(payload.message_id):
+            if payload.get("guild_id"):
                 try:
                     await self.bot.get_channel(payload.channel_id).delete_messages(self.bot.to_delete_message_cache.get(payload.message_id))
                 except discord.Forbidden:
