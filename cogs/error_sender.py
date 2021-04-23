@@ -30,14 +30,12 @@ class error_sender(commands.Cog):
         ]
         formater = prettify_exceptions.DefaultFormatter()
         exception = formater.format_exception(
-            type(error),
-            error,
-            error.__traceback__
+            type(error), error, error.__traceback__
         )
         embed = discord.Embed(
             color=0xFF0000,
             title="An error occured",
-            description=f"```py\n{''.join(exception)}\n```"
+            description=f"```py\n{''.join(exception)}\n```",
         )
         [
             embed.add_field(

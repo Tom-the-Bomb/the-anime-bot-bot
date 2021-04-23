@@ -537,8 +537,12 @@ class utility(commands.Cog):
                     )
                 result = f"```{lang}\n{js['output'].replace('code.code', 'cogs.eval')}\n```"
                 if len(result) >= 1900 or len(result.split("\n")) >= 40:
-                    return await ctx.send(await ctx.paste(f"{js['output'].replace('code.code', 'cogs.eval')}"))
-                
+                    return await ctx.send(
+                        await ctx.paste(
+                            f"{js['output'].replace('code.code', 'cogs.eval')}"
+                        )
+                    )
+
                 return await ctx.send(
                     f"```{lang}\n{js['output'].replace('code.code', 'cogs.eval')}\n```"
                 )
@@ -938,7 +942,7 @@ class utility(commands.Cog):
             return await ctx.send("Power not supported")
         try:
             result = str(
-            await self.bot.loop.run_in_executor(None, self.calc, thing)
+                await self.bot.loop.run_in_executor(None, self.calc, thing)
             )
         except:
             return await ctx.send(math.nan)

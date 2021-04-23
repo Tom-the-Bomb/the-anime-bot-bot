@@ -62,14 +62,11 @@ class animes(commands.Cog):
                             f"Members: {anime['members']}\n"
                             f"Favorites: {anime['favorites']}"
                         )
-                    )
+                    ),
                 )
                 characters = []
                 for i in anime["characters_and_actor"]:
-                    if i.get("voice_actor"):
-                        actor = i.get("voice_actor")
-                    else:
-                        actor = i.get("actor")
+                    actor = i.get("voice_actor") or i.get("actor")
                     characters.append(
                         (f"Character: {i['character']} - Actor: " f"{actor}")
                     )

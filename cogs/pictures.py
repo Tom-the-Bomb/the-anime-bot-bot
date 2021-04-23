@@ -28,7 +28,9 @@ authorizationthing = config.ksoft
 class pictures(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.bot_cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=1, period=6)
+        self.bot_cdn_ratelimiter = ratelimiter.RateLimiter(
+            max_calls=1, period=6
+        )
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
 
@@ -44,11 +46,15 @@ class pictures(commands.Cog):
             elif message.embeds and message.embeds[0].type == "rich":
                 if message.embeds[0].image.proxy_url:
                     url = message.embeds[0].image.proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    url = url.replace(
+                        "cdn.discordapp.com", "media.discordapp.net"
+                    )
                     return url
                 elif message.embeds[0].thumbnail.proxy_url:
                     url = message.embeds[0].thumbnail.proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    url = url.replace(
+                        "cdn.discordapp.com", "media.discordapp.net"
+                    )
                     return url
             elif (
                 message.attachments
@@ -58,7 +64,7 @@ class pictures(commands.Cog):
                 url = message.attachments[0].proxy_url
                 url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                 return url
-               
+
         if (
             ctx.message.attachments
             and ctx.message.attachments[0].width
@@ -116,7 +122,9 @@ class pictures(commands.Cog):
                     "https://idevision.net/api/cdn",
                     headers={
                         "Authorization": config.idevision,
-                        "File-Name": ree.split(str(resp.url).split("/")[-1])[0],
+                        "File-Name": ree.split(str(resp.url).split("/")[-1])[
+                            0
+                        ],
                     },
                     data=resp.content,
                 ) as resp:
@@ -174,6 +182,7 @@ class pictures(commands.Cog):
         )
         igif.seek(0)
         return igif
+
     @asyncexe()
     def qr_enc(self, thing):
         q = qrcode.make(thing, image_factory=PymagingImage)
@@ -181,12 +190,13 @@ class pictures(commands.Cog):
         q.save(pic)
         pic.seek(0)
         return pic
+
     @asyncexe()
     def qr_dec(self, bytes_):
         with Image.open(bytes_) as img:
             data = decode(img)[0].data.decode("utf-8")
             return data
-        
+
     @commands.group(invoke_without_command=True)
     async def qr(self, ctx, *, thing):
         try:
@@ -196,13 +206,17 @@ class pictures(commands.Cog):
         await ctx.send(file=discord.File(pic, "qrcode.png"))
 
     @qr.command(name="decode")
-    async def qr_decode(self, ctx, thing: typing.Union[
+    async def qr_decode(
+        self,
+        ctx,
+        thing: typing.Union[
             discord.Member,
             discord.User,
             discord.PartialEmoji,
             discord.Emoji,
             str,
-        ] = None,):
+        ] = None,
+    ):
         url = await self.get_url(ctx, thing)
         async with self.bot.session.get(url) as resp:
             bytes_ = BytesIO(await resp.read())
@@ -212,9 +226,7 @@ class pictures(commands.Cog):
                 return await ctx.send("Can't regonize qrcode")
             embed = discord.Embed(color=self.bot.color, description=data)
             await ctx.send(embed=embed)
-            
-        
-    
+
     @commands.command()
     async def caption(
         self,
@@ -248,7 +260,11 @@ class pictures(commands.Cog):
         self,
         ctx: AnimeContext,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         url = await self.get_url(ctx, thing)
@@ -259,7 +275,11 @@ class pictures(commands.Cog):
         self,
         ctx: AnimeContext,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         url = await self.get_url(ctx, thing)
@@ -270,7 +290,11 @@ class pictures(commands.Cog):
         self,
         ctx: AnimeContext,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         url = await self.get_url(ctx, thing)
@@ -294,20 +318,32 @@ class pictures(commands.Cog):
         ctx: AnimeContext,
         woman: typing.Optional[
             typing.Union[
-                discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+                discord.Member,
+                discord.User,
+                discord.PartialEmoji,
+                discord.Emoji,
+                str,
             ]
         ],
         cat: typing.Optional[
             typing.Union[
-                discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+                discord.Member,
+                discord.User,
+                discord.PartialEmoji,
+                discord.Emoji,
+                str,
             ]
         ],
     ):
         url = await self.get_url(ctx, woman)
         url1 = await self.get_url(ctx, cat)
-        pic = await self.bot.vacefron_api.woman_yelling_at_cat(woman=url, cat=url1)
+        pic = await self.bot.vacefron_api.woman_yelling_at_cat(
+            woman=url, cat=url1
+        )
         await ctx.send(
-            file=discord.File(await pic.read(), filename=f"woman_yelling_at_cat.png")
+            file=discord.File(
+                await pic.read(), filename=f"woman_yelling_at_cat.png"
+            )
         )
 
     @commands.command()
@@ -319,11 +355,16 @@ class pictures(commands.Cog):
 
     @commands.command()
     async def npc(
-        self, ctx, text1: str = "You gotta enter something", text2: str = "yeye"
+        self,
+        ctx,
+        text1: str = "You gotta enter something",
+        text2: str = "yeye",
     ):
         pic = await self.bot.vacefron_api.npc(text1, text2)
         await ctx.send(
-            file=discord.File(await pic.read(), filename=f"npc_{text1}_{text2}.png")
+            file=discord.File(
+                await pic.read(), filename=f"npc_{text1}_{text2}.png"
+            )
         )
 
     @commands.command()
@@ -333,7 +374,8 @@ class pictures(commands.Cog):
         pic = await self.bot.vacefron_api.ejected(name, color, imposter)
         await ctx.send(
             file=discord.File(
-                await pic.read(), filename=f"among_us_{name}_{color}_{imposter}.png"
+                await pic.read(),
+                filename=f"among_us_{name}_{color}_{imposter}.png",
             )
         )
 
@@ -345,7 +387,9 @@ class pictures(commands.Cog):
             ) as resp:
                 pic = BytesIO(await resp.read())
         else:
-            async with self.bot.session.get("https://picsum.photos/3840/2160") as resp:
+            async with self.bot.session.get(
+                "https://picsum.photos/3840/2160"
+            ) as resp:
                 pic = BytesIO(await resp.read())
         await ctx.send(file=discord.File(pic, filename="randompicture.png"))
 
@@ -355,17 +399,23 @@ class pictures(commands.Cog):
         Google do you mean picture
         Usage: ovo dym \"anime bot is bad bot\" \"anime bot is good bot\"
         """
-        embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+        embed = discord.Embed(color=0x00FF6A).set_image(
+            url="attachment://alex.png"
+        )
         image = discord.File(
-            await (await self.bot.alex.didyoumean(up, bottom)).read(), "alex.png"
+            await (await self.bot.alex.didyoumean(up, bottom)).read(),
+            "alex.png",
         )
         await ctx.send(embed=embed, file=image)
 
     @commands.command()
     async def gradiant(self, ctx):
-        embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+        embed = discord.Embed(color=0x00FF6A).set_image(
+            url="attachment://alex.png"
+        )
         image = discord.File(
-            await (await self.bot.alex.colour_image_gradient()).read(), "alex.png"
+            await (await self.bot.alex.colour_image_gradient()).read(),
+            "alex.png",
         )
         await ctx.send(embed=embed, file=image)
 
@@ -375,7 +425,11 @@ class pictures(commands.Cog):
         ctx,
         thing: typing.Optional[
             typing.Union[
-                discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+                discord.Member,
+                discord.User,
+                discord.PartialEmoji,
+                discord.Emoji,
+                str,
             ]
         ],
         level: float = 0.3,
@@ -383,15 +437,21 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             level = min(level, 1)
             url = await self.get_url(ctx, thing)
-        embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+        embed = discord.Embed(color=0x00FF6A).set_image(
+            url="attachment://alex.png"
+        )
         image = discord.File(
             await (await self.bot.alex.amiajoke(url)).read(), "alex.png"
         )
         await ctx.send(embed=embed, file=image)
 
     @commands.group(invoke_without_command=True)
-    async def supreme(self, ctx: AnimeContext, *, text: str = "enter something here"):
-        embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+    async def supreme(
+        self, ctx: AnimeContext, *, text: str = "enter something here"
+    ):
+        embed = discord.Embed(color=0x00FF6A).set_image(
+            url="attachment://alex.png"
+        )
         image = discord.File(
             await (await self.bot.alex.supreme(text=text)).read(), "alex.png"
         )
@@ -401,17 +461,23 @@ class pictures(commands.Cog):
     async def supreme_dark(
         self, ctx: AnimeContext, *, text: str = "enter something here"
     ):
-        embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+        embed = discord.Embed(color=0x00FF6A).set_image(
+            url="attachment://alex.png"
+        )
         image = discord.File(
-            await (await self.bot.alex.supreme(text=text, dark=True)).read(), "alex.png"
+            await (await self.bot.alex.supreme(text=text, dark=True)).read(),
+            "alex.png",
         )
         await ctx.send(embed=embed, file=image)
 
     @commands.command()
     async def archive(self, ctx: AnimeContext, *, text):
-        embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+        embed = discord.Embed(color=0x00FF6A).set_image(
+            url="attachment://alex.png"
+        )
         image = discord.File(
-            await (await self.bot.alex.achievement(text=text)).read(), "alex.png"
+            await (await self.bot.alex.achievement(text=text)).read(),
+            "alex.png",
         )
         await ctx.send(embed=embed, file=image)
 
@@ -421,7 +487,11 @@ class pictures(commands.Cog):
         ctx,
         thing: typing.Optional[
             typing.Union[
-                discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+                discord.Member,
+                discord.User,
+                discord.PartialEmoji,
+                discord.Emoji,
+                str,
             ]
         ],
         level: float = 0.3,
@@ -437,7 +507,8 @@ class pictures(commands.Cog):
                 url="attachment://pixelate.png"
             )
             await ctx.send(
-                file=discord.File(fp=image, filename="pixelate.png"), embed=embed
+                file=discord.File(fp=image, filename="pixelate.png"),
+                embed=embed,
             )
 
     @commands.command()
@@ -445,7 +516,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -466,7 +541,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -484,7 +563,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -494,7 +577,8 @@ class pictures(commands.Cog):
                 url="attachment://palette.png"
             )
             await ctx.send(
-                file=discord.File(fp=image, filename="palette.png"), embed=embed
+                file=discord.File(fp=image, filename="palette.png"),
+                embed=embed,
             )
 
     @commands.command()
@@ -502,13 +586,19 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.sort(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://sort.png")
+            embed = discord.Embed(color=0x00FF6A).set_image(
+                url="attachment://sort.png"
+            )
             await ctx.send(
                 file=discord.File(fp=image, filename="sort.png"), embed=embed
             )
@@ -518,7 +608,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -527,7 +621,9 @@ class pictures(commands.Cog):
                 image = await self.bot.zaneapi.cube(url)
             except asyncio.TimeoutError:
                 raise commands.CommandError("Zaneapi timeout")
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://cube.png")
+            embed = discord.Embed(color=0x00FF6A).set_image(
+                url="attachment://cube.png"
+            )
             await ctx.send(
                 file=discord.File(fp=image, filename="cube.png"), embed=embed
             )
@@ -537,7 +633,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -550,13 +650,19 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.dots(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://dots.png")
+            embed = discord.Embed(color=0x00FF6A).set_image(
+                url="attachment://dots.png"
+            )
             await ctx.send(
                 file=discord.File(fp=image, filename="dots.png"), embed=embed
             )
@@ -566,7 +672,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -576,7 +686,8 @@ class pictures(commands.Cog):
                 url="attachment://threshold.png"
             )
             await ctx.send(
-                file=discord.File(fp=image, filename="threshold.png"), embed=embed
+                file=discord.File(fp=image, filename="threshold.png"),
+                embed=embed,
             )
 
     @commands.command()
@@ -584,7 +695,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -602,13 +717,19 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.jpeg(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://jpeg.gif")
+            embed = discord.Embed(color=0x00FF6A).set_image(
+                url="attachment://jpeg.gif"
+            )
             await ctx.send(
                 file=discord.File(fp=image, filename="jpeg.gif"), embed=embed
             )
@@ -619,7 +740,11 @@ class pictures(commands.Cog):
         ctx,
         thing: typing.Optional[
             typing.Union[
-                discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+                discord.Member,
+                discord.User,
+                discord.PartialEmoji,
+                discord.Emoji,
+                str,
             ]
         ],
         level: float = 0.6,
@@ -641,7 +766,11 @@ class pictures(commands.Cog):
         ctx,
         thing: commands.Greedy[
             typing.Union[
-                discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+                discord.Member,
+                discord.User,
+                discord.PartialEmoji,
+                discord.Emoji,
+                str,
             ]
         ] = None,
     ):
@@ -653,7 +782,8 @@ class pictures(commands.Cog):
                     url="attachment://floor.gif"
                 )
                 return await ctx.send(
-                    file=discord.File(fp=image, filename="floor.gif"), embed=embed
+                    file=discord.File(fp=image, filename="floor.gif"),
+                    embed=embed,
                 )
 
             if len(thing) > 10:
@@ -665,7 +795,8 @@ class pictures(commands.Cog):
                     url="attachment://floor.gif"
                 )
                 await ctx.send(
-                    file=discord.File(fp=image, filename="floor.gif"), embed=embed
+                    file=discord.File(fp=image, filename="floor.gif"),
+                    embed=embed,
                 )
 
     # @commands.command()
@@ -675,7 +806,9 @@ class pictures(commands.Cog):
     @commands.command()
     async def noise(self, ctx):
         stat_ = await self.image(
-            ctx, await ctx.author.avatar_url_as(format="png").read(), "add_noise_rand"
+            ctx,
+            await ctx.author.avatar_url_as(format="png").read(),
+            "add_noise_rand",
         )
 
     @commands.command(aliases=["wtp"])
@@ -726,7 +859,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
         *,
         text="enter something here",
@@ -734,7 +871,9 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             text1 = text
-        img = await self.bot.dag.image_process(ImageFeatures.captcha(), url, text=text1)
+        img = await self.bot.dag.image_process(
+            ImageFeatures.captcha(), url, text=text1
+        )
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -743,7 +882,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -757,7 +900,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -770,7 +917,11 @@ class pictures(commands.Cog):
         ctx,
         thing: typing.Optional[
             typing.Union[
-                discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+                discord.Member,
+                discord.User,
+                discord.PartialEmoji,
+                discord.Emoji,
+                str,
             ]
         ],
     ):
@@ -783,7 +934,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -795,7 +950,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -809,7 +968,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -823,7 +986,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -837,7 +1004,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -851,7 +1022,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -865,7 +1040,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -879,7 +1058,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -893,7 +1076,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -907,7 +1094,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -921,7 +1112,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -935,7 +1130,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -949,7 +1148,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -963,7 +1166,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -977,7 +1184,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -991,7 +1202,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1005,7 +1220,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1019,7 +1238,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1033,7 +1256,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1047,7 +1274,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1061,7 +1292,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1075,7 +1310,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1089,7 +1328,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1103,7 +1346,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1117,7 +1364,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1131,7 +1382,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1145,7 +1400,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1159,7 +1418,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1173,7 +1436,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1187,7 +1454,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1201,7 +1472,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():
@@ -1215,7 +1490,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: typing.Union[
-            discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
         ] = None,
     ):
         async with ctx.channel.typing():

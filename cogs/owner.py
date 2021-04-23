@@ -56,7 +56,6 @@ class owners(commands.Cog):
         else:
             return True
 
-
     def cleanup_code(self, content):
         """Automatically removes code blocks from the code."""
         # remove ```py\n```
@@ -99,7 +98,7 @@ class owners(commands.Cog):
             await ctx.send(
                 f'```py\n{stderr.decode().replace("jadonvps", "secrect")}\n```'
             )
-           
+
     @commands.command(aliases=["sync"])
     @commands.is_owner()
     async def pull(self, ctx):
@@ -179,9 +178,9 @@ class owners(commands.Cog):
             "author": ctx.author,
             "inspect": inspect,
             "asyncio": asyncio,
-            "aiohttp": aiohttp
+            "aiohttp": aiohttp,
         }
-        env.update(globals())        
+        env.update(globals())
         to_execute = f"async def execute():\n{textwrap.indent(code, '  ')}"
         async with ReactionProcedureTimer(ctx.message, self.bot.loop):
             try:
@@ -199,12 +198,29 @@ class owners(commands.Cog):
                         return
                     result = await to_execute()
             except Exception as e:
-                return await ctx.send(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```") if len(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```") <= 2000 else await ctx.send(await ctx.paste(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```"))
+                return (
+                    await ctx.send(
+                        f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```"
+                    )
+                    if len(
+                        f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```"
+                    )
+                    <= 2000
+                    else await ctx.send(
+                        await ctx.paste(
+                            f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```"
+                        )
+                    )
+                )
             if result == " " and not f.getvalue():
                 return await ctx.send("\u200b")
             result = result or ""
             if result or f.getvalue():
-                await ctx.send(f"{f.getvalue()}\n{result}") if len(f"{f.getvalue()}\n{result}") <= 2000 else await ctx.send(await ctx.paste(f"{f.getvalue()}\n{result}"))
+                await ctx.send(f"{f.getvalue()}\n{result}") if len(
+                    f"{f.getvalue()}\n{result}"
+                ) <= 2000 else await ctx.send(
+                    await ctx.paste(f"{f.getvalue()}\n{result}")
+                )
 
     # @staticmethod
     # @asyncexe()
@@ -262,7 +278,9 @@ class owners(commands.Cog):
             f"https://image.thum.io/get/png/{website}"
         ) as resp:
             pic = BytesIO(await resp.read())
-        await ctx.send(file=discord.File(pic, f"website_screemshot_{website}.png"))
+        await ctx.send(
+            file=discord.File(pic, f"website_screemshot_{website}.png")
+        )
 
     @commands.command()
     @commands.is_owner()
@@ -386,9 +404,8 @@ class owners(commands.Cog):
                 await message.delete()
                 counter += 1
             if counter >= number:
-                    break
+                break
         await ctx.send(f"cleared {number} messages")
-
 
     @commands.command(aliases=["del"])
     @commands.is_owner()

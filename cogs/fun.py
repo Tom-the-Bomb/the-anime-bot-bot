@@ -147,10 +147,31 @@ class fun(commands.Cog):
             return to_bottom(text)
         else:
             return from_bottom(text)
-                         
+
     @commands.command()
     async def bigtext(self, ctx, *, text: str):
-        await ctx.send(getattr("", "join")([getattr(":regional_indicator_{}:", "format")(i) if i in getattr(__import__("string"), "ascii_lowercase") else getattr("{}\N{combining enclosing keycap}", "format")(i) if i in getattr(__import__("string"), "digits") else "\U00002757" if i == "!" else "\U000025c0" if i == "<" else "\U000025b6" if i == ">" else "\U00002753" if i == "?" else i for i in getattr(text, "lower")()]))
+        await ctx.send(
+            getattr("", "join")(
+                [
+                    getattr(":regional_indicator_{}:", "format")(i)
+                    if i in getattr(__import__("string"), "ascii_lowercase")
+                    else getattr("{}\N{combining enclosing keycap}", "format")(
+                        i
+                    )
+                    if i in getattr(__import__("string"), "digits")
+                    else "\U00002757"
+                    if i == "!"
+                    else "\U000025c0"
+                    if i == "<"
+                    else "\U000025b6"
+                    if i == ">"
+                    else "\U00002753"
+                    if i == "?"
+                    else i
+                    for i in getattr(text, "lower")()
+                ]
+            )
+        )
 
     @commands.command()
     async def ship(

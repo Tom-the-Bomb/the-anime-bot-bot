@@ -65,7 +65,7 @@ class events(commands.Cog):
             f"{date.hour}:"
             f"{date.minute}:"
             f"{date.second}"
-            )
+        )
         async with aiofile.async_open("discord.log", "r") as f:
             content = await f.read()
         data = {
@@ -122,7 +122,9 @@ class events(commands.Cog):
                 f"Received {bot.socket_receive} {bot.socket_receive//difference} per minute"
             )
             for i, (n, v) in enumerate(bot.socket_stats.most_common()):
-                lists.append(f"{n:<30} {v:<20} {round(v/difference, 3)} /minute")
+                lists.append(
+                    f"{n:<30} {v:<20} {round(v/difference, 3)} /minute"
+                )
             lists = "\n".join(lists)
             await message.edit(content=f"```\n{lists}\n```")
         except:
@@ -152,8 +154,8 @@ class events(commands.Cog):
                 "Content-Type": "application/json",
             },
             json={
-                    "guildCount": len(bot.guilds),
-                },
+                "guildCount": len(bot.guilds),
+            },
         ) as resp:
             pass
         await bot.session.post(
@@ -326,26 +328,34 @@ class events(commands.Cog):
     @commands.Cog.listener()
     async def on_message_delete(self, message):
         pass
+
     @commands.Cog.listener()
     async def on_raw_message_delete(self, payload):
-        if self.bot.to_delete_message_cache.get(payload.message_id):
-            if payload.guild_id:
-                try:
-                    await self.bot.get_channel(payload.channel_id).delete_messages(self.bot.to_delete_message_cache.get(payload.message_id))
-                except:
-                    for i in self.bot.to_delete_message_cache.get(payload.message_id):
-                        try:
-                            await self.bot.http.delete_message(payload.channel_id, i)
-                        except:
-                            pass
-                del self.bot.to_delete_message_cache[payload.message_id]
-            else:
-                for i in self.bot.to_delete_message_cache.get(payload.message_id):
+        if not self.bot.to_delete_message_cache.get(payload.message_id):
+            return
+        if payload.guild_id:
+            try:
+                await self.bot.get_channel(payload.channel_id).delete_messages(
+                    self.bot.to_delete_message_cache.get(payload.message_id)
+                )
+            except:
+                for i in self.bot.to_delete_message_cache.get(
+                    payload.message_id
+                ):
                     try:
-                        await self.bot.http.delete_message(payload.channel_id, i)
+                        await self.bot.http.delete_message(
+                            payload.channel_id, i
+                        )
                     except:
                         pass
-                del self.bot.to_delete_message_cache[payload.message_id]
+        else:
+            for i in self.bot.to_delete_message_cache.get(payload.message_id):
+                try:
+                    await self.bot.http.delete_message(payload.channel_id, i)
+                except:
+                    pass
+
+        del self.bot.to_delete_message_cache[payload.message_id]
 
     @commands.Cog.listener()
     async def on_bulk_message_delete(self, messages):
@@ -456,7 +466,10 @@ class events(commands.Cog):
     @commands.Cog.listener()
     async def on_message(self, message):
         self.bot.deleted_message_cache[message.id] = message
-        if message.content == "<@!787927476177076234>" and not message.author.bot:
+        if (
+            message.content == "<@!787927476177076234>"
+            and not message.author.bot
+        ):
             message_ = await message.channel.send(
                 f"Hii there why u ping me smh oh i mean hii my prefix is `{', '.join(self.bot.prefixes[message.guild.id])}` "
             )
@@ -472,7 +485,9 @@ class events(commands.Cog):
             for i in emojis:
                 if i == "":
                     continue
-                e = finder(i, self.bot.emojis, key=lambda i: i.name, lazy=False)
+                e = finder(
+                    i, self.bot.emojis, key=lambda i: i.name, lazy=False
+                )
                 if e == []:
                     continue
                 e = e[0]
@@ -517,7 +532,9 @@ class events(commands.Cog):
         print("Logged in as:\n{0.user.name}\n{0.user.id}".format(self.bot))
 
     def embed(self, text):
-        return discord.Embed(color=0xFF0000, title="An error occured", description=text)
+        return discord.Embed(
+            color=0xFF0000, title="An error occured", description=text
+        )
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: AnimeContext, error):
@@ -562,7 +579,9 @@ class events(commands.Cog):
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.NoPrivateMessage):
             try:
-                embed = self.embed("{ctx.command} can not be used in Private Messages.")
+                embed = self.embed(
+                    "{ctx.command} can not be used in Private Messages."
+                )
                 await ctx.author.send(embed=embed)
             except discord.HTTPException:
                 pass
@@ -578,7 +597,9 @@ class events(commands.Cog):
             embed = self.embed(f"Unable to convert")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MissingRequiredArgument):
-            embed = self.embed(f"You are missing `{error.param.name}` argument")
+            embed = self.embed(
+                f"You are missing `{error.param.name}` argument"
+            )
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MaxConcurrencyReached):
             embed = self.embed(
@@ -635,12 +656,11 @@ class events(commands.Cog):
     @commands.is_owner()
     async def errors(self, ctx: AnimeContext, id: int = None):
         if not id:
-            lists = []
             errors = await self.bot.db.fetch("SELECT * FROM errors")
-            for i in errors:
-                lists.append(f"{i['error_id']}\n{i['message']}")
-            embed = discord.Embed(color=self.bot.color, description="\n".join(lists))
-            return await ctx.send(embed=embed)
+            lists = [f"{i['error_id']}\n{i['message']}" for i in errors]
+            embed = discord.Embed(
+                color=self.bot.color, description="\n".join(lists)
+            )
         else:
             error = await self.bot.db.fetchrow(
                 "SELECT * FROM errors WHERE error_id = $1", id
@@ -660,7 +680,8 @@ class events(commands.Cog):
             )
             embed.add_field(name="Author name", value=error["author_name"])
             embed.add_field(name="command", value=error["command"])
-            return await ctx.send(embed=embed)
+
+        return await ctx.send(embed=embed)
 
 
 def setup(bot):

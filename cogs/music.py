@@ -8,23 +8,29 @@ import datetime
 from menus import menus
 import wavelink
 
+
 class NoNodesAvaiable(Exception):
     pass
+
 
 class QueueMenuSource(menus.ListPageSource):
     def __init__(self, data):
         super().__init__(data, per_page=10)
 
     async def format_page(self, menu, entries):
-        
+
         return {
             "embed": discord.Embed(
                 color=menu.ctx.bot.color,
                 title=f"Music queue",
-                description="\n".join([f"[**{i.title}**]({i.uri})\n{i.author or 'no author'}" for i in entries]),
+                description="\n".join(
+                    [
+                        f"[**{i.title}**]({i.uri})\n{i.author or 'no author'}"
+                        for i in entries
+                    ]
+                ),
             )
         }
-
 
 
 class Track(wavelink.Track):
@@ -51,7 +57,7 @@ class Player(wavelink.Player):
         self.queue_position = 0
 
     def make_embed(self, track):
-        
+
         embed = discord.Embed(
             color=0x00FF6A,
             title="Now playing",
@@ -59,30 +65,36 @@ class Player(wavelink.Player):
         )
         try:
             duration = humanize.precisedelta(
-                        datetime.timedelta(milliseconds=track.length)
-                    )
+                datetime.timedelta(milliseconds=track.length)
+            )
         except:
             duration = "Duration too long"
         try:
             position = humanize.precisedelta(
-                        datetime.timedelta(milliseconds=self.position)
-                    )
+                datetime.timedelta(milliseconds=self.position)
+            )
         except:
             position = "Position too long"
         try:
             percentage = 100 / track.length * self.position
-            bar =  "`" + "⬜"*int(20/100*percentage) + "⬛"*int(20-(20/100*percentage)) + "`"
+            bar = (
+                "`"
+                + "⬜" * int(20 / 100 * percentage)
+                + "⬛" * int(20 - (20 / 100 * percentage))
+                + "`"
+            )
         except:
             bar = ""
-        embed.description += f"\nCurrent Position: {position} / {duration}" if not track.is_stream else ...
+        embed.description += (
+            f"\nCurrent Position: {position} / {duration}"
+            if not track.is_stream
+            else ...
+        )
         embed.description += f"\n{bar}" if not track.is_stream else ...
         embed.set_thumbnail(url=track.thumb) if track.thumb else ...
         embed.add_field(name="Requester", value=track.requester)
         if track.is_stream:
-            embed.add_field(
-                name="Duration",
-                value="Live Stream"
-            )
+            embed.add_field(name="Duration", value="Live Stream")
         else:
             try:
                 embed.add_field(
@@ -93,12 +105,9 @@ class Player(wavelink.Player):
                 )
             except:
                 embed.add_field(
-                    name="Duration",
-                    value="Duration too long to display."
+                    name="Duration", value="Duration too long to display."
                 )
-        embed.add_field(
-            name="URL", value=track.uri
-        ) if track.uri else ...
+        embed.add_field(name="URL", value=track.uri) if track.uri else ...
         embed.add_field(
             name="Author", value=track.author
         ) if track.author else ...
@@ -114,26 +123,38 @@ class Player(wavelink.Player):
             for track in song.tracks:
                 track = Track(track.id, track.info, requester=ctx.author)
                 self.queue.append(track)
-            self.now_playing = Track(song.tracks[0].id, song.tracks[0].info, requester=ctx.author)
+            self.now_playing = Track(
+                song.tracks[0].id, song.tracks[0].info, requester=ctx.author
+            )
             playlist_name = song.data["playlistInfo"]["name"]
             await ctx.send(
                 f"Added playlist `{playlist_name}` with `{len(song.tracks)}` songs to the queue. "
             )
-            
+
         else:
             track = Track(song[0].id, song[0].info, requester=ctx.author)
             self.queue.append(track)
             self.now_playing = track
             await ctx.send(f"Added `{track}` to the queue.")
 
-        await ctx.send(embed=self.make_embed(Track(self.now_playing.id, self.now_playing.info, requester=ctx.author)))
+        await ctx.send(
+            embed=self.make_embed(
+                Track(
+                    self.now_playing.id,
+                    self.now_playing.info,
+                    requester=ctx.author,
+                )
+            )
+        )
         self.queue_position += 1
         await self.play(self.now_playing)
         self.ctx = ctx
         self.started = True
 
     async def do_next(self):
-        if not any([not i.bot for i in self.bot.get_channel(self.channel_id).members]):
+        if not any(
+            [not i.bot for i in self.bot.get_channel(self.channel_id).members]
+        ):
             return await self.destory()
         if self.repeat:
             self.queue_position -= 1
@@ -184,23 +205,39 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             )
         except:
             raise NoNodesAvaiable
+
     @wavelink.WavelinkMixin.listener("on_track_exception")
     async def on_node_event_(self, node, event):
         if "YouTube (429)" in event.error:
             player = event.player
             if player.bot.url_regex.fullmatch(player.query):
-                new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.track.title}")
+                new_track = await player.ctx.bot.wavelink.get_tracks(
+                    f"scsearch:{player.track.title}"
+                )
             else:
-                new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.query}")
+                new_track = await player.ctx.bot.wavelink.get_tracks(
+                    f"scsearch:{player.query}"
+                )
             if new_track:
-                track = Track(new_track[0].id, new_track[0].info, requester=player.ctx.author)
+                track = Track(
+                    new_track[0].id,
+                    new_track[0].info,
+                    requester=player.ctx.author,
+                )
                 player.queue.append(track)
                 player.now_playing = track
                 await player.play(player.now_playing)
-                await player.ctx.send(embed=player.make_embed(player.now_playing))
-                await player.ctx.send("Due to YouTube ratelimiting our IP address, we have searched this song on soundcloud. Please include author name for a more accurate result.")
+                await player.ctx.send(
+                    embed=player.make_embed(player.now_playing)
+                )
+                await player.ctx.send(
+                    "Due to YouTube ratelimiting our IP address, we have searched this song on soundcloud. Please include author name for a more accurate result."
+                )
             else:
-                await player.ctx.send("We are so sorry, Youtube has ratelimited us so we can't play anything. We have tried searching on SoundCloud but we can't find anything. Please try a direct link to soundcloud.")
+                await player.ctx.send(
+                    "We are so sorry, Youtube has ratelimited us so we can't play anything. We have tried searching on SoundCloud but we can't find anything. Please try a direct link to soundcloud."
+                )
+
     @wavelink.WavelinkMixin.listener("on_track_stuck")
     @wavelink.WavelinkMixin.listener("on_track_end")
     async def on_node_event(self, node, event):
@@ -224,12 +261,9 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             )
             return False
         if ctx.command.qualified_name != "play" and player.now_playing is None:
-            await ctx.send(
-                "Nothing is being played right now."
-            )
+            await ctx.send("Nothing is being played right now.")
             return False
         return True
-
 
     @commands.command()
     async def node_info(self, ctx):
@@ -241,22 +275,25 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         free = humanize.naturalsize(node.stats.memory_free)
         cpu = node.stats.cpu_cores
 
-        fmt = f'**WaveLink:** `{wavelink.__version__}`\n\n' \
-              f'Connected to `{len(self.bot.wavelink.nodes)}` nodes.\n' \
-              f'Best available Node `{self.bot.wavelink.get_best_node().__repr__()}`\n' \
-              f'`{len(self.bot.wavelink.players)}` players are distributed on nodes.\n' \
-              f'`{node.stats.players}` players are distributed on server.\n' \
-              f'`{node.stats.playing_players}` players are playing on server.\n\n' \
-              f'Server Memory: `{used}/{total}` | `({free} free)`\n' \
-              f'Server CPU: `{cpu}`\n\n' \
-              f'Server Uptime: `{datetime.timedelta(milliseconds=node.stats.uptime)}`'
+        fmt = (
+            f"**WaveLink:** `{wavelink.__version__}`\n\n"
+            f"Connected to `{len(self.bot.wavelink.nodes)}` nodes.\n"
+            f"Best available Node `{self.bot.wavelink.get_best_node().__repr__()}`\n"
+            f"`{len(self.bot.wavelink.players)}` players are distributed on nodes.\n"
+            f"`{node.stats.players}` players are distributed on server.\n"
+            f"`{node.stats.playing_players}` players are playing on server.\n\n"
+            f"Server Memory: `{used}/{total}` | `({free} free)`\n"
+            f"Server CPU: `{cpu}`\n\n"
+            f"Server Uptime: `{datetime.timedelta(milliseconds=node.stats.uptime)}`"
+        )
         await ctx.send(fmt)
-                                       
+
     @commands.command()
     async def queue(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         pages = menus.MenuPages(
-            source=QueueMenuSource(player.queue[player.queue_position:]), delete_message_after=True
+            source=QueueMenuSource(player.queue[player.queue_position :]),
+            delete_message_after=True,
         )
         await pages.start(ctx)
 
@@ -297,7 +334,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             return await ctx.send("Unrepeated")
         player.repeat = True
         await ctx.send("Repeating the current song")
-                                       
+
     @commands.command()
     async def loop(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
@@ -375,7 +412,6 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             track = Track(tracks[0].id, tracks[0].info, requester=ctx.author)
             player.queue.append(track)
             await ctx.send(f"Added `{track}` to the queue.")
-        
 
     @commands.command(aliases=["resume"])
     async def unpause(self, ctx):
