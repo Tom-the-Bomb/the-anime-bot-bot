@@ -1506,32 +1506,6 @@ class pictures(commands.Cog):
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
-    @staticmethod
-    @asyncexe()
-    def scared_(data):
-        with Image.open("3po4m7.jpg") as image, Image.open(data) as pfp:
-            pfp.resize((106, 87))
-            image.paste(pfp, (99, 29))
-            buffer = BytesIO()
-            image.save(buffer, "PNG")
-            buffer.seek(0)
-            return buffer
-
-    @commands.command()
-    async def scared(self, ctx: AnimeContext, author: discord.Member = None):
-        await ctx.trigger_typing()
-        if author is None:
-            author = ctx.author
-        asset = author.avatar_url_as(size=128)
-        data = BytesIO(await asset.read())
-        buffer = await self.scared_(data)
-        embed = discord.Embed(color=self.bot.color)
-        embed.set_footer(
-            text=f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
-            icon_url=ctx.author.avatar_url,
-        )
-        await ctx.reply(file=discord.File(buffer, "scared.png"), embed=embed)
-
 
 def setup(bot):
     bot.add_cog(pictures(bot))
