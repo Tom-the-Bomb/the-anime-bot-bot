@@ -163,16 +163,17 @@ class pictures(commands.Cog):
         frames = []
         mid = 100
         for i in range(500):
-            img = Image.new("RGB", (200, 200), background_color)
-            imgr = ImageDraw.Draw(img)
-            imgr.ellipse(
-                (100 - i * 20, 100 - i * 20, 100 + i * 20, 100 + i * 20),
-                fill=circle_color,
-            )
-            fobj = BytesIO()
-            img.save(fobj, "GIF")
-            img = Image.open(fobj)
-            frames.append(img)
+            with Image.new("RGB", (200, 200), background_color) as img:
+                with ImageDraw.Draw(img) as imgr:
+                    imgr.ellipse(
+                        (100 - i * 20, 100 - i * 20, 100 + i * 20, 100 + i * 20),
+                        fill=circle_color,
+                    )
+                    fobj = BytesIO()
+                    img.save(fobj, "GIF")
+                    with Image.open(fobg) as img_final:
+                        frames.append(img_final)
+                    fobj.flush()
         igif = BytesIO()
         frames[0].save(
             igif,
