@@ -212,7 +212,7 @@ class pictures(commands.Cog):
     @asyncexe()
     def run_polaroid(image1, method, *args, **kwargs):
         with Image.open(BytesIO(image1)) as img:
-            if img.format == "GIF":
+            if img.format == "GIF" and img.n_frames < 30:
                 to_process = []
                 to_make_gif = []
                 for im in ImageSequence.Iterator(img):
