@@ -1020,7 +1020,7 @@ class pictures(commands.Cog):
         ],
     ):
         async with ctx.channel.typing():
-            url = await self.get_gif_url(ctx, thing)
+            url = await self.get_url(ctx, thing)
         await ctx.reply(file=await self.polaroid_(url, "oil", 3, 10))
 
     @commands.command()
