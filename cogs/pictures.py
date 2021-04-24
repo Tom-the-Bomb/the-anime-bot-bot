@@ -163,16 +163,17 @@ class pictures(commands.Cog):
         frames = []
         mid = 100
         for i in range(500):
-            img = Image.new("RGB", (200, 200), background_color)
-            imgr = ImageDraw.Draw(img)
-            imgr.ellipse(
-                (100 - i * 20, 100 - i * 20, 100 + i * 20, 100 + i * 20),
-                fill=circle_color,
-            )
-            fobj = BytesIO()
-            img.save(fobj, "GIF")
-            img = Image.open(fobj)
-            frames.append(img)
+            with Image.new("RGB", (200, 200), background_color) as img:
+                imgr = ImageDraw.Draw(img)
+                imgr.ellipse(
+                    (100 - i * 20, 100 - i * 20, 100 + i * 20, 100 + i * 20),
+                    fill=circle_color,
+                )
+                fobj = BytesIO()
+                img.save(fobj, "GIF")
+                img = Image.open(fobj)
+                frames.append(img)
+                fobj.flush()
         igif = BytesIO()
         frames[0].save(
             igif,
@@ -183,6 +184,8 @@ class pictures(commands.Cog):
             loop=0,
         )
         igif.seek(0)
+        for i in frames:
+            i.close()
         return igif
     @asyncexe()
     def qr_enc(self, thing):
