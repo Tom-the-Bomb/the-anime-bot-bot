@@ -215,7 +215,7 @@ class pictures(commands.Cog):
             if img.format == "GIF":
                 to_process = []
                 to_make_gif = []
-                async for im in ImageSequence.Iterator(img):
+                for im in ImageSequence.Iterator(img):
                     b = BytesIO()
                     im.save(b, "PNG")
                     to_process.append(b)
