@@ -171,7 +171,7 @@ class pictures(commands.Cog):
                 )
                 fobj = BytesIO()
                 img.save(fobj, "GIF")
-                with Image.open(fobg) as img_final:
+                with Image.open(fobj) as img_final:
                     frames.append(img_final)
                 fobj.flush()
         igif = BytesIO()
