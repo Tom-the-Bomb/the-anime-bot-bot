@@ -231,6 +231,7 @@ class pictures(commands.Cog):
                                 format="GIF",
                                 append_images=to_make_gif[1:],
                                 save_all=True,
+                                disposal=2,
                                 loop=0,
                             )
                 final.seek(0)
