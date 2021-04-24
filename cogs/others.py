@@ -277,6 +277,8 @@ class others(commands.Cog):
             .replace("`", "\u200b`")
             .replace("~", "\u200b~")
             .replace(">", "\u200b>")
+            .replace("/", "\u200b/")
+            .replace("\\", "\u200b\\")
         )
         if len(raw) > 1900:
             paginator = WrappedPaginator(
