@@ -1509,11 +1509,13 @@ class pictures(commands.Cog):
     @staticmethod
     @asyncexe()
     def scared_(data):
-        image = Image.open("3po4m7.jpg")
-        pfp = Image.open(data)
-        pfp.resize((106, 87))
-        image.paste(pfp, (99, 29))
-        image.save("profile.jpg")
+        with Image.open("3po4m7.jpg") as image, Image.open(data) as pfp:
+            pfp.resize((106, 87))
+            image.paste(pfp, (99, 29))
+            buffer = BytesIO()
+            image.save(buffer, "PNG")
+            buffer.seek(0)
+            return buffer
 
     @commands.command()
     async def scared(self, ctx: AnimeContext, author: discord.Member = None):
@@ -1522,13 +1524,13 @@ class pictures(commands.Cog):
             author = ctx.author
         asset = author.avatar_url_as(size=128)
         data = BytesIO(await asset.read())
-        await self.scared_(data)
-        embed = discord.Embed(color=0x2ECC71)
+        buffer = await self.scared_(data)
+        embed = discord.Embed(color=self.bot.color)
         embed.set_footer(
             text=f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
             icon_url=ctx.author.avatar_url,
         )
-        await ctx.reply(file=discord.File("profile.jpg"), embed=embed)
+        await ctx.reply(file=discord.File(buffer, "scared.png"), embed=embed)
 
 
 def setup(bot):
