@@ -234,6 +234,10 @@ class pictures(commands.Cog):
                                 duration=img.info["duration"],
                                 loop=0,
                             )
+                for i in to_process:
+                    i.flush()
+                for i in to_make_gif:
+                    i.close()
                 final.seek(0)
                 return discord.File(final, filename=f"{method}.gif")
 
