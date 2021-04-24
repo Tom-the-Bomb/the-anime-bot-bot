@@ -17,6 +17,7 @@ import os
 from utils.asyncstuff import asyncexe
 import polaroid
 from PIL import Image, ImageDraw
+from PIL import ImageSequence
 from io import BytesIO
 from asyncdagpi import ImageFeatures
 import typing
@@ -33,6 +34,69 @@ class pictures(commands.Cog):
         )
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
+    
+        async def get_gif_url(self, ctx: AnimeContext, thing, **kwargs):
+            avatar = kwargs.get("avatar", True)
+            check = kwargs.get("check", True)
+            if ctx.message.reference:
+                message = ctx.message.reference.resolved
+                if message.embeds and message.embeds[0].type == "image":
+                    url = message.embeds[0].thumbnail.proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    return url
+                elif message.embeds and message.embeds[0].type == "rich":
+                    if message.embeds[0].image.proxy_url:
+                        url = message.embeds[0].image.proxy_url
+                        url = url.replace(
+                            "cdn.discordapp.com", "media.discordapp.net"
+                        )
+                        return url
+                    elif message.embeds[0].thumbnail.proxy_url:
+                        url = message.embeds[0].thumbnail.proxy_url
+                        url = url.replace(
+                            "cdn.discordapp.com", "media.discordapp.net"
+                        )
+                        return url
+                elif (
+                    message.attachments
+                    and message.attachments[0].width
+                    and message.attachments[0].height
+                ):
+                    url = message.attachments[0].proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    return url
+
+            if (
+                ctx.message.attachments
+                and ctx.message.attachments[0].width
+                and ctx.message.attachments[0].height
+            ):
+                return ctx.message.attachments[0].proxy_url.replace(
+                    "cdn.discordapp.com", "media.discordapp.net"
+                )
+
+            if thing is None and avatar:
+                url = str(ctx.author.avatar_url_as(static_format="png"))
+            elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
+                url = str(thing.url_as())
+            elif isinstance(thing, (discord.Member, discord.User)):
+                url = str(thing.avatar_url_as(static_format="png"))
+            else:
+                thing = str(thing).strip("<>")
+                if self.bot.url_regex.match(thing):
+                    url = thing
+                else:
+                    url = await emoji_to_url(thing)
+                    if url == thing:
+                        raise commands.CommandError("Invalid url")
+            if not avatar:
+                return None
+            if check:
+                async with self.bot.session.get(url) as resp:
+                    if resp.status != 200:
+                        raise commands.CommandError("Invalid Picture")
+            url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+            return url
 
     async def get_url(self, ctx: AnimeContext, thing, **kwargs):
         avatar = kwargs.get("avatar", True)
@@ -147,10 +211,36 @@ class pictures(commands.Cog):
     @staticmethod
     @asyncexe()
     def run_polaroid(image1, method, *args, **kwargs):
+        with Image.open(BytesIO(image1)) as img:
+            if img.format == "GIF":
+                to_process = []
+                to_make_gif = []
+                async for im in ImageSequence.Iterator(img):
+                    b = BytesIO()
+                    im.save(b, "PNG")
+                    to_process.append(b)
+                for i in to_process:
+                    p_image = polaroid.Image(i.read())
+                    method1 = getattr(p_image, method)
+                    method1(*args, **kwargs)
+                    to_make_gif.append(Image.open(BytesIO(p_image.save_bytes())))
+                final = BytesIO()
+                to_make_gif[0].save(
+                                final,
+                                format="GIF",
+                                append_images=to_make_gif[1:],
+                                save_all=True,
+                                duration=3,
+                                loop=0,
+                            )
+                final.seek(0)
+                return discord.File(final, filename=f"{method}.gif")
+
+                    
         im = polaroid.Image(image1)
         method1 = getattr(im, method)
         method1(*args, **kwargs)
-        return discord.File(BytesIO(im.save_bytes()), filename=f"{method}.png")
+        return discord.File(BytesIO(im.save_bytes("png")), filename=f"{method}.png")
 
     async def polaroid_(self, image, method, *args, **kwargs):
         async with self.bot.session.get(image) as resp:
@@ -801,11 +891,7 @@ class pictures(commands.Cog):
                     file=discord.File(fp=image, filename="floor.gif"),
                     embed=embed,
                 )
-
-    # @commands.command()
-    # async def rainbow(self, ctx):
-    #   stat_ = await self.image(ctx, await ctx.author.avatar_url_as(format="png").read(), "apply_gradient")
-
+                
     @commands.command()
     async def noise(self, ctx):
         stat_ = await self.image(
@@ -945,7 +1031,7 @@ class pictures(commands.Cog):
         ] = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
         await ctx.reply(file=await self.polaroid_(url, "apply_gradient"))
 
     @commands.command()
