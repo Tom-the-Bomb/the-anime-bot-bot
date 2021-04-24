@@ -218,6 +218,7 @@ class pictures(commands.Cog):
                 for im in ImageSequence.Iterator(img):
                     b = BytesIO()
                     im.save(b, "PNG")
+                    b.seek(0)
                     to_process.append(b)
                 for i in to_process:
                     p_image = polaroid.Image(i.read())
