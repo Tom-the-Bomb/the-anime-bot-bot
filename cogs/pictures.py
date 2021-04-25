@@ -36,7 +36,7 @@ class pictures(commands.Cog):
         )
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
-    
+
     async def get_gif_url(self, ctx: AnimeContext, thing, **kwargs):
         avatar = kwargs.get("avatar", True)
         check = kwargs.get("check", True)
@@ -160,10 +160,10 @@ class pictures(commands.Cog):
             async with self.bot.session.get(url) as resp:
                 if resp.status != 200:
                     raise commands.CommandError("Invalid Picture")
-#                 with Image.open(BytesIO(await resp.read())) as img:
-#                     if img.width >= 3000 or img.height >= 3000:
-#                         raise commands.CommandError("Image too large")
-                
+        #                 with Image.open(BytesIO(await resp.read())) as img:
+        #                     if img.width >= 3000 or img.height >= 3000:
+        #                         raise commands.CommandError("Image too large")
+
         url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
 
@@ -217,7 +217,12 @@ class pictures(commands.Cog):
     @staticmethod
     def run_polaroid(image1, method, *args, **kwargs):
         with Image.open(BytesIO(image1)) as img:
-            if img.format == "GIF" and img.n_frames < 200 and img.width <= 3000 and img.height <= 3000:
+            if (
+                img.format == "GIF"
+                and img.n_frames < 200
+                and img.width <= 3000
+                and img.height <= 3000
+            ):
                 to_process = []
                 to_make_gif = []
                 for im in ImageSequence.Iterator(img):
@@ -235,13 +240,13 @@ class pictures(commands.Cog):
                     del p_image
                 final = BytesIO()
                 to_make_gif[0].save(
-                                final,
-                                format="GIF",
-                                append_images=to_make_gif[1:],
-                                save_all=True,
-                                duration=img.info["duration"],
-                                loop=0,
-                            )
+                    final,
+                    format="GIF",
+                    append_images=to_make_gif[1:],
+                    save_all=True,
+                    duration=img.info["duration"],
+                    loop=0,
+                )
                 for i in to_process:
                     i.flush()
                     del i
@@ -251,19 +256,20 @@ class pictures(commands.Cog):
                 final.seek(0)
                 return discord.File(final, filename=f"{method}.gif")
 
-                    
         im = polaroid.Image(image1)
         method1 = getattr(im, method)
         method1(*args, **kwargs)
         b = BytesIO(im.save_bytes("png"))
         del im
         return discord.File(b, filename=f"{method}.png")
-        
+
     async def polaroid_(self, image, method, *args, **kwargs):
         async with self.bot.session.get(image) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
-        f = functools.partial(self.run_polaroid, image1, method, *args, **kwargs)
+        f = functools.partial(
+            self.run_polaroid, image1, method, *args, **kwargs
+        )
         result = await self.bot.loop.run_in_executor(e, f)
         e.shutdown()
         return result
@@ -298,6 +304,7 @@ class pictures(commands.Cog):
         for i in frames:
             i.close()
         return igif
+
     @asyncexe()
     def qr_enc(self, thing):
         q = qrcode.make(thing, image_factory=PymagingImage)
@@ -912,7 +919,7 @@ class pictures(commands.Cog):
                     file=discord.File(fp=image, filename="floor.gif"),
                     embed=embed,
                 )
-                
+
     @commands.command()
     async def noise(self, ctx):
         stat_ = await self.image(

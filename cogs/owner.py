@@ -50,7 +50,7 @@ class MyMenu(menus.Menu, timeout=9223372036854775807):
 class owners(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.cog_regex = re.compile(r'cogs/[a-zA-Z]+\.py')
+        self.cog_regex = re.compile(r"cogs/[a-zA-Z]+\.py")
 
     async def cog_check(self, ctx):
         if ctx.author.id not in self.bot.owner_ids:
@@ -118,20 +118,27 @@ class owners(commands.Cog):
         if self.cog_regex.findall(final):
             for i in self.cog_regex.findall(final):
                 try:
-                    self.bot.reload_extension(i.replace("/", ".").replace(".py", ""))
+                    self.bot.reload_extension(
+                        i.replace("/", ".").replace(".py", "")
+                    )
                 except Exception as e:
-                        embed = discord.Embed(
-                            color=0xFF0000,
-                            description=f"Error while reloading cogs \n {e}",
-                        )
-                        await ctx.send(embed=embed)
+                    embed = discord.Embed(
+                        color=0xFF0000,
+                        description=f"Error while reloading cogs \n {e}",
+                    )
+                    await ctx.send(embed=embed)
 
-                
         return await ctx.send(
             embed=discord.Embed(
                 color=self.bot.color,
                 title="Pulling from GitHub...",
-                description=f"```\n{stdout}\n{stderr}\n```").add_field(name="Reloaded cogs", value=", ".join(self.cog_regex.findall(final)) if self.cog_regex.findall(final) else "No cogs reloaded"),
+                description=f"```\n{stdout}\n{stderr}\n```",
+            ).add_field(
+                name="Reloaded cogs",
+                value=", ".join(self.cog_regex.findall(final))
+                if self.cog_regex.findall(final)
+                else "No cogs reloaded",
+            ),
         )
 
     @classmethod
