@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from utils.subclasses import AnimeContext
+import random
 from io import BytesIO
 from wordcloud import WordCloud
 from matplotlib import pyplot as plt
