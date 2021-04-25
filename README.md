@@ -4,6 +4,11 @@
 
 the best bot
 
-**please do follow the license**
+**well if ur here here are a few things to know </br>  
+ if you ever take or modify code in this repo you must</br>
+ Have License and copyright notice</br>
+ State changes</br>
+ Disclose source</br>
+ Use the Same license</br>**
 
 this bot is never designed to be copied so ya know just don't i mean nothing stopping you from do so but just don't
