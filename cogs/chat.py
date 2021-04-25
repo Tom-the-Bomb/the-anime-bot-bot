@@ -25,7 +25,7 @@ class chat(commands.Cog):
     async def wordcloud(self, ctx, limit: int=1000):
         limit = min(limit, 10000)
         text = ""
-        async for message in ctx.channel.history(limit=1000):
+        async for message in ctx.channel.history(limit=limit):
             if message.content:
                 text += message.content
         pic = await self.wordcloud_(text)
