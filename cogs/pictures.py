@@ -275,8 +275,7 @@ class pictures(commands.Cog):
         return result
 
     @staticmethod
-    @asyncexe()
-    def circle_(background_color, circle_color):
+    def circle__(background_color, circle_color):
         frames = []
         mid = 100
         for i in range(500):
@@ -304,6 +303,12 @@ class pictures(commands.Cog):
         for i in frames:
             i.close()
         return igif
+    @asyncexe()
+    def circle_(background_color, circle_color):
+        e = ThreadPoolExecutor(max_workers=5)
+        result = await self.bot.loop.run_in_executor(e, self.circle__, background_color, circle_color)
+        e.shutdown()
+        return result
 
     @asyncexe()
     def qr_enc(self, thing):
