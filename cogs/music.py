@@ -224,9 +224,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             player.queue.append(track)
             player.now_playing = track
             await player.play(player.now_playing)
-            await player.ctx.send(
-                embed=player.make_embed(player.now_playing)
-            )
+            await player.ctx.send(embed=player.make_embed(player.now_playing))
             await player.ctx.send(
                 "Due to YouTube ratelimiting our IP address, we have searched this song on soundcloud. Please include author name for a more accurate result."
             )

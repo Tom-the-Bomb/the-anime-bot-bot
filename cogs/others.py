@@ -270,7 +270,9 @@ class others(commands.Cog):
         # raw = str(resp).replace("|", "\u200b|").replace("*", "\u200b*").replace("`", "\u200b`").replace("~", "\u200b~").replace(">", "\u200b>").replace('"', "'")
         # raw = json.loads(raw)
         # raw = json.dumps(raw, indent=4)
-        raw = ujson.dumps(raw, indent=4, ensure_ascii=True, escape_forward_slashes=False)
+        raw = ujson.dumps(
+            raw, indent=4, ensure_ascii=True, escape_forward_slashes=False
+        )
         raw = (
             raw.replace("|", "\u200b|")
             .replace("*", "\u200b*")
