@@ -31,9 +31,9 @@ class chat(commands.Cog):
         async for message in ctx.channel.history(limit=limit):
             if message.content:
                 text += message.content
+                if random.randint(0, 30) == 3:
+                    await m.edit(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
             counter += 1
-            if random.randint(0, 10) == 3:
-                await m.edit(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
             
         pic = await self.wordcloud_(text)
         await ctx.send(file=discord.File(pic, "wordcloud.png"))
