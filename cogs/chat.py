@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from utils.subclasses import AnimeContext
+from wordcloud import WordCloud
 from matplotlib import pyplot as plt
 from utils.asyncstuff import asyncexe
 from collections import Counter
@@ -9,6 +10,24 @@ from collections import Counter
 class chat(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+    
+    @asyncexe()
+    def wordcloud_(text):
+        wordcloud = WordCloud().generate(text)
+        image = wordcloud.to_image()
+        b = BytesIO()
+        image.save(b, "PNG")
+        b.seek(0)
+        return b
+        
+    @commands.command()
+    async def wordcloud(self, ctx):
+        text = ""
+        async for message in ctx.channel.history(limit=1000):
+            if message.content:
+                text += message.content
+        pic = await self.wordcloud_(text)
+        await ctx.send(file=discord.File(pic, "wordcloud.png"))
 
     @staticmethod
     @asyncexe()
