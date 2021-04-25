@@ -327,16 +327,11 @@ class pictures(commands.Cog):
                 and img.width <= 3000
                 and img.height <= 3000
             ):
-                to_process = []
                 to_make_gif = []
                 for im in ImageSequence.Iterator(img):
-                    b = BytesIO()
                     im_ = im.resize((300, 300))
-                    im_.save(b, "PNG")
-                    b.seek(0)
-                    to_process.append(b)
-                for i in to_process:
-                    to_make_gif.append(function(Image.open(i)))
+                    im_final = function(im_)
+                    to_make_gif.append(im_final)
                 final = BytesIO()
                 to_make_gif[0].save(
                     final,
@@ -346,9 +341,6 @@ class pictures(commands.Cog):
                     duration=img.info["duration"],
                     loop=0,
                 )
-                for i in to_process:
-                    i.flush()
-                    del i
                 for i in to_make_gif:
                     i.close()
                     del i
