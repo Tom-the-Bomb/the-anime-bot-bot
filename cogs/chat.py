@@ -28,15 +28,14 @@ class chat(commands.Cog):
         counter = 0
         text = ""
         m = await ctx.send(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
-        async for message in ctx.channel.history(limit=limit):
-            if message.content:
-                text += message.content
-                if counter % 25 == 0:
-                    await m.edit(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
-            counter += 1
-            
-        pic = await self.wordcloud_(text)
-        await ctx.send(file=discord.File(pic, "wordcloud.png"))
+        async with ctx.typing:
+            async for message in ctx.channel.history(limit=limit):
+                if message.content:
+                    text += message.content
+                counter += 1
+
+            pic = await self.wordcloud_(text)
+            await ctx.send(file=discord.File(pic, "wordcloud.png"))
 
     @staticmethod
     @asyncexe()
