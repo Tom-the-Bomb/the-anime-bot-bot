@@ -25,9 +25,15 @@ class chat(commands.Cog):
     async def wordcloud(self, ctx, limit: int=1000):
         limit = min(limit, 10000)
         text = ""
+        m = await ctx.send(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
+        counter = 0
         async for message in ctx.channel.history(limit=limit):
             if message.content:
                 text += message.content
+            counter += 1
+            if random.randint(0, 10) == 3:
+                await m.edit(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
+            
         pic = await self.wordcloud_(text)
         await ctx.send(file=discord.File(pic, "wordcloud.png"))
 
