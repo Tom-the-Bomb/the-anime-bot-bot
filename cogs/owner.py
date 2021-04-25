@@ -49,6 +49,7 @@ class MyMenu(menus.Menu, timeout=9223372036854775807):
 class owners(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.cog_regex = re.compile(r'cogs/[a-zA-Z]+\.py')
 
     async def cog_check(self, ctx):
         if ctx.author.id not in self.bot.owner_ids:
@@ -112,11 +113,24 @@ class owners(commands.Cog):
 
         stdout = f"{stdout.decode()}" if stdout != b"" else ""
         stderr = f"\n{stderr.decode()}" if stderr != b"" else ""
+        final = f"```\n{stdout}\n{stderr}\n```"
+        if self.cog_regex.findall(final):
+            for i in self.cog_regex.findall(final):
+                try:
+                    self.bot.reload_extension(i.replace("/", ".").replace(".py", ""))
+                except Exception as e:
+                        embed = discord.Embed(
+                            color=0xFF0000,
+                            description=f"Error while reloading cogs \n {e}",
+                        )
+                        await ctx.send(embed=embed)
+                    
+                
         return await ctx.send(
             embed=discord.Embed(
                 color=self.bot.color,
                 title="Pulling from GitHub...",
-                description=f"```\n{stdout}\n{stderr}\n```",
+                description=f"```\n{stdout}\n{stderr}\n```").add_field(name="Reloaded cogs", value=self.cog_regex.findall(final) if self.cog_regex.findall(final) else "No cogs reloaded"),
             )
         )
 
