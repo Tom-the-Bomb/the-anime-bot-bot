@@ -213,10 +213,22 @@ class pictures(commands.Cog):
                     data=resp.content,
                 ) as resp:
                     return (await resp.json())["data"]
+    
+    def resize(self, image: BytesIO) -> BytesIO:
+        with Image.open(image) as img:
+            resized = img.resize((400, 400))
+            b = BytesIO()
+            resized.save(b, "PNG")
+            b.seek(0)
+            resized.close()
+            del resized
+            return b
+
 
     @staticmethod
     def run_polaroid(image1, method, *args, **kwargs):
-        with Image.open(BytesIO(image1)) as img:
+        image1 = self.resize(BytesIO(image1))
+        with Image.open(image1) as img:
             if (
                 img.format == "GIF"
                 and img.n_frames < 200
@@ -256,7 +268,7 @@ class pictures(commands.Cog):
                 final.seek(0)
                 return discord.File(final, filename=f"{method}.gif")
 
-        im = polaroid.Image(image1)
+        im = polaroid.Image(image1.read())
         method1 = getattr(im, method)
         method1(*args, **kwargs)
         b = BytesIO(im.save_bytes("png"))
@@ -290,6 +302,7 @@ class pictures(commands.Cog):
                 img = Image.open(fobj)
                 frames.append(img)
                 fobj.flush()
+                del fobj
         igif = BytesIO()
         frames[0].save(
             igif,
@@ -302,6 +315,7 @@ class pictures(commands.Cog):
         igif.seek(0)
         for i in frames:
             i.close()
+            del i
         return igif
 
 
