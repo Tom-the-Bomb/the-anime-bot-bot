@@ -22,7 +22,8 @@ class chat(commands.Cog):
         return b
         
     @commands.command()
-    async def wordcloud(self, ctx):
+    async def wordcloud(self, ctx, limit: int=1000):
+        limit = min(limit, 10000)
         text = ""
         async for message in ctx.channel.history(limit=1000):
             if message.content:
