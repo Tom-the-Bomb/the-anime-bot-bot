@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from utils.subclasses import AnimeContext
+from io import BytesIO
 from wordcloud import WordCloud
 from matplotlib import pyplot as plt
 from utils.asyncstuff import asyncexe
@@ -12,7 +13,7 @@ class chat(commands.Cog):
         self.bot = bot
     
     @asyncexe()
-    def wordcloud_(text):
+    def wordcloud_(self, text):
         wordcloud = WordCloud().generate(text)
         image = wordcloud.to_image()
         b = BytesIO()
