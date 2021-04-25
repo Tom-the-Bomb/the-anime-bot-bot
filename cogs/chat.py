@@ -24,9 +24,9 @@ class chat(commands.Cog):
     @commands.command()
     async def wordcloud(self, ctx, limit: int=1000):
         limit = min(limit, 10000)
+        counter = 0
         text = ""
         m = await ctx.send(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
-        counter = 0
         async for message in ctx.channel.history(limit=limit):
             if message.content:
                 text += message.content
