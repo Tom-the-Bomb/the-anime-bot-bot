@@ -1080,7 +1080,7 @@ class pictures(commands.Cog):
         ] = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             file = await self.solarize_(url)
             await ctx.reply(file=file)
 
