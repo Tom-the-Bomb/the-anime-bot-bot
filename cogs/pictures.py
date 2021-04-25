@@ -226,7 +226,7 @@ class pictures(commands.Cog):
 
     def run_polaroid(self, image1, method, *args, **kwargs):
         # image1 = self.resize(BytesIO(image1))
-        with Image.open(image1) as img:
+        with Image.open(BytesIO(image1)) as img:
             if (
                 img.format == "GIF"
                 and img.n_frames < 200
@@ -267,6 +267,7 @@ class pictures(commands.Cog):
                 final.seek(0)
                 return discord.File(final, filename=f"{method}.gif")
 
+        image1 = self.resize(BytesIO(image1))
         im = polaroid.Image(image1.read())
         method1 = getattr(im, method)
         method1(*args, **kwargs)
