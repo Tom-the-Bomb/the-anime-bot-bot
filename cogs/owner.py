@@ -131,7 +131,7 @@ class owners(commands.Cog):
             embed=discord.Embed(
                 color=self.bot.color,
                 title="Pulling from GitHub...",
-                description=f"```\n{stdout}\n{stderr}\n```").add_field(name="Reloaded cogs", value=self.cog_regex.findall(final) if self.cog_regex.findall(final) else "No cogs reloaded"),
+                description=f"```\n{stdout}\n{stderr}\n```").add_field(name="Reloaded cogs", value=", ".join(self.cog_regex.findall(final)) if self.cog_regex.findall(final) else "No cogs reloaded"),
         )
 
     @classmethod
