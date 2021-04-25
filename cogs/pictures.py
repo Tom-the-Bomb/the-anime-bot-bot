@@ -320,7 +320,7 @@ class pictures(commands.Cog):
         return igif
 
     def process_gif(self, image, function):
-        with Image.open(BytesIO(image)) as img:
+        with Image.open(BytesIO(image), "RGB") as img:
             if (
                 img.format == "GIF"
                 and img.n_frames < 200
@@ -355,7 +355,7 @@ class pictures(commands.Cog):
                 final.seek(0)
                 return final, img.format
         image = self.resize(BytesIO(image))
-        with Image.open(image) as img_:
+        with Image.open(image, "RGB") as img_:
             img = function(img_)
             b = BytesIO()
             img.save(b, "PNG")
