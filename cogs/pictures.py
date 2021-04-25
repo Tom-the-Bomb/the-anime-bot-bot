@@ -252,8 +252,9 @@ class pictures(commands.Cog):
         im = polaroid.Image(image1)
         method1 = getattr(im, method)
         method1(*args, **kwargs)
+        b = BytesIO(im.save_bytes("png"))
         del im
-        return discord.File(BytesIO(im.save_bytes("png")), filename=f"{method}.png")
+        return discord.File(b, filename=f"{method}.png")
 
     async def polaroid_(self, image, method, *args, **kwargs):
         async with self.bot.session.get(image) as resp:
