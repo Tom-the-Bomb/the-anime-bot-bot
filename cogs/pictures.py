@@ -363,7 +363,7 @@ class pictures(commands.Cog):
             return b, img_.format
 
 
-    def solarize_(self, url):
+    async def solarize_(self, url):
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
