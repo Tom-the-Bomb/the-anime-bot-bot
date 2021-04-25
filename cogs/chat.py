@@ -31,7 +31,7 @@ class chat(commands.Cog):
         async for message in ctx.channel.history(limit=limit):
             if message.content:
                 text += message.content
-                if random.randint(0, 30) == 3:
+                if counter % 25 == 0:
                     await m.edit(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
             counter += 1
             
