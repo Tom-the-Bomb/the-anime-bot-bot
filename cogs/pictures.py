@@ -216,7 +216,7 @@ class pictures(commands.Cog):
     
     def resize(self, image: BytesIO) -> BytesIO:
         with Image.open(image) as img:
-            resized = img.resize((400, 400))
+            resized = img.resize((300, 300))
             b = BytesIO()
             resized.save(b, img.format)
             b.seek(0)
@@ -237,7 +237,7 @@ class pictures(commands.Cog):
                 to_make_gif = []
                 for im in ImageSequence.Iterator(img):
                     b = BytesIO()
-                    im_ = im.resize((400, 400))
+                    im_ = im.resize((300, 300))
                     im_.save(b, "PNG")
                     b.seek(0)
                     to_process.append(b)
