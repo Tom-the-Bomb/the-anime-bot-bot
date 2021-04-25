@@ -131,7 +131,6 @@ class owners(commands.Cog):
                 color=self.bot.color,
                 title="Pulling from GitHub...",
                 description=f"```\n{stdout}\n{stderr}\n```").add_field(name="Reloaded cogs", value=self.cog_regex.findall(final) if self.cog_regex.findall(final) else "No cogs reloaded"),
-            )
         )
 
     @classmethod
