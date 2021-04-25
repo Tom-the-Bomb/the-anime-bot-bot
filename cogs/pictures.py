@@ -228,7 +228,8 @@ class pictures(commands.Cog):
                     p_image = polaroid.Image(i.read())
                     method1 = getattr(p_image, method)
                     method1(*args, **kwargs)
-                    to_make_gif.append(Image.open(BytesIO(p_image.save_bytes())))
+                    to_make_gif.append(Image.open(BytesIO(p_image.save_bytes("png"))))
+                    del p_image
                 final = BytesIO()
                 to_make_gif[0].save(
                                 final,
@@ -240,8 +241,10 @@ class pictures(commands.Cog):
                             )
                 for i in to_process:
                     i.flush()
+                    del i
                 for i in to_make_gif:
                     i.close()
+                    del i
                 final.seek(0)
                 return discord.File(final, filename=f"{method}.gif")
 
@@ -249,6 +252,7 @@ class pictures(commands.Cog):
         im = polaroid.Image(image1)
         method1 = getattr(im, method)
         method1(*args, **kwargs)
+        del im
         return discord.File(BytesIO(im.save_bytes("png")), filename=f"{method}.png")
 
     async def polaroid_(self, image, method, *args, **kwargs):
