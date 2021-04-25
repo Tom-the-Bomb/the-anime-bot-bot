@@ -20,6 +20,7 @@ import polaroid
 from concurrent.futures import ThreadPoolExecutor
 from PIL import Image, ImageDraw
 from PIL import ImageSequence
+from PIL import ImageOps
 from io import BytesIO
 from asyncdagpi import ImageFeatures
 import typing
@@ -318,6 +319,58 @@ class pictures(commands.Cog):
             del i
         return igif
 
+    def process_gif(self, image, function):
+        with Image.open(BytesIO(image)) as img:
+            if (
+                img.format == "GIF"
+                and img.n_frames < 200
+                and img.width <= 3000
+                and img.height <= 3000
+            ):
+                to_process = []
+                to_make_gif = []
+                for im in ImageSequence.Iterator(img):
+                    b = BytesIO()
+                    im_ = im.resize((300, 300))
+                    im_.save(b, "PNG")
+                    b.seek(0)
+                    to_process.append(b)
+                for i in to_process:
+                    to_make_gif.append(function(Image.open(i)))
+                final = BytesIO()
+                to_make_gif[0].save(
+                    final,
+                    format="GIF",
+                    append_images=to_make_gif[1:],
+                    save_all=True,
+                    duration=img.info["duration"],
+                    loop=0,
+                )
+                for i in to_process:
+                    i.flush()
+                    del i
+                for i in to_make_gif:
+                    i.close()
+                    del i
+                final.seek(0)
+                return final, img.format
+        image = self.resize(BytesIO(image))
+        with Image.open(image) as img_:
+            img = function(img_)
+            b = BytesIO()
+            img.save(b, "PNG")
+            b.seek(0)
+            return b, img_.format
+
+
+    def solarize_(self, url):
+        async with self.bot.session.get(url) as resp:
+            image1 = await resp.read()
+        e = ThreadPoolExecutor(max_workers=5)
+        result, format_ = await self.bot.loop.run_in_executor(e, self.process_gif, image1, ImageOps.solarize)
+        e.shutdown()
+        result = discord.File(result, f"The_Anime_Bot_solarize.{format_}")
+        return result
 
     async def circle_(self, background_color, circle_color):
         e = ThreadPoolExecutor(max_workers=5)
@@ -1015,7 +1068,7 @@ class pictures(commands.Cog):
         await ctx.reply(file=file)
 
     @commands.command()
-    async def solar(
+    async def solarize(
         self,
         ctx,
         thing: typing.Union[
@@ -1028,9 +1081,8 @@ class pictures(commands.Cog):
     ):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.solar(), url)
-        file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
-        await ctx.reply(file=file)
+            file = await self.solarize_(url)
+            await ctx.reply(file=file)
 
     @commands.command()
     async def invert(
