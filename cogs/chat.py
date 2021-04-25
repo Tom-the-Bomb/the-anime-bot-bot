@@ -28,7 +28,7 @@ class chat(commands.Cog):
         counter = 0
         text = ""
         m = await ctx.send(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
-        async with ctx.typing:
+        async with ctx.typing():
             async for message in ctx.channel.history(limit=limit):
                 if message.content:
                     text += message.content
