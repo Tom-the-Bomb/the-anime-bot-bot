@@ -218,7 +218,7 @@ class pictures(commands.Cog):
         with Image.open(image) as img:
             resized = img.resize((400, 400))
             b = BytesIO()
-            resized.save(b)
+            resized.save(b, img.format)
             b.seek(0)
             resized.close()
             del resized
