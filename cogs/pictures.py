@@ -9,6 +9,7 @@ import re
 import ratelimiter
 import config
 import flags
+import functools
 import aiohttp
 import asyncio
 from twemoji_parser import emoji_to_url
@@ -16,6 +17,7 @@ import typing
 import os
 from utils.asyncstuff import asyncexe
 import polaroid
+from concurrent.futures import ThreadPoolExecutor
 from PIL import Image, ImageDraw
 from PIL import ImageSequence
 from io import BytesIO
@@ -213,7 +215,6 @@ class pictures(commands.Cog):
                     return (await resp.json())["data"]
 
     @staticmethod
-    @asyncexe()
     def run_polaroid(image1, method, *args, **kwargs):
         with Image.open(BytesIO(image1)) as img:
             if img.format == "GIF" and img.n_frames < 100 and img.width <= 3000 and img.height <= 3000:
@@ -228,7 +229,9 @@ class pictures(commands.Cog):
                     p_image = polaroid.Image(i.read())
                     method1 = getattr(p_image, method)
                     method1(*args, **kwargs)
-                    to_make_gif.append(Image.open(BytesIO(p_image.save_bytes("png"))))
+                    b = BytesIO(p_image.save_bytes("png"))
+                    to_make_gif.append(Image.open(b))
+                    b.flush()
                     del p_image
                 final = BytesIO()
                 to_make_gif[0].save(
@@ -255,11 +258,15 @@ class pictures(commands.Cog):
         b = BytesIO(im.save_bytes("png"))
         del im
         return discord.File(b, filename=f"{method}.png")
-
+        
     async def polaroid_(self, image, method, *args, **kwargs):
         async with self.bot.session.get(image) as resp:
             image1 = await resp.read()
-        return await self.run_polaroid(image1, method, *args, **kwargs)
+        e = ThreadPoolExecutor(max_workers=5)
+        f = functools.partial(self.run_polaroid, image1, method, *args, **kwargs)
+        result = await self.bot.loop.run_in_executor(e, f)
+        e.shutdown()
+        return result
 
     @staticmethod
     @asyncexe()
