@@ -305,7 +305,7 @@ class pictures(commands.Cog):
         return igif
 
 
-    async def circle_(background_color, circle_color):
+    async def circle_(self, background_color, circle_color):
         e = ThreadPoolExecutor(max_workers=5)
         result = await self.bot.loop.run_in_executor(e, self.circle__, background_color, circle_color)
         e.shutdown()
