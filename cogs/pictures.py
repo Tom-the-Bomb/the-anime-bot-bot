@@ -158,6 +158,10 @@ class pictures(commands.Cog):
             async with self.bot.session.get(url) as resp:
                 if resp.status != 200:
                     raise commands.CommandError("Invalid Picture")
+#                 with Image.open(BytesIO(await resp.read())) as img:
+#                     if img.width >= 3000 or img.height >= 3000:
+#                         raise commands.CommandError("Image too large")
+                
         url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
 
@@ -212,7 +216,7 @@ class pictures(commands.Cog):
     @asyncexe()
     def run_polaroid(image1, method, *args, **kwargs):
         with Image.open(BytesIO(image1)) as img:
-            if img.format == "GIF" and img.n_frames < 100 and img.size <= (3000, 3000):
+            if img.format == "GIF" and img.n_frames < 100 and img.width <= 3000 and img.height <= 3000:
                 to_process = []
                 to_make_gif = []
                 for im in ImageSequence.Iterator(img):
