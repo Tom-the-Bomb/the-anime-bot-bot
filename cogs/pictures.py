@@ -225,7 +225,7 @@ class pictures(commands.Cog):
             return b
 
     def run_polaroid(self, image1, method, *args, **kwargs):
-        image1 = self.resize(BytesIO(image1))
+        # image1 = self.resize(BytesIO(image1))
         with Image.open(image1) as img:
             if (
                 img.format == "GIF"
@@ -237,7 +237,8 @@ class pictures(commands.Cog):
                 to_make_gif = []
                 for im in ImageSequence.Iterator(img):
                     b = BytesIO()
-                    im.save(b, "PNG")
+                    im_ = im.resize((400, 400))
+                    im_.save(b, "PNG")
                     b.seek(0)
                     to_process.append(b)
                 for i in to_process:
