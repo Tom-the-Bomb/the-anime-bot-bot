@@ -224,9 +224,7 @@ class pictures(commands.Cog):
             del resized
             return b
 
-
-    @staticmethod
-    def run_polaroid(image1, method, *args, **kwargs):
+    def run_polaroid(self, image1, method, *args, **kwargs):
         image1 = self.resize(BytesIO(image1))
         with Image.open(image1) as img:
             if (
