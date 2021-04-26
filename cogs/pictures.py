@@ -218,10 +218,12 @@ class pictures(commands.Cog):
                     data=resp.content,
                 ) as resp:
                     return (await resp.json())["data"]
-    
+
     def resize(self, image: Image) -> Image:
         if image.height > 500 or image.width > 500:
-            resized = image.resize((int(image.width//1.5), int(image.height//1.5)))
+            resized = image.resize(
+                (int(image.width // 1.5), int(image.height // 1.5))
+            )
             return resized
         return image
 
@@ -366,7 +368,6 @@ class pictures(commands.Cog):
             b.seek(0)
             return b, "png"
 
-
     async def mirror_(self, url):
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
@@ -397,7 +398,6 @@ class pictures(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_grayscale.{format_}")
         return result
 
-
     async def posterize_(self, url):
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
@@ -408,19 +408,22 @@ class pictures(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_posterize.{format_}")
         return result
 
-
     async def solarize_(self, url):
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
-        result, format_ = await self.bot.loop.run_in_executor(e, self.process_gif, image1, ImageOps.solarize)
+        result, format_ = await self.bot.loop.run_in_executor(
+            e, self.process_gif, image1, ImageOps.solarize
+        )
         e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_solarize.{format_}")
         return result
 
     async def circle_(self, background_color, circle_color):
         e = ThreadPoolExecutor(max_workers=5)
-        result = await self.bot.loop.run_in_executor(e, self.circle__, background_color, circle_color)
+        result = await self.bot.loop.run_in_executor(
+            e, self.circle__, background_color, circle_color
+        )
         e.shutdown()
         return result
 
