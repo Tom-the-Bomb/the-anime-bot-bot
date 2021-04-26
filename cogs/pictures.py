@@ -79,7 +79,7 @@ class PictureUrl(commands.Converter):
                 and message.attachments[0].width
                 and message.attachments[0].height
             ):
-                url = message.attachments[0].url
+                url = message.attachments[0].proxy_url
                 return url
         await ctx.send("1")
         if (
