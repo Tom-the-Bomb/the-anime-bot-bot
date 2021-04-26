@@ -319,7 +319,7 @@ class pictures(commands.Cog):
             del i
         return igif
 
-    def process_gif(self, image, function, *args, **kwargs):
+    def process_gif(self, image, function, *args):
         with Image.open(BytesIO(image)) as img:
             if (
                 img.format == "GIF"
@@ -331,7 +331,7 @@ class pictures(commands.Cog):
                 for im in ImageSequence.Iterator(img):
                     im_ = im.resize((300, 300))
                     im_ = im_.convert("RGB")
-                    im_final = function(im_, *args, **kwargs)
+                    im_final = function(im_, *args)
                     to_make_gif.append(im_final)
                 final = BytesIO()
                 to_make_gif[0].save(
