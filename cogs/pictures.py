@@ -219,15 +219,11 @@ class pictures(commands.Cog):
                 ) as resp:
                     return (await resp.json())["data"]
     
-    def resize(self, image: BytesIO) -> BytesIO:
-        with Image.open(image) as img:
-            resized = img.resize((300, 300))
-            b = BytesIO()
-            resized.save(b, img.format)
-            b.seek(0)
-            resized.close()
-            del resized
-            return b
+    def resize(self, image: Image) -> Image:
+        if image.height > 500 or image.width > 500:
+            resized = image.resize((image.width//1.5, image.height//1.5))
+            return resized
+        return image
 
     def run_polaroid(self, image1, method, *args, **kwargs):
         # image1 = self.resize(BytesIO(image1))
@@ -333,7 +329,7 @@ class pictures(commands.Cog):
             ):
                 to_make_gif = []
                 for im in ImageSequence.Iterator(img):
-                    im_ = im.resize((300, 300))
+                    im_ = self.resize(im)
                     im_ = im_.convert("RGB")
                     im_final = function(im_, *args)
                     to_make_gif.append(im_final)
@@ -352,9 +348,9 @@ class pictures(commands.Cog):
                     del i
                 final.seek(0)
                 return final, "gif"
-        image = self.resize(BytesIO(image))
         with Image.open(image) as img_:
             format_ = img_.format
+            img_ = self.resize(img_)
             img_ = img_.convert("RGB")
             img = function(img_, *args)
             b = BytesIO()
