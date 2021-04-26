@@ -163,6 +163,7 @@ class GifUrl(commands.Converter):
             ):
                 url = message.attachments[0].proxy_url
                 url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                await ctx.send(url)
                 return url
 
         if (
