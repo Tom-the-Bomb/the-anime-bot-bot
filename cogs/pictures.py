@@ -359,6 +359,17 @@ class pictures(commands.Cog):
             return b, "png"
 
 
+    async def grayscale_(self, url):
+        async with self.bot.session.get(url) as resp:
+            image1 = await resp.read()
+        e = ThreadPoolExecutor(max_workers=5)
+        f = functools.partial(self.process_gif, image1, ImageOps.grayscale)
+        result, format_ = await self.bot.loop.run_in_executor(e, f)
+        e.shutdown()
+        result = discord.File(result, f"The_Anime_Bot_grayscale.{format_}")
+        return result
+
+
     async def posterize_(self, url):
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
@@ -1249,7 +1260,7 @@ class pictures(commands.Cog):
             await ctx.reply(file=file)
 
     @commands.command()
-    async def charcoal(
+    async def grayscale(
         self,
         ctx,
         thing: typing.Union[
@@ -1262,9 +1273,8 @@ class pictures(commands.Cog):
     ):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.charcoal(), url)
-        file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
-        await ctx.reply(file=file)
+            file = await self
+            await ctx.reply(file=file)
 
     @commands.command()
     async def ascii(
