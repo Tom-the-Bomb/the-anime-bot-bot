@@ -163,7 +163,7 @@ class pictures(commands.Cog):
             async with self.bot.session.get(url) as resp:
                 if resp.status != 200:
                     raise commands.CommandError("Invalid Picture")
-                 if "image" not in resp.content_type:
+                if "image" not in resp.content_type:
                     raise commands.CommandError("Invalid Picture")
         #                 with Image.open(BytesIO(await resp.read())) as img:
         #                     if img.width >= 3000 or img.height >= 3000:
