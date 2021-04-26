@@ -1,6 +1,7 @@
 from utils.asyncstuff import asyncexe
 import ujson
 from utils.subclasses import AnimeContext
+import PIL
 import tracemalloc
 import gc
 import prettify_exceptions
