@@ -348,7 +348,7 @@ class pictures(commands.Cog):
                     del i
                 final.seek(0)
                 return final, "gif"
-        with Image.open(image) as img_:
+        with Image.open(BytesIO(image)) as img_:
             format_ = img_.format
             img_ = self.resize(img_)
             img_ = img_.convert("RGB")
