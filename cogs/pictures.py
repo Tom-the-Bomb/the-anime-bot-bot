@@ -109,13 +109,13 @@ class pictures(commands.Cog):
                 url = str(thing.avatar_url_as(static_format="png"))
             else:
                 thing = str(thing).strip("<>")
-                if self.bot.url_regex.match(thing):
+                if ctx.bot.url_regex.match(thing):
                     url = thing
                 else:
                     url = await emoji_to_url(thing)
                     if url == thing:
                         raise commands.BadArgument("Invalid url")
-            async with self.bot.session.get(url) as resp:
+            async with ctx.bot.session.get(url) as resp:
                 if resp.status != 200:
                     raise commands.BadArgument("Invalid Picture")
                 if "image" not in resp.content_type:
