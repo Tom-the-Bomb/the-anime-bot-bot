@@ -356,7 +356,7 @@ class pictures(commands.Cog):
             b = BytesIO()
             img.save(b, "PNG")
             b.seek(0)
-            return b, format_
+            return b, "png"
 
 
     async def solarize_(self, url):
