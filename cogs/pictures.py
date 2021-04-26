@@ -38,6 +38,90 @@ class pictures(commands.Cog):
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
     
+    class PictureUrl(commands.Converter):
+        async def convert(self, ctx, thing):
+            """
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
+            """
+            Member = commands.MemberConverter()
+            User = commands.UserConverter()
+            PartialEmoji = commands.PartialEmojiConverter()
+            Emoji = commands.EmojiConverter()
+            try:
+               thing = await Member.convert(ctx, thing)
+            except commands.MemberNotFound:
+                try:
+                    thing = await User.convert(ctx, thing)
+                except commands.UserNotFound:
+                    try:
+                        thing = await PartialEmoji.convert(ctx, thing)
+                    except commands.PartialEmojiConversionFailure:
+                        try:
+                            thing = await Emoji.convert(ctx, thing)
+                        except commands.EmojiNotFound:
+                            thing = str(thing)
+            if ctx.message.reference:
+                message = ctx.message.reference.resolved
+                if message.embeds and message.embeds[0].type == "image":
+                    url = message.embeds[0].thumbnail.proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    return url
+                elif message.embeds and message.embeds[0].type == "rich":
+                    if message.embeds[0].image.proxy_url:
+                        url = message.embeds[0].image.proxy_url
+                        url = url.replace(
+                            "cdn.discordapp.com", "media.discordapp.net"
+                        )
+                        return url
+                    elif message.embeds[0].thumbnail.proxy_url:
+                        url = message.embeds[0].thumbnail.proxy_url
+                        url = url.replace(
+                            "cdn.discordapp.com", "media.discordapp.net"
+                        )
+                        return url
+                elif (
+                    message.attachments
+                    and message.attachments[0].width
+                    and message.attachments[0].height
+                ):
+                    url = message.attachments[0].proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    return url
+
+            if (
+                ctx.message.attachments
+                and ctx.message.attachments[0].width
+                and ctx.message.attachments[0].height
+            ):
+                return ctx.message.attachments[0].proxy_url.replace(
+                    "cdn.discordapp.com", "media.discordapp.net"
+                )
+
+            if thing is None:
+                url = str(ctx.author.avatar_url_as(format="png"))
+            elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
+                url = str(thing.url_as())
+            elif isinstance(thing, (discord.Member, discord.User)):
+                url = str(thing.avatar_url_as(format="png"))
+            else:
+                thing = str(thing).strip("<>")
+                if ctx.bot.url_regex.match(thing):
+                    url = thing
+                else:
+                    url = await emoji_to_url(thing)
+                    if url == thing:
+                        raise commands.BadArgument("Invalid url")
+            async with ctx.bot.session.get(url) as resp:
+                if resp.status != 200:
+                    raise commands.BadArgument("Invalid Picture")
+                if "image" not in resp.content_type:
+                    raise commands.BadArgument("Invalid Picture")
+            url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+            return url
     class GifUrl(commands.Converter):
         async def convert(self, ctx, thing):
             """
@@ -540,16 +624,10 @@ class pictures(commands.Cog):
     async def qr_decode(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
-        url = await self.get_url(ctx, thing)
-        async with self.bot.session.get(url) as resp:
+        
+        async with self.bot.session.get(thing) as resp:
             bytes_ = BytesIO(await resp.read())
             try:
                 data = await self.qr_dec(bytes_)
@@ -562,16 +640,10 @@ class pictures(commands.Cog):
     async def caption(
         self,
         ctx: AnimeContext,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
-        url = await self.get_url(ctx, thing)
-        data = {"Content": url, "Type": "CaptionRequest"}
+        
+        data = {"Content": thing, "Type": "CaptionRequest"}
         async with self.bot.session.post(
             "https://captionbot.azurewebsites.net/api/messages",
             headers={"Content-Type": "application/json; charset=utf-8"},
@@ -580,7 +652,7 @@ class pictures(commands.Cog):
             text = await resp.text()
             embed = discord.Embed(color=self.bot.color, title=text)
             embed.set_image(url="attachment://caption.png")
-            async with self.bot.session.get(url) as resp:
+            async with self.bot.session.get(thing) as resp:
                 bytes_ = BytesIO(await resp.read())
             await ctx.send(
                 embed=embed, file=discord.File(bytes_, "caption.png")
@@ -590,46 +662,28 @@ class pictures(commands.Cog):
     async def botcdn(
         self,
         ctx: AnimeContext,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
-        url = await self.get_url(ctx, thing)
-        await ctx.send(f"{await self.bot_cdn(url)}")
+        
+        await ctx.send(f"{await self.bot_cdn(thing)}")
 
     @commands.command()
     async def cdn(
         self,
         ctx: AnimeContext,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
-        url = await self.get_url(ctx, thing)
-        await ctx.send(f"<{await self.cdn_(url)}>")
+        
+        await ctx.send(f"<{await self.cdn_(thing)}>")
 
     @commands.command()
     async def ocr(
         self,
         ctx: AnimeContext,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
-        url = await self.get_url(ctx, thing)
-        await ctx.send(f"```\n{await self.ocr_(url)}\n```")
+        
+        await ctx.send(f"```\n{await self.ocr_(thing)}\n```")
 
     @commands.command()
     async def aww(self, ctx):
@@ -666,10 +720,8 @@ class pictures(commands.Cog):
             ]
         ],
     ):
-        url = await self.get_url(ctx, woman)
-        url1 = await self.get_url(ctx, cat)
         pic = await self.bot.vacefron_api.woman_yelling_at_cat(
-            woman=url, cat=url1
+            woman=woman, cat=cat
         )
         await ctx.send(
             file=discord.File(
@@ -767,12 +819,12 @@ class pictures(commands.Cog):
     ):
         async with ctx.channel.typing():
             level = min(level, 1)
-            url = await self.get_url(ctx, thing)
+            
         embed = discord.Embed(color=0x00FF6A).set_image(
             url="attachment://alex.png"
         )
         image = discord.File(
-            await (await self.bot.alex.amiajoke(url)).read(), "alex.png"
+            await (await self.bot.alex.amiajoke(thing)).read(), "alex.png"
         )
         await ctx.send(embed=embed, file=image)
 
@@ -829,9 +881,9 @@ class pictures(commands.Cog):
     ):
         async with ctx.channel.typing():
             level = min(level, 1)
-            url = await self.get_url(ctx, thing)
+            
             try:
-                image = await self.bot.zaneapi.pixelate(url, level)
+                image = await self.bot.zaneapi.pixelate(thing, level)
             except asyncio.TimeoutError:
                 raise commands.CommandError("Zaneapi timeout")
             embed = discord.Embed(color=0x00FF6A).set_image(
@@ -846,18 +898,12 @@ class pictures(commands.Cog):
     async def swirl(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
+            
             try:
-                image = await self.bot.zaneapi.swirl(url)
+                image = await self.bot.zaneapi.swirl(thing)
             except asyncio.TimeoutError:
                 raise commands.CommandError("Zaneapi timeout")
             embed = discord.Embed(color=0x00FF6A).set_image(
@@ -871,17 +917,11 @@ class pictures(commands.Cog):
     async def sobel(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.sobel(url)
+            
+            image = await self.bot.zaneapi.sobel(thing)
             embed = discord.Embed(color=0x00FF6A).set_image(
                 url="attachment://sobel.png"
             )
@@ -893,17 +933,11 @@ class pictures(commands.Cog):
     async def palette(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.palette(url)
+            
+            image = await self.bot.zaneapi.palette(thing)
             embed = discord.Embed(color=0x00FF6A).set_image(
                 url="attachment://palette.png"
             )
@@ -916,17 +950,11 @@ class pictures(commands.Cog):
     async def sort(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.sort(url)
+            
+            image = await self.bot.zaneapi.sort(thing)
             embed = discord.Embed(color=0x00FF6A).set_image(
                 url="attachment://sort.png"
             )
@@ -938,18 +966,12 @@ class pictures(commands.Cog):
     async def cube(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
+            
             try:
-                image = await self.bot.zaneapi.cube(url)
+                image = await self.bot.zaneapi.cube(thing)
             except asyncio.TimeoutError:
                 raise commands.CommandError("Zaneapi timeout")
             embed = discord.Embed(color=0x00FF6A).set_image(
@@ -963,34 +985,22 @@ class pictures(commands.Cog):
     async def braille(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.braille(url)
+            
+            image = await self.bot.zaneapi.braille(thing)
             await ctx.send(image)
 
     @commands.command(aliases=["dot"])
     async def dots(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.dots(url)
+            
+            image = await self.bot.zaneapi.dots(thing)
             embed = discord.Embed(color=0x00FF6A).set_image(
                 url="attachment://dots.png"
             )
@@ -1002,17 +1012,11 @@ class pictures(commands.Cog):
     async def threshold(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.threshold(url)
+            
+            image = await self.bot.zaneapi.threshold(thing)
             embed = discord.Embed(color=0x00FF6A).set_image(
                 url="attachment://threshold.png"
             )
@@ -1025,17 +1029,11 @@ class pictures(commands.Cog):
     async def spread(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.spread(url)
+            
+            image = await self.bot.zaneapi.spread(thing)
             embed = discord.Embed(color=0x00FF6A).set_image(
                 url="attachment://spread.gif"
             )
@@ -1047,17 +1045,11 @@ class pictures(commands.Cog):
     async def jpeg(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.jpeg(url)
+            
+            image = await self.bot.zaneapi.jpeg(thing)
             embed = discord.Embed(color=0x00FF6A).set_image(
                 url="attachment://jpeg.gif"
             )
@@ -1081,8 +1073,8 @@ class pictures(commands.Cog):
         level: float = 0.6,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.magic(url, level)
+            
+            image = await self.bot.zaneapi.magic(thing, level)
             embed = discord.Embed(color=0x00FF6A).set_image(
                 url="attachment://magic.gif"
             )
@@ -1090,53 +1082,53 @@ class pictures(commands.Cog):
                 file=discord.File(fp=image, filename="magic.gif"), embed=embed
             )
 
-    @commands.command()
-    @commands.max_concurrency(1, commands.BucketType.user)
-    async def floor(
-        self,
-        ctx,
-        thing: commands.Greedy[
-            typing.Union[
-                discord.Member,
-                discord.User,
-                discord.PartialEmoji,
-                discord.Emoji,
-                str,
-            ]
-        ] = None,
-    ):
-        async with ctx.channel.typing():
-            if not thing:
-                url = await self.get_url(ctx, thing)
-                image = await self.bot.zaneapi.floor(url)
-                embed = discord.Embed(color=0x00FF6A).set_image(
-                    url="attachment://floor.gif"
-                )
-                return await ctx.send(
-                    file=discord.File(fp=image, filename="floor.gif"),
-                    embed=embed,
-                )
+    # @commands.command()
+    # @commands.max_concurrency(1, commands.BucketType.user)
+    # async def floor(
+    #     self,
+    #     ctx,
+    #     thing: commands.Greedy[
+    #         typing.Union[
+    #             discord.Member,
+    #             discord.User,
+    #             discord.PartialEmoji,
+    #             discord.Emoji,
+    #             str,
+    #         ]
+    #     ] = None,
+    # ):
+    #     async with ctx.channel.typing():
+    #         if not thing:
+                
+    #             image = await self.bot.zaneapi.floor(thing)
+    #             embed = discord.Embed(color=0x00FF6A).set_image(
+    #                 url="attachment://floor.gif"
+    #             )
+    #             return await ctx.send(
+    #                 file=discord.File(fp=image, filename="floor.gif"),
+    #                 embed=embed,
+    #             )
 
-            if len(thing) > 10:
-                return await ctx.send("the max is 10")
-            for i in thing:
-                url = await self.get_url(ctx, i)
-                image = await self.bot.zaneapi.floor(url)
-                embed = discord.Embed(color=0x00FF6A).set_image(
-                    url="attachment://floor.gif"
-                )
-                await ctx.send(
-                    file=discord.File(fp=image, filename="floor.gif"),
-                    embed=embed,
-                )
+    #         if len(thing) > 10:
+    #             return await ctx.send("the max is 10")
+    #         for i in thing:
+    #             url = await self.get_url(ctx, i)
+    #             image = await self.bot.zaneapi.floor(url)
+    #             embed = discord.Embed(color=0x00FF6A).set_image(
+    #                 url="attachment://floor.gif"
+    #             )
+    #             await ctx.send(
+    #                 file=discord.File(fp=image, filename="floor.gif"),
+    #                 embed=embed,
+    #             )
 
-    @commands.command()
-    async def noise(self, ctx):
-        stat_ = await self.image(
-            ctx,
-            await ctx.author.avatar_url_as(format="png").read(),
-            "add_noise_rand",
-        )
+    # @commands.command()
+    # async def noise(self, ctx):
+    #     stat_ = await self.image(
+    #         ctx,
+    #         await ctx.author.avatar_url_as(format="png").read(),
+    #         "add_noise_rand",
+    #     )
 
     @commands.command(aliases=["wtp"])
     async def pokemon(self, ctx):
@@ -1185,24 +1177,18 @@ class pictures(commands.Cog):
     async def captcha(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
         *,
         text="enter something here",
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
+            
             text1 = text
-        img = await self.bot.dag.image_process(
-            ImageFeatures.captcha(), url, text=text1
-        )
-        file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
-        await ctx.reply(file=file)
+            img = await self.bot.dag.image_process(
+                ImageFeatures.captcha(), thing, text=text1
+            )
+            file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
+            await ctx.reply(file=file)
 
     @commands.command()
     async def solarize(
@@ -1245,17 +1231,11 @@ class pictures(commands.Cog):
     async def awareness(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.magik(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.magik(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1263,17 +1243,11 @@ class pictures(commands.Cog):
     async def night(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.night(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.night(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1281,17 +1255,11 @@ class pictures(commands.Cog):
     async def paint(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.paint(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.paint(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1299,17 +1267,11 @@ class pictures(commands.Cog):
     async def polaroid(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.polaroid(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.polaroid(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1317,17 +1279,11 @@ class pictures(commands.Cog):
     async def sepia(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.sepia(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.sepia(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1375,17 +1331,11 @@ class pictures(commands.Cog):
     async def ascii(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.ascii(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.ascii(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1393,17 +1343,11 @@ class pictures(commands.Cog):
     async def deepfry(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.deepfry(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.deepfry(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1411,17 +1355,11 @@ class pictures(commands.Cog):
     async def trash(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.trash(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.trash(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1429,17 +1367,11 @@ class pictures(commands.Cog):
     async def gay(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.gay(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.gay(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1447,17 +1379,11 @@ class pictures(commands.Cog):
     async def shatter(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.shatter(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.shatter(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1465,17 +1391,11 @@ class pictures(commands.Cog):
     async def delete(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.delete(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.delete(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1483,17 +1403,11 @@ class pictures(commands.Cog):
     async def fedora(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.fedora(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.fedora(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1501,17 +1415,11 @@ class pictures(commands.Cog):
     async def jail(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.jail(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.jail(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1519,17 +1427,11 @@ class pictures(commands.Cog):
     async def sith(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.sith(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.sith(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1537,17 +1439,11 @@ class pictures(commands.Cog):
     async def bad(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.bad(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.bad(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1555,17 +1451,11 @@ class pictures(commands.Cog):
     async def obama(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.obama(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.obama(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1573,17 +1463,11 @@ class pictures(commands.Cog):
     async def hitler(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.hitler(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.hitler(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1591,17 +1475,11 @@ class pictures(commands.Cog):
     async def satan(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.satan(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.satan(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1609,17 +1487,11 @@ class pictures(commands.Cog):
     async def angel(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.angel(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.angel(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1627,17 +1499,11 @@ class pictures(commands.Cog):
     async def rgb(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.rgb(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.rgb(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1645,17 +1511,11 @@ class pictures(commands.Cog):
     async def blur(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.blur(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.blur(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1663,17 +1523,11 @@ class pictures(commands.Cog):
     async def hog(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.hog(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.hog(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1681,17 +1535,11 @@ class pictures(commands.Cog):
     async def triangle(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.triangle(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.triangle(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1699,17 +1547,11 @@ class pictures(commands.Cog):
     async def wasted(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.wasted(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.wasted(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1717,17 +1559,11 @@ class pictures(commands.Cog):
     async def america(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.america(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.america(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1735,17 +1571,11 @@ class pictures(commands.Cog):
     async def triggered(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.triggered(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.triggered(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1753,17 +1583,11 @@ class pictures(commands.Cog):
     async def wanted(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.wanted(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.wanted(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1771,17 +1595,11 @@ class pictures(commands.Cog):
     async def colors(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.colors(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.colors(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
@@ -1789,17 +1607,11 @@ class pictures(commands.Cog):
     async def pixel(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: PictureUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.pixel(), url)
+            
+        img = await self.bot.dag.image_process(ImageFeatures.pixel(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
         await ctx.reply(file=file)
 
