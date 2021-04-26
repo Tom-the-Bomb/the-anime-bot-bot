@@ -331,7 +331,7 @@ class pictures(commands.Cog):
                 for im in ImageSequence.Iterator(img):
                     im_ = im.resize((300, 300))
                     im_ = im_.convert("RGB")
-                    im_final = function(im_, *args)
+                    im_final = function(im_, args)
                     to_make_gif.append(im_final)
                 final = BytesIO()
                 to_make_gif[0].save(
