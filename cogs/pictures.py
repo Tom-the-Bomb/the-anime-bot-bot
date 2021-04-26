@@ -53,7 +53,7 @@ class pictures(commands.Cog):
             Emoji = commands.EmojiConverter()
             if thing:
                 try:
-                thing = await Member.convert(ctx, thing)
+                    thing = await Member.convert(ctx, thing)
                 except commands.MemberNotFound:
                     try:
                         thing = await User.convert(ctx, thing)
@@ -137,7 +137,7 @@ class pictures(commands.Cog):
             Emoji = commands.EmojiConverter()
             if thing:
                 try:
-                thing = await Member.convert(ctx, thing)
+                    thing = await Member.convert(ctx, thing)
                 except commands.MemberNotFound:
                     try:
                         thing = await User.convert(ctx, thing)
