@@ -79,7 +79,7 @@ class PictureUrl(commands.Converter):
                 and message.attachments[0].width
                 and message.attachments[0].height
             ):
-                url = message.attachments[0].proxy_url
+                url = message.attachments[0].url
                 return url
         await ctx.send("1")
         if (
@@ -88,7 +88,7 @@ class PictureUrl(commands.Converter):
             and ctx.message.attachments[0].height
         ):
             await ctx.send("2")
-            return ctx.message.attachments[0].proxy_url
+            return ctx.message.attachments[0].url
         await ctx.send("3")
         if thing is None:
             url = str(ctx.author.avatar_url_as(format="png"))
