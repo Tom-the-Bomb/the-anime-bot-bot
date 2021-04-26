@@ -89,7 +89,6 @@ class pictures(commands.Cog):
                     and message.attachments[0].height
                 ):
                     url = message.attachments[0].proxy_url
-                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
                     return url
 
             if (
@@ -147,7 +146,7 @@ class pictures(commands.Cog):
                         try:
                             thing = await Emoji.convert(ctx, thing)
                         except commands.EmojiNotFound:
-                            thing = str(thing)
+                            thing = thing
             if ctx.message.reference:
                 message = ctx.message.reference.resolved
                 if message.embeds and message.embeds[0].type == "image":
