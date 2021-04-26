@@ -321,6 +321,7 @@ class pictures(commands.Cog):
 
     def process_gif(self, image, function):
         with Image.open(BytesIO(image)) as img:
+            format_ = img.format
             if (
                 img.format == "GIF"
                 and img.n_frames < 200
@@ -346,15 +347,16 @@ class pictures(commands.Cog):
                     i.close()
                     del i
                 final.seek(0)
-                return final, img.format
+                return final, format_
         image = self.resize(BytesIO(image))
         with Image.open(image) as img_:
+            format_ = img_.format
             img_ = img_.convert("RGB")
             img = function(img_)
             b = BytesIO()
             img.save(b, "PNG")
             b.seek(0)
-            return b, img_.format
+            return b, format_
 
 
     async def solarize_(self, url):
