@@ -820,13 +820,13 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             level = min(level, 1)
             
-        embed = discord.Embed(color=0x00FF6A).set_image(
-            url="attachment://alex.png"
-        )
-        image = discord.File(
-            await (await self.bot.alex.amiajoke(thing)).read(), "alex.png"
-        )
-        await ctx.send(embed=embed, file=image)
+            embed = discord.Embed(color=0x00FF6A).set_image(
+                url="attachment://alex.png"
+            )
+            image = discord.File(
+                await (await self.bot.alex.amiajoke(thing)).read(), "alex.png"
+            )
+            await ctx.send(embed=embed, file=image)
 
     @commands.group(invoke_without_command=True)
     async def supreme(
@@ -1235,9 +1235,9 @@ class pictures(commands.Cog):
     ):
         async with ctx.channel.typing():
             
-        img = await self.bot.dag.image_process(ImageFeatures.magik(), thing)
-        file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
-        await ctx.reply(file=file)
+            img = await self.bot.dag.image_process(ImageFeatures.magik(), thing)
+            file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
+            await ctx.reply(file=file)
 
     @commands.command()
     async def night(
@@ -1245,7 +1245,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.night(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1257,7 +1257,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.paint(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1269,7 +1269,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.polaroid(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1281,7 +1281,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.sepia(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1333,7 +1333,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.ascii(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1345,7 +1345,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.deepfry(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1357,7 +1357,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.trash(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1369,7 +1369,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.gay(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1381,7 +1381,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.shatter(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1393,7 +1393,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.delete(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1405,7 +1405,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.fedora(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1417,7 +1417,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.jail(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1429,7 +1429,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.sith(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1441,7 +1441,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.bad(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1453,7 +1453,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.obama(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1465,7 +1465,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.hitler(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1477,7 +1477,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.satan(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1489,7 +1489,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.angel(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1501,7 +1501,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.rgb(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1513,7 +1513,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.blur(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1525,7 +1525,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.hog(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1537,7 +1537,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.triangle(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1549,7 +1549,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.wasted(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1561,7 +1561,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.america(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1573,7 +1573,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.triggered(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1585,7 +1585,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.wanted(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1597,7 +1597,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.colors(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1609,7 +1609,7 @@ class pictures(commands.Cog):
         ctx,
         thing: PictureUrl = None,
     ):
-        async with ctx.channel.typing():
+        await ctx.trigger_typing()
             
         img = await self.bot.dag.image_process(ImageFeatures.pixel(), thing)
         file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
