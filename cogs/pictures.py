@@ -268,7 +268,8 @@ class pictures(commands.Cog):
                 final.seek(0)
                 return discord.File(final, filename=f"{method}.gif")
 
-        image1_ = self.resize(Image.open(BytesIO(image1)))
+        i = Image.open(BytesIO(image1))
+        image1_ = self.resize(i)
         image1 = BytesIO()
         image1_.save(image1, "PNG")
         image1.seek(0)
@@ -277,6 +278,10 @@ class pictures(commands.Cog):
         method1(*args, **kwargs)
         b = BytesIO(im.save_bytes("png"))
         del im
+        i.close()
+        del i
+        image1.flush()
+        del image1
         return discord.File(b, filename=f"{method}.png")
 
     async def polaroid_(self, image, method, *args, **kwargs):
