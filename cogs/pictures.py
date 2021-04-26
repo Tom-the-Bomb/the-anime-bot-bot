@@ -221,7 +221,7 @@ class pictures(commands.Cog):
     
     def resize(self, image: Image) -> Image:
         if image.height > 500 or image.width > 500:
-            resized = image.resize((image.width//1.5, image.height//1.5))
+            resized = image.resize((int(image.width//1.5), int(image.height//1.5)))
             return resized
         return image
 
