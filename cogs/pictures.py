@@ -1208,52 +1208,29 @@ class pictures(commands.Cog):
     async def solarize(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: GifUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_gif_url(ctx, thing)
-            file = await self.solarize_(url)
+            file = await self.solarize_(thing)
             await ctx.reply(file=file)
 
     @commands.command()
     async def invert(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: GifUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_gif_url(ctx, thing)
-        await ctx.reply(file=await self.polaroid_(url, "invert"))
+        await ctx.reply(file=await self.polaroid_(thing, "invert"))
 
     @commands.command()
     async def oil(
         self,
         ctx,
-        thing: typing.Optional[
-            typing.Union[
-                discord.Member,
-                discord.User,
-                discord.PartialEmoji,
-                discord.Emoji,
-                str,
-            ]
-        ],
+        thing: GifUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_gif_url(ctx, thing)
-        await ctx.reply(file=await self.polaroid_(url, "oil", 3, 10))
+            await ctx.reply(file=await self.polaroid_(thing, "oil", 3, 10))
 
     @commands.command()
     async def rainbow(
@@ -1358,68 +1335,40 @@ class pictures(commands.Cog):
     async def posterize(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: GifUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_gif_url(ctx, thing)
-            file = await self.posterize_(url)
+            file = await self.posterize_(thing)
             await ctx.reply(file=file)
 
     @commands.command()
     async def mirror(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: GifUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_gif_url(ctx, thing)
-            file = await self.mirror_(url)
+            file = await self.mirror_(thing)
             await ctx.reply(file=file)
 
     @commands.command()
     async def flip(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: GifUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_gif_url(ctx, thing)
-            file = await self.flip_(url)
+            file = await self.flip_(thing)
             await ctx.reply(file=file)
 
     @commands.command()
     async def grayscale(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: GifUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_gif_url(ctx, thing)
-            file = await self.grayscale_(url)
+            file = await self.grayscale_(thing)
             await ctx.reply(file=file)
 
     @commands.command()
