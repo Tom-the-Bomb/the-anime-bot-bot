@@ -37,6 +37,94 @@ class pictures(commands.Cog):
         )
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
+    
+    class GifUrl(commands.Converter):
+        async def convert(self, ctx, thing):
+            """
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
+            """
+            Member = commands.MemberConverter()
+            User = commands.UserConverter()
+            PartialEmoji = commands.PartialEmojiConverter()
+            Emoji = commands.EmojiConverter()
+            try:
+               thing = await Member.convert(ctx, thing)
+            except commands.MemberNotFound:
+                try:
+                    thing = await User.convert(ctx, thing)
+                except commands.UserNotFound:
+                    try:
+                        thing = await PartialEmoji.convert(ctx, thing)
+                    except commands.PartialEmojiConversionFailure:
+                        try:
+                            thing = await Emoji.convert(ctx, thing)
+                        except commands.EmojiNotFound:
+                            thing = str(thing)
+            if ctx.message.reference:
+                message = ctx.message.reference.resolved
+                if message.embeds and message.embeds[0].type == "image":
+                    url = message.embeds[0].thumbnail.proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    return url
+                elif message.embeds and message.embeds[0].type == "rich":
+                    if message.embeds[0].image.proxy_url:
+                        url = message.embeds[0].image.proxy_url
+                        url = url.replace(
+                            "cdn.discordapp.com", "media.discordapp.net"
+                        )
+                        return url
+                    elif message.embeds[0].thumbnail.proxy_url:
+                        url = message.embeds[0].thumbnail.proxy_url
+                        url = url.replace(
+                            "cdn.discordapp.com", "media.discordapp.net"
+                        )
+                        return url
+                elif (
+                    message.attachments
+                    and message.attachments[0].width
+                    and message.attachments[0].height
+                ):
+                    url = message.attachments[0].proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                    return url
+
+            if (
+                ctx.message.attachments
+                and ctx.message.attachments[0].width
+                and ctx.message.attachments[0].height
+            ):
+                return ctx.message.attachments[0].proxy_url.replace(
+                    "cdn.discordapp.com", "media.discordapp.net"
+                )
+
+            if thing is None:
+                url = str(ctx.author.avatar_url_as(static_format="png"))
+            elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
+                url = str(thing.url_as())
+            elif isinstance(thing, (discord.Member, discord.User)):
+                url = str(thing.avatar_url_as(static_format="png"))
+            else:
+                thing = str(thing).strip("<>")
+                if self.bot.url_regex.match(thing):
+                    url = thing
+                else:
+                    url = await emoji_to_url(thing)
+                    if url == thing:
+                        raise commands.BadArgument("Invalid url")
+            async with self.bot.session.get(url) as resp:
+                if resp.status != 200:
+                    raise commands.BadArgument("Invalid Picture")
+                if "image" not in resp.content_type:
+                    raise commands.BadArgument("Invalid Picture")
+            url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+            return url
+
+
+            
 
     async def get_gif_url(self, ctx: AnimeContext, thing, **kwargs):
         avatar = kwargs.get("avatar", True)
@@ -1171,17 +1259,10 @@ class pictures(commands.Cog):
     async def rainbow(
         self,
         ctx,
-        thing: typing.Union[
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-        ] = None,
+        thing: GifUrl = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_gif_url(ctx, thing)
-        await ctx.reply(file=await self.polaroid_(url, "apply_gradient"))
+            await ctx.reply(file=await self.polaroid_(thing, "apply_gradient"))
 
     @commands.command()
     async def awareness(
