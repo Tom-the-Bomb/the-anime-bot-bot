@@ -359,6 +359,16 @@ class pictures(commands.Cog):
             return b, "png"
 
 
+    async def mirror_(self, url):
+        async with self.bot.session.get(url) as resp:
+            image1 = await resp.read()
+        e = ThreadPoolExecutor(max_workers=5)
+        f = functools.partial(self.process_gif, image1, ImageOps.mirror)
+        result, format_ = await self.bot.loop.run_in_executor(e, f)
+        e.shutdown()
+        result = discord.File(result, f"The_Anime_Bot_mirror.{format_}")
+        return result
+
     async def flip_(self, url):
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
@@ -1267,6 +1277,23 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             url = await self.get_gif_url(ctx, thing)
             file = await self.posterize_(url)
+            await ctx.reply(file=file)
+
+    @commands.command()
+    async def mirror(
+        self,
+        ctx,
+        thing: typing.Union[
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
+        ] = None,
+    ):
+        async with ctx.channel.typing():
+            url = await self.get_gif_url(ctx, thing)
+            file = await self.mirror_(url)
             await ctx.reply(file=file)
 
     @commands.command()
