@@ -686,7 +686,6 @@ class pictures(commands.Cog):
         ctx: AnimeContext,
         thing: PictureUrl = None,
     ):
-        return await ctx.send(thing)
         await ctx.send(f"```\n{await self.ocr_(thing)}\n```")
 
     @commands.command()
