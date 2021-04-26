@@ -362,7 +362,7 @@ class pictures(commands.Cog):
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
-        f = functools.partial(self.process_gif, image1, ImageOps.posterize, 5)
+        f = functools.partial(self.process_gif, image1, ImageOps.posterize, 1)
         result, format_ = await self.bot.loop.run_in_executor(e, f)
         e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_posterize.{format_}")
