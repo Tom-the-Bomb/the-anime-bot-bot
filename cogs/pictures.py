@@ -1273,7 +1273,7 @@ class pictures(commands.Cog):
     ):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
-            file = await self
+            file = await self.grayscale_(url)
             await ctx.reply(file=file)
 
     @commands.command()
