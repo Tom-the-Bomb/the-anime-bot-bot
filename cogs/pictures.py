@@ -347,6 +347,8 @@ class pictures(commands.Cog):
                 for i in to_make_gif:
                     i.close()
                     del i
+                print(duration)
+                print(to_make_gif)
                 final.seek(0)
                 return final, format_
         image = self.resize(BytesIO(image))
