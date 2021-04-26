@@ -115,6 +115,8 @@ class pictures(commands.Cog):
                     url = await emoji_to_url(thing)
                     if url == thing:
                         raise commands.BadArgument("Invalid url")
+             if not url:
+                raise commands.MissingRequiredArgument()
             async with ctx.bot.session.get(url) as resp:
                 if resp.status != 200:
                     raise commands.BadArgument("Invalid Picture")
@@ -199,6 +201,8 @@ class pictures(commands.Cog):
                     url = await emoji_to_url(thing)
                     if url == thing:
                         raise commands.BadArgument("Invalid url")
+             if not url:
+                raise commands.MissingRequiredArgument()
             async with ctx.bot.session.get(url) as resp:
                 if resp.status != 200:
                     raise commands.BadArgument("Invalid Picture")
