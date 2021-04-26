@@ -81,15 +81,12 @@ class PictureUrl(commands.Converter):
             ):
                 url = message.attachments[0].proxy_url
                 return url
-        await ctx.send("1")
         if (
             ctx.message.attachments
             and ctx.message.attachments[0].width
             and ctx.message.attachments[0].height
         ):
-            await ctx.send("2")
-            return ctx.message.attachments[0].url
-        await ctx.send("3")
+            return ctx.message.attachments[0].proxy_url
         if thing is None:
             url = str(ctx.author.avatar_url_as(format="png"))
         elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
