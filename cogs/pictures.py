@@ -268,7 +268,10 @@ class pictures(commands.Cog):
                 final.seek(0)
                 return discord.File(final, filename=f"{method}.gif")
 
-        image1 = self.resize(Image.open(BytesIO(image1)))
+        image1_ = self.resize(Image.open(BytesIO(image1)))
+        image1 = BytesIO()
+        image1_.save(image1, "PNG")
+        image1.seek(0)
         im = polaroid.Image(image1.read())
         method1 = getattr(im, method)
         method1(*args, **kwargs)
