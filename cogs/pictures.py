@@ -322,6 +322,7 @@ class pictures(commands.Cog):
     def process_gif(self, image, function):
         with Image.open(BytesIO(image)) as img:
             format_ = img.format
+            duration = img.info["duration"]
             if (
                 img.format == "GIF"
                 and img.n_frames < 200
@@ -340,7 +341,7 @@ class pictures(commands.Cog):
                     format="GIF",
                     append_images=to_make_gif[1:],
                     save_all=True,
-                    duration=img.info["duration"],
+                    duration=duration,
                     loop=0,
                 )
                 for i in to_make_gif:
