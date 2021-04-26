@@ -97,9 +97,7 @@ class pictures(commands.Cog):
                 and ctx.message.attachments[0].width
                 and ctx.message.attachments[0].height
             ):
-                return ctx.message.attachments[0].proxy_url.replace(
-                    "cdn.discordapp.com", "media.discordapp.net"
-                )
+                return ctx.message.attachments[0].proxy_url
 
             if thing is None:
                 url = str(ctx.author.avatar_url_as(format="png"))
@@ -183,9 +181,7 @@ class pictures(commands.Cog):
                 and ctx.message.attachments[0].width
                 and ctx.message.attachments[0].height
             ):
-                return ctx.message.attachments[0].proxy_url.replace(
-                    "cdn.discordapp.com", "media.discordapp.net"
-                )
+                return ctx.message.attachments[0].proxy_url
 
             if thing is None:
                 url = str(ctx.author.avatar_url_as(static_format="png"))
