@@ -319,7 +319,7 @@ class pictures(commands.Cog):
             del i
         return igif
 
-    def process_gif(self, image, function):
+    def process_gif(self, image, function, *args, **kwargs):
         with Image.open(BytesIO(image)) as img:
             if (
                 img.format == "GIF"
@@ -331,7 +331,7 @@ class pictures(commands.Cog):
                 for im in ImageSequence.Iterator(img):
                     im_ = im.resize((300, 300))
                     im_ = im_.convert("RGB")
-                    im_final = function(im_)
+                    im_final = function(i, *args, **kwargs)
                     to_make_gif.append(im_final)
                 final = BytesIO()
                 to_make_gif[0].save(
@@ -362,7 +362,8 @@ class pictures(commands.Cog):
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
-        result, format_ = await self.bot.loop.run_in_executor(e, self.process_gif, image1, ImageOps.posterize)
+        f = functools.partial(self.process_gif, image1, ImageOps.posterize, 5)
+        result, format_ = await self.bot.loop.run_in_executor(e, f)
         e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_posterize.{format_}")
         return result
