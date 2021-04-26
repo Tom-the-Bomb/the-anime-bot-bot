@@ -63,7 +63,7 @@ class pictures(commands.Cog):
                         try:
                             thing = await Emoji.convert(ctx, thing)
                         except commands.EmojiNotFound:
-                            thing = str(thing)
+                            thing = thing
             if ctx.message.reference:
                 message = ctx.message.reference.resolved
                 if message.embeds and message.embeds[0].type == "image":
