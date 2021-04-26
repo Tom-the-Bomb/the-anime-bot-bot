@@ -51,19 +51,20 @@ class pictures(commands.Cog):
             User = commands.UserConverter()
             PartialEmoji = commands.PartialEmojiConverter()
             Emoji = commands.EmojiConverter()
-            try:
-               thing = await Member.convert(ctx, thing)
-            except commands.MemberNotFound:
+            if thing:
                 try:
-                    thing = await User.convert(ctx, thing)
-                except commands.UserNotFound:
+                thing = await Member.convert(ctx, thing)
+                except commands.MemberNotFound:
                     try:
-                        thing = await PartialEmoji.convert(ctx, thing)
-                    except commands.PartialEmojiConversionFailure:
+                        thing = await User.convert(ctx, thing)
+                    except commands.UserNotFound:
                         try:
-                            thing = await Emoji.convert(ctx, thing)
-                        except commands.EmojiNotFound:
-                            thing = thing
+                            thing = await PartialEmoji.convert(ctx, thing)
+                        except commands.PartialEmojiConversionFailure:
+                            try:
+                                thing = await Emoji.convert(ctx, thing)
+                            except commands.EmojiNotFound:
+                                thing = thing
             if ctx.message.reference:
                 message = ctx.message.reference.resolved
                 if message.embeds and message.embeds[0].type == "image":
@@ -134,19 +135,20 @@ class pictures(commands.Cog):
             User = commands.UserConverter()
             PartialEmoji = commands.PartialEmojiConverter()
             Emoji = commands.EmojiConverter()
-            try:
-               thing = await Member.convert(ctx, thing)
-            except commands.MemberNotFound:
+            if thing:
                 try:
-                    thing = await User.convert(ctx, thing)
-                except commands.UserNotFound:
+                thing = await Member.convert(ctx, thing)
+                except commands.MemberNotFound:
                     try:
-                        thing = await PartialEmoji.convert(ctx, thing)
-                    except commands.PartialEmojiConversionFailure:
+                        thing = await User.convert(ctx, thing)
+                    except commands.UserNotFound:
                         try:
-                            thing = await Emoji.convert(ctx, thing)
-                        except commands.EmojiNotFound:
-                            thing = thing
+                            thing = await PartialEmoji.convert(ctx, thing)
+                        except commands.PartialEmojiConversionFailure:
+                            try:
+                                thing = await Emoji.convert(ctx, thing)
+                            except commands.EmojiNotFound:
+                                thing = thing
             if ctx.message.reference:
                 message = ctx.message.reference.resolved
                 if message.embeds and message.embeds[0].type == "image":
