@@ -571,8 +571,11 @@ class events(commands.Cog):
                 f"You have hit the global ratelimit try again in {round(error.retry_after)} seconds"
             )
             return await ctx.send(embed=embed)
+        elif isinstance(error, PIL.UnidentifiedImageError):
+            embed = self.embed("No image found")
+            await ctx.reply(embed=embed)
         elif isinstance(error, aiozaneapi.GatewayError):
-            embed = self.embed("Zane api have a error")
+            embed = self.embed("Zane api error")
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.errors.NotOwner):
             embed = self.embed("You must be the bot owner to use this command")
