@@ -1024,7 +1024,7 @@ class pictures(commands.Cog):
     async def rainbow(
         self,
         ctx,
-        thing:  = None,
+        thing: Image_Union = None,
     ):
         async with ctx.channel.typing():
             url = await self.get_gif_url(ctx, thing)
