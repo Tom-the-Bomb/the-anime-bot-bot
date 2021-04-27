@@ -81,11 +81,7 @@ class PictureUrl(commands.Converter):
             ):
                 url = message.attachments[0].proxy_url
                 return url
-        if (
-            ctx.message.attachments
-            and ctx.message.attachments[0].width
-            and ctx.message.attachments[0].height
-        ):
+        if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             return ctx.message.attachments[0].proxy_url
         if thing is None:
             url = str(ctx.author.avatar_url_as(format="png"))
