@@ -629,7 +629,6 @@ class pictures(commands.Cog):
         thing: typing.Optional[
             Image_Union
             ]
-        ],
         level: float = 0.3,
     ):
         async with ctx.channel.typing():
@@ -685,8 +684,7 @@ class pictures(commands.Cog):
         ctx,
         thing: typing.Optional[
             Image_Union
-            ]
-        ],
+            ],
         level: float = 0.3,
     ):
         async with ctx.channel.typing():
@@ -873,8 +871,7 @@ class pictures(commands.Cog):
         ctx,
         thing: typing.Optional[
             Image_Union
-            ]
-        ],
+            ],
         level: float = 0.6,
     ):
         async with ctx.channel.typing():
@@ -1017,8 +1014,7 @@ class pictures(commands.Cog):
         ctx,
         thing: typing.Optional[
             Image_Union
-            ]
-        ],
+            ],
     ):
         async with ctx.channel.typing():
             url = await self.get_gif_url(ctx, thing)
