@@ -537,7 +537,6 @@ class pictures(commands.Cog):
         cat: typing.Optional[
             Image_Union
             ]
-        ],
     ):
         url = await self.get_url(ctx, woman)
         url1 = await self.get_url(ctx, cat)
