@@ -630,7 +630,7 @@ class pictures(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command()
-    async def ct(self, ctx, thing: PictureUrl = None):
+    async def ct(self, ctx, thing: PictureUrl):
         return await ctx.send(thing or "None")
 
     @commands.command()
