@@ -637,6 +637,10 @@ class pictures(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command()
+    async def ct(self, ctx, thing: PictureUrl = None):
+        return await ctx.send(thing)
+
+    @commands.command()
     async def caption(
         self,
         ctx: AnimeContext,
