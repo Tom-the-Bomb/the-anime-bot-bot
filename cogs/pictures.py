@@ -37,6 +37,7 @@ class PictureUrl(commands.Converter):
         discord.Emoji,
         str,
         """
+        url = None
         Member = commands.MemberConverter()
         User = commands.UserConverter()
         PartialEmoji = commands.PartialEmojiConverter()
@@ -60,36 +61,32 @@ class PictureUrl(commands.Converter):
             if message.embeds and message.embeds[0].type == "image":
                 url = message.embeds[0].thumbnail.proxy_url
                 url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                return url
             elif message.embeds and message.embeds[0].type == "rich":
                 if message.embeds[0].image.proxy_url:
                     url = message.embeds[0].image.proxy_url
                     url = url.replace(
                         "cdn.discordapp.com", "media.discordapp.net"
                     )
-                    return url
                 elif message.embeds[0].thumbnail.proxy_url:
                     url = message.embeds[0].thumbnail.proxy_url
                     url = url.replace(
                         "cdn.discordapp.com", "media.discordapp.net"
                     )
-                    return url
-            elif (
+            if (
                 message.attachments
                 and message.attachments[0].width
                 and message.attachments[0].height
             ):
                 url = message.attachments[0].proxy_url
-                return url
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
-            return ctx.message.attachments[0].proxy_url
-        if thing is None:
+            url = ctx.message.attachments[0].proxy_url
+        if thing is None and not url:
             url = str(ctx.author.avatar_url_as(format="png"))
         elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
             url = str(thing.url_as())
         elif isinstance(thing, (discord.Member, discord.User)):
             url = str(thing.avatar_url_as(format="png"))
-        else:
+        elif thing:
             thing = str(thing).strip("<>")
             if ctx.bot.url_regex.match(thing):
                 url = thing
