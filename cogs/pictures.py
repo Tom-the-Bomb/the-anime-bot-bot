@@ -28,82 +28,7 @@ import typing
 ree = re.compile(r"\?.+")
 authorizationthing = config.ksoft
 
-class PictureUrl(commands.Converter):
-    async def convert(self, ctx, thing):
-        """
-        discord.Member,
-        discord.User,
-        discord.PartialEmoji,
-        discord.Emoji,
-        str,
-        """
-        url = None
-        Member = commands.MemberConverter()
-        User = commands.UserConverter()
-        PartialEmoji = commands.PartialEmojiConverter()
-        Emoji = commands.EmojiConverter()
-        if thing:
-            try:
-                thing = await Member.convert(ctx, thing)
-            except commands.MemberNotFound:
-                try:
-                    thing = await User.convert(ctx, thing)
-                except commands.UserNotFound:
-                    try:
-                        thing = await PartialEmoji.convert(ctx, thing)
-                    except commands.PartialEmojiConversionFailure:
-                        try:
-                            thing = await Emoji.convert(ctx, thing)
-                        except commands.EmojiNotFound:
-                            thing = thing
-        if ctx.message.reference:
-            message = ctx.message.reference.resolved
-            if message.embeds and message.embeds[0].type == "image":
-                url = message.embeds[0].thumbnail.proxy_url
-                url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-            elif message.embeds and message.embeds[0].type == "rich":
-                if message.embeds[0].image.proxy_url:
-                    url = message.embeds[0].image.proxy_url
-                    url = url.replace(
-                        "cdn.discordapp.com", "media.discordapp.net"
-                    )
-                elif message.embeds[0].thumbnail.proxy_url:
-                    url = message.embeds[0].thumbnail.proxy_url
-                    url = url.replace(
-                        "cdn.discordapp.com", "media.discordapp.net"
-                    )
-            if (
-                message.attachments
-                and message.attachments[0].width
-                and message.attachments[0].height
-            ):
-                url = message.attachments[0].proxy_url
-        if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
-            url = ctx.message.attachments[0].proxy_url
-            await ctx.send(url)
-        if thing is None and not url:
-            url = str(ctx.author.avatar_url_as(format="png"))
-        elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
-            url = str(thing.url_as())
-        elif isinstance(thing, (discord.Member, discord.User)):
-            url = str(thing.avatar_url_as(format="png"))
-        elif thing:
-            thing = str(thing).strip("<>")
-            if ctx.bot.url_regex.match(thing):
-                url = thing
-            else:
-                url = await emoji_to_url(thing)
-                if url == thing:
-                    raise commands.BadArgument("Invalid url")
-        if not url:
-            raise commands.MissingRequiredArgument()
-        async with ctx.bot.session.get(url) as resp:
-            if resp.status != 200:
-                raise commands.BadArgument("Invalid Picture")
-            if "image" not in resp.content_type:
-                raise commands.BadArgument("Invalid Picture")
-        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-        return url
+
 class GifUrl(commands.Converter):
     async def convert(self, ctx, thing):
         """
@@ -200,6 +125,83 @@ class pictures(commands.Cog):
         )
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
+    
+    class PictureUrl(commands.Converter):
+        async def convert(self, ctx, thing):
+            """
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
+            """
+            url = None
+            Member = commands.MemberConverter()
+            User = commands.UserConverter()
+            PartialEmoji = commands.PartialEmojiConverter()
+            Emoji = commands.EmojiConverter()
+            if thing:
+                try:
+                    thing = await Member.convert(ctx, thing)
+                except commands.MemberNotFound:
+                    try:
+                        thing = await User.convert(ctx, thing)
+                    except commands.UserNotFound:
+                        try:
+                            thing = await PartialEmoji.convert(ctx, thing)
+                        except commands.PartialEmojiConversionFailure:
+                            try:
+                                thing = await Emoji.convert(ctx, thing)
+                            except commands.EmojiNotFound:
+                                thing = thing
+            if ctx.message.reference:
+                message = ctx.message.reference.resolved
+                if message.embeds and message.embeds[0].type == "image":
+                    url = message.embeds[0].thumbnail.proxy_url
+                    url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                elif message.embeds and message.embeds[0].type == "rich":
+                    if message.embeds[0].image.proxy_url:
+                        url = message.embeds[0].image.proxy_url
+                        url = url.replace(
+                            "cdn.discordapp.com", "media.discordapp.net"
+                        )
+                    elif message.embeds[0].thumbnail.proxy_url:
+                        url = message.embeds[0].thumbnail.proxy_url
+                        url = url.replace(
+                            "cdn.discordapp.com", "media.discordapp.net"
+                        )
+                if (
+                    message.attachments
+                    and message.attachments[0].width
+                    and message.attachments[0].height
+                ):
+                    url = message.attachments[0].proxy_url
+            if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
+                url = ctx.message.attachments[0].proxy_url
+                await ctx.send(url)
+            if thing is None and not url:
+                url = str(ctx.author.avatar_url_as(format="png"))
+            elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
+                url = str(thing.url_as())
+            elif isinstance(thing, (discord.Member, discord.User)):
+                url = str(thing.avatar_url_as(format="png"))
+            elif thing:
+                thing = str(thing).strip("<>")
+                if ctx.bot.url_regex.match(thing):
+                    url = thing
+                else:
+                    url = await emoji_to_url(thing)
+                    if url == thing:
+                        raise commands.BadArgument("Invalid url")
+            if not url:
+                raise commands.MissingRequiredArgument()
+            async with ctx.bot.session.get(url) as resp:
+                if resp.status != 200:
+                    raise commands.BadArgument("Invalid Picture")
+                if "image" not in resp.content_type:
+                    raise commands.BadArgument("Invalid Picture")
+            url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+            return url
 
 
             
