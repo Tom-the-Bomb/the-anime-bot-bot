@@ -638,7 +638,7 @@ class pictures(commands.Cog):
 
     @commands.command()
     async def ct(self, ctx, thing: PictureUrl = None):
-        return await ctx.send(thing)
+        return await ctx.send(thing or "None")
 
     @commands.command()
     async def caption(
