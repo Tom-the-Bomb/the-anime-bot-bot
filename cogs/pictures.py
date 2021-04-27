@@ -628,7 +628,7 @@ class pictures(commands.Cog):
         ctx,
         thing: typing.Optional[
             Image_Union
-            ]
+            ],
         level: float = 0.3,
     ):
         async with ctx.channel.typing():
