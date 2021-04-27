@@ -80,6 +80,7 @@ class PictureUrl(commands.Converter):
                 url = message.attachments[0].proxy_url
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             url = ctx.message.attachments[0].proxy_url
+            await ctx.send(url)
         if thing is None and not url:
             url = str(ctx.author.avatar_url_as(format="png"))
         elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
@@ -630,7 +631,7 @@ class pictures(commands.Cog):
             await ctx.send(embed=embed)
 
     @commands.command()
-    async def ct(self, ctx, thing: PictureUrl):
+    async def ct(self, ctx, thing: PictureUrl = None):
         return await ctx.send(thing or "None")
 
     @commands.command()
