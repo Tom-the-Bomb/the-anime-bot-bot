@@ -28,7 +28,13 @@ import typing
 ree = re.compile(r"\?.+")
 authorizationthing = config.ksoft
 
-Image_Union = Image_Union
+Image_Union = typing.Union[
+            discord.Member,
+            discord.User,
+            discord.PartialEmoji,
+            discord.Emoji,
+            str,
+        ]
 
 
 class pictures(commands.Cog):
