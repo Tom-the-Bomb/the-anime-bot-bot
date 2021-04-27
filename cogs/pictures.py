@@ -128,13 +128,7 @@ class pictures(commands.Cog):
     
     class PictureUrl(commands.Converter):
         async def convert(self, ctx, thing):
-            """
-            discord.Member,
-            discord.User,
-            discord.PartialEmoji,
-            discord.Emoji,
-            str,
-            """
+            await ctx.send("called")
             url = None
             Member = commands.MemberConverter()
             User = commands.UserConverter()
