@@ -47,6 +47,7 @@ class pictures(commands.Cog):
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
 
     async def get_gif_url(self, ctx: AnimeContext, thing, **kwargs):
+        url = None
         avatar = kwargs.get("avatar", True)
         check = kwargs.get("check", True)
         if ctx.message.reference:
@@ -54,20 +55,17 @@ class pictures(commands.Cog):
             if message.embeds and message.embeds[0].type == "image":
                 url = message.embeds[0].thumbnail.proxy_url
                 url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                return url
             elif message.embeds and message.embeds[0].type == "rich":
                 if message.embeds[0].image.proxy_url:
                     url = message.embeds[0].image.proxy_url
                     url = url.replace(
                         "cdn.discordapp.com", "media.discordapp.net"
                     )
-                    return url
                 elif message.embeds[0].thumbnail.proxy_url:
                     url = message.embeds[0].thumbnail.proxy_url
                     url = url.replace(
                         "cdn.discordapp.com", "media.discordapp.net"
                     )
-                    return url
             elif (
                 message.attachments
                 and message.attachments[0].width
@@ -75,14 +73,13 @@ class pictures(commands.Cog):
             ):
                 url = message.attachments[0].proxy_url
                 url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                return url
 
         if (
             ctx.message.attachments
             and ctx.message.attachments[0].width
             and ctx.message.attachments[0].height
         ):
-            return ctx.message.attachments[0].proxy_url.replace(
+            url = ctx.message.attachments[0].proxy_url.replace(
                 "cdn.discordapp.com", "media.discordapp.net"
             )
 
@@ -102,16 +99,30 @@ class pictures(commands.Cog):
                     raise commands.CommandError("Invalid url")
         if not avatar:
             return None
+        if not url:
+            raise commands.MissingRequiredArgument()
         if check:
             async with self.bot.session.get(url) as resp:
                 if resp.status != 200:
                     raise commands.CommandError("Invalid Picture")
                 if "image" not in resp.content_type:
                     raise commands.CommandError("Invalid Picture")
+                b = await resp.content.read(50)
+                if b.startswith(b'\x89\x50\x4E\x47\x0D\x0A\x1A\x0A'):
+                    pass
+                elif b[0:3] == b'\xff\xd8\xff' or b[6:10] in (b'JFIF', b'Exif'):
+                    pass
+                elif b.startswith((b'\x47\x49\x46\x38\x37\x61', b'\x47\x49\x46\x38\x39\x61')):
+                    pass
+                elif b.startswith(b'RIFF') and data[8:12] == b'WEBP':
+                    pass
+                else:
+                    raise InvalidArgument('Unsupported image type given')
         url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
 
     async def get_url(self, ctx: AnimeContext, thing, **kwargs):
+        url = None
         avatar = kwargs.get("avatar", True)
         check = kwargs.get("check", True)
         if ctx.message.reference:
@@ -119,20 +130,17 @@ class pictures(commands.Cog):
             if message.embeds and message.embeds[0].type == "image":
                 url = message.embeds[0].thumbnail.proxy_url
                 url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                return url
             elif message.embeds and message.embeds[0].type == "rich":
                 if message.embeds[0].image.proxy_url:
                     url = message.embeds[0].image.proxy_url
                     url = url.replace(
                         "cdn.discordapp.com", "media.discordapp.net"
                     )
-                    return url
                 elif message.embeds[0].thumbnail.proxy_url:
                     url = message.embeds[0].thumbnail.proxy_url
                     url = url.replace(
                         "cdn.discordapp.com", "media.discordapp.net"
                     )
-                    return url
             elif (
                 message.attachments
                 and message.attachments[0].width
@@ -140,21 +148,20 @@ class pictures(commands.Cog):
             ):
                 url = message.attachments[0].proxy_url
                 url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-                return url
 
         if (
             ctx.message.attachments
             and ctx.message.attachments[0].width
             and ctx.message.attachments[0].height
         ):
-            return ctx.message.attachments[0].proxy_url.replace(
+            url = ctx.message.attachments[0].proxy_url.replace(
                 "cdn.discordapp.com", "media.discordapp.net"
             )
 
         if thing is None and avatar:
-            url = str(ctx.author.avatar_url_as(format="png"))
+            url = str(ctx.author.avatar_url_as(static_format="png"))
         elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
-            url = str(thing.url)
+            url = str(thing.url_as(format="png"))
         elif isinstance(thing, (discord.Member, discord.User)):
             url = str(thing.avatar_url_as(format="png"))
         else:
@@ -167,16 +174,25 @@ class pictures(commands.Cog):
                     raise commands.CommandError("Invalid url")
         if not avatar:
             return None
+        if not url:
+            raise commands.MissingRequiredArgument()
         if check:
             async with self.bot.session.get(url) as resp:
                 if resp.status != 200:
                     raise commands.CommandError("Invalid Picture")
                 if "image" not in resp.content_type:
                     raise commands.CommandError("Invalid Picture")
-        #                 with Image.open(BytesIO(await resp.read())) as img:
-        #                     if img.width >= 3000 or img.height >= 3000:
-        #                         raise commands.CommandError("Image too large")
-
+                b = await resp.content.read(50)
+                if b.startswith(b'\x89\x50\x4E\x47\x0D\x0A\x1A\x0A'):
+                    pass
+                elif b[0:3] == b'\xff\xd8\xff' or b[6:10] in (b'JFIF', b'Exif'):
+                    pass
+                elif b.startswith((b'\x47\x49\x46\x38\x37\x61', b'\x47\x49\x46\x38\x39\x61')):
+                    pass
+                elif b.startswith(b'RIFF') and data[8:12] == b'WEBP':
+                    pass
+                else:
+                    raise InvalidArgument('Unsupported image type given')
         url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
 
