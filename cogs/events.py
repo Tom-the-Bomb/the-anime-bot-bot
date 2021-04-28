@@ -61,15 +61,15 @@ class events(commands.Cog):
             for i in p.iterdir():
                 if not i.is_dir():
                     if not i.name == "config.py":
-                        with i.open() as f:
-                            zipfile_.writestr(i.name, f.getvalue())
+                        with i.open(encoding="utf-8") as f:
+                            zipfile_.writestr(i.name, f.read())
         file_2 = BytesIO()
         with zipfile.ZipFile(file_1, mode="w") as zipfile_:
             p = Path('./cogs')
             for i in p.iterdir():
                 if not i.is_dir():
-                    with i.open() as f:
-                        zipfile_.writestr(i.name, f.getvalue())
+                    with i.open(encoding="utf-8") as f:
+                        zipfile_.writestr(i.name, f.read())
         return file_1, file_2
 
     @tasks.loop(minutes=1)
