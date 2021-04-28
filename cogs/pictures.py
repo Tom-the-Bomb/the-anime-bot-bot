@@ -70,6 +70,7 @@ class pictures(commands.Cog):
             and ctx.message.attachments[0].width
             and ctx.message.attachments[0].height
         ):
+            url = ctx.message.attachments[0].url
 
         if thing is None and avatar:
             url = str(ctx.author.avatar_url_as(static_format="png"))
