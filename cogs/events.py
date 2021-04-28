@@ -1,6 +1,7 @@
 from utils.asyncstuff import asyncexe
 import ujson
 from utils.subclasses import AnimeContext
+from io import BytesIO
 from pathlib import Path
 import zipfile
 import PIL
