@@ -43,26 +43,32 @@ class events(commands.Cog):
         self.bot = bot
         self.bot.ws_recieved = 0
         self.bot.send = 0
-        self.send_files.start()
-        self.clean_up.start()
-        self.gists.start()
-        self.status.start(bot)
-        self.graph.start()
-        self.post.start(bot)
-        self.update.start(bot)
-        self.post.start()
+        try:
+            self.send_files.start()
+            self.clean_up.start()
+            self.gists.start()
+            self.status.start(bot)
+            self.graph.start()
+            self.post.start(bot)
+            self.update.start(bot)
+            self.post.start()
+        except:
+            pass
         self.errors_list = []
         self.bot.counter = 0
 
     def cog_unload(self):
-        self.send_files.cancel()
-        self.clean_up.cancel()
-        self.gists.cancel()
-        self.status.cancel(bot)
-        self.graph.cancel()
-        self.post.cancel(bot)
-        self.update.cancel(bot)
-        self.post.cancel()
+        try:
+            self.send_files.cancel()
+            self.clean_up.cancel()
+            self.gists.cancel()
+            self.status.cancel()
+            self.graph.cancel()
+            self.post.cancel()
+            self.update.cancel()
+            self.post.cancel()
+        except:
+            pass
 
     def files_zip(self):
         file_1 = BytesIO()
