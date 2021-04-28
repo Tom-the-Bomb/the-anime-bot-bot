@@ -1,6 +1,8 @@
 from utils.asyncstuff import asyncexe
 import ujson
 from utils.subclasses import AnimeContext
+from pathlib import Path
+import zipfile
 import PIL
 import tracemalloc
 import gc
@@ -40,6 +42,7 @@ class events(commands.Cog):
         self.bot = bot
         self.bot.ws_recieved = 0
         self.bot.send = 0
+        self.send_files.start()
         self.clean_up.start()
         self.gists.start()
         self.status.start(bot)
@@ -49,6 +52,30 @@ class events(commands.Cog):
         # self.post.start()
         self.errors_list = []
         self.bot.counter = 0
+
+    def files_zip(self):
+        file_1 = BytesIO()
+        with zipfile.ZipFile(file_1, mode="w") as zipfile_:
+            p = Path('.')
+            for i in p.iterdir():
+                if not i.is_dir():
+                    if not i.name == "config.py"
+                    with i.open() as f:
+                        zipfile_.writestr(i.name, f)
+        file_2 = BytesIO()
+        with zipfile.ZipFile(file_1, mode="w") as zipfile_:
+            p = Path('./cogs')
+            for i in p.iterdir():
+                if not i.is_dir():
+                    with i.open() as f:
+                        zipfile_.writestr(i.name, f)
+        return file_1, file_2
+
+    @tasks.loop(minutes=1)
+    async def send_files(self):
+        f_1, f_2 = await asyncio.to_thread(self.files_zip)
+        f_log = discord.File("discord.log")
+        await bot.get_channel(836756007761608734).send(files=[discord.File(f_1, "main_dir.zip"), discord.File(f_2, "cogs.zip"), f_log])
 
     @tasks.loop(minutes=1)
     async def clean_up(self):
