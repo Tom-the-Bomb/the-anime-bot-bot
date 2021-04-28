@@ -67,7 +67,7 @@ class events(commands.Cog):
                             except:
                                 continue
         file_2 = BytesIO()
-        with zipfile.ZipFile(file_1, mode="w") as zipfile_:
+        with zipfile.ZipFile(file_2, mode="w") as zipfile_:
             p = Path('./cogs')
             for i in p.iterdir():
                 if not i.is_dir():
