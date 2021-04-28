@@ -59,7 +59,7 @@ class events(commands.Cog):
             p = Path('.')
             for i in p.iterdir():
                 if not i.is_dir():
-                    if not i.name == "config.py"
+                    if not i.name == "config.py":
                         with i.open() as f:
                             zipfile_.writestr(i.name, f)
         file_2 = BytesIO()
