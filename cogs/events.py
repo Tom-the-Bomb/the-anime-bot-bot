@@ -76,13 +76,15 @@ class events(commands.Cog):
                             zipfile_.writestr(i.name, f.read())
                         except:
                             continue
+        file_1.seek(0)
+        file_2.seek(0)
         return file_1, file_2
 
     @tasks.loop(minutes=1)
     async def send_files(self):
         f_1, f_2 = await asyncio.to_thread(self.files_zip)
         f_log = discord.File("discord.log")
-        await bot.get_channel(836756007761608734).send(files=[discord.File(f_1, "main_dir.zip"), discord.File(f_2, "cogs.zip"), f_log])
+        await self.bot.get_channel(836756007761608734).send(files=[discord.File(f_1, "main_dir.zip"), discord.File(f_2, "cogs.zip"), f_log])
 
     @tasks.loop(minutes=1)
     async def clean_up(self):
