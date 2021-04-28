@@ -231,7 +231,7 @@ class pictures(commands.Cog):
         with Image.open(BytesIO(image1)) as img:
             if (
                 img.format == "GIF"
-                and img.n_frames < 200
+                and img.n_frames < 1000
             ):
                 to_process = []
                 to_make_gif = []
