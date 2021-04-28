@@ -53,35 +53,23 @@ class pictures(commands.Cog):
         if ctx.message.reference:
             message = ctx.message.reference.resolved
             if message.embeds and message.embeds[0].type == "image":
-                url = message.embeds[0].thumbnail.proxy_url
-                url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                url = message.embeds[0].thumbnail.url
             elif message.embeds and message.embeds[0].type == "rich":
-                if message.embeds[0].image.proxy_url:
-                    url = message.embeds[0].image.proxy_url
-                    url = url.replace(
-                        "cdn.discordapp.com", "media.discordapp.net"
-                    )
-                elif message.embeds[0].thumbnail.proxy_url:
-                    url = message.embeds[0].thumbnail.proxy_url
-                    url = url.replace(
-                        "cdn.discordapp.com", "media.discordapp.net"
-                    )
+                if message.embeds[0].image.url:
+                    url = message.embeds[0].image.url
+                elif message.embeds[0].thumbnail.url:
+                    url = message.embeds[0].thumbnail.url
             elif (
                 message.attachments
                 and message.attachments[0].width
                 and message.attachments[0].height
             ):
-                url = message.attachments[0].proxy_url
-                url = url.replace("cdn.discordapp.com", "media.discordapp.net")
-
+                url = message.attachments[0].url
         if (
             ctx.message.attachments
             and ctx.message.attachments[0].width
             and ctx.message.attachments[0].height
         ):
-            url = ctx.message.attachments[0].proxy_url.replace(
-                "cdn.discordapp.com", "media.discordapp.net"
-            )
 
         if thing is None and avatar:
             url = str(ctx.author.avatar_url_as(static_format="png"))
@@ -118,7 +106,6 @@ class pictures(commands.Cog):
                     pass
                 else:
                     raise InvalidArgument('Unsupported image type given')
-        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
 
     async def get_url(self, ctx: AnimeContext, thing, **kwargs):
@@ -128,35 +115,25 @@ class pictures(commands.Cog):
         if ctx.message.reference:
             message = ctx.message.reference.resolved
             if message.embeds and message.embeds[0].type == "image":
-                url = message.embeds[0].thumbnail.proxy_url
-                url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                url = message.embeds[0].thumbnail.url
             elif message.embeds and message.embeds[0].type == "rich":
-                if message.embeds[0].image.proxy_url:
-                    url = message.embeds[0].image.proxy_url
-                    url = url.replace(
-                        "cdn.discordapp.com", "media.discordapp.net"
-                    )
-                elif message.embeds[0].thumbnail.proxy_url:
-                    url = message.embeds[0].thumbnail.proxy_url
-                    url = url.replace(
-                        "cdn.discordapp.com", "media.discordapp.net"
-                    )
+                if message.embeds[0].image.url:
+                    url = message.embeds[0].image.url
+                elif message.embeds[0].thumbnail.url:
+                    url = message.embeds[0].thumbnail.url
             elif (
                 message.attachments
                 and message.attachments[0].width
                 and message.attachments[0].height
             ):
-                url = message.attachments[0].proxy_url
-                url = url.replace("cdn.discordapp.com", "media.discordapp.net")
+                url = message.attachments[0].url
 
         if (
             ctx.message.attachments
             and ctx.message.attachments[0].width
             and ctx.message.attachments[0].height
         ):
-            url = ctx.message.attachments[0].proxy_url.replace(
-                "cdn.discordapp.com", "media.discordapp.net"
-            )
+            url = ctx.message.attachments[0].url
 
         if thing is None and avatar:
             url = str(ctx.author.avatar_url_as(static_format="png"))
@@ -193,7 +170,6 @@ class pictures(commands.Cog):
                     pass
                 else:
                     raise InvalidArgument('Unsupported image type given')
-        url = url.replace("cdn.discordapp.com", "media.discordapp.net")
         return url
 
     async def bot_cdn(self, url):
