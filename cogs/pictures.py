@@ -106,7 +106,7 @@ class pictures(commands.Cog):
                 elif b.startswith(b'RIFF') and data[8:12] == b'WEBP':
                     pass
                 else:
-                    raise commands.InvalidArgument('Unsupported image type given')
+                    raise discord.InvalidArgument('Unsupported image type given')
         return url
 
     async def get_url(self, ctx: AnimeContext, thing, **kwargs):
@@ -170,7 +170,7 @@ class pictures(commands.Cog):
                 elif b.startswith(b'RIFF') and data[8:12] == b'WEBP':
                     pass
                 else:
-                    raise InvalidArgument('Unsupported image type given')
+                    raise discord.InvalidArgument('Unsupported image type given')
         return url
 
     async def bot_cdn(self, url):
