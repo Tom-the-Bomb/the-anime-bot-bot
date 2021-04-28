@@ -55,14 +55,14 @@ class events(commands.Cog):
         self.bot.counter = 0
 
     def cog_unload(self):
-        self.send_files.stop()
-        self.clean_up.stop()
-        self.gists.stop()
-        self.status.stop(bot)
-        self.graph.stop()
-        self.post.stop(bot)
-        self.update.stop(bot)
-        self.post.stop()
+        self.send_files.cancel()
+        self.clean_up.cancel()
+        self.gists.cancel()
+        self.status.cancel(bot)
+        self.graph.cancel()
+        self.post.cancel(bot)
+        self.update.cancel(bot)
+        self.post.cancel()
 
     def files_zip(self):
         file_1 = BytesIO()
@@ -92,7 +92,7 @@ class events(commands.Cog):
 
     @tasks.loop(minutes=10)
     async def send_files(self):
-        await self.bot.wait_until.ready()
+        await self.bot.wait_until_ready()
         f_1, f_2 = await asyncio.to_thread(self.files_zip)
         f_log = discord.File("discord.log")
         await self.bot.get_channel(836756007761608734).send(files=[discord.File(f_1, "main_dir.zip"), discord.File(f_2, "cogs.zip"), f_log])
