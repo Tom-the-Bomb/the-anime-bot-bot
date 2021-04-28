@@ -223,7 +223,7 @@ class pictures(commands.Cog):
     def resize(self, image: Image) -> Image:
         if image.height > 500 or image.width > 500:
             resized = image.resize(
-                (int(image.width // 1.5), int(image.height // 1.5))
+                480, 480
             )
             return resized
         return image
@@ -234,8 +234,8 @@ class pictures(commands.Cog):
             if (
                 img.format == "GIF"
                 and img.n_frames < 200
-                and img.width <= 3000
-                and img.height <= 3000
+                and img.width <= 800
+                and img.height <= 800
             ):
                 to_process = []
                 to_make_gif = []
@@ -335,8 +335,8 @@ class pictures(commands.Cog):
             if (
                 img.format == "GIF"
                 and img.n_frames < 200
-                and img.width <= 3000
-                and img.height <= 3000
+                and img.width <= 800
+                and img.height <= 800
             ):
                 to_make_gif = []
                 for im in ImageSequence.Iterator(img):
