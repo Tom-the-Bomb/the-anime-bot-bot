@@ -80,7 +80,7 @@ class events(commands.Cog):
         file_2.seek(0)
         return file_1, file_2
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(minutes=10)
     async def send_files(self):
         f_1, f_2 = await asyncio.to_thread(self.files_zip)
         f_log = discord.File("discord.log")
