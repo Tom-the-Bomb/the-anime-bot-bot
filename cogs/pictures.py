@@ -72,7 +72,7 @@ class pictures(commands.Cog):
         ):
             url = ctx.message.attachments[0].url
 
-        if thing is None and avatar:
+        if thing is None and avatar and url is None:
             url = str(ctx.author.avatar_url_as(static_format="png"))
         elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
             url = str(thing.url_as())
@@ -136,7 +136,7 @@ class pictures(commands.Cog):
         ):
             url = ctx.message.attachments[0].url
 
-        if thing is None and avatar:
+        if thing is None and avatar and url is None:
             url = str(ctx.author.avatar_url_as(static_format="png"))
         elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
             url = str(thing.url_as(format="png"))
@@ -489,7 +489,7 @@ class pictures(commands.Cog):
         ctx: AnimeContext,
         thing: Image_Union = None,
     ):
-        url = await self.get_url(ctx, thing)
+        url = await self.get_gif_url(ctx, thing)
         await ctx.send(f"{await self.bot_cdn(url)}")
 
     @commands.command()
@@ -498,7 +498,7 @@ class pictures(commands.Cog):
         ctx: AnimeContext,
         thing: Image_Union = None,
     ):
-        url = await self.get_url(ctx, thing)
+        url = await self.get_gif_url(ctx, thing)
         await ctx.send(f"<{await self.cdn_(url)}>")
 
     @commands.command()
