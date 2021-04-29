@@ -232,7 +232,7 @@ class pictures(commands.Cog):
         # image1 = self.resize(BytesIO(image1))
         with Image.open(BytesIO(image1)) as img:
             if (
-                img.format == "GIF"
+                img.is_animated
                 and img.n_frames < 200
             ):
                 to_process = []
@@ -331,7 +331,7 @@ class pictures(commands.Cog):
     def process_gif(self, image, function, *args):
         with Image.open(BytesIO(image)) as img:
             if (
-                img.format == "GIF"
+                img.is_animated
                 and img.n_frames < 200
             ):
                 to_make_gif = []
