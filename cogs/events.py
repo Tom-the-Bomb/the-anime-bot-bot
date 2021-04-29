@@ -526,7 +526,7 @@ class events(commands.Cog):
             message_ = await message.channel.send(
                 f"Hii there why u ping me smh oh i mean hii my prefix is `{', '.join(self.bot.prefixes[message.guild.id])}` "
             )
-            self.bot.to_delete_message_cache[message.id] = message_
+            self.bot.to_delete_message_cache[message.id] = [message_]
         if (
             message.content.startswith(";;")
             and not message.author.bot
@@ -552,7 +552,7 @@ class events(commands.Cog):
                 try:
                     message_ = await message.channel.send("".join(lists))
                     self.bot._message_cache[message.id] = message_
-                    self.bot.to_delete_message_cache[message.id] = message_
+                    self.bot.to_delete_message_cache[message.id] = [message_]
                 except:
                     pass
         # mentions = message.mentions
