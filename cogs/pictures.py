@@ -78,7 +78,7 @@ class pictures(commands.Cog):
             url = str(thing.url_as())
         elif isinstance(thing, (discord.Member, discord.User)):
             url = str(thing.avatar_url_as(static_format="png"))
-        else:
+        elif url is None:
             thing = str(thing).strip("<>")
             if self.bot.url_regex.match(thing):
                 url = thing
@@ -142,7 +142,7 @@ class pictures(commands.Cog):
             url = str(thing.url_as(format="png"))
         elif isinstance(thing, (discord.Member, discord.User)):
             url = str(thing.avatar_url_as(format="png"))
-        else:
+        elif url is None:
             thing = str(thing).strip("<>")
             if self.bot.url_regex.match(thing):
                 url = thing
