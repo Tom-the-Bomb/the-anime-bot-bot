@@ -80,11 +80,11 @@ class AnimeContext(commands.Context):
         await msg.edit(content=content, **kwargs)
         return msg
       else:
-        message = await super().send(content, nonce=random.randint(0, 9999999999999999999999999), **kwargs)
+        message = await super().send(content, nonce=random.randint(0, 9223372036854775807), **kwargs)
         self.bot.to_delete_message_cache[self.message.id].append(message.id)
         return message
     else:
-      message = await super().send(content, nonce=random.randint(0, 9999999999999999999999999), **kwargs)
+      message = await super().send(content, nonce=random.randint(0, 9223372036854775807), **kwargs)
       self.bot._message_cache[self.message.id] = message
       self.bot.to_delete_message_cache[self.message.id] = [message.id]
       return message
@@ -95,11 +95,11 @@ class AnimeContext(commands.Context):
         await msg.edit(content=content, **kwargs)
         return msg
       else:
-        message = await super().reply(content, nonce=random.randint(0, 9999999999999999999999999), **kwargs)
+        message = await super().reply(content, nonce=random.randint(0, 9223372036854775807), **kwargs)
         self.bot.to_delete_message_cache[self.message.id].append(message.id)
         return message
     else:
-      message = await super().reply(content, nonce=random.randint(0, 9999999999999999999999999), **kwargs)
+      message = await super().reply(content, nonce=random.randint(0, 9223372036854775807), **kwargs)
       self.bot._message_cache[self.message.id] = message
       self.bot.to_delete_message_cache[self.message.id] = [message.id]
       return message
