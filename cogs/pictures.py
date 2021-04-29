@@ -103,7 +103,7 @@ class pictures(commands.Cog):
                     pass
                 elif b.startswith((b'\x47\x49\x46\x38\x37\x61', b'\x47\x49\x46\x38\x39\x61')):
                     pass
-                elif b.startswith(b'RIFF') and data[8:12] == b'WEBP':
+                elif b.startswith(b'RIFF') and b[8:12] == b'WEBP':
                     pass
                 else:
                     raise discord.InvalidArgument('Unsupported image type given')
