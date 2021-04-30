@@ -69,11 +69,13 @@ class AnimeContext(commands.Context):
       return None
   async def paste(self, content):
     return str(await self.bot.mystbin.post(content))
-  async def send(self, content=None, **kwargs):
+  async def send(self, content=None, codeblock=False, lang="py", **kwargs):
     # if self.invoked_with("jishaku"):
     #   embed = discord.Embed(color=0x2ecc71, description=content)
     #   message = super().send(content=None, embed=embed)
     #   return message
+    if codeblock:
+      content = f"```{lang}\n" + str(content) + "\n```" 
     if self.message.id in self.bot._message_cache:
       if self.message.edited_at:
         msg = self.bot._message_cache[self.message.id]
