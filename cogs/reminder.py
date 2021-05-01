@@ -17,6 +17,7 @@ class Timer:
 class Reminder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.already_waiting = []
         self.get_reminders_task = self.bot.loop.create_task(self.get_reminders())
     
     def cog_unload(self):
@@ -42,8 +43,9 @@ class Reminder(commands.Cog):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             e = await self.bot.db.fetchrow("SELECT * FROM reminder ORDER BY time ASC LIMIT 1")
-            if e:
-                await self.wait_for_timers(Timer(e))
+            if e and e["id"] not in self.already_waiting:
+                self.bot.create_task(self.wait_for_timers(Timer(e)))
+                self.already_waiting.append(e["id"])
             await asyncio.sleep(0)
 
     async def create_reminder(self, time, reason, user, message):
