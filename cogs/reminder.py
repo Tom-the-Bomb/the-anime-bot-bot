@@ -26,7 +26,7 @@ class Reminder(commands.Cog):
         channel = bot.get_channel(timer.channel_id)
         if channel:
             try:
-                await channel.send(f"<@{timer.user_id}>: {humanize.naturaldelta(timer.time)} ago {commands.clean_content(timer.reason)}", allowed_mention=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
+                await channel.send(f"<@{timer.user_id}>: {humanize.naturaldelta(timer.time)} ago {commands.clean_content(timer.reason)}", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
             except:
                 pass
 
@@ -66,7 +66,7 @@ class Reminder(commands.Cog):
         if reason[0:2] == 'me' and reason[0:6] in ('me to ', 'me in ', 'me at '):
             reason = reason[6:]
         id = await self.create_reminder(date_obj, reason, ctx.author, ctx.message)
-        await ctx.send(f"Ok, {ctx.author.mention} in {humanize.precisedelta(date_obj)} {reason} (ID: {id})", allowed_mention=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
+        await ctx.send(f"Ok, {ctx.author.mention} in {humanize.precisedelta(date_obj)} {reason} (ID: {id})", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
         await self.get_reminders()
 
 
