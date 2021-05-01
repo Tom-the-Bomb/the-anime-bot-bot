@@ -32,6 +32,7 @@ class Reminder(commands.Cog):
                 pass
 
     async def wait_for_timers(self, timer):
+        await self.bot.get_channel(timer.channel_id).send("fuck fuck")
         if timer.time > datetime.datetime.utcnow():
             await self.bot.get_channel(timer.channel_id).send("fuck")
             await asyncio.sleep((timer.time - datetime.datetime.utcnow()).total_seconds())
