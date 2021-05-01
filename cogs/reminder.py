@@ -43,7 +43,6 @@ class Reminder(commands.Cog):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             e = await self.bot.db.fetchrow("SELECT * FROM reminder ORDER BY time ASC LIMIT 1")
-            await self.bot.get_channel(Timer(e).channel_id).send("i gonna wait")
             await self.wait_for_timers(Timer(e))
 
     async def create_reminder(self, time, reason, user, message):
