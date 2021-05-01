@@ -23,7 +23,7 @@ class Reminder(commands.Cog):
 
     @commands.Cog.listener()
     async def on_timer_complete(self, timer):
-        channel = bot.get_channel(timer.channel_id)
+        channel = self.bot.get_channel(timer.channel_id)
         if channel:
             try:
                 await channel.send(f"<@{timer.user_id}>: {humanize.naturaldelta(datetime.datetime.utcnow() - timer.time)} ago {commands.clean_content(timer.reason)}", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
