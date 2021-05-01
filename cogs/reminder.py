@@ -26,7 +26,7 @@ class Reminder(commands.Cog):
         channel = bot.get_channel(timer.channel_id)
         if channel:
             try:
-                await channel.send(f"<@{timer.user_id}>: {humanize.naturaldelta(timer.time)} ago {commands.clean_content(timer.reason)}", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
+                await channel.send(f"<@{timer.user_id}>: {humanize.naturaldelta(datetime.datetime.utcnow() - timer.time)} ago {commands.clean_content(timer.reason)}", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
             except:
                 pass
 
@@ -58,15 +58,13 @@ class Reminder(commands.Cog):
             return await ctx.send("hmm idk what you mean do something like do stuff at 10 minutes later")
         string_date = parsed[0][0]
         date_obj = parsed[0][1]
-        if date_obj.tzinfo:
-            date_obj = date_obj + date_obj.tzinfo.utcoffset(date_obj)
-        if date_obj <= ctx.message.created_at:
+        if date_obj <= datetime.datetime.utcnow():
             return await ctx.send("I don't have a time traveler to remind you at the past")
         reason = arg.replace(string_date, "")
         if reason[0:2] == 'me' and reason[0:6] in ('me to ', 'me in ', 'me at '):
             reason = reason[6:]
         id = await self.create_reminder(date_obj, reason, ctx.author, ctx.message)
-        await ctx.send(f"Ok, {ctx.author.mention} in {humanize.precisedelta(date_obj)} {reason} (ID: {id})", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
+        await ctx.send(f"Ok, {ctx.author.mention} in {humanize.precisedelta(date_obj - datetime.datetime.utcnow())} {reason} (ID: {id})", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
         await self.get_reminders()
 
 
