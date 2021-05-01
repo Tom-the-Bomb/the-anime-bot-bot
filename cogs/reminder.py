@@ -27,7 +27,7 @@ class Reminder(commands.Cog):
         channel = self.bot.get_channel(timer.channel_id)
         if channel:
             try:
-                await channel.send(f"<@{timer.user_id}>: {humanize.precisedelta(datetime.datetime.utcnow() - timer.time)} ago {discord.utils.escape_mentions(timer.reason)}", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
+                await channel.send(f"<@{timer.user_id}>: {discord.utils.escape_mentions(timer.reason)}\n{timer.jump_url}", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
             except:
                 pass
 
