@@ -68,3 +68,7 @@ class Reminder(commands.Cog):
         await self.create_reminder(date_obj, reason, ctx.author, ctx.message)
         await ctx.send(f"Ok, {ctx.author.mention} in {humanize.precisedelta(date_obj)} {reason}", allowed_mention=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
         await self.get_reminders()
+
+
+def setup(self, bot):
+    bot.add_cog(Reminder(bot))
