@@ -70,5 +70,5 @@ class Reminder(commands.Cog):
         await self.get_reminders()
 
 
-def setup(self, bot):
+def setup(bot):
     bot.add_cog(Reminder(bot))
