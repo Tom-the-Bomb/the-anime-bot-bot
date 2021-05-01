@@ -37,7 +37,7 @@ class Reminder(commands.Cog):
             await self.bot.get_channel(timer.channel_id).send("i waited")
             self.bot.dispatch("timer_complete", timer)
         await self.bot.db.execute("DELETE FROM reminder WHERE id = $1", timer.id)
-o
+
 
     async def get_reminders(self):
         await self.bot.wait_until_ready()
