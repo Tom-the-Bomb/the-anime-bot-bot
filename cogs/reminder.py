@@ -27,7 +27,7 @@ class Reminder(commands.Cog):
         channel = self.bot.get_channel(timer.channel_id)
         if channel:
             try:
-                await channel.send(f"<@{timer.user_id}>: {humanize.naturaldelta(datetime.datetime.utcnow() - timer.time)} ago {commands.clean_content(timer.reason)}", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
+                await channel.send(f"<@{timer.user_id}>: {humanize.naturaldelta(datetime.datetime.utcnow() - timer.time)} ago {discord.utils.escape_mentions(timer.reason)}", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
             except:
                 pass
 
@@ -37,7 +37,7 @@ class Reminder(commands.Cog):
             await self.bot.get_channel(timer.channel_id).send("i waited")
             self.bot.dispatch("timer_complete", timer)
         await self.bot.db.execute("DELETE FROM reminder WHERE id = $1", timer.id)
-
+o
 
     async def get_reminders(self):
         await self.bot.wait_until_ready()
