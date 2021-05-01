@@ -34,6 +34,7 @@ class Reminder(commands.Cog):
     async def wait_for_timers(self, timer):
         if timer.time > datetime.datetime.utcnow():
             await asyncio.sleep((timer.time - datetime.datetime.utcnow()).total_seconds())
+            await self.bot.get_channel(timer.channel_id).send("i waited")
             self.bot.dispatch("timer_complete", timer)
             await self.bot.db.execute("DELETE FROM reminder WHERE id = $1", timer.id)
 
