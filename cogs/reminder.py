@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from dateparser.search import search_dates
+import humanize
 
 class Reminder(commands.Cog):
     def __init__(self, bot):
@@ -21,4 +22,7 @@ class Reminder(commands.Cog):
         if date_obj.tzinfo:
             date_obj = date_obj + date_obj.tzinfo.utcoffset(date_obj)
         if date_obj <= ctx.message.created_at:
-            return await ctx.send("i don't have a time traveler to remind you at the past")
+            return await ctx.send("I don't have a time traveler to remind you at the past")
+        await self.create_reminder(date_obj, reason, ctx.author, ctx.message)
+        await ctx.send(f"Ok, {ctx.author.mention} in {humanize.precisedelta(date_obj)} {reason}")
+        
