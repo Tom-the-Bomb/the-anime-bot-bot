@@ -48,8 +48,8 @@ class Reminder(commands.Cog):
     
 
     async def create_reminder(self, time, reason, user, message):
-        await self.bot.db.execute("INSERT INTO reminder VALUES ($1, $2, $3, $4, $5)", user.id, time, reason, message.jump_url, message.channel.id)
-
+        id = await self.bot.db.fetchrow("INSERT INTO reminder (user_id, time, reason, message_jump) VALUES ($1, $2, $3, $4, $5) RETURNING id", user.id, time, reason, message.jump_url, message.channel.id)
+        return id["id"]
     
     @commands.command()
     async def remind(self, ctx, *, arg: str):
@@ -65,8 +65,8 @@ class Reminder(commands.Cog):
         reason = arg.replace(string_date, "")
         if reason[0:2] == 'me' and reason[0:6] in ('me to ', 'me in ', 'me at '):
             reason = reason[6:]
-        await self.create_reminder(date_obj, reason, ctx.author, ctx.message)
-        await ctx.send(f"Ok, {ctx.author.mention} in {humanize.precisedelta(date_obj)} {reason}", allowed_mention=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
+        id = await self.create_reminder(date_obj, reason, ctx.author, ctx.message)
+        await ctx.send(f"Ok, {ctx.author.mention} in {humanize.precisedelta(date_obj)} {reason} (ID: {})", allowed_mention=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
         await self.get_reminders()
 
 
