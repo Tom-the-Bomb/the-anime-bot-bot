@@ -44,7 +44,7 @@ class Reminder(commands.Cog):
             if e:
                 for i in e:
                     self.bot.loop.create_task(self.wait_for_timers(Timer(i)))
-            await asyncio.sleep(30)
+            await asyncio.sleep(10)
     
 
     async def create_reminder(self, time, reason, user, message):
