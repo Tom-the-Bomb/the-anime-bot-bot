@@ -48,7 +48,7 @@ class Reminder(commands.Cog):
     
 
     async def create_reminder(self, time, reason, user, message):
-        id = await self.bot.db.fetchrow("INSERT INTO reminder (user_id, time, reason, message_jump) VALUES ($1, $2, $3, $4, $5) RETURNING id", user.id, time, reason, message.jump_url, message.channel.id)
+        id = await self.bot.db.fetchrow("INSERT INTO reminder (user_id, time, reason, message_jump, message_id) VALUES ($1, $2, $3, $4, $5) RETURNING id", user.id, time, reason, message.jump_url, message.channel.id)
         return id["id"]
     
     @commands.command()
