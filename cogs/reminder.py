@@ -27,7 +27,7 @@ class Reminder(commands.Cog):
         channel = self.bot.get_channel(timer.channel_id)
         if channel:
             try:
-                await channel.send(f"<@{timer.user_id}>: {humanize.naturaldelta(datetime.datetime.utcnow() - timer.time)} ago {discord.utils.escape_mentions(timer.reason)}", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
+                await channel.send(f"<@{timer.user_id}>: {humanize.precisedelta(datetime.datetime.utcnow() - timer.time)} ago {discord.utils.escape_mentions(timer.reason)}", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
             except:
                 pass
 
@@ -45,7 +45,9 @@ class Reminder(commands.Cog):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
             e = await self.bot.db.fetchrow("SELECT * FROM reminder ORDER BY time ASC LIMIT 1")
-            await self.wait_for_timers(Timer(e))
+            if e:
+                await self.wait_for_timers(Timer(e))
+            await asyncio.sleep(0)
 
     async def create_reminder(self, time, reason, user, message):
         id = await self.bot.db.fetchrow("INSERT INTO reminder (user_id, time, reason, message_jump, channel_id) VALUES ($1, $2, $3, $4, $5) RETURNING id", user.id, time, reason, message.jump_url, message.channel.id)
