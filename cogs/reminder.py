@@ -43,7 +43,7 @@ class Reminder(commands.Cog):
         while not self.bot.is_closed():
             e = await self.bot.db.fetchrow("SELECT * FROM reminder ORDER BY time ASC LIMIT 1")
             if e:
-                await self.wait_for_timers(Timer(e))
+                self.bot.loop.create_task(self.wait_for_timers(Timer(e)))
             await asyncio.sleep(0)
 
     async def create_reminder(self, time, reason, user, message):
