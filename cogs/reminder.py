@@ -41,12 +41,8 @@ class Reminder(commands.Cog):
     async def get_reminders(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
-            e = await self.bot.db.fetch("SELECT * FROM reminder WHERE time < (CURRENT_TIMESTAMP + $1::interval) ORDER BY time", datetime.timedelta(hours=1))
-            if e:
-                for i in e:
-                    self.bot.loop.create_task(self.wait_for_timers(Timer(i)))
-            await asyncio.sleep(10)
-    
+            e = await self.bot.db.fetchrow("SELECT * FROM reminder ORDER BY time ASC LIMIT 1")
+            await self.wait_for_timers(Timer(e)))
 
     async def create_reminder(self, time, reason, user, message):
         id = await self.bot.db.fetchrow("INSERT INTO reminder (user_id, time, reason, message_jump, channel_id) VALUES ($1, $2, $3, $4, $5) RETURNING id", user.id, time, reason, message.jump_url, message.channel.id)
