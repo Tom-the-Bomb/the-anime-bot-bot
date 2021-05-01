@@ -36,13 +36,14 @@ class Reminder(commands.Cog):
             await asyncio.sleep((timer.time - datetime.datetime.utcnow()).total_seconds())
             await self.bot.get_channel(timer.channel_id).send("i waited")
             self.bot.dispatch("timer_complete", timer)
-            await self.bot.db.execute("DELETE FROM reminder WHERE id = $1", timer.id)
+        await self.bot.db.execute("DELETE FROM reminder WHERE id = $1", timer.id)
 
 
     async def get_reminders(self):
         await self.bot.wait_until_ready()
         while not self.bot.is_closed():
-            e = await self.bot.db.fetchrow("SELECT * FROM reminder WHERE time < (CURRENT_TIMESTAMP + $1::interval) ORDER BY time ASC LIMIT 1", datetime.timedelta(hours=1))
+            e = await self.bot.db.fetchrow("SELECT * FROM reminder ORDER BY time ASC LIMIT 1")
+            await self.bot.get_channel(Timer(e).channel_id).send("i gonna wait")
             await self.wait_for_timers(Timer(e))
 
     async def create_reminder(self, time, reason, user, message):
