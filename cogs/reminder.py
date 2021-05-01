@@ -37,6 +37,7 @@ class Reminder(commands.Cog):
             await asyncio.sleep((timer.time - datetime.datetime.utcnow()).total_seconds())
             self.bot.dispatch("timer_complete", timer)
         await self.bot.db.execute("DELETE FROM reminder WHERE id = $1", timer.id)
+        del self.already_waiting[timer.id]
 
 
     async def get_reminders(self):
@@ -44,7 +45,7 @@ class Reminder(commands.Cog):
         while not self.bot.is_closed():
             e = await self.bot.db.fetchrow("SELECT * FROM reminder ORDER BY time ASC LIMIT 1")
             if e and e["id"] not in self.already_waiting:
-                self.bot.create_task(self.wait_for_timers(Timer(e)))
+                self.bot.loop.create_task(self.wait_for_timers(Timer(e)))
                 self.already_waiting.append(e["id"])
             await asyncio.sleep(0)
 
