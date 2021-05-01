@@ -57,7 +57,7 @@ class Reminder(commands.Cog):
     async def remind(self, ctx, *, arg: str):
         parsed = search_dates(arg, settings={'TIMEZONE': 'UTC'})
         if not parsed:
-            return await ctx.send("hmm idk what you mean do something like do stuff at 10 minutes later")
+            return await ctx.send("hmm idk what you mean do something like remind me in 13 seconds hm idk")
         string_date = parsed[0][0]
         date_obj = parsed[0][1]
         if date_obj <= datetime.datetime.utcnow():
