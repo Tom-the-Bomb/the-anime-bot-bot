@@ -54,6 +54,19 @@ class tag(commands.Cog):
         await self.bot.db.execute(
             "UPDATE tags SET uses = uses + 1 WHERE tag_name = $1", name
         )
+    
+    @tag.command()
+    async def info(self, ctx, *, name)
+        tags = await self.bot.db.fetchrow(
+                "SELECT * FROM tags WHERE tag_name = $1",
+                name
+            )
+        embed = discord.Embed(color=self.bot.color, title=tags["tag_name"])
+        user = await self.bot.getch(tags["author_id"])
+        embed.set_author(name=str(user), icon_url=user.avatar_url)
+        embed.add_field(name='Owner', value=f'<@{tags["author_id"]}>')
+        embed.add_field(name='Uses', value=tags['uses'])
+        embed.set_footer(text=f"Message ID: {tags["message_id"]}")
 
     @tag.command()
     async def all(self, ctx):

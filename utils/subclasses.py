@@ -194,6 +194,13 @@ case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
       self.socket_stats[i["name"]] = i["count"]
       self.socket_receive += i["count"]
 
+  async def getch(self, id):
+    user = self.get_user(id)
+    if user:
+      return user
+    else:
+      user = await self.fetch_user(id)
+      return user
         
   async def chunk_(self, ctx):
     if ctx.guild and not ctx.guild.chunked:
