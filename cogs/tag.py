@@ -61,6 +61,8 @@ class tag(commands.Cog):
                 "SELECT * FROM tags WHERE tag_name = $1",
                 name
             )
+        if not tags:
+            return await ctx.send("Tag not found")
         embed = discord.Embed(color=self.bot.color, title=tags["tag_name"])
         user = await self.bot.getch(tags["author_id"])
         embed.set_author(name=str(user), icon_url=user.avatar_url)
