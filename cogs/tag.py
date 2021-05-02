@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from typing import Union
 from utils.subclasses import AnimeContext
 from menus import menus
 
