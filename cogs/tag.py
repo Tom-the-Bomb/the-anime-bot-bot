@@ -22,15 +22,17 @@ class tag(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    #     @commands.Cog.listener()
-    #     async def on_message(self, message):
-    #         if message.content.startswith("?tag "):
-    #             tag_partial = message.content.split("?tag ")
-    #             if len(tag_partial) >= 3:
-    #                 return
-    #             m = await self.bot.wait_for("message", check = lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id, timeout=2)
-    #             content = m.content
-    #             await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4, $5)", message.content.replace("?tag ", ""), content, 80528701850124288, m.id, 0)
+        @commands.Cog.listener()
+        async def on_message(self, message):
+            if message.content.startswith("?tag "):
+                tag_partial = message.content.split("?tag ")
+                if tag_partial[1] in ["create", "add", "alias", "make", "stats", "edit", "remove", "remove_id", "info", "raw", "list", "tags", "all", "purge", "search", "claim", "transfer", "box"]:
+                    return
+                m = await self.bot.wait_for("message", check = lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id, timeout=2)
+                if m.embeds:
+                    return
+                content = m.content
+                await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING", message.content.replace("?tag ", ""), content, 80528701850124288, m.id, 0)
 
     @commands.group(invoke_without_command=True)
     async def tag(self, ctx: AnimeContext, *, name):
