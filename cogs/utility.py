@@ -320,7 +320,7 @@ class utility(commands.Cog):
         # interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author)
         # await interface.send_to(ctx)
         e.description = "\n".join(f"[{key}]({url})" for key, url in matches)
-        await ctx.send(embed=e, reference=ctx.replied_reference)
+        await ctx.send(embed=e)
 
     @staticmethod
     def choosebstofcal(ctx, times, choices):
