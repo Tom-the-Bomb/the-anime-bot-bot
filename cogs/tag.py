@@ -5,14 +5,15 @@ from menus import menus
 
 
 class TagMenuSource(menus.ListPageSource):
-    def __init__(self, data):
+    def __init__(self, data, name=None):
         super().__init__(data, per_page=10)
+        self.name = name
 
     async def format_page(self, menu, entries):
         return {
             "embed": discord.Embed(
                 color=menu.ctx.bot.color,
-                title="Tags",
+                title="Tags" if not self.name else f"Tags for {self.name}",
                 description="\n".join(entries),
             )
         }
@@ -70,6 +71,16 @@ class tag(commands.Cog):
         embed.add_field(name='Uses', value=tags['uses'])
         embed.set_footer(text=f"Message ID: {tags['message_id']}")
         await ctx.send(embed=embed)
+
+    @tag.command(name="list")
+    async def list_(self, ctx, member: Union[discord.Member, discord.User] = None):
+        member = member or ctx.author
+        tags = await self.bot.db.fetch("SELECT tag_name FROM tags WHERE author_id = $1", member.id)
+        pages = menus.MenuPages(
+            source=TagMenuSource([i["tag_name"] for i in tags], str(member)),
+            delete_message_after=True,
+        )
+        await pages.start(ctx)
 
     @tag.command()
     async def all(self, ctx):
