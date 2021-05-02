@@ -74,7 +74,7 @@ class AnimeContext(commands.Context):
     #   embed = discord.Embed(color=0x2ecc71, description=content)
     #   message = super().send(content=None, embed=embed)
     #   return message
-    return await self.reply(content=None, codeblock=False, lang="py", **kwargs)
+    return await self.reply(content=content, codeblock=codeblock, lang=lang, **kwargs)
     if codeblock:
       content = f"```{lang}\n" + str(content) + "\n```" 
     if self.message.id in self.bot._message_cache:
