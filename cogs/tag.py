@@ -33,6 +33,8 @@ class tag(commands.Cog):
                 if m.embeds:
                     return
                 content = m.content
+                if content.startswith("Tag not found."):
+                    return
                 await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING", message.content.replace("?tag ", ""), content, 80528701850124288, m.id, 0)
 
     @commands.group(invoke_without_command=True)
