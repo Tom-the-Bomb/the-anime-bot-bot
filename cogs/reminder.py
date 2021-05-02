@@ -6,7 +6,7 @@ from dateparser.search import search_dates
 import humanize
 
 import dateparser
-dateparser.data.date_translation_data.info["second"].append(" s")
+dateparser.data.date_translation_data.en.info["second"].append(" s")
 
 class Timer:
     def __init__(self, record):
