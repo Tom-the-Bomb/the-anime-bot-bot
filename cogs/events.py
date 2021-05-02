@@ -628,7 +628,7 @@ class events(commands.Cog):
         elif isinstance(error, PIL.UnidentifiedImageError):
             embed = self.embed("No image found")
             await ctx.reply(embed=embed)
-        elif isinstance(error, PIL.DecompressionBombError):
+        elif isinstance(erro, PIL.Image.DecompressionBombError):
             embed = self.embed("eww decompression bomb eww stop or i use my ban hammer")
             await ctx.reply(embed=embed)
         elif isinstance(error, aiozaneapi.GatewayError):
