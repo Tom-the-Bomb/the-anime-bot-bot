@@ -40,7 +40,6 @@ token=re.compile(r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-
 class AnimeContext(commands.Context):
   def __init__(self, *args, **kwargs):
     self.utils = utils
-    self.hmm = "hmm"
     super().__init__(*args, **kwargs)
   async def remove(self, *args, **kwargs):
     m = await self.send(*args, **kwargs)
