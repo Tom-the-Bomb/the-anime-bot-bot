@@ -16,7 +16,7 @@ class TagMenuSource(menus.ListPageSource):
                 color=menu.ctx.bot.color,
                 title="Tags" if not self.name else f"Tags for {self.name}",
                 description="\n".join(entries),
-            )
+            ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(entries)}")
         }
 
 
