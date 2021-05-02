@@ -124,6 +124,8 @@ class tag(commands.Cog):
     @tag.command()
     async def add(self, ctx: AnimeContext, name, *, content):
         tags = await self.bot.db.fetch("SELECT * FROM tags")
+        if len(name) > 500:
+            return await ctx.send("no tag name too long")
         for i in tags:
             if name == i["tag_name"]:
                 return await ctx.send("This tag already exist")
