@@ -27,6 +27,7 @@ from asyncdagpi import ImageFeatures
 import typing
 
 warnings.simplefilter('error', Image.DecompressionBombWarning)
+Image.MAX_IMAGE_PIXELS = 44739243
 
 ree = re.compile(r"\?.+")
 authorizationthing = config.ksoft
