@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import warnings
 import ujson
 import qrcode
 from utils.subclasses import AnimeContext
@@ -24,6 +25,8 @@ from PIL import ImageOps
 from io import BytesIO
 from asyncdagpi import ImageFeatures
 import typing
+
+warnings.simplefilter('error', Image.DecompressionBombWarning)
 
 ree = re.compile(r"\?.+")
 authorizationthing = config.ksoft
