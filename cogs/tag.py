@@ -9,6 +9,7 @@ class TagMenuSource(menus.ListPageSource):
     def __init__(self, data, name=None):
         super().__init__(data, per_page=10)
         self.name = name
+        self.data = data
 
     async def format_page(self, menu, entries):
         return {
@@ -16,7 +17,7 @@ class TagMenuSource(menus.ListPageSource):
                 color=menu.ctx.bot.color,
                 title="Tags" if not self.name else f"Tags for {self.name}",
                 description="\n".join(entries),
-            ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(entries)}")
+            ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
         }
 
 
