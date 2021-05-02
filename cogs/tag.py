@@ -67,7 +67,7 @@ class tag(commands.Cog):
         embed.add_field(name='Owner', value=f"<@{tags['author_id']}>")
         embed.add_field(name='Uses', value=tags['uses'])
         embed.set_footer(text=f"Message ID: {tags['message_id']}")
-        await ctx.send(embed=embe
+        await ctx.send(embed=embed)
 
     @tag.command()
     async def all(self, ctx):
