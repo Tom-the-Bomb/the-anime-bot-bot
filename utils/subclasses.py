@@ -166,7 +166,7 @@ description="""
   |_| |_| |_|\___| /_/   \_\_| |_|_|_| |_| |_|\___| |____/ \___/ \__|
 """,
 chunk_guilds_at_startup=False, 
-case_insensitive=True, allowed_mentions=discord.AllowedMentions.none())
+case_insensitive=True, allowed_mentions=discord.AllowedMentions.none(), strip_after_prefix=True)
   def add_command(self, command):
     super().add_command(command)
     command.cooldown_after_parsing = True
