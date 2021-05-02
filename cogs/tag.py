@@ -56,7 +56,7 @@ class tag(commands.Cog):
         )
     
     @tag.command()
-    async def info(self, ctx, *, name)
+    async def info(self, ctx, *, name):
         tags = await self.bot.db.fetchrow(
                 "SELECT * FROM tags WHERE tag_name = $1",
                 name
