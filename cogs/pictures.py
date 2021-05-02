@@ -227,8 +227,6 @@ class pictures(commands.Cog):
     def resize(self, image: Image) -> Image:
         if image.height > 500 or image.width > 500:
             resized = image.resize((480, 480), resample=Image.BILINEAR, reducing_gap=2)
-            image.close()
-            del image
             return resized
         return image
 
