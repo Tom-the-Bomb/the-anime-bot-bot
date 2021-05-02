@@ -29,7 +29,11 @@ class tag(commands.Cog):
                 tag_partial = tag_partial[1].split(" ")
                 if tag_partial[0].strip() in ["create", "add", "alias", "make", "stats", "edit", "remove", "remove_id", "info", "raw", "list", "tags", "all", "purge", "search", "claim", "transfer", "box"]:
                     return
-                m = await self.bot.wait_for("message", check = lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id, timeout=2)
+                try:
+                    m = await self.bot.wait_for("message", check = lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id, timeout=2)
+                except:
+                    if message.author.id == 726475420454617168:
+                        return await message.channel.send("bruh")
                 if m.embeds:
                     if m.embeds[0].type == "rich":
                         return
