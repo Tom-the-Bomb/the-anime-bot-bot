@@ -18,10 +18,11 @@ class Reminder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.already_waiting = []
-        self.get_reminders_task = self.bot.loop.create_task(self.get_reminders())
+        self.bot.loop.create_task(self.get_reminders())
+    #     self.get_reminders_task = self.bot.loop.create_task(self.get_reminders())
     
-    def cog_unload(self):
-        self.get_reminders_task.cancel()
+    # def cog_unload(self):
+    #     self.get_reminders_task.cancel()
 
     @commands.Cog.listener()
     async def on_timer_complete(self, timer):
@@ -38,16 +39,15 @@ class Reminder(commands.Cog):
             self.bot.dispatch("timer_complete", timer)
         await self.bot.db.execute("DELETE FROM reminder WHERE id = $1", timer.id)
         del self.already_waiting[timer.id]
+        self.bot.loop.create_task(self.get_reminders())
 
 
     async def get_reminders(self):
         await self.bot.wait_until_ready()
-        while not self.bot.is_closed():
-            e = await self.bot.db.fetchrow("SELECT * FROM reminder ORDER BY time ASC LIMIT 1")
-            if e and e["id"] not in self.already_waiting:
-                self.bot.loop.create_task(self.wait_for_timers(Timer(e)))
-                self.already_waiting.append(e["id"])
-            await asyncio.sleep(0)
+        e = await self.bot.db.fetchrow("SELECT * FROM reminder ORDER BY time ASC LIMIT 1")
+        if e and e["id"] not in self.already_waiting:
+            self.bot.loop.create_task(self.wait_for_timers(Timer(e)))
+            self.already_waiting.append(e["id"])
 
     async def create_reminder(self, time, reason, user, message):
         id = await self.bot.db.fetchrow("INSERT INTO reminder (user_id, time, reason, message_jump, channel_id) VALUES ($1, $2, $3, $4, $5) RETURNING id", user.id, time, reason, message.jump_url, message.channel.id)
@@ -67,7 +67,7 @@ class Reminder(commands.Cog):
             reason = reason[6:]
         id = await self.create_reminder(date_obj, reason, ctx.author, ctx.message)
         await ctx.send(f"Ok, {ctx.author.mention} in {humanize.precisedelta(date_obj - datetime.datetime.utcnow())} {reason} (ID: {id})", allowed_mentions=discord.AllowedMentions(everyone=False, users=True, roles=False, replied_user=False))
-
+        self.bot.loop.create_task(self.get_reminders())
 
 def setup(bot):
     bot.add_cog(Reminder(bot))
