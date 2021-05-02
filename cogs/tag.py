@@ -31,7 +31,8 @@ class tag(commands.Cog):
                     return
                 m = await self.bot.wait_for("message", check = lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id, timeout=2)
                 if m.embeds:
-                    return
+                    if m.embeds[0].type == "rich":
+                        return
                 content = m.content
                 if content.startswith("Tag not found."):
                     return
