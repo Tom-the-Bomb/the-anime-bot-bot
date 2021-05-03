@@ -16,6 +16,13 @@ class Timer:
 		self.end = round(time, 3)
 		return f"{self.end} ms"
 	
+	async def __aenter__(self, *args, **kwargs):
+		self.start()
+		return self
+     
+	async def __aexit__(self, *args, **kwargs):
+		self.stop()
+	
 	def __enter__(self, *args, **kwargs):
 		self.start()
 		return self
