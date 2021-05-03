@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import asyncpg
 from typing import Union
 from utils.subclasses import AnimeContext
 from menus import menus
@@ -44,7 +45,13 @@ class tag(commands.Cog):
         content = m.content
         if content.startswith("Tag not found."):
             return
-        await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING", message.content.replace("?tag ", ""), content, 80528701850124288, m.id, 0)
+        try:
+            await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4, $5)", message.content.replace("?tag ", ""), content, 80528701850124288, m.id, 0)
+        except asyncpg.exceptions.UniqueViolationError:
+            tags = await self.bot.db.fetchrow("SELECT author_id FROM tags WHERE tag_name = $1", message.content.replace("?tag ", ""))
+            if tags["author_id"] == 80528701850124288:
+                await self.bot.db.execute("UPDATE tags SET tag_content = $1 WHERE tag_name = $2", content, message.content.replace("?tag ", ""))
+            
 
     @commands.group(invoke_without_command=True)
     async def tag(self, ctx: AnimeContext, *, name):
