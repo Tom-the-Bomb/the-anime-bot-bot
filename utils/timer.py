@@ -12,8 +12,8 @@ class Timer:
 		self._end = time.perf_counter()
 
 	def __str__(self):
-		time = (self._end - self._start) * 1000
-		self.end = round(time, 3)
+		time_= (self._end - self._start) * 1000
+		self.end = round(time_, 3)
 		return f"{self.end} ms"
 	
 	def __enter__(self, *args, **kwargs):
