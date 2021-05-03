@@ -97,7 +97,10 @@ class AnimeContext(commands.Context):
     if self.message.id in self.bot._message_cache:
       if self.message.edited_at:
         msg = self.bot._message_cache[self.message.id]
-        await msg.edit(content=content, **kwargs)
+        if not kwargs.get("allowed_mentions"):
+          msg = await msg.edit(content=content, allowed_mentions=discord.AllowedMentions.none(), **kwargs)
+        else:
+          msg = await msg.edit(content=content, **kwargs)
         return msg
       else:
         message = await super().reply(content, nonce=random.randint(0, 9223372036854775807), **kwargs)
