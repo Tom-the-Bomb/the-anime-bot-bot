@@ -19,10 +19,10 @@ class Timer:
         self.stop()
 
     def __int__(self):
-        return round(self.time, 3)
+        return round(self.time)
 
     def __float__(self):
-        return self.time
+        return round(self.time, 3)
 
     def __str__(self):
         return str(self.time)
