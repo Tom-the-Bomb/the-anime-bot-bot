@@ -14,4 +14,5 @@ class Timer:
 		return self
      
 	def __exit__(self, *args, **kwargs):
-		self.end = round((time.perf_counter() - self.start) * 1000, 3)
+		time = (time.perf_counter() - self.start) * 1000
+		self.end = round(, 3)
