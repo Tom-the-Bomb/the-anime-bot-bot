@@ -26,7 +26,7 @@ class chat(commands.Cog):
 #             m[m.sum(axis=2) == 0] = 255
 #             edges = np.mean([gaussian_gradient_magnitude(mask[:, :, i] / 255., 2) for i in range(3)], axis=0)
 #             m[edges > .08] = 255
-        wordcloud = WordCloud(width=1000, height=500, mask=m).generate(text)
+        wordcloud = WordCloud(width=3840, height=2160, mask=m).generate(text)
         image = wordcloud.to_image()
         b = BytesIO()
         image.save(b, "PNG")
