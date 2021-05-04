@@ -3,6 +3,7 @@ from discord.ext import commands
 from utils.subclasses import AnimeContext
 import random
 from io import BytesIO
+from scipy.ndimage import gaussian_gradient_magnitude
 import numpy as np
 from PIL import Image
 from wordcloud import WordCloud
@@ -17,10 +18,15 @@ class chat(commands.Cog):
     
     @asyncexe()
     def wordcloud_(self, text, icon):
-        mask = None
+        m = None
         if icon:
             mask = np.array(Image.open(icon))
-        wordcloud = WordCloud(width=1000, height=500, mask=mask).generate(text)
+            mask = mask[::3, ::3]
+            m = mask.copy()
+            m[m.sum(axis=2) == 0] = 255
+            edges = np.mean([gaussian_gradient_magnitude(mask[:, :, i] / 255., 2) for i in range(3)], axis=0)
+            m[edges > .08] = 255
+        wordcloud = WordCloud(width=1000, height=500, mask=m).generate(text)
         image = wordcloud.to_image()
         b = BytesIO()
         image.save(b, "PNG")
