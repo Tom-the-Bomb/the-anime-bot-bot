@@ -42,9 +42,11 @@ class chat(commands.Cog):
         m = await ctx.send(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
         async with ctx.typing():
             async for message in ctx.channel.history(limit=limit):
+                counter += 1
                 if message.content:
                     text += message.content
-                counter += 1
+                if counter % 250 == 0:
+                    await m.edit(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
             icon = None
             if ctx.guild:
                 icon = BytesIO(await ctx.guild.icon_url_as(format="png").read()) if ctx.guild.icon_url_as(format="png") else None
