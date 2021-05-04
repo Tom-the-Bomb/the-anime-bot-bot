@@ -15,7 +15,7 @@ class chat(commands.Cog):
     
     @asyncexe()
     def wordcloud_(self, text):
-        wordcloud = WordCloud().generate(text)
+        wordcloud = WordCloud(width=500, height=300).generate(text)
         image = wordcloud.to_image()
         b = BytesIO()
         image.save(b, "PNG")
