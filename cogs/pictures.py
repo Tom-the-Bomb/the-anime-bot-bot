@@ -229,49 +229,59 @@ class pictures(commands.Cog):
             resized = image.resize((480, 480), resample=Image.BILINEAR, reducing_gap=2)
             return resized
         return image
+    
+    def open_pil_image(self, buffer: BytesIO) -> Image:
+        try:
+            return Image.open(buffer, "RGBA")
+        except:
+            try:
+                return Image.open(buffer, "RGB")
+            except:
+                return Image.open(buffer)
 
     def run_polaroid(self, image1, method, *args, **kwargs):
         # image1 = self.resize(BytesIO(image1))
-        with Image.open(BytesIO(image1)) as img:
-            if (
-                img.is_animated
-                and img.n_frames < 200
-            ):
-                to_process = []
-                to_make_gif = []
-                for im in ImageSequence.Iterator(img):
-                    b = BytesIO()
-                    im_ = self.resize(im)
-                    im_.save(b, "PNG")
-                    b.seek(0)
-                    to_process.append(b)
-                for i in to_process:
-                    p_image = polaroid.Image(i.read())
-                    method1 = getattr(p_image, method)
-                    method1(*args, **kwargs)
-                    b = BytesIO(p_image.save_bytes("png"))
-                    to_make_gif.append(Image.open(b))
-                    b.flush()
-                    del p_image
-                final = BytesIO()
-                to_make_gif[0].save(
-                    final,
-                    format="GIF",
-                    append_images=to_make_gif[1:],
-                    save_all=True,
-                    duration=img.info["duration"],
-                    loop=0,
-                )
-                for i in to_process:
-                    i.flush()
-                    del i
-                for i in to_make_gif:
-                    i.close()
-                    del i
-                final.seek(0)
-                return discord.File(final, filename=f"{method}.gif")
+        img = self.open_pil_image(BytesIO(image1))
+        if (
+            img.is_animated
+            and img.n_frames < 200
+        ):
+            to_process = []
+            to_make_gif = []
+            for im in ImageSequence.Iterator(img):
+                b = BytesIO()
+                im_ = self.resize(im)
+                im_.save(b, "PNG")
+                b.seek(0)
+                to_process.append(b)
+            for i in to_process:
+                p_image = polaroid.Image(i.read())
+                method1 = getattr(p_image, method)
+                method1(*args, **kwargs)
+                b = BytesIO(p_image.save_bytes("png"))
+                to_make_gif.append(Image.open(b))
+                b.flush()
+                del p_image
+            final = BytesIO()
+            to_make_gif[0].save(
+                final,
+                format="GIF",
+                append_images=to_make_gif[1:],
+                save_all=True,
+                duration=img.info["duration"],
+                loop=0,
+            )
+            for i in to_process:
+                i.flush()
+                del i
+            for i in to_make_gif:
+                i.close()
+                del i
+            final.seek(0)
+            img.close()
+            return discord.File(final, filename=f"{method}.gif")
 
-        i = Image.open(BytesIO(image1))
+        i = img
         image1_ = self.resize(i)
         image1 = BytesIO()
         image1_.save(image1, "PNG")
@@ -331,41 +341,44 @@ class pictures(commands.Cog):
         return igif
 
     def process_gif(self, image, function, *args):
-        with Image.open(BytesIO(image)) as img:
-            if (
-                img.is_animated
-                and img.n_frames < 200
-            ):
-                to_make_gif = []
-                for im in ImageSequence.Iterator(img):
-                    im_ = self.resize(im)
-                    im_ = im_.convert("RGB")
-                    im_final = function(im_, *args)
-                    to_make_gif.append(im_final)
-                final = BytesIO()
-                to_make_gif[0].save(
-                    final,
-                    format="GIF",
-                    append_images=to_make_gif[1:],
-                    save_all=True,
-                    disposal=2,
-                    duration=img.info["duration"],
-                    loop=0,
-                )
-                for i in to_make_gif:
-                    i.close()
-                    del i
-                final.seek(0)
-                return final, "gif"
-        with Image.open(BytesIO(image)) as img_:
-            format_ = img_.format
-            img_ = self.resize(img_)
-            img_ = img_.convert("RGB")
-            img = function(img_, *args)
-            b = BytesIO()
-            img.save(b, "PNG")
-            b.seek(0)
-            return b, "png"
+        img = self.open_pil_image(BytesIO(image))
+        if (
+            img.is_animated
+            and img.n_frames < 200
+        ):
+            to_make_gif = []
+            for im in ImageSequence.Iterator(img):
+                im_ = self.resize(im)
+                im_ = im_.convert("RGB")
+                im_final = function(im_, *args)
+                to_make_gif.append(im_final)
+            final = BytesIO()
+            to_make_gif[0].save(
+                final,
+                format="GIF",
+                append_images=to_make_gif[1:],
+                save_all=True,
+                disposal=2,
+                duration=img.info["duration"],
+                loop=0,
+            )
+            for i in to_make_gif:
+                i.close()
+                del i
+            final.seek(0)
+            img.close()
+            return final, "gif"
+        img_ = img
+        format_ = img_.format
+        img_ = self.resize(img_)
+        img_ = img_.convert("RGB")
+        img = function(img_, *args)
+        b = BytesIO()
+        img.save(b, "PNG")
+        b.seek(0)
+        img_.close()
+        img.close()
+        return b, "png"
 
     async def mirror_(self, url):
         async with self.bot.session.get(url) as resp:
