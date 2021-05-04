@@ -34,6 +34,7 @@ class chat(commands.Cog):
         return b
         
     @commands.command()
+    @commands.max_concurrency(1, commands.BucketType.channel)
     async def wordcloud(self, ctx, limit: int=1000):
         limit = min(limit, 10000)
         counter = 0
@@ -67,6 +68,7 @@ class chat(commands.Cog):
         return
 
     @commands.command()
+    @commands.max_concurrency(1, commands.BucketType.channel)
     async def chatgraph(self, ctx: AnimeContext, *, limit: int = 500):
         limit = min(limit, 10000)
         await ctx.send("Collecting might take long")
