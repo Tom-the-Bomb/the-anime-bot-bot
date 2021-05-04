@@ -3,6 +3,8 @@ from discord.ext import commands
 from utils.subclasses import AnimeContext
 import random
 from io import BytesIO
+import numpy as np
+from PIL import Image
 from wordcloud import WordCloud
 from matplotlib import pyplot as plt
 from utils.asyncstuff import asyncexe
@@ -14,8 +16,11 @@ class chat(commands.Cog):
         self.bot = bot
     
     @asyncexe()
-    def wordcloud_(self, text):
-        wordcloud = WordCloud(width=1000, height=500).generate(text)
+    def wordcloud_(self, text, icon):
+        mask = None
+        if icon:
+            mask = np.array(Image.open(icon))
+        wordcloud = WordCloud(width=1000, height=500, mask=mask).generate(text)
         image = wordcloud.to_image()
         b = BytesIO()
         image.save(b, "PNG")
@@ -33,8 +38,10 @@ class chat(commands.Cog):
                 if message.content:
                     text += message.content
                 counter += 1
-
-            pic = await self.wordcloud_(text)
+            icon = None
+            if ctx.guild:
+                icon = BytesIO(await ctx.guild.icon_url_as(format="png").read()) if ctx.guild.icon_url_as(format="png") else None
+            pic = await self.wordcloud_(text, icon)
             await ctx.send(file=discord.File(pic, "wordcloud.png"))
 
     @staticmethod
