@@ -71,8 +71,8 @@ class others(commands.Cog):
         embed = discord.Embed(
             color=self.bot.color,
             description=f"""
-      <:rooSip:824129426181980191> Owner: {str(self.bot.get_user(590323594744168494)) if self.bot.get_user(590323594744168494) else str(await self.bot.fetch_user(590323594744168494))}
-      <:rooSellout:739614245343199234> Rich Co-owner: {str(self.bot.get_user(711057339360477184)) if self.bot.get_user(711057339360477184) else str(await self.bot.fetch_user(711057339360477184))}
+      <:rooSip:824129426181980191> Owner: {str(await self.bot.getch(590323594744168494))}
+      <:rooSellout:739614245343199234> Rich Co-owner: {str(await self.bot.getch(711057339360477184))}
 """,
         )
         await ctx.send(embed=embed)
