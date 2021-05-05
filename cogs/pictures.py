@@ -329,7 +329,7 @@ class pictures(commands.Cog):
                     return (await resp.json())["data"]
 
 
-    def _create_animated_gif(images: List[Image.Image], durations: Union[int, List[int]]) -> Tuple[Image.Image, dict]:
+    def _create_animated_gif(self, images: List[Image.Image], durations: Union[int, List[int]]) -> Tuple[Image.Image, dict]:
         """If the image is a GIF, create an its thumbnail here."""
         save_kwargs = {}
         new_images: List[Image.Image] = []
@@ -354,7 +354,7 @@ class pictures(commands.Cog):
         return output_image, save_kwargs
 
 
-    def save_transparent_gif(images: List[Image.Image], durations: Union[int, List[int]], save_file):
+    def save_transparent_gif(self, images: List[Image.Image], durations: Union[int, List[int]], save_file):
         root_frame, save_args = _create_animated_gif(images, durations)
         root_frame.save(save_file, **save_args)
 
@@ -398,7 +398,7 @@ class pictures(commands.Cog):
                 b.flush()
                 del p_image
             final = BytesIO()
-            save_transparent_gif(to_make_gif, img.info["duration"], final)
+            self.save_transparent_gif(to_make_gif, img.info["duration"], final)
             for i in to_process:
                 i.flush()
                 del i
@@ -481,7 +481,7 @@ class pictures(commands.Cog):
                 im_final = function(im_, *args)
                 to_make_gif.append(im_final)
             final = BytesIO()
-            save_transparent_gif(to_make_gif, img.info["duration"], final)
+            self.save_transparent_gif(to_make_gif, img.info["duration"], final)
             for i in to_make_gif:
                 i.close()
                 del i
