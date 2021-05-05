@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from urllib.parse import quote
 import warnings
 import ujson
 import qrcode
@@ -592,6 +593,11 @@ class pictures(commands.Cog):
         with Image.open(bytes_) as img:
             return decode(img)[0].data.decode("utf-8")
     
+    @commands.command()
+    async def latex(self, ctx, *, text):
+        async with self.bot.session.get("https://chart.googleapis.com/chart", params={"cht": "tx", "chl": quote(text), "chf": "a, s, 00000000"}) as resp:
+            await ctx.send(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_latex"))
+            
     @commands.command()
     async def spin(
         self,
