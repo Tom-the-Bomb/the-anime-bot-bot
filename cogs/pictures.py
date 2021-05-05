@@ -394,7 +394,7 @@ class pictures(commands.Cog):
                 method1 = getattr(p_image, method)
                 method1(*args, **kwargs)
                 b = BytesIO(p_image.save_bytes("png"))
-                to_make_gif.append(Image.open(b))
+                to_make_gif.append(Image.open(b).convert("RGBA"))
                 b.flush()
                 del p_image
             final = BytesIO()
@@ -479,6 +479,7 @@ class pictures(commands.Cog):
                 im_ = self.resize(im)
                 im_ = im_.convert("RGB")
                 im_final = function(im_, *args)
+                im_final = im_final.convert("RGBA")
                 to_make_gif.append(im_final)
             final = BytesIO()
             self.save_transparent_gif(to_make_gif, img.info["duration"], final)
