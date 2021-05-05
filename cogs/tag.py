@@ -144,7 +144,7 @@ class tag(commands.Cog):
         member = member or ctx.author
         tags = await self.bot.db.fetch("SELECT tag_name FROM tags WHERE author_id = $1 ORDER BY tag_name", member.id)
         pages = menus.MenuPages(
-            source=TagMenuSource([i["tag_name"] for i in tags], str(member)),
+            source=TagMenuSource([discord.utils.escape_markdown(i["tag_name"]) for i in tags], str(member)),
             delete_message_after=True,
         )
         await pages.start(ctx)
@@ -153,7 +153,7 @@ class tag(commands.Cog):
     async def all(self, ctx):
         tags = await self.bot.db.fetch("SELECT tag_name FROM tags ORDER BY tag_name")
         pages = menus.MenuPages(
-            source=TagMenuSource([i["tag_name"] for i in tags]),
+            source=TagMenuSource([discord.utils.escape_markdown(i["tag_name"]) for i in tags]),
             delete_message_after=True,
         )
         await pages.start(ctx)
