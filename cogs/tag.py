@@ -142,7 +142,7 @@ class tag(commands.Cog):
     @tag.command(name="list")
     async def list_(self, ctx, member: Union[discord.Member, discord.User] = None):
         member = member or ctx.author
-        tags = await self.bot.db.fetch("SELECT tag_name FROM tags WHERE author_id = $1", member.id)
+        tags = await self.bot.db.fetch("SELECT tag_name FROM tags WHERE author_id = $1 ORDER BY tag_name", member.id)
         pages = menus.MenuPages(
             source=TagMenuSource([i["tag_name"] for i in tags], str(member)),
             delete_message_after=True,
@@ -151,7 +151,7 @@ class tag(commands.Cog):
 
     @tag.command()
     async def all(self, ctx):
-        tags = await self.bot.db.fetch("SELECT tag_name FROM tags")
+        tags = await self.bot.db.fetch("SELECT tag_name FROM tags ORDER BY tag_name")
         pages = menus.MenuPages(
             source=TagMenuSource([i["tag_name"] for i in tags]),
             delete_message_after=True,
