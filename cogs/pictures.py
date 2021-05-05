@@ -24,7 +24,7 @@ from typing import Tuple, List, Union
 from collections import defaultdict
 from random import randrange
 from itertools import chain
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter
 from PIL import ImageSequence
 from PIL import ImageOps
 from io import BytesIO
@@ -592,11 +592,21 @@ class pictures(commands.Cog):
     def qr_dec(self, bytes_):
         with Image.open(bytes_) as img:
             return decode(img)[0].data.decode("utf-8")
+       
+    def process_latex(self, buffer):
+        with Image.open(buffer) as img:
+            im = img.filter(ImageFilter.SMOOTH_MORE)
+            b = BytesIO()
+            im.save(b, "PNG")
+            b.seek(0)
+            im.close()
+            return b
+            
     
     @commands.command()
     async def latex(self, ctx, *, text):
         async with self.bot.session.get("https://chart.googleapis.com/chart", params={"cht": "tx", "chl": quote(text), "chf": "a, s, 00000000", "chs": "200"}) as resp:
-            await ctx.send(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_latex.png"))
+            await ctx.send(file=discord.File(await asyncio.to_thread(self.process_latex(), BytesIO(await resp.read())), "The_Anime_Bot_latex.png"))
             
     @commands.command()
     async def spin(
