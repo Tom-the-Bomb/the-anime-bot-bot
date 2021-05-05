@@ -595,7 +595,7 @@ class pictures(commands.Cog):
     
     @commands.command()
     async def latex(self, ctx, *, text):
-        async with self.bot.session.get("https://chart.googleapis.com/chart", params={"cht": "tx", "chl": quote(text), "chf": "a, s, 00000000"}) as resp:
+        async with self.bot.session.get("https://chart.googleapis.com/chart", params={"cht": "tx", "chl": quote(text), "chf": "a, s, 00000000", "chs": "100"}) as resp:
             await ctx.send(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_latex.png"))
             
     @commands.command()
