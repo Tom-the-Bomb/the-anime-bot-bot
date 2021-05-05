@@ -614,7 +614,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def latex(self, ctx, *, text):
         async with self.bot.session.get(f"https://latex.codecogs.com/png.latex?\bg_white{text}") as resp:
-            await ctx.send(file=discord.File(await asyncio.to_thread(self.process_latex, BytesIO(await resp.read())), "The_Anime_Bot_latex.png"))
+            await ctx.send(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_latex.png"))
             
     @commands.command()
     async def spin(
