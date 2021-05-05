@@ -355,7 +355,7 @@ class pictures(commands.Cog):
 
 
     def save_transparent_gif(self, images: List[Image.Image], durations: Union[int, List[int]], save_file):
-        root_frame, save_args = _create_animated_gif(images, durations)
+        root_frame, save_args = self._create_animated_gif(images, durations)
         root_frame.save(save_file, **save_args)
 
     def resize(self, image: Image) -> Image:
