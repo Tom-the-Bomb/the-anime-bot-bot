@@ -68,7 +68,7 @@ class tag(commands.Cog):
 
     @commands.Cog.listener("on_message")
     async def on_message_for_normal_tag_weird_prefix(self, message):
-         if not message.content.startswith("!tag "):
+        if not message.content.startswith("!tag "):
             return
 
         tag_name = message.content[5:]
