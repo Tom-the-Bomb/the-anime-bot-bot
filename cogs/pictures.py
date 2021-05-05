@@ -477,9 +477,8 @@ class pictures(commands.Cog):
             to_make_gif = []
             for im in ImageSequence.Iterator(img):
                 im_ = self.resize(im)
-                im_ = im_.convert("RGB")
+                im_ = im_.convert("RGBA")
                 im_final = function(im_, *args)
-                im_final = im_final.convert("RGBA")
                 to_make_gif.append(im_final)
             final = BytesIO()
             self.save_transparent_gif(to_make_gif, img.info["duration"], final)
@@ -492,7 +491,7 @@ class pictures(commands.Cog):
         img_ = img
         format_ = img_.format
         img_ = self.resize(img_)
-        img_ = img_.convert("RGB")
+        img_ = img_.convert("RGBA")
         img = function(img_, *args)
         b = BytesIO()
         img.save(b, "PNG")
