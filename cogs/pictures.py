@@ -360,7 +360,7 @@ class pictures(commands.Cog):
 
     def resize(self, image: Image) -> Image:
         if image.height > 500 or image.width > 500:
-            resized = image.resize((480, 480), resample=Image.BILINEAR, reducing_gap=2)
+            resized = image.resize((480, 480), resample=Image.BICUBIC, reducing_gap=2)
             image.close()
             return resized
         return image
@@ -499,6 +499,26 @@ class pictures(commands.Cog):
         img_.close()
         img.close()
         return b, "png"
+        
+    def spin__(self, image, speed):
+        im = self.open_pil_image(BytesIO(image))
+        im = self.resize(im)
+        im = im.convert("RGBA")
+        to_make_gif = [im.rotate(degree, resample=Image.BICUBIC, expand=0) for degree in range(0, 360, 10)]
+        final = BytesIO()
+        self.save_transparent_gif(to_make_gif, speed, final)
+        final.seek(0)
+        return final, "gif"
+        
+    async def spin_(self, url, speed):
+        async with self.bot.session.get(url) as resp:
+            image1 = await resp.read()
+        e = ThreadPoolExecutor(max_workers=5)
+        f = functools.partial(self.spin__, image1, speed)
+        result, format_ = await self.bot.loop.run_in_executor(e, f)
+        e.shutdown()
+        result = discord.File(result, f"The_Anime_Bot_spin.{format_}")
+        return result
 
     async def mirror_(self, url):
         async with self.bot.session.get(url) as resp:
@@ -571,6 +591,16 @@ class pictures(commands.Cog):
     def qr_dec(self, bytes_):
         with Image.open(bytes_) as img:
             return decode(img)[0].data.decode("utf-8")
+    
+    @commands.command()
+    async def flip(
+        self,
+        ctx,
+        thing: Image_Union = None,
+    ):
+        async with ctx.channel.typing():
+            url = await self.get_url(ctx, thing)
+            await ctx.reply(file=await self.flip_(url))
 
     @commands.group(invoke_without_command=True)
     async def qr(self, ctx, *, thing):
