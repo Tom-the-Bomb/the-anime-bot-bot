@@ -23,7 +23,8 @@ from typing import Tuple, List, Union
 from collections import defaultdict
 from random import randrange
 from itertools import chain
-from PIL import Image, ImageDraw
+from PIL.Image import Image
+from PIL import ImageDraw
 from PIL import ImageSequence
 from PIL import ImageOps
 from io import BytesIO
