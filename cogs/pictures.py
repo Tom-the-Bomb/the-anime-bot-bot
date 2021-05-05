@@ -597,10 +597,11 @@ class pictures(commands.Cog):
         self,
         ctx,
         thing: Image_Union = None,
+        speed:int = 64
     ):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
-            await ctx.reply(file=await self.spin_(url))
+            await ctx.reply(file=await self.spin_(url, speed))
 
     @commands.group(invoke_without_command=True)
     async def qr(self, ctx, *, thing):
