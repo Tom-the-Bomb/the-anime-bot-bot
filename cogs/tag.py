@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import re
 import asyncpg
 from typing import Union
 from utils.subclasses import AnimeContext
@@ -25,32 +26,89 @@ class TagMenuSource(menus.ListPageSource):
 class tag(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.random_tag_regex = re.compile(r"Random tag found: (?P<tag_name>.+)\n(?P<tag_content>.+)")
+    
+    @commands.Cog.listener("on_message")
+    async def on_message_for_random_tag_(self, message):
+        if not message.content.startswith("!random tag"):
+            return
+        m = await self.bot.wait_for("message", check = lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id, timeout=1)
+        if m.embeds and m.embeds[0].type == "rich":
+            return
+        content = m.content
+        matches = self.random_tag_regex.findall(content)
+        if matches:
+            tag_name = matches[0][0]
+            tag_content = matches[0][1]
+            try:
+                await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4, $5)", tag_name, tag_content, 80528701850124288, m.id, 0)
+            except asyncpg.exceptions.UniqueViolationError:
+                tags = await self.bot.db.fetchrow("SELECT author_id FROM tags WHERE tag_name = $1", tag_name)
+                if tags["author_id"] == 80528701850124288:
+                    await self.bot.db.execute("UPDATE tags SET tag_content = $1 WHERE tag_name = $2", tag_content, tag_name)
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if not message.content.startswith("?tag "):
+    @commands.Cog.listener("on_message")
+    async def on_message_for_random_tag(self, message):
+        if not message.content.startswith("?random tag"):
+            return
+        m = await self.bot.wait_for("message", check = lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id, timeout=1)
+        if m.embeds and m.embeds[0].type == "rich":
+            return
+        content = m.content
+        matches = self.random_tag_regex.findall(content)
+        if matches:
+            tag_name = matches[0][0]
+            tag_content = matches[0][1]
+            try:
+                await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4, $5)", tag_name, tag_content, 80528701850124288, m.id, 0)
+            except asyncpg.exceptions.UniqueViolationError:
+                tags = await self.bot.db.fetchrow("SELECT author_id FROM tags WHERE tag_name = $1", tag_name)
+                if tags["author_id"] == 80528701850124288:
+                    await self.bot.db.execute("UPDATE tags SET tag_content = $1 WHERE tag_name = $2", tag_content, tag_name)
+
+    @commands.Cog.listener("on_message")
+    async def on_message_for_normal_tag_weird_prefix(self, message):
+         if not message.content.startswith("!tag "):
             return
 
-        tag_partial = message.content.split("?tag ")
-        tag_partial = tag_partial[1].split(" ")
+        tag_name = message.content[5:]
+        tag_partial = tag_name.split()
         if tag_partial[0].strip() in ["create", "add", "alias", "make", "stats", "edit", "remove", "remove_id", "info", "raw", "list", "tags", "all", "purge", "search", "claim", "transfer", "box"]:
             return
-        try:
-            m = await self.bot.wait_for("message", check = lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id, timeout=2)
-        except:
-            if message.author.id == 726475420454617168:
-                return await message.channel.send("bruh")
+        m = await self.bot.wait_for("message", check = lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id, timeout=1)
         if m.embeds and m.embeds[0].type == "rich":
             return
         content = m.content
         if content.startswith("Tag not found."):
             return
         try:
-            await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4, $5)", message.content.replace("?tag ", ""), content, 80528701850124288, m.id, 0)
+            await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4, $5)", tag_name, content, 80528701850124288, m.id, 0)
         except asyncpg.exceptions.UniqueViolationError:
-            tags = await self.bot.db.fetchrow("SELECT author_id FROM tags WHERE tag_name = $1", message.content.replace("?tag ", ""))
+            tags = await self.bot.db.fetchrow("SELECT author_id FROM tags WHERE tag_name = $1", tag_name)
             if tags["author_id"] == 80528701850124288:
-                await self.bot.db.execute("UPDATE tags SET tag_content = $1 WHERE tag_name = $2", content, message.content.replace("?tag ", ""))
+                await self.bot.db.execute("UPDATE tags SET tag_content = $1 WHERE tag_name = $2", content, tag_name)
+
+    @commands.Cog.listener("on_message")
+    async def on_message_for_normal_tag(self, message):
+        if not message.content.startswith("?tag "):
+            return
+
+        tag_name = message.content[5:]
+        tag_partial = tag_name.split()
+        if tag_partial[0].strip() in ["create", "add", "alias", "make", "stats", "edit", "remove", "remove_id", "info", "raw", "list", "tags", "all", "purge", "search", "claim", "transfer", "box"]:
+            return
+        m = await self.bot.wait_for("message", check = lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id, timeout=1)
+        if m.embeds and m.embeds[0].type == "rich":
+            return
+        content = m.content
+        if content.startswith("Tag not found."):
+            return
+        try:
+            await self.bot.db.execute("INSERT INTO tags (tag_name, tag_content, author_id, message_id, uses) VALUES ($1, $2, $3, $4, $5)", tag_name, content, 80528701850124288, m.id, 0)
+        except asyncpg.exceptions.UniqueViolationError:
+            tags = await self.bot.db.fetchrow("SELECT author_id FROM tags WHERE tag_name = $1", tag_name)
+            if tags["author_id"] == 80528701850124288:
+                await self.bot.db.execute("UPDATE tags SET tag_content = $1 WHERE tag_name = $2", content, tag_name)
             
 
     @commands.group(invoke_without_command=True)
