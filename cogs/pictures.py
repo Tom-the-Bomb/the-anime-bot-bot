@@ -215,6 +215,7 @@ class pictures(commands.Cog):
                     pass
                 else:
                     raise discord.InvalidArgument('Unsupported image type given')
+                resp.content.unread_data(b)
                 i = Image.open(BytesIO(await resp.read()))
                 i.close()
         return url
@@ -281,6 +282,7 @@ class pictures(commands.Cog):
                     pass
                 else:
                     raise discord.InvalidArgument('Unsupported image type given')
+                resp.content.unread_data(b)
                 i = Image.open(BytesIO(await resp.read()))
                 i.close()
         return url
