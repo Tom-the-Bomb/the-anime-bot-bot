@@ -596,20 +596,22 @@ class pictures(commands.Cog):
        
     def process_latex(self, buffer):
         with Image.open(buffer) as img:
-            im_ = img.filter(ImageFilter.SMOOTH_MORE)
-            enhancer = ImageEnhance.Sharpness(im_)
-            im = enhancer.enhance(2)
-            im_.close()
+            im__ = img.filter(ImageFilter.SMOOTH_MORE)
+            _im_ = im__.filter(ImageFilter.DETAIL)
+            enhancer = ImageEnhance.Sharpness(_im_)
+            im_ = enhancer.enhance(2)
+            im__.close()
+            _im_.close()
             b = BytesIO()
-            im.save(b, "PNG")
+            im_.save(b, "PNG",  dpi=(1000, 1000))
             b.seek(0)
-            im.close()
+            im_.close()
             return b
             
     
     @commands.command()
     async def latex(self, ctx, *, text):
-        async with self.bot.session.get("https://chart.googleapis.com/chart", params={"cht": "tx", "chl": quote(text), "chf": "a, s, 00000000", "chs": 100}) as resp:
+        async with self.bot.session.get("https://chart.googleapis.com/chart", params={"cht": "tx", "chl": quote(text), "chf": "bg, s, FFFFFF00", "chs": 100, "chco": "FFFFFF"}) as resp:
             await ctx.send(file=discord.File(await asyncio.to_thread(self.process_latex, BytesIO(await resp.read())), "The_Anime_Bot_latex.png"))
             
     @commands.command()
