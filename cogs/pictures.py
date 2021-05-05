@@ -596,11 +596,13 @@ class pictures(commands.Cog):
        
     def process_latex(self, buffer):
         with Image.open(buffer) as img:
-            im__ = img.filter(ImageFilter.SMOOTH_MORE)
+            img_ = img.convert("RGBA")
+            im__ = img_.filter(ImageFilter.SMOOTH_MORE)
             _im_ = im__.filter(ImageFilter.DETAIL)
             enhancer = ImageEnhance.Sharpness(_im_)
             im_ = enhancer.enhance(2)
             im__.close()
+            img_.close()
             _im_.close()
             b = BytesIO()
             im_.save(b, "PNG",  dpi=(1000, 1000))
