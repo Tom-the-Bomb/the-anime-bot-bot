@@ -215,6 +215,8 @@ class pictures(commands.Cog):
                     pass
                 else:
                     raise discord.InvalidArgument('Unsupported image type given')
+                i = Image.open(BytesIO(await resp.read()))
+                i.close()
         return url
 
     async def get_url(self, ctx: AnimeContext, thing, **kwargs):
@@ -279,7 +281,7 @@ class pictures(commands.Cog):
                     pass
                 else:
                     raise discord.InvalidArgument('Unsupported image type given')
-                i = Image.Open(BytesIO(await resp.read()))
+                i = Image.open(BytesIO(await resp.read()))
                 i.close()
         return url
 
