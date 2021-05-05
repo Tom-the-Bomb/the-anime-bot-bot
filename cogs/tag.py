@@ -26,7 +26,7 @@ class TagMenuSource(menus.ListPageSource):
 class tag(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.random_tag_regex = re.compile(r"Random tag found: (?P<tag_name>.+)\n(?P<tag_content>.+)")
+        self.random_tag_regex = re.compile(r"Random tag found: (?P<tag_name>[.\n])\n(?P<tag_content>[.\n])")
     
     @commands.Cog.listener("on_message")
     async def on_message_for_random_tag_(self, message):
