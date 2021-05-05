@@ -25,6 +25,7 @@ from collections import defaultdict
 from random import randrange
 from itertools import chain
 from PIL import Image, ImageDraw, ImageFilter
+from PIL import ImageEnhance
 from PIL import ImageSequence
 from PIL import ImageOps
 from io import BytesIO
@@ -595,7 +596,10 @@ class pictures(commands.Cog):
        
     def process_latex(self, buffer):
         with Image.open(buffer) as img:
-            im = img.filter(ImageFilter.SMOOTH_MORE)
+            im_ = img.filter(ImageFilter.SMOOTH_MORE)
+            enhancer = ImageEnhance.Sharpness(im_)
+            im = enhancer.enhance(2)
+            im_.close()
             b = BytesIO()
             im.save(b, "PNG")
             b.seek(0)
