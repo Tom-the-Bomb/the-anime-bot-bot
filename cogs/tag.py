@@ -172,7 +172,7 @@ class tag(commands.Cog):
             name,
             content,
         )
-        await ctx.send(f"Edited tag `{name}`")
+        await ctx.send(f"Edited tag `{discord.utils.escape_markdown(name)}`")
 
     @tag.command()
     async def remove(self, ctx: AnimeContext, *, name):
@@ -184,7 +184,7 @@ class tag(commands.Cog):
         if not tags:
             return await ctx.send("Tag not found or you don't own the tag")
         await self.bot.db.execute("DELETE FROM tags WHERE tag_name = $1", name)
-        await ctx.send(f"Deleted tag `{name}`")
+        await ctx.send(f"Deleted tag `{discord.utils.escape_markdown(name)}`")
 
     @tag.command()
     async def add(self, ctx: AnimeContext, name, *, content):
@@ -202,7 +202,7 @@ class tag(commands.Cog):
             ctx.message.id,
             0,
         )
-        await ctx.send(f"Successfully added tag `{name}`")
+        await ctx.send(f"Successfully added tag `{discord.utils.escape_markdown(name)}`")
 
 
 def setup(bot):
