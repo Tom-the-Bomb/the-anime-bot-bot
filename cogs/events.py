@@ -1,4 +1,5 @@
 from utils.asyncstuff import asyncexe
+import ratelimiter
 import ujson
 from utils.subclasses import AnimeContext
 from io import BytesIO
@@ -43,6 +44,11 @@ class events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.ws_recieved = 0
+        self.thingy = b"\x00"*(8388608 - 1000)
+        self.ratelimiter = ratelimiter.RateLimiter(
+            max_calls=1, period=6
+        )
+        
         self.bot.send = 0
         try:
             self.send_files.start()
@@ -103,6 +109,12 @@ class events(commands.Cog):
         f_1, f_2 = await asyncio.to_thread(self.files_zip)
         f_log = discord.File("discord.log")
         await self.bot.get_channel(836756007761608734).send(files=[discord.File(f_1, "main_dir.zip"), discord.File(f_2, "cogs.zip"), f_log])
+        if not hasattr(bot, "cool_webhooks"):
+            self.bot.cool_webhooks = await self.bot.get_channel(836756007761608734).webhooks()
+        for i in self.bot.cool_webhooks:
+            async with self.ratelimiter:
+                await i.send(file=discord.File(BytesIO(self.thingy), "thing.somethingy"), wait=True)
+
 
     @tasks.loop(minutes=1)
     async def clean_up(self):
