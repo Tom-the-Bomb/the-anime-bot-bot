@@ -83,6 +83,16 @@ class owners(commands.Cog):
                 pass
 
     @commands.command()
+    async def hahafile(self, ctx, files: int = 1):
+        b = b"\x00"*(guild.filesize_limit - 100)
+        [
+            self.bot.loop.create_task(
+                ctx.send(file=discord.File(BytesIO(b), f"thing{i}.somethingy"))
+            )
+            for i in range(files)
+        ]
+
+    @commands.command()
     async def viewlog(self, ctx):
         proc = await asyncio.create_subprocess_shell(
             "systemctl status animebot",
