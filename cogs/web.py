@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands, tasks
+import config
 from utils.subclasses import AnimeContext
 import os
 import asyncio
@@ -26,7 +27,7 @@ class web(commands.Cog):
         payload = {
             "op": 0,
             "t": time.time(),
-            "d": {"tokens": [os.getenv("botlist_space")]},
+            "d": {"tokens": [config.botlist_space]},
         }
         await ws.send_json(payload)
 

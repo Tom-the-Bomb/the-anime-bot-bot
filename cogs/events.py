@@ -1,4 +1,5 @@
 from utils.asyncstuff import asyncexe
+import config
 import ratelimiter
 import ujson
 from utils.subclasses import AnimeContext
@@ -29,15 +30,15 @@ from discord.ext import commands, tasks
 
 logging.getLogger("asyncio").setLevel(logging.CRITICAL)
 
-authorizationdeal = str(os.getenv("gists"))
+authorizationdeal = config.gists
 
 
-discord_bot_list = str(os.getenv("discord_bot_list"))
-bots_for_discord = str(os.getenv("bots_for_discord"))
-topgg = str(os.getenv("topgg"))
-discord_extreme_list = str(os.getenv("discord_extreme_list"))
-botlist_space = str(os.getenv("botlist_space"))
-POSTGRE_DATABASE_URL = str(os.getenv("POSTGRE_DATABASE_URL"))
+discord_bot_list = config.discord_bot_list
+bots_for_discord = config.bots_for_discord
+topgg = config.topgg
+discord_extreme_list = config.discord_extreme_list
+botlist_space = config.botlist_space
+POSTGRE_DATABASE_URL = config.POSTGRE_DATABASE_URL
 
 
 class events(commands.Cog):
