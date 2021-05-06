@@ -33,7 +33,7 @@ from bs4 import BeautifulSoup
 import flags
 import discord
 import cse
-import bs4
+import bs4f
 import ratelimiter
 from urllib.parse import urlparse
 from itertools import cycle
@@ -782,7 +782,7 @@ class utility(commands.Cog):
             ]
 
         pages = menus.MenuPages(
-            source=GoogleMenuSource(lists, safesearch=not ctx.channel.is_nsfw()), delete_message_after=True
+            source=GoogleMenuSource(results, safesearch=not ctx.channel.is_nsfw()), delete_message_after=True
         )
         await pages.start(ctx)
 
