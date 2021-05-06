@@ -626,7 +626,7 @@ class pictures(commands.Cog):
             roi_gray = gray_img[y:y+h, x:x+w]
             roi_color = img[y:y+h, x:x+w]
             eyes = eye_cascade.detectMultiScale(roi_gray)
-            smiles = smile_cascade.detectMultiScale(roi_gray, scaleFactor=1.5, minNeighbors=5)
+            smiles = smile_cascade.detectMultiScale(roi_gray, scaleFactor=1.8, minNeighbors=20)
             for (ex,ey,ew,eh) in eyes:
                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (255, 0, 0), 2)
             for (ex,ey,ew,eh) in smiles:
