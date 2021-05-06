@@ -55,25 +55,19 @@ google_api_2 = config.google_api_2
 google_api_3 = config.google_api_3
 
 
-class googlemenu(menus.Menu):
-    def __init__(self, *args, **kwargs):
-        self.counter = 0
-        self.safe_search = kwargs.pop("safe_search")
-        self.datas = kwargs.pop("datas")
-        super().__init__(*args, **kwargs)
+class GoogleMenuSource(menus.ListPageSource):
+    def __init__(self, data, safesearch):
+        super().__init__(data, per_page=5)
+        self.safesearch = safesearch
 
-    async def send_initial_message(self, ctx, channel):
-        embed = discord.Embed(
-            color=self.bot.color,
-            title=self.datas[self.counter].title,
-            description=f"{self.datas[self.counter].snippet or ''}\n{self.datas[self.counter].link}",
-        )
-        # if self.datas[self.counter].image != None and self.datas[self.counter].image.startswith("http"):
-        #   embed.set_image(url=self.datas[self.counter].image)
-        embed.set_footer(
-            text=f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}"
-        )
-        return await channel.send(embed=embed)
+    async def format_page(self, menu, entries):
+        return {
+            "embed": discord.Embed(
+                color=menu.ctx.bot.color,
+                title=f"Google Search Result",
+                description="\n".join(entries),
+            ).set_footer(text=f"Safe Search: {safesearch}")
+        }
 
     @menus.button("\U000025c0")
     async def on_left(self, payload):
@@ -787,14 +781,10 @@ class utility(commands.Cog):
                 for i in js["items"]
             ]
 
-        paginator = commands.Paginator(prefix="", suffix="", max_size=2000)
-        embed = discord.Embed(color=self.bot.color)
-        for i in results:
-            paginator.add_line(i)
-        interface = PaginatorEmbedInterface(
-            ctx.bot, paginator, owner=ctx.author, embed=embed
+        pages = menus.MenuPages(
+            source=GoogleMenuSource(lists, safesearch=not ctx.channel.is_nsfw()), delete_message_after=True
         )
-        await interface.send_to(ctx)
+        await pages.start(ctx)
 
         # results = await self.google_(thing)
         # paginator = commands.Paginator(prefix="", suffix="", max_size=500)
