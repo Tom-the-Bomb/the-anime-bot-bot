@@ -616,7 +616,9 @@ class pictures(commands.Cog):
     def facereg_(self, image):
         with Image.open(image) as img:
             buffer = BytesIO()
-            img.save(buffer, "PNG")
+            img_ = img.convert("RGB")
+            img_.save(buffer, "PNG")
+            img_.close()
             buffer.seek(0)
         np_array = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
         img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
