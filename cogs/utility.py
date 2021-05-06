@@ -66,7 +66,7 @@ class GoogleMenuSource(menus.ListPageSource):
                 color=menu.ctx.bot.color,
                 title=f"Google Search Result",
                 description="\n".join(entries),
-            ).set_footer(text=f"Safe Search: {safesearch}")
+            ).set_footer(text=f"Safe Search: {self.safesearch}")
         }
 
     @menus.button("\U000025c0")
