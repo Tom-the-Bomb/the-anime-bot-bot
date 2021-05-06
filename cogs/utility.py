@@ -33,7 +33,7 @@ from bs4 import BeautifulSoup
 import flags
 import discord
 import cse
-import bs4f
+import bs4
 import ratelimiter
 from urllib.parse import urlparse
 from itertools import cycle
