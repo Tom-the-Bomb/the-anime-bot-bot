@@ -50,9 +50,9 @@ from fake_useragent import UserAgent
 ua = UserAgent()
 
 
-google_api_1 = str(os.getenv("google_api_1"))
-google_api_2 = str(os.getenv("google_api_2"))
-google_api_3 = str(os.getenv("google_api_3"))
+google_api_1 = config.google_api_1
+google_api_2 = config.google_api_2
+google_api_3 = config.google_api_3
 
 
 class googlemenu(menus.Menu):
