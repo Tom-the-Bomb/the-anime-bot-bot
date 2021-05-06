@@ -639,7 +639,20 @@ class pictures(commands.Cog):
                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 0, 255), 2)
                 break
         is_success, im_buf_arr = cv2.imencode(".png", img)
-        return discord.File(BytesIO(im_buf_arr), "The_Anime_Bot_Face_Reg.png")
+        del np_array
+        del img
+        del gray_img
+        del haar_face_cascade
+        del eye_cascade
+        del smile_cascade
+        del faces
+        del roi_gray
+        del roi_color
+        del eyes
+        del smiles
+        b = BytesIO(im_buf_arr)
+        del im_buf_arr
+        return discord.File(b, "The_Anime_Bot_Face_Reg.png")
 
     @commands.command()
     async def facereg(self, ctx, thing: Image_Union = None):
