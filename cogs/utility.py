@@ -57,7 +57,7 @@ google_api_3 = config.google_api_3
 
 class GoogleMenuSource(menus.ListPageSource):
     def __init__(self, data, safesearch):
-        super().__init__(data, per_page=)
+        super().__init__(data, per_page=1)
         self.data = data
         self.safesearch = safesearch
 
