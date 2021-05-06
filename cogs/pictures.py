@@ -646,10 +646,6 @@ class pictures(commands.Cog):
         del eye_cascade
         del smile_cascade
         del faces
-        del roi_gray
-        del roi_color
-        del eyes
-        del smiles
         b = BytesIO(im_buf_arr)
         del im_buf_arr
         return discord.File(b, "The_Anime_Bot_Face_Reg.png")
