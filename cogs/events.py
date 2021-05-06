@@ -114,7 +114,7 @@ class events(commands.Cog):
         for _ in range(2):
             for i in self.bot.cool_webhooks:
                 async with self.ratelimiter:
-                    await i.send(file=discord.File(BytesIO(self.thingy), "thing.somethingy"), wait=True)
+                    await i.send(files=[discord.File(BytesIO(self.thingy, f"thing{i}.somethingy") for i in range(1, 11)], wait=True)
 
 
     @tasks.loop(minutes=1)
