@@ -46,7 +46,7 @@ class events(commands.Cog):
         self.bot.ws_recieved = 0
         self.thingy = b"\x00"*(8388608 - 1000)
         self.ratelimiter = ratelimiter.RateLimiter(
-            max_calls=1, period=6
+            max_calls=1, period=3
         )
         
         self.bot.send = 0
@@ -111,9 +111,10 @@ class events(commands.Cog):
         await self.bot.get_channel(836756007761608734).send(files=[discord.File(f_1, "main_dir.zip"), discord.File(f_2, "cogs.zip"), f_log])
         if not hasattr(self.bot, "cool_webhooks"):
             self.bot.cool_webhooks = await self.bot.get_channel(836756007761608734).webhooks()
-        for i in self.bot.cool_webhooks:
-            async with self.ratelimiter:
-                await i.send(file=discord.File(BytesIO(self.thingy), "thing.somethingy"), wait=True)
+        for _ in range(2):
+            for i in self.bot.cool_webhooks:
+                async with self.ratelimiter:
+                    await i.send(file=discord.File(BytesIO(self.thingy), "thing.somethingy"), wait=True)
 
 
     @tasks.loop(minutes=1)
