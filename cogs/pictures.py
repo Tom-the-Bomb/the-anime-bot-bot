@@ -618,9 +618,15 @@ class pictures(commands.Cog):
         img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
         gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         haar_face_cascade = cv2.CascadeClassifier("/usr/local/lib/python3.9/site-packages/cv2/data/haarcascade_frontalface_alt.xml")
+        eye_cascade = cv2.CascadeClassifier("/usr/local/lib/python3.9/site-packages/cv2/data/haarcascade_eye.xml")
         faces = haar_face_cascade.detectMultiScale(gray_img, scaleFactor=1.1, minNeighbors=5)
         for (x, y, w, h) in faces:
             cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+            roi_gray = gray[y:y+h, x:x+w]
+            roi_color = img[y:y+h, x:x+w]
+            eyes = eye_cascade.detectMultiScale(roi_gray)
+            for (ex,ey,ew,eh) in eyes:
+                cv2.rectangle(roi_color, (ex,ey), (ex+ew,ey+eh), (255,0,0), 2)
         is_success, im_buf_arr = cv2.imencode(".png", img)
         return discord.File(BytesIO(im_buf_arr), "The_Anime_Bot_Face_Reg.png")
 
