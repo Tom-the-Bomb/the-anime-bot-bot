@@ -614,7 +614,7 @@ class pictures(commands.Cog):
     
     @asyncexe()
     def facereg_(self, image):
-        np_array = np.array(Image.open(image))
+        np_array = np.asarray(bytearray(image.read()), dtype=np.uint8)
         img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
         gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         haar_face_cascade = cv2.CascadeClassifier("/usr/local/lib/python3.9/site-packages/cv2/data/haarcascade_frontalface_alt.xml")
