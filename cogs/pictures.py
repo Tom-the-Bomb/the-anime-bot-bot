@@ -614,7 +614,11 @@ class pictures(commands.Cog):
     
     @asyncexe()
     def facereg_(self, image):
-        np_array = np.asarray(bytearray(image.read()), dtype=np.uint8)
+        with Image.open(image) as img:
+            buffer = BytesIO()
+            img.save(buffer, "PNG")
+            buffer.seek(0)
+        np_array = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
         img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
         gray_img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         haar_face_cascade = cv2.CascadeClassifier("/usr/local/lib/python3.9/site-packages/cv2/data/haarcascade_frontalface_alt.xml")
@@ -631,6 +635,7 @@ class pictures(commands.Cog):
                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (255, 0, 0), 2)
             for (ex,ey,ew,eh) in smiles:
                 cv2.rectangle(roi_color, (ex, ey), (ex+ew, ey+eh), (0, 0, 255), 2)
+                break
         is_success, im_buf_arr = cv2.imencode(".png", img)
         return discord.File(BytesIO(im_buf_arr), "The_Anime_Bot_Face_Reg.png")
 
