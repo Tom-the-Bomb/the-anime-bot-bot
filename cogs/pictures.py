@@ -651,7 +651,7 @@ class pictures(commands.Cog):
     
     @commands.command()
     async def latex(self, ctx, *, text):
-        async with self.bot.session.get(f"https://latex.codecogs.com/png.latex?%5Cdpi%7B300%7D%20%5Chuge%20{quote(text)}") as resp:
+        async with self.bot.session.get(f"https://latex.codecogs.com/png.latex?%5Cdpi%7B300%7D%20%5Cbg_black%20%5Chuge%20{quote(text)}") as resp:
             await ctx.send(embed=discord.Embed(title="LaTeX", color=self.bot.color).set_image(url="attachment://The_Anime_Bot_latex.png"), file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_latex.png"))
             
     @commands.command()
