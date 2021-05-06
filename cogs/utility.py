@@ -57,7 +57,7 @@ google_api_3 = config.google_api_3
 
 class GoogleMenuSource(menus.ListPageSource):
     def __init__(self, data, safesearch):
-        super().__init__(data, per_page=1)
+        super().__init__(data, per_page=)
         self.data = data
         self.safesearch = safesearch
 
@@ -66,8 +66,8 @@ class GoogleMenuSource(menus.ListPageSource):
             "embed": discord.Embed(
                 color=menu.ctx.bot.color,
                 title=f"Google Search Result",
-                description=f" Safe Search: {self.safesearch}\n" + "\n".join(entries),
-            ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
+                description=entries,
+            ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)} Safe Search: {self.safesearch}")
         }
 
     @menus.button("\U000025c0")
