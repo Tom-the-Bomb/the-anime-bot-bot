@@ -88,8 +88,8 @@ class Player(wavelink.Player):
             if not track.is_stream
             else "Live Stream"
         )
-        embed.description += f"\n{bar}" if not track.is_stream else ...
-        embed.set_thumbnail(url=track.thumb) if track.thumb else ...
+        embed.description += f"\n{bar}" if not track.is_stream else "Live Stream"
+        embed.set_thumbnail(url=track.thumb) if track.thumb else "Live Stream"
         embed.add_field(name="Requester", value=track.requester)
         if track.is_stream:
             embed.add_field(name="Duration", value="Live Stream")
@@ -105,7 +105,7 @@ class Player(wavelink.Player):
                 embed.add_field(
                     name="Duration", value="Duration too long to display."
                 )
-        embed.add_field(name="URL", value=track.uri) if track.uri else ...
+        embed.add_field(name="URL", value=track.uri) if track.uri else "None"
         embed.add_field(
             name="Author", value=track.author
         ) if track.author else ...
