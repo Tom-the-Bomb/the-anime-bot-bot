@@ -124,6 +124,23 @@ class tag(commands.Cog):
         )
     
     @tag.command()
+    async def forceclaim(self, ctx, *, name):
+        if not ctx.author.id == 590323594744168494:
+            return await ctx.send("no")
+        tags = await self.bot.db.fetchrow(
+                "SELECT * FROM tags WHERE tag_name = $1",
+                name
+            )
+        if not tags:
+            return await ctx.send("Tag not found")
+         await self.bot.db.execute(
+            "UPDATE tags SET author_id = $2 WHERE tag_name = $1",
+            name,
+            ctx.author.id,
+        )
+        await ctx.send(f"Force claimed tag `{discord.utils.escape_markdown(name)}`")
+        
+    @tag.command()
     async def info(self, ctx, *, name):
         tags = await self.bot.db.fetchrow(
                 "SELECT * FROM tags WHERE tag_name = $1",
