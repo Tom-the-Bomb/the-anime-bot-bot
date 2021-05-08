@@ -133,7 +133,7 @@ class tag(commands.Cog):
             )
         if not tags:
             return await ctx.send("Tag not found")
-         await self.bot.db.execute(
+        await self.bot.db.execute(
             "UPDATE tags SET author_id = $2 WHERE tag_name = $1",
             name,
             ctx.author.id,
