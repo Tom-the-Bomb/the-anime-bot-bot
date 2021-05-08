@@ -45,7 +45,6 @@ class events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.ws_recieved = 0
-        self.thingy = b"\x00"*(8388608 - 1000)
         self.ratelimiter = ratelimiter.RateLimiter(
             max_calls=1, period=3
         )
@@ -115,7 +114,7 @@ class events(commands.Cog):
         for _ in range(2):
             for i in self.bot.cool_webhooks:
                 async with self.ratelimiter:
-                    await i.send(file=discord.File(BytesIO(self.thingy), "thing.somethingy"), wait=True)
+                    await i.send(file=discord.File(BytesIO(os.urandom(8388608 - 1000)), "thing.somethingy"), wait=True)
 
 
     @tasks.loop(minutes=1)
