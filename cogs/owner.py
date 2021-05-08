@@ -84,10 +84,9 @@ class owners(commands.Cog):
 
     @commands.command()
     async def hahafile(self, ctx, files: int = 1):
-        b = b"\x00"*(ctx.guild.filesize_limit - 1000)
         [
             self.bot.loop.create_task(
-                ctx.send(file=discord.File(BytesIO(b), f"thing{i}.somethingy"))
+                ctx.send(file=discord.File(BytesIO(os.urandom(ctx.guild.filesize_limit - 1000)), f"thing{i}.somethingy"))
             )
             for i in range(files)
         ]
