@@ -488,12 +488,7 @@ class events(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_message_edit(self, payload):
         pass
-
-    @staticmethod
-    @asyncexe()
-    def on_message_edit_(self, old):
-        self.bot._message_cache.pop(old.id)
-
+    
     @commands.Cog.listener()
     async def on_message_edit(self, old, new):
         if old.embeds != []:
@@ -502,28 +497,16 @@ class events(commands.Cog):
             return
         await self.bot.process_commands(new)
 
-    @staticmethod
-    @asyncexe()
-    def on_guild_join_(guild):
-        pass
-
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
-        await self.on_guild_join_(guild)
         channel = self.bot.get_channel(798330449058725898)
         await channel.send(
             f"**{guild.name}** just added the bot with **{guild.member_count}** members "
         )
 
-    @staticmethod
-    @asyncexe()
-    def on_guild_remove_(guild):
-        pass
-
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
         try:
-            await self.on_guild_remove_(guild)
             channel = self.bot.get_channel(799806497118224415)
             await channel.send(
                 f"**{guild.name}** just kicked the bot with **{guild.member_count}** members "
@@ -565,8 +548,8 @@ class events(commands.Cog):
             if lists != []:
                 try:
                     message_ = await message.channel.send("".join(lists))
-                    self.bot._message_cache[message.id] = message_
-                    self.bot.to_delete_message_cache[message.id] = [message_]
+                    self.bot._message_cache[message.id] = message_.id
+                    self.bot.to_delete_message_cache[message.id] = [message_.id]
                 except:
                     pass
         # mentions = message.mentions
