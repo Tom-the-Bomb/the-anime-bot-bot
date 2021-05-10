@@ -78,7 +78,7 @@ class AnimeContext(commands.Context):
       content = f"```{lang}\n" + str(content) + "\n```" 
     if self.message.id in self.bot._message_cache:
       if self.message.edited_at:
-        msg = self.bot._message_cache[self.message.id]
+        msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
         await msg.edit(content=content, **kwargs)
         return msg
       else:
@@ -87,7 +87,7 @@ class AnimeContext(commands.Context):
         return message
     else:
       message = await super().send(content, nonce=random.randint(0, 9223372036854775807), **kwargs)
-      self.bot._message_cache[self.message.id] = message
+      self.bot._message_cache[self.message.id] = message.id
       self.bot.to_delete_message_cache[self.message.id] = [message.id]
       return message
   async def reply(self, content=None, *, codeblock=False, lang="py", **kwargs):
@@ -95,7 +95,7 @@ class AnimeContext(commands.Context):
       content = f"```{lang}\n" + str(content) + "\n```" 
     if self.message.id in self.bot._message_cache:
       if self.message.edited_at:
-        msg = self.bot._message_cache[self.message.id]
+        msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
         if not kwargs.get("allowed_mentions"):
           msg = await msg.edit(content=content, allowed_mentions=discord.AllowedMentions.none(), **kwargs)
         else:
@@ -107,7 +107,7 @@ class AnimeContext(commands.Context):
         return message
     else:
       message = await super().reply(content, nonce=random.randint(0, 9223372036854775807), **kwargs)
-      self.bot._message_cache[self.message.id] = message
+      self.bot._message_cache[self.message.id] = message.id
       self.bot.to_delete_message_cache[self.message.id] = [message.id]
       return message
 class AnimeMessage(discord.Message):
