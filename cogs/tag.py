@@ -230,12 +230,34 @@ class tag(commands.Cog):
             "SELECT * FROM tags WHERE tag_name = $1", name
         )
         if not tags:
-            return await ctx.send("Tag not found")
+            tags = await self.bot.db.fetch("SELECT tag_name FROM tags WHERE tag_name % $1 ORDER BY similarity(tag_name, $1) DESC LIMIT 3", name)
+            if tags:
+                tags = "\n".join(i["tag_name"] for i in tags)
+            return await ctx.send(f"Tag not found\nDid you mean:\n{tags}")
+
+
         await ctx.send(tags["tag_content"])
         await self.bot.db.execute(
             "UPDATE tags SET uses = uses + 1 WHERE tag_name = $1", name
         )
     
+    @tag.command()
+    async def edit(self, ctx: AnimeContext, name, member: discord.Member):
+        tags = await self.bot.db.fetch(
+            "SELECT * FROM tags WHERE tag_name = $1 AND author_id = $2",
+            name,
+            ctx.author.id,
+        )
+        if not tags:
+            return await ctx.send("Tag not found or you don't own the tag")
+        await self.bot.db.execute(
+            "UPDATE tags SET author_id = $2 WHERE tag_name = $1",
+            name,
+            member.id
+        )
+        await ctx.send(f"Successfully transferred tag `{discord.utils.escape_markdown(name)}` to {member.mention}")
+
+
     @tag.command()
     async def search(self, ctx, *, name):
         tags = await self.bot.db.fetch("SELECT tag_name FROM tags WHERE tag_name % $1 ORDER BY similarity(tag_name, $1) DESC", name)
