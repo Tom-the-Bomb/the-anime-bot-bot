@@ -272,7 +272,7 @@ class tag(commands.Cog):
 
     @tag.command()
     async def forceclaim(self, ctx, *, name):
-        if not ctx.author.id == 590323594744168494:
+        if ctx.author.id != 590323594744168494:
             return await ctx.send("no")
         tags = await self.bot.db.fetchrow(
             "SELECT * FROM tags WHERE tag_name = $1", name
