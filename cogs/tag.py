@@ -364,7 +364,8 @@ class tag(commands.Cog):
             name = await self.bot.wait_for("message", timeout=60, check=check)
         except asyncio.TimeoutError:
             return await ctx.send("smh u took too long run the command again if u want to remake")
-         try:
+        await ctx.send(f"ok {name} it will be what about content?")
+        try:
             content = await self.bot.wait_for("message", timeout=60, check=check)
         except asyncio.TimeoutError:
             return await ctx.send("smh u took too long run the command again if u want to remake")
