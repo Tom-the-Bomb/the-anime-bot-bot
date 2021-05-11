@@ -782,6 +782,10 @@ class pictures(commands.Cog):
     def ocr_(self, image):
         with Image.open(image) as img:
             buffer = BytesIO()
+            if 'A' in img.getbands():
+                background = Image.new("RGB", img, (255, 255, 255))
+                background.paste(img, (0, 0), img.getchannel('A'))
+                img = background
             img.save(buffer, "PNG")
             buffer.seek(0)
         np_array = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
