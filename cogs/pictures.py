@@ -766,6 +766,11 @@ class pictures(commands.Cog):
 
     @asyncexe()
     def ocr_(self, image):
+        with Image.open(image) as img:
+            buffer = BytesIO()
+            img_.save(buffer, "PNG")
+            img_.close()
+            buffer.seek(0)
         np_array = np.asarray(bytearray(image.read()), dtype=np.uint8)
         img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -785,7 +790,6 @@ class pictures(commands.Cog):
         url = await self.get_url(ctx, thing)
         async with self.bot.session.get(url) as resp:
             image = BytesIO(await resp.read())
-            Image.open(copy(image)).close()
         await ctx.send(f"```\n{await self.ocr_(image)}\n```")
 
     @commands.command()
