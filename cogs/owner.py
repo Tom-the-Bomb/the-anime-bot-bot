@@ -547,7 +547,7 @@ class owners(commands.Cog):
             f"```\n{render}\n```\n*Returned {plural(rows):row} in {dt:.2f}ms*"
         )
         if len(fmt) > 2000:
-            return await ctx.send(await ctx.paste(fmt))
+            return await ctx.send(file=discord.File(BytesIO(fmt.encode("utf-8")), "result.txt"))
         else:
             await ctx.send(fmt)
 
