@@ -55,9 +55,7 @@ class others(commands.Cog):
 
     @commands.command()
     @is_in_server()
-    async def ree(
-        self, ctx: AnimeContext, *id: typing.Union[int, discord.abc.User]
-    ):
+    async def ree(self, ctx: AnimeContext, *id: typing.Union[int, discord.abc.User]):
         channel = self.bot.get_channel(823418220832751646)
         for id in id:
             if isinstance(id, discord.abc.User):
@@ -123,9 +121,7 @@ class others(commands.Cog):
         await ctx.send("https://discord.gg/bUpF6d6bP9")
 
     @commands.command(aliases=["randomtoken"])
-    async def randombottoken(
-        self, ctx: AnimeContext, user: discord.User = None
-    ):
+    async def randombottoken(self, ctx: AnimeContext, user: discord.User = None):
         """
         Generate a completely random token from a server member THE TOKEN IS NOT VALID so don't be scared
         """
@@ -161,9 +157,7 @@ class others(commands.Cog):
         lists = []
         paginator = WrappedPaginator(max_size=500, prefix="", suffix="")
         if search != None:
-            emojis = finder(
-                search, self.bot.emojis, key=lambda i: i.name, lazy=False
-            )
+            emojis = finder(search, self.bot.emojis, key=lambda i: i.name, lazy=False)
             if emojis == []:
                 return await ctx.send("no emoji found")
             for i in emojis:
@@ -172,9 +166,7 @@ class others(commands.Cog):
                 else:
                     lists.append(f"{str(i)} `<:{i.name}:{i.id}>`")
             paginator.add_line("\n".join(lists))
-            interface = PaginatorInterface(
-                ctx.bot, paginator, owner=ctx.author
-            )
+            interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
             return await interface.send_to(ctx)
         for i in self.bot.emojis:
             if i.animated == True:
@@ -260,13 +252,9 @@ class others(commands.Cog):
 
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
-    async def raw(
-        self, ctx: AnimeContext, message_id: int, channel_id: int = None
-    ):
+    async def raw(self, ctx: AnimeContext, message_id: int, channel_id: int = None):
         await ctx.trigger_typing()
-        raw = await self.bot.http.get_message(
-            channel_id or ctx.channel.id, message_id
-        )
+        raw = await self.bot.http.get_message(channel_id or ctx.channel.id, message_id)
         # raw = str(resp).replace("|", "\u200b|").replace("*", "\u200b*").replace("`", "\u200b`").replace("~", "\u200b~").replace(">", "\u200b>").replace('"', "'")
         # raw = json.loads(raw)
         # raw = json.dumps(raw, indent=4)
@@ -282,13 +270,9 @@ class others(commands.Cog):
             .replace("\\", "\u200b\\")
         )
         if len(raw) > 1900:
-            paginator = WrappedPaginator(
-                max_size=500, prefix="```json", suffix="```"
-            )
+            paginator = WrappedPaginator(max_size=500, prefix="```json", suffix="```")
             paginator.add_line(raw)
-            interface = PaginatorInterface(
-                ctx.bot, paginator, owner=ctx.author
-            )
+            interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
             return await interface.send_to(ctx)
         embed = discord.Embed(
             color=AnimeColor.lighter_green(), description=f"```json\n{raw}```"
@@ -359,9 +343,7 @@ class others(commands.Cog):
             final_latency = end - start
             lists.append(str(round(final_latency * 1000)))
         lists = " ms \n".join(lists)
-        embed = discord.Embed(
-            color=0x00FF6A, description=f"```py\n{lists} ms```"
-        )
+        embed = discord.Embed(color=0x00FF6A, description=f"```py\n{lists} ms```")
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -476,12 +458,8 @@ class others(commands.Cog):
             text=f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
             icon_url=ctx.author.avatar_url,
         )
-        await channel.send(
-            embed=embed, allowed_mentions=discord.AllowedMentions.none()
-        )
-        await ctx.reply(
-            embed=embed, allowed_mentions=discord.AllowedMentions.none()
-        )
+        await channel.send(embed=embed, allowed_mentions=discord.AllowedMentions.none())
+        await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 
     # @commands.command()
     # async def help(self, ctx):
@@ -530,9 +508,7 @@ class others(commands.Cog):
         paginator = commands.Paginator(prefix="", suffix="", max_size=1000)
         for i in lists:
             paginator.add_line(i)
-        interface = PaginatorEmbedInterface(
-            ctx.bot, paginator, owner=ctx.author
-        )
+        interface = PaginatorEmbedInterface(ctx.bot, paginator, owner=ctx.author)
         await interface.send_to(ctx)
 
     @commands.command(aliases=["info"])

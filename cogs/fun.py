@@ -52,9 +52,7 @@ class UrbanDictionaryPageSource(menus.ListPageSource):
             if maximum
             else entry["word"]
         )
-        embed = discord.Embed(
-            title=title, colour=0x00FF6A, url=entry["permalink"]
-        )
+        embed = discord.Embed(title=title, colour=0x00FF6A, url=entry["permalink"])
         embed.set_footer(text=f'By {entry["author"]}')
         embed.description = self.cleanup_definition(
             f"**Definition:**\n {entry['definition']}\n**Example:**\n{entry['example']}"
@@ -94,9 +92,7 @@ class fun(commands.Cog):
         return quotes["quote"]
 
     async def getmeme(self):
-        async with self.bot.session.get(
-            "https://meme-api.herokuapp.com/gimme"
-        ) as resp:
+        async with self.bot.session.get("https://meme-api.herokuapp.com/gimme") as resp:
             meme = await resp.json()
             if meme["nsfw"] == True:
                 return True
@@ -155,9 +151,7 @@ class fun(commands.Cog):
                 [
                     getattr(":regional_indicator_{}:", "format")(i)
                     if i in getattr(__import__("string"), "ascii_lowercase")
-                    else getattr("{}\N{combining enclosing keycap}", "format")(
-                        i
-                    )
+                    else getattr("{}\N{combining enclosing keycap}", "format")(i)
                     if i in getattr(__import__("string"), "digits")
                     else "\U00002757"
                     if i == "!"
@@ -202,9 +196,7 @@ class fun(commands.Cog):
             pic = await resp.json()
             async with self.bot.session.get(pic["link"]) as resp:
                 pic = BytesIO(await resp.read())
-                await ctx.send(
-                    file=discord.File(pic, filename=animal + ".png")
-                )
+                await ctx.send(file=discord.File(pic, filename=animal + ".png"))
 
     @commands.command()
     async def fact(self, ctx: AnimeContext, animal: str):
@@ -220,9 +212,7 @@ class fun(commands.Cog):
     async def http(self, ctx: AnimeContext, *, code: str = "404"):
         async with self.bot.session.get(f"https://http.cat/{code}") as resp:
             buffer = await resp.read()
-        await ctx.send(
-            file=discord.File(BytesIO(buffer), filename=f"{code}.png")
-        )
+        await ctx.send(file=discord.File(BytesIO(buffer), filename=f"{code}.png"))
 
     @commands.command()
     async def robtea(self, ctx):
@@ -311,9 +301,7 @@ class fun(commands.Cog):
                     msg = message
                     break
             embed = discord.Embed(color=0x00FF6A, timestamp=msg.created_at)
-            embed.set_author(
-                name=msg.author, icon_url=str(msg.author.avatar_url)
-            )
+            embed.set_author(name=msg.author, icon_url=str(msg.author.avatar_url))
             embed.set_footer(text=f"id: {msg.id} Created at: ")
             if msg.embeds != []:
                 content = "Embed"
@@ -363,9 +351,7 @@ class fun(commands.Cog):
             #   return await ctx.send(f"Can not find message that is send by {user}")
             # msg = random.choice(lists)
             embed = discord.Embed(color=0x00FF6A, timestamp=msg.created_at)
-            embed.set_author(
-                name=msg.author, icon_url=str(msg.author.avatar_url)
-            )
+            embed.set_author(name=msg.author, icon_url=str(msg.author.avatar_url))
             embed.set_footer(text=f"id: {msg.id} Created at: ")
             if msg.embeds != []:
                 content = "Embed"
@@ -456,16 +442,12 @@ class fun(commands.Cog):
                 "bitch",
             ]
             if any(i in search for i in lists):
-                return await ctx.send(
-                    "Can not search nsfw words in non nsfw channel"
-                )
+                return await ctx.send("Can not search nsfw words in non nsfw channel")
         async with self.bot.session.get(
             f"http://api.urbandictionary.com/v0/define?term={search}"
         ) as resp:
             if resp.status != 200:
-                return await ctx.send(
-                    f"An error occurred: {resp.status} {resp.reason}"
-                )
+                return await ctx.send(f"An error occurred: {resp.status} {resp.reason}")
             js = await resp.json()
             data = js.get("list", [])
             if not data:
@@ -478,9 +460,7 @@ class fun(commands.Cog):
             await ctx.send(e)
 
     @commands.command(aliases=["chat"])
-    @commands.max_concurrency(
-        1, commands.cooldowns.BucketType.channel, wait=False
-    )
+    @commands.max_concurrency(1, commands.cooldowns.BucketType.channel, wait=False)
     async def talk(self, ctx):
         """
         Chat with the bot you might stop by saying `end`
@@ -502,9 +482,7 @@ class fun(commands.Cog):
         while talking:
             chats = ["Hii", "helooo"]
             try:
-                message = await self.bot.wait_for(
-                    "message", timeout=60, check=check
-                )
+                message = await self.bot.wait_for("message", timeout=60, check=check)
                 chats.append(message.content)
                 if message.content == "end":
                     self.talk_channels.remove(ctx.message.channel.id)
@@ -589,9 +567,7 @@ class fun(commands.Cog):
         await ctx.send(embed=embed, file=discord.File(gif, f"{search}.gif"))
 
     @commands.command(aliases=["sw", "speedwatch"])
-    async def speedwatcher(
-        self, ctx: AnimeContext, member: discord.Member = None
-    ):
+    async def speedwatcher(self, ctx: AnimeContext, member: discord.Member = None):
         member1 = member
         if member1 is None:
             member1 = ctx.author
@@ -652,9 +628,7 @@ class fun(commands.Cog):
         return discord.File(buffer, filename="audio.mp3")
 
     @commands.command()
-    async def tts(
-        self, ctx: AnimeContext, lang="en", *, text="enter something "
-    ):
+    async def tts(self, ctx: AnimeContext, lang="en", *, text="enter something "):
         async with ctx.typing():
             file = await self.tts_(text, lang)
             await ctx.send(file=file)
@@ -718,9 +692,7 @@ class fun(commands.Cog):
             value=f"**{user.mention} got it in {round(final * 1000)} ms **",
             inline=False,
         )
-        embed.add_field(
-            name="participant", value="\n".join(lists), inline=False
-        )
+        embed.add_field(name="participant", value="\n".join(lists), inline=False)
         await message.edit(embed=embed)
 
         def check(payload):
@@ -746,9 +718,7 @@ class fun(commands.Cog):
                 value=f"**{user.mention} got it in {round(final * 1000)} ms **",
                 inline=False,
             )
-            embed.add_field(
-                name="participant", value="\n".join(lists), inline=False
-            )
+            embed.add_field(name="participant", value="\n".join(lists), inline=False)
             await message.edit(embed=embed)
 
     @commands.command()
@@ -778,9 +748,7 @@ class fun(commands.Cog):
             new = bytes(text1, "utf-8")
             decrypted = f.decrypt(new)
             decrypted = str(decrypted, "utf-8")
-            await ctx.reply(
-                decrypted, allowed_mentions=discord.AllowedMentions.none()
-            )
+            await ctx.reply(decrypted, allowed_mentions=discord.AllowedMentions.none())
         except:
             await ctx.send("You provided a invalid link")
 
@@ -800,10 +768,7 @@ class fun(commands.Cog):
     @commands.command()
     async def ovoly(self, ctx: AnimeContext, *, text):
         ovo = (
-            text.replace("l", "v")
-            .replace("L", "v")
-            .replace("r", "v")
-            .replace("R", "v")
+            text.replace("l", "v").replace("L", "v").replace("r", "v").replace("R", "v")
         )
         await ctx.reply(f"{ovo} ovo")
 

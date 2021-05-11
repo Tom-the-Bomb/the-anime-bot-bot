@@ -100,9 +100,7 @@ class todo(commands.Cog):
             for counter, i in enumerate(todos, start=1)
         ]
 
-        pages = menus.MenuPages(
-            source=TodoMenuSource(lists), delete_message_after=True
-        )
+        pages = menus.MenuPages(source=TodoMenuSource(lists), delete_message_after=True)
         await pages.start(ctx)
 
     @todo.command()
@@ -119,8 +117,7 @@ class todo(commands.Cog):
                 "INSERT INTO todos (author_id, content, created_at, message_id, jump_url) VALUES ($1, $2, $3, $4, $5)",
                 ctx.author.id,
                 i,
-                ctx.message.created_at
-                + datetime.timedelta(microseconds=offset),
+                ctx.message.created_at + datetime.timedelta(microseconds=offset),
                 ctx.message.id,
                 ctx.message.jump_url,
             )

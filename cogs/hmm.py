@@ -41,9 +41,7 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.emoji_to_role[
-                payload.emoji.id or payload.emoji.name
-            ]
+            role_id = self.emoji_to_role[payload.emoji.id or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -73,9 +71,7 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.emoji_to_role[
-                payload.emoji.id or payload.emoji.name
-            ]
+            role_id = self.emoji_to_role[payload.emoji.id or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return

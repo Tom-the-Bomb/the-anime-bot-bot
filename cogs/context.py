@@ -4,6 +4,7 @@ from discord.ext import commands
 
 def setup(bot):
     from utils.subclasses import AnimeContext
+
     bot.context = AnimeContext
 
 

@@ -69,9 +69,7 @@ class socket(commands.Cog):
         )
         for i, (n, v) in enumerate(self.bot.socket_stats.most_common()):
             lists.append(f"{n:<30} {v:<15} {round(v/difference, 3)} /minute")
-        paginator = commands.Paginator(
-            max_size=500, prefix="```", suffix="```"
-        )
+        paginator = commands.Paginator(max_size=500, prefix="```", suffix="```")
         for i in lists:
             paginator.add_line(i)
         interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)

@@ -22,7 +22,7 @@ from ipc.errors import *
 class Client:
     """
     Handles webserver side requests to the bot process.
-    
+
     Parameters
     ----------
     host: str

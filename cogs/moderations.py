@@ -131,9 +131,7 @@ class moderations(commands.Cog):
         )
         await ctx.send(embed=embed)
         embed = discord.Embed(color=self.bot.color)
-        embed.add_field(
-            name=f"You have been warned", value=f"with reason: `{reason}`"
-        )
+        embed.add_field(name=f"You have been warned", value=f"with reason: `{reason}`")
         await user.send(embed=embed)
 
     @commands.command()
@@ -142,16 +140,12 @@ class moderations(commands.Cog):
     async def purge(self, ctx: AnimeContext, limit: int):
         await ctx.trigger_typing()
         counts = await ctx.channel.purge(limit=limit)
-        await ctx.send(
-            content=f" purged {len(counts)} messages", delete_after=10
-        )
+        await ctx.send(content=f" purged {len(counts)} messages", delete_after=10)
 
     @commands.command()
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
-    async def kick(
-        self, ctx: AnimeContext, member: discord.Member, *, reason=None
-    ):
+    async def kick(self, ctx: AnimeContext, member: discord.Member, *, reason=None):
         if member.id == 590323594744168494:
             return await ctx.reply("hmm nope not gonna do that")
         if ctx.author.top_role < member.top_role:
@@ -163,9 +157,7 @@ class moderations(commands.Cog):
     @commands.command()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def ban(
-        self, ctx: AnimeContext, member: discord.Member, *, reason=None
-    ):
+    async def ban(self, ctx: AnimeContext, member: discord.Member, *, reason=None):
         if member.id == 590323594744168494:
             return await ctx.reply("hmm nope not gonna do that")
         if ctx.author.top_role < member.top_role:

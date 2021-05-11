@@ -14,9 +14,7 @@ class slash(commands.Cog):
     async def think(self, ctx, seconds: int):
         await ctx.defer()
         if seconds >= 899:
-            return await ctx.send(
-                "how am i suppose to think for more then 15 minutes"
-            )
+            return await ctx.send("how am i suppose to think for more then 15 minutes")
         await asyncio.sleep(seconds)
         await ctx.send(f"I thinked for {seconds} seconds")
 

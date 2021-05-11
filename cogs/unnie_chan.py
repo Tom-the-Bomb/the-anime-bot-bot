@@ -30,10 +30,7 @@ class reactionrole(commands.Cog):
         )
 
         def check(m):
-            return (
-                m.guild.id == 810331898278182952
-                and m.author.id == ctx.author.id
-            )
+            return m.guild.id == 810331898278182952 and m.author.id == ctx.author.id
 
         m = await self.bot.wait_for("message", check=check, timeout=120)
         for i in ctx.guild.roles:
@@ -66,9 +63,7 @@ class reactionrole(commands.Cog):
                 name=msg.author.display_name,
                 icon_url=str(msg.author.avatar_url),
             )
-            embed.add_field(
-                name="Message delete", value=f"Message: {msg.content}"
-            )
+            embed.add_field(name="Message delete", value=f"Message: {msg.content}")
             await self.bot.get_channel(811829054293934130).send(embed=embed)
             self.bot.deleted_message_cache.pop(payload.message_id)
 
@@ -104,9 +99,7 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.emoji_to_role[
-                payload.emoji.id or payload.emoji.name
-            ]
+            role_id = self.emoji_to_role[payload.emoji.id or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return
@@ -136,9 +129,7 @@ class reactionrole(commands.Cog):
             return
 
         try:
-            role_id = self.emoji_to_role[
-                payload.emoji.id or payload.emoji.name
-            ]
+            role_id = self.emoji_to_role[payload.emoji.id or payload.emoji.name]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
             return

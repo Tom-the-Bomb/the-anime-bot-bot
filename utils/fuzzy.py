@@ -4,10 +4,12 @@ License, v. 2.0. If a copy of the MPL was not distributed with this
 file, You can obtain one at http://mozilla.org/MPL/2.0/.
 """
 import re
+
+
 def finder(text, collection, *, key=None, lazy=True):
     maybe = []
     text = str(text)
-    to_compile = '.*?'.join(map(re.escape, text))
+    to_compile = ".*?".join(map(re.escape, text))
     regex = re.compile(to_compile, flags=re.IGNORECASE)
     for item in collection:
         to_search = key(item) if key else item

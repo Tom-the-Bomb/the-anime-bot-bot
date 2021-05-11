@@ -69,10 +69,7 @@ class owners(commands.Cog):
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
-        if (
-            payload.user_id == 590323594744168494
-            and payload.emoji.name == "\U0001f6ae"
-        ):
+        if payload.user_id == 590323594744168494 and payload.emoji.name == "\U0001f6ae":
             try:
                 await self.bot.http.delete_message(
                     payload.channel_id,
@@ -86,7 +83,12 @@ class owners(commands.Cog):
     async def hahafile(self, ctx, files: int = 1):
         [
             self.bot.loop.create_task(
-                ctx.send(file=discord.File(BytesIO(os.urandom(ctx.guild.filesize_limit - 1000)), f"thing{i}.somethingy"))
+                ctx.send(
+                    file=discord.File(
+                        BytesIO(os.urandom(ctx.guild.filesize_limit - 1000)),
+                        f"thing{i}.somethingy",
+                    )
+                )
             )
             for i in range(files)
         ]
@@ -127,9 +129,7 @@ class owners(commands.Cog):
         if self.cog_regex.findall(final):
             for i in self.cog_regex.findall(final):
                 try:
-                    self.bot.reload_extension(
-                        i.replace("/", ".").replace(".py", "")
-                    )
+                    self.bot.reload_extension(i.replace("/", ".").replace(".py", ""))
                 except Exception as e:
                     embed = discord.Embed(
                         color=0xFF0000,
@@ -231,9 +231,7 @@ class owners(commands.Cog):
                     await ctx.send(
                         f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```"
                     )
-                    if len(
-                        f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```"
-                    )
+                    if len(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```")
                     <= 2000
                     else await ctx.send(
                         await ctx.paste(
@@ -307,9 +305,7 @@ class owners(commands.Cog):
             f"https://image.thum.io/get/png/{website}"
         ) as resp:
             pic = BytesIO(await resp.read())
-        await ctx.send(
-            file=discord.File(pic, f"website_screemshot_{website}.png")
-        )
+        await ctx.send(file=discord.File(pic, f"website_screemshot_{website}.png"))
 
     @commands.command()
     @commands.is_owner()
@@ -331,9 +327,7 @@ class owners(commands.Cog):
         """
         paginator = commands.Paginator(max_size=1000)
         lines = list(self.bot.cached_messages)
-        lines.append(
-            f"Total amount of messages cached {len(self.bot.cached_messages)}"
-        )
+        lines.append(f"Total amount of messages cached {len(self.bot.cached_messages)}")
         for i in lines:
             i = str(i)
             paginator.add_line(i)
@@ -350,9 +344,7 @@ class owners(commands.Cog):
                 paginator = WrappedPaginator(prefix=prefix, max_size=1975)
                 paginator.add_line(f"{reader.ps1} 'speedtest-cli --simple'\n")
 
-                interface = PaginatorInterface(
-                    ctx.bot, paginator, owner=ctx.author
-                )
+                interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
                 self.bot.loop.create_task(interface.send_to(ctx))
 
                 async for line in reader:
@@ -360,9 +352,7 @@ class owners(commands.Cog):
                         return
                     await interface.add_line(line)
 
-            await interface.add_line(
-                f"\n[status] Return code {reader.close_code}"
-            )
+            await interface.add_line(f"\n[status] Return code {reader.close_code}")
 
     @commands.command()
     @commands.is_owner()
@@ -451,9 +441,7 @@ class owners(commands.Cog):
                     self.bot.http.delete_message(ctx.channel.id, id), timeout=5
                 )
             except asyncio.TimeoutError:
-                await ctx.send(
-                    "guess what retarded discord ratelimit me again"
-                )
+                await ctx.send("guess what retarded discord ratelimit me again")
 
     @commands.command()
     # @commands.is_owner()
@@ -476,9 +464,7 @@ class owners(commands.Cog):
                 "nsfw",
             ]
             if any(i in text for i in lists):
-                return await ctx.send(
-                    "Can not say nsfw words in non nsfw channel"
-                )
+                return await ctx.send("Can not say nsfw words in non nsfw channel")
         # if ctx.author.id == 707250997407252531 or ctx.author.id == 590323594744168494:
         text = (
             text.replace("|", "\u200b|")
@@ -497,9 +483,7 @@ class owners(commands.Cog):
         embed.set_author(
             name=ctx.author.display_name, icon_url=str(ctx.author.avatar_url)
         )
-        await ctx.send(
-            embed=embed, allowed_mentions=discord.AllowedMentions.none()
-        )
+        await ctx.send(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 
     @commands.command()
     @commands.is_owner()
@@ -543,11 +527,11 @@ class owners(commands.Cog):
         table.add_rows(list(r.values()) for r in results)
         render = table.render()
 
-        fmt = (
-            f"```\n{render}\n```\n*Returned {plural(rows):row} in {dt:.2f}ms*"
-        )
+        fmt = f"```\n{render}\n```\n*Returned {plural(rows):row} in {dt:.2f}ms*"
         if len(fmt) > 2000:
-            return await ctx.send(file=discord.File(BytesIO(fmt.encode("utf-8")), "result.txt"))
+            return await ctx.send(
+                file=discord.File(BytesIO(fmt.encode("utf-8")), "result.txt")
+            )
         else:
             await ctx.send(fmt)
 
@@ -588,9 +572,7 @@ async def purge(self, ctx: AnimeContext, limit: int):
     async def purge(self, ctx: AnimeContext, limit: int):
         await ctx.trigger_typing()
         counts = await ctx.channel.purge(limit=limit)
-        await ctx.reply(
-            content=f" purged {len(counts)} messages", delete_after=10
-        )
+        await ctx.reply(content=f" purged {len(counts)} messages", delete_after=10)
 
 
 def setup(bot):

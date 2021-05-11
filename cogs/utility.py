@@ -67,7 +67,9 @@ class GoogleMenuSource(menus.ListPageSource):
                 color=menu.ctx.bot.color,
                 title=f"Google Search Result",
                 description=entries,
-            ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)} Safe Search: {self.safesearch}")
+            ).set_footer(
+                text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)} Safe Search: {self.safesearch}"
+            )
         }
 
     @menus.button("\U000025c0")
@@ -206,9 +208,7 @@ class utility(commands.Cog):
             "python": "https://docs.python.org/3",
             "asyncpg": "https://magicstack.github.io/asyncpg/current/",
         }
-        bot.loop.create_task(
-            self.build_rtfm_lookup_table(page_types=page_types)
-        )
+        bot.loop.create_task(self.build_rtfm_lookup_table(page_types=page_types))
         bot.cse1 = cse.Search(api_key=google_api_1)
         bot.cse2 = cse.Search(api_key=google_api_2)
         bot.cse3 = cse.Search(api_key=google_api_3)
@@ -229,13 +229,9 @@ class utility(commands.Cog):
         # next line says if it's a zlib header
         line = stream.readline()
         if "zlib" not in line:
-            raise RuntimeError(
-                "Invalid objects.inv file, not z-lib compatible."
-            )
+            raise RuntimeError("Invalid objects.inv file, not z-lib compatible.")
         # This code mostly comes from the Sphinx repository.
-        entry_regex = re.compile(
-            r"(?x)(.+?)\s+(\S*:\S*)\s+(-?\d+)\s+(\S+)\s+(.*)"
-        )
+        entry_regex = re.compile(r"(?x)(.+?)\s+(\S*:\S*)\s+(-?\d+)\s+(\S+)\s+(.*)")
         for line in stream.read_compressed_lines():
             match = entry_regex.match(line.rstrip())
             if not match:
@@ -257,9 +253,7 @@ class utility(commands.Cog):
             key = name if dispname == "-" else dispname
             prefix = f"{subdirective}:" if domain == "std" else ""
             if projname == "discord.py":
-                key = key.replace("discord.ext.commands.", "").replace(
-                    "discord.", ""
-                )
+                key = key.replace("discord.ext.commands.", "").replace("discord.", "")
             result[f"{prefix}{key}"] = os.path.join(url, location)
         return result
 
@@ -288,9 +282,7 @@ class utility(commands.Cog):
         if not hasattr(self.bot, "_rtfm_cache"):
             await ctx.trigger_typing()
             await self.build_rtfm_lookup_table(page_types)
-        obj = re.sub(
-            r"^(?:discord\.(?:ext\.)?)?(?:commands\.)?(.+)", r"\1", obj
-        )
+        obj = re.sub(r"^(?:discord\.(?:ext\.)?)?(?:commands\.)?(.+)", r"\1", obj)
         if key.startswith("latest"):
             # point the abc.Messageable types properly:
             q = obj.lower()
@@ -326,9 +318,7 @@ class utility(commands.Cog):
         builder = []
         if len(results) > 30:
             builder.append("Showing the top 30 results")
-        for index, (elem, count) in enumerate(
-            results.most_common(30), start=1
-        ):
+        for index, (elem, count) in enumerate(results.most_common(30), start=1):
             builder.append(
                 f"**{index}. {elem} ** `({plural(count):time}, {count/times:.2%})`"
             )
@@ -457,9 +447,7 @@ class utility(commands.Cog):
     @staticmethod
     @asyncexe()
     def translate_(from_lang, to_lang, thing):
-        return Translator(from_lang=from_lang, to_lang=to_lang).translate(
-            thing
-        )
+        return Translator(from_lang=from_lang, to_lang=to_lang).translate(thing)
 
     @staticmethod
     @asyncexe()
@@ -529,7 +517,9 @@ class utility(commands.Cog):
                         == "Supplied language is not supported by Piston"
                         else js["message"]
                     )
-                result = f"```{lang}\n{js['output'].replace('code.code', 'cogs.eval')}\n```"
+                result = (
+                    f"```{lang}\n{js['output'].replace('code.code', 'cogs.eval')}\n```"
+                )
                 if len(result) >= 1900 or len(result.split("\n")) >= 40:
                     return await ctx.send(
                         await ctx.paste(
@@ -583,9 +573,7 @@ class utility(commands.Cog):
 
     @commands.command()
     async def pypi(self, ctx, name):
-        async with self.bot.session.get(
-            f"https://pypi.org/pypi/{name}/json"
-        ) as resp:
+        async with self.bot.session.get(f"https://pypi.org/pypi/{name}/json") as resp:
             if resp.status == 404:
                 return await ctx.send(f"We are unable to find that package")
             package = await resp.json()
@@ -629,11 +617,8 @@ class utility(commands.Cog):
     async def mystbin(self, ctx, *, code: str = None):
         if ctx.message.reference:
             message = ctx.message.reference.resolve
-            if (
-                message.attachments
-                and message.attachments.filename.endswith(
-                    (".txt", ".py", ".json", ".html", ".csv")
-                )
+            if message.attachments and message.attachments.filename.endswith(
+                (".txt", ".py", ".json", ".html", ".csv")
             ):
                 message_ = await message.attachments[0].read()
                 message_ = message_.decode("utf-8")
@@ -641,9 +626,7 @@ class utility(commands.Cog):
                     str(
                         await self.bot.mystbin.post(
                             message_,
-                            syntax=message.attachments[0].filename.split(
-                                "."
-                            )[1],
+                            syntax=message.attachments[0].filename.split(".")[1],
                         )
                     )
                 )
@@ -652,15 +635,11 @@ class utility(commands.Cog):
             message = ctx.message.attachments[0]
             if message:
                 syntax = message.filename.split(".")[1]
-                if message.filename.endswith(
-                    (".txt", ".py", ".json", ".html", ".csv")
-                ):
+                if message.filename.endswith((".txt", ".py", ".json", ".html", ".csv")):
                     message = await message.read()
                     message = message.decode("utf-8")
                     await ctx.send(
-                        str(
-                            await self.bot.mystbin.post(message, syntax=syntax)
-                        )
+                        str(await self.bot.mystbin.post(message, syntax=syntax))
                     )
         else:
             if code.startswith("http"):
@@ -669,23 +648,13 @@ class utility(commands.Cog):
                     try:
                         message = message.decode("utf-8")
                         return await ctx.send(
-                            str(
-                                await self.bot.mystbin.post(
-                                    message, syntax="html"
-                                )
-                            )
+                            str(await self.bot.mystbin.post(message, syntax="html"))
                         )
                     except:
 
-                        message = (
-                            f"Unable to decode so here is the byte {message}"
-                        )
+                        message = f"Unable to decode so here is the byte {message}"
                         return await ctx.send(
-                            str(
-                                await self.bot.mystbin.post(
-                                    message, syntax="python"
-                                )
-                            )
+                            str(await self.bot.mystbin.post(message, syntax="python"))
                         )
             await ctx.send(str(await self.bot.mystbin.post(code)))
 
@@ -713,9 +682,7 @@ class utility(commands.Cog):
 
     @commands.command()
     async def mytime(self, ctx):
-        embed = discord.Embed(
-            color=self.bot.color, timestamp=datetime.utcnow()
-        )
+        embed = discord.Embed(color=self.bot.color, timestamp=datetime.utcnow())
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -755,9 +722,7 @@ class utility(commands.Cog):
                 real_results = []
             for i in titles:
                 try:
-                    real_results.append(
-                        f"{titles[counter]}\n{results[counter]}\n"
-                    )
+                    real_results.append(f"{titles[counter]}\n{results[counter]}\n")
                     counter += 1
                 except:
                     return real_results
@@ -774,8 +739,8 @@ class utility(commands.Cog):
             "safe": "off" if ctx.channel.is_nsfw() else "active",
         }
         async with self.bot.session.get(
-                f"https://www.googleapis.com/customsearch/v1", params=params
-            ) as resp:
+            f"https://www.googleapis.com/customsearch/v1", params=params
+        ) as resp:
             js = await resp.json()
             results = [
                 f"{i['title']}\n{i['link']}\n{i.get('snippet', 'No description')}\n"
@@ -783,7 +748,8 @@ class utility(commands.Cog):
             ]
 
         pages = menus.MenuPages(
-            source=GoogleMenuSource(results, safesearch=not ctx.channel.is_nsfw()), delete_message_after=True
+            source=GoogleMenuSource(results, safesearch=not ctx.channel.is_nsfw()),
+            delete_message_after=True,
         )
         await pages.start(ctx)
 
@@ -850,9 +816,7 @@ class utility(commands.Cog):
         else:
             content = msg.content
         embed.add_field(name="Content", value=content, inline=False)
-        embed.add_field(
-            name="Jump link", value=f"[url]({msg.jump_url})", inline=False
-        )
+        embed.add_field(name="Jump link", value=f"[url]({msg.jump_url})", inline=False)
         await ctx.send(embed=embed)
         if msg.attachments != []:
             await ctx.send(msg.attachments[0].url)
@@ -899,9 +863,7 @@ class utility(commands.Cog):
         if "**" in thing:
             return await ctx.send("Power not supported")
         try:
-            result = str(
-                await self.bot.loop.run_in_executor(None, self.calc, thing)
-            )
+            result = str(await self.bot.loop.run_in_executor(None, self.calc, thing))
         except:
             return await ctx.send(math.nan)
         if "None" in result:
@@ -944,9 +906,7 @@ class utility(commands.Cog):
         """
         Shows discord's incidents
         """
-        paginator = commands.Paginator(
-            max_size=500, prefix="```yaml", suffix="```"
-        )
+        paginator = commands.Paginator(max_size=500, prefix="```yaml", suffix="```")
         for i in await self.get_incidents():
             paginator.add_line(f"{i}\n")
         interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
@@ -957,9 +917,7 @@ class utility(commands.Cog):
         """
         Shows discord's status
         """
-        paginator = commands.Paginator(
-            max_size=500, prefix="```yaml", suffix="```"
-        )
+        paginator = commands.Paginator(max_size=500, prefix="```yaml", suffix="```")
         for i in await self.get_status():
             paginator.add_line(i)
         interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
@@ -982,9 +940,7 @@ class utility(commands.Cog):
         # file = discord.File(fp=obj, filename="emoji.png")
         # await ctx.send(file=file)
         try:
-            partialemoji = await commands.PartialEmojiConverter().convert(
-                ctx, emoji
-            )
+            partialemoji = await commands.PartialEmojiConverter().convert(ctx, emoji)
             if partialemoji.is_custom_emoji() == True:
                 asset = partialemoji.url
                 link = str(asset)
@@ -1060,9 +1016,7 @@ class utility(commands.Cog):
             res = await resp.json()
             if res.get("message"):
                 return await ctx.send(res.get("message"))
-            await ctx.send(
-                f"{amount} {from_.upper()} is equal to {res.get('pretty')}"
-            )
+            await ctx.send(f"{amount} {from_.upper()} is equal to {res.get('pretty')}")
 
     @commands.command()
     async def charinfo(self, ctx, *, characters: str):
@@ -1094,9 +1048,7 @@ class utility(commands.Cog):
             guild1 = ctx.message.guild
         else:
             if self.bot.get_guild(guild) is None:
-                return await ctx.send(
-                    "Bot do not have permission to view that guild"
-                )
+                return await ctx.send("Bot do not have permission to view that guild")
             else:
                 guild1 = self.bot.get_guild(guild)
         categories = len(guild1.categories)
@@ -1151,9 +1103,7 @@ class utility(commands.Cog):
         builder = await self.bot.loop.run_in_executor(
             None, self.choosebstofcal, ctx, times, choices
         )
-        embed = discord.Embed(
-            color=self.bot.color, description="\n".join(builder)
-        )
+        embed = discord.Embed(color=self.bot.color, description="\n".join(builder))
         await message.edit(embed=embed)
 
     @commands.command(aliases=["ui", "userinformation", "userinformations"])
@@ -1206,9 +1156,7 @@ class utility(commands.Cog):
             else:
                 early_supporter = "<:redTick:596576672149667840>"
             if member1.public_flags.bug_hunter_level_2:
-                bug_hunter = (
-                    "<:greenTick:596576670815879169> Bug hunter level 2"
-                )
+                bug_hunter = "<:greenTick:596576670815879169> Bug hunter level 2"
             if member1.public_flags.verified_bot:
                 verified_bot = "<:greenTick:596576670815879169>"
             else:
@@ -1261,9 +1209,7 @@ class utility(commands.Cog):
             else:
                 early_supporter = "<:redTick:596576672149667840>"
             if member1.public_flags.bug_hunter_level_2:
-                bug_hunter = (
-                    "<:greenTick:596576670815879169> Bug hunter level 2"
-                )
+                bug_hunter = "<:greenTick:596576670815879169> Bug hunter level 2"
             if member1.public_flags.verified_bot:
                 verified_bot = "<:greenTick:596576670815879169>"
             else:
@@ -1289,9 +1235,7 @@ class utility(commands.Cog):
         await ctx.reply(embed=embed)
 
     @commands.command()
-    async def avatar(
-        self, ctx, member: typing.Union[discord.User, str] = None
-    ):
+    async def avatar(self, ctx, member: typing.Union[discord.User, str] = None):
         """
         shows a members's avatar
 
@@ -1319,9 +1263,7 @@ class utility(commands.Cog):
         await ctx.reply(
             embed=embed,
             file=discord.File(
-                BytesIO(
-                    await member1.avatar_url_as(static_format="png").read()
-                ),
+                BytesIO(await member1.avatar_url_as(static_format="png").read()),
                 f"{member1.id}{format}",
             ),
         )

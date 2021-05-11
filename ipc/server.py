@@ -96,7 +96,6 @@ class Server:
         self.bot = bot
         self.loop = asyncio.get_event_loop()
 
-
         self.secret_key = secret_key
 
         self.host = host

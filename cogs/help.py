@@ -25,15 +25,11 @@ class HelpMenuSource(menus.ListPageSource):
 
 class HelpCommand(commands.HelpCommand):
     def get_command_signature(self, command):
-        return (
-            f"{self.clean_prefix}{command.qualified_name} {command.signature}"
-        )
+        return f"{self.clean_prefix}{command.qualified_name} {command.signature}"
 
     async def send_group_help(self, group):
         lists = [self.get_command_signature(i) for i in group.walk_commands()]
-        pages = menus.MenuPages(
-            source=HelpMenuSource(lists), delete_message_after=True
-        )
+        pages = menus.MenuPages(source=HelpMenuSource(lists), delete_message_after=True)
         await pages.start(self.context)
 
     async def send_command_help(self, command):
@@ -55,9 +51,7 @@ class HelpCommand(commands.HelpCommand):
             else:
                 lists_.append(self.get_command_signature(i))
         lists = [f"**{i}**" for i in lists_]
-        pages = menus.MenuPages(
-            source=HelpMenuSource(lists), delete_message_after=True
-        )
+        pages = menus.MenuPages(source=HelpMenuSource(lists), delete_message_after=True)
         await pages.start(self.context)
 
     async def send_bot_help(self, mapping):
@@ -93,9 +87,7 @@ socket
         ```
         """,
         )
-        embed.set_thumbnail(
-            url=str(self.context.me.avatar_url_as(format="png"))
-        )
+        embed.set_thumbnail(url=str(self.context.me.avatar_url_as(format="png")))
         await self.context.send(embed=embed)
         # is_working = True
         # dicts = {
@@ -119,6 +111,7 @@ socket
         # payload = await self.context.bot.wait_for("raw_reaction_add", check=check)
         # await self.context.bot.invoke(copy_context_with(self.context, content="ovo help " + dicts.get(payload.emoji.id)))
         # await message.delete()
+
     async def command_not_found(self, string: str):
         matches = difflib.get_close_matches(string, self.context.bot.command_list)
         if not matches:

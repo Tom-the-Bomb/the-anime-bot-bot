@@ -102,13 +102,9 @@ class Player(wavelink.Player):
                     ),
                 )
             except:
-                embed.add_field(
-                    name="Duration", value="Duration too long to display."
-                )
+                embed.add_field(name="Duration", value="Duration too long to display.")
         embed.add_field(name="URL", value=track.uri) if track.uri else "None"
-        embed.add_field(
-            name="Author", value=track.author
-        ) if track.author else ...
+        embed.add_field(name="Author", value=track.author) if track.author else ...
         footer = f"Youtube ID: {track.ytid or 'None'} Identifier: {track.identifier or 'None'}"
         embed.set_footer(text=footer)
         return embed
@@ -246,9 +242,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         if not ctx.guild:
             raise commands.NoPrivateMessage
         if not ctx.author.voice:
-            await ctx.send(
-                "You must be in a voice channel to use this command."
-            )
+            await ctx.send("You must be in a voice channel to use this command.")
             return False
         if ctx.author.voice.channel.id != player.channel_id:
             await ctx.send(
@@ -312,9 +306,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             if ctx.author.voice:
                 channel = ctx.author.voice.channel
             else:
-                return await ctx.send(
-                    "you are not connected to any voice channel"
-                )
+                return await ctx.send("you are not connected to any voice channel")
         else:
             channel = vc
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)

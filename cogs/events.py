@@ -45,10 +45,8 @@ class events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.ws_recieved = 0
-        self.ratelimiter = ratelimiter.RateLimiter(
-            max_calls=1, period=3
-        )
-        
+        self.ratelimiter = ratelimiter.RateLimiter(max_calls=1, period=3)
+
         self.bot.send = 0
         try:
             self.send_files.start()
@@ -80,7 +78,7 @@ class events(commands.Cog):
     def files_zip(self):
         file_1 = BytesIO()
         with zipfile.ZipFile(file_1, mode="w") as zipfile_:
-            p = Path('.')
+            p = Path(".")
             for i in p.iterdir():
                 if not i.is_dir():
                     if not i.name == "config.py":
@@ -91,7 +89,7 @@ class events(commands.Cog):
                                 continue
         file_2 = BytesIO()
         with zipfile.ZipFile(file_2, mode="w") as zipfile_:
-            p = Path('./cogs')
+            p = Path("./cogs")
             for i in p.iterdir():
                 if not i.is_dir():
                     with i.open(encoding="utf-8") as f:
@@ -108,14 +106,26 @@ class events(commands.Cog):
         await self.bot.wait_until_ready()
         f_1, f_2 = await asyncio.to_thread(self.files_zip)
         f_log = discord.File("discord.log")
-        await self.bot.get_channel(836756007761608734).send(files=[discord.File(f_1, "main_dir.zip"), discord.File(f_2, "cogs.zip"), f_log])
+        await self.bot.get_channel(836756007761608734).send(
+            files=[
+                discord.File(f_1, "main_dir.zip"),
+                discord.File(f_2, "cogs.zip"),
+                f_log,
+            ]
+        )
         if not hasattr(self.bot, "cool_webhooks"):
-            self.bot.cool_webhooks = await self.bot.get_channel(836756007761608734).webhooks()
+            self.bot.cool_webhooks = await self.bot.get_channel(
+                836756007761608734
+            ).webhooks()
         for _ in range(2):
             for i in self.bot.cool_webhooks:
                 async with self.ratelimiter:
-                    await i.send(file=discord.File(BytesIO(os.urandom(8388608 - 1000)), "thing.somethingy"), wait=True)
-
+                    await i.send(
+                        file=discord.File(
+                            BytesIO(os.urandom(8388608 - 1000)), "thing.somethingy"
+                        ),
+                        wait=True,
+                    )
 
     @tasks.loop(minutes=1)
     async def clean_up(self):
@@ -190,9 +200,7 @@ class events(commands.Cog):
                 f"Received {bot.socket_receive} {bot.socket_receive//difference} per minute"
             )
             for i, (n, v) in enumerate(bot.socket_stats.most_common()):
-                lists.append(
-                    f"{n:<30} {v:<20} {round(v/difference, 3)} /minute"
-                )
+                lists.append(f"{n:<30} {v:<20} {round(v/difference, 3)} /minute")
             lists = "\n".join(lists)
             await message.edit(content=f"```\n{lists}\n```")
         except:
@@ -407,13 +415,9 @@ class events(commands.Cog):
                     self.bot.to_delete_message_cache.get(payload.message_id)
                 )
             except:
-                for i in self.bot.to_delete_message_cache.get(
-                    payload.message_id
-                ):
+                for i in self.bot.to_delete_message_cache.get(payload.message_id):
                     try:
-                        await self.bot.http.delete_message(
-                            payload.channel_id, i
-                        )
+                        await self.bot.http.delete_message(payload.channel_id, i)
                     except:
                         pass
         else:
@@ -488,7 +492,7 @@ class events(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_message_edit(self, payload):
         pass
-    
+
     @commands.Cog.listener()
     async def on_message_edit(self, old, new):
         if old.embeds != []:
@@ -516,10 +520,7 @@ class events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        if (
-            message.content == "<@!787927476177076234>"
-            and not message.author.bot
-        ):
+        if message.content == "<@!787927476177076234>" and not message.author.bot:
             message_ = await message.channel.send(
                 f"Hii there why u ping me smh oh i mean hii my prefix is `{', '.join(self.bot.prefixes[message.guild.id])}` "
             )
@@ -535,9 +536,7 @@ class events(commands.Cog):
             for i in emojis:
                 if i == "":
                     continue
-                e = finder(
-                    i, self.bot.emojis, key=lambda i: i.name, lazy=False
-                )
+                e = finder(i, self.bot.emojis, key=lambda i: i.name, lazy=False)
                 if e == []:
                     continue
                 e = e[0]
@@ -583,9 +582,7 @@ class events(commands.Cog):
         print("Logged in as:\n{0.user.name}\n{0.user.id}".format(self.bot))
 
     def embed(self, text):
-        return discord.Embed(
-            color=0xFF0000, title="An error occured", description=text
-        )
+        return discord.Embed(color=0xFF0000, title="An error occured", description=text)
 
     @commands.Cog.listener()
     async def on_command_error(self, ctx: AnimeContext, error):
@@ -636,9 +633,7 @@ class events(commands.Cog):
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.NoPrivateMessage):
             try:
-                embed = self.embed(
-                    "{ctx.command} can not be used in Private Messages."
-                )
+                embed = self.embed("{ctx.command} can not be used in Private Messages.")
                 await ctx.author.send(embed=embed)
             except discord.HTTPException:
                 pass
@@ -654,9 +649,7 @@ class events(commands.Cog):
             embed = self.embed(f"Unable to convert")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MissingRequiredArgument):
-            embed = self.embed(
-                f"You are missing `{error.param.name}` argument"
-            )
+            embed = self.embed(f"You are missing `{error.param.name}` argument")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MaxConcurrencyReached):
             embed = self.embed(
@@ -715,9 +708,7 @@ class events(commands.Cog):
         if not id:
             errors = await self.bot.db.fetch("SELECT * FROM errors")
             lists = [f"{i['error_id']}\n{i['message']}" for i in errors]
-            embed = discord.Embed(
-                color=self.bot.color, description="\n".join(lists)
-            )
+            embed = discord.Embed(color=self.bot.color, description="\n".join(lists))
         else:
             error = await self.bot.db.fetchrow(
                 "SELECT * FROM errors WHERE error_id = $1", id

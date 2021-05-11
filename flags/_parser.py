@@ -17,34 +17,34 @@ class ArgumentParsingError(commands.CommandError):
 class DontExitArgumentParser(argparse.ArgumentParser):
     def __init__(self, *args, **kwargs):
         self.ctx = None
-        kwargs.pop('add_help', False)
+        kwargs.pop("add_help", False)
         super().__init__(*args, add_help=False, **kwargs)
 
     def error(self, message):
         raise ArgumentParsingError(message)
 
     def _get_value(self, action, arg_string):
-        type_func = self._registry_get('type', action.type, action.type)
+        type_func = self._registry_get("type", action.type, action.type)
         param = [arg_string]
 
-        if hasattr(type_func, '__module__') and type_func.__module__ is not None:
+        if hasattr(type_func, "__module__") and type_func.__module__ is not None:
             module = type_func.__module__
-            if module.startswith('discord') and not module.endswith('converter'):
+            if module.startswith("discord") and not module.endswith("converter"):
                 # gets the default discord.py converter
                 try:
-                    type_func = getattr(commands.converter, type_func.__name__ + 'Converter')
+                    type_func = getattr(
+                        commands.converter, type_func.__name__ + "Converter"
+                    )
                 except AttributeError:
                     pass
 
         # for custom converter compatibility
-        if inspect.isclass(type_func) and issubclass(
-            type_func, commands.Converter
-        ):
+        if inspect.isclass(type_func) and issubclass(type_func, commands.Converter):
             type_func = type_func().convert
             param.insert(0, self.ctx)
 
         if not callable(type_func):
-            msg = '%r is not callable'
+            msg = "%r is not callable"
             raise argparse.ArgumentError(action, msg % type_func)
 
         # if type is bool, use the discord.py's bool converter

@@ -15,41 +15,57 @@ from collections import Counter
 class chat(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
+
     @asyncexe()
     def wordcloud_(self, text, icon):
         m = None
-#         if icon:
-#             mask = np.array(Image.open(icon))
-#             mask = mask[::3, ::3]
-#             m = mask.copy()
-#             m[m.sum(axis=2) == 0] = 255
-#             edges = np.mean([gaussian_gradient_magnitude(mask[:, :, i] / 255., 2) for i in range(3)], axis=0)
-#             m[edges > .08] = 255
+        #         if icon:
+        #             mask = np.array(Image.open(icon))
+        #             mask = mask[::3, ::3]
+        #             m = mask.copy()
+        #             m[m.sum(axis=2) == 0] = 255
+        #             edges = np.mean([gaussian_gradient_magnitude(mask[:, :, i] / 255., 2) for i in range(3)], axis=0)
+        #             m[edges > .08] = 255
         wordcloud = WordCloud(width=1000, height=500, max_words=300).generate(text)
         image = wordcloud.to_image()
         b = BytesIO()
         image.save(b, "PNG")
         b.seek(0)
         return b
-        
+
     @commands.command()
     @commands.max_concurrency(1, commands.BucketType.channel)
-    async def wordcloud(self, ctx, limit: int=1000):
+    async def wordcloud(self, ctx, limit: int = 1000):
         limit = min(limit, 10000)
         counter = 0
         text = ""
-        m = await ctx.send(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
+        m = await ctx.send(
+            embed=discord.Embed(
+                color=self.bot.color,
+                title="Collecting messages",
+                description=f"{counter} / {limit}",
+            )
+        )
         async with ctx.typing():
             async for message in ctx.channel.history(limit=limit):
                 counter += 1
                 if message.content:
                     text += message.content
                 if counter % 250 == 0:
-                    await m.edit(embed=discord.Embed(color=self.bot.color, title="Collecting messages", description=f"{counter} / {limit}"))
+                    await m.edit(
+                        embed=discord.Embed(
+                            color=self.bot.color,
+                            title="Collecting messages",
+                            description=f"{counter} / {limit}",
+                        )
+                    )
             icon = None
             if ctx.guild:
-                icon = BytesIO(await ctx.guild.icon_url_as(format="png").read()) if ctx.guild.icon_url_as(format="png") else None
+                icon = (
+                    BytesIO(await ctx.guild.icon_url_as(format="png").read())
+                    if ctx.guild.icon_url_as(format="png")
+                    else None
+                )
             pic = await self.wordcloud_(text, icon)
             await ctx.send(file=discord.File(pic, "wordcloud.png"))
 

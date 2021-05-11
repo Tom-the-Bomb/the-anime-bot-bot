@@ -17,34 +17,37 @@ from __future__ import annotations
 
 from typing import Optional, Mapping, Any
 
+
 class SearchResult:
-	"""
-	Small object that represents a search result.
+    """
+    Small object that represents a search result.
 
-	Attributes
-	----------
-	title : :class:`str`
-		The title of the returned result.
-	snippet : Optional[:class:`str`]
-		A short description of the following website, if applicable.
-	link : :class:`str`
-		The target link.
-	image : :class:`str`
-		A preview image of the website, if applicable.
-	"""
+    Attributes
+    ----------
+    title : :class:`str`
+            The title of the returned result.
+    snippet : Optional[:class:`str`]
+            A short description of the following website, if applicable.
+    link : :class:`str`
+            The target link.
+    image : :class:`str`
+            A preview image of the website, if applicable.
+    """
 
-	__slots__ = ("title", "snippet", "link", "image")
+    __slots__ = ("title", "snippet", "link", "image")
 
-	def __init__(self, data: Mapping[str, Any]):
-		self.title: str = data['title']
-		snip = data.get("snippet")
-		self.snippet: Optional[str] = snip and ''.join(snip.split('\n'))
-		self.link: str = data['link']
-		image = data['pagemap'].get('cse_image')
-		self.image: Optional[str] = image and image[0]['src']
+    def __init__(self, data: Mapping[str, Any]):
+        self.title: str = data["title"]
+        snip = data.get("snippet")
+        self.snippet: Optional[str] = snip and "".join(snip.split("\n"))
+        self.link: str = data["link"]
+        image = data["pagemap"].get("cse_image")
+        self.image: Optional[str] = image and image[0]["src"]
 
-	def __repr__(self) -> str:
-		return "<SearchResult title={0.title!r} snippet={0.snippet!r} link={0.link!r} image={0.image!r}>".format(self)
+    def __repr__(self) -> str:
+        return "<SearchResult title={0.title!r} snippet={0.snippet!r} link={0.link!r} image={0.image!r}>".format(
+            self
+        )
 
-	def __eq__(self, other: object) -> bool:
-		return isinstance(other, SearchResult) and self.title == other.title
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, SearchResult) and self.title == other.title

@@ -16,14 +16,20 @@ limitations under the License.
 
 from typing import Mapping
 
-__all__ = ['SearchError', 'QuotaExceededError']
+__all__ = ["SearchError", "QuotaExceededError"]
+
 
 class SearchError(Exception):
-	"""Raised when the API returns an error."""
-	def __init__(self, data: Mapping[str, str]) -> None:
-		super().__init__("[{code}: {status}] {message}".format(**data))
+    """Raised when the API returns an error."""
+
+    def __init__(self, data: Mapping[str, str]) -> None:
+        super().__init__("[{code}: {status}] {message}".format(**data))
+
 
 class QuotaExceededError(SearchError):
-	"""Raised when the active API key has run out of uses."""
-	def __init__(self) -> None:
-		Exception.__init__(self, "100 queries/day quota has been exceeded for this API key")
+    """Raised when the active API key has run out of uses."""
+
+    def __init__(self) -> None:
+        Exception.__init__(
+            self, "100 queries/day quota has been exceeded for this API key"
+        )

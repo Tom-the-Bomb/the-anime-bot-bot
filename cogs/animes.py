@@ -75,9 +75,7 @@ class animes(commands.Cog):
                     value="\n".join(characters).replace("||", "\||"),
                     inline=False,
                 )
-                embed.set_image(url=anime["img_src"]) if anime.get(
-                    "img_src"
-                ) else ...
+                embed.set_image(url=anime["img_src"]) if anime.get("img_src") else ...
                 embed_list.append(embed)
             pages = menus.MenuPages(
                 source=AnimeMenuSource(embed_list), delete_message_after=True

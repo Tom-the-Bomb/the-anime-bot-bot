@@ -55,9 +55,7 @@ class logging(commands.Cog):
             for i, v in logging_settings.items()
         ]
         settings = "\n".join(settings)
-        await ctx.send(
-            embed=discord.Embed(color=self.bot.color, description=settings)
-        )
+        await ctx.send(embed=discord.Embed(color=self.bot.color, description=settings))
 
     @logging.command()
     @commands.has_permissions(manage_guild=True)
@@ -99,9 +97,7 @@ class logging(commands.Cog):
             if not webhook:
                 webhook = await channel.create_webhook(
                     name="The Anime Bot logging",
-                    avatar=await self.bot.user.avatar_url_as(
-                        format="png"
-                    ).read(),
+                    avatar=await self.bot.user.avatar_url_as(format="png").read(),
                     reason="The Anime Bot logging",
                 )
         except discord.HTTPException:
@@ -200,17 +196,13 @@ class logging(commands.Cog):
                 if not webhooks:
                     webhook = await channel.create_webhook(
                         name="The Anime Bot logging",
-                        avatar=await self.bot.user.avatar_url_as(
-                            format="png"
-                        ).read(),
+                        avatar=await self.bot.user.avatar_url_as(format="png").read(),
                         reason="The Anime Bot logging",
                     )
                     message = await webhook.send(
                         embed=embed,
                         username="The Anime Bot logging",
-                        avatar_url=str(
-                            self.bot.user.avatar_url_as(format="png")
-                        ),
+                        avatar_url=str(self.bot.user.avatar_url_as(format="png")),
                     )
                     await self.bot.db.execute(
                         "UPDATE logging SET webhook = $1, WHERE guild_id = $2",
@@ -301,9 +293,9 @@ class logging(commands.Cog):
             ]
             to_display = []
             for i, v in changed_permission:
-                to_display.append(
-                    f"Added permission {i}"
-                ) if v else to_display.append(f"Removed permission {i}")
+                to_display.append(f"Added permission {i}") if v else to_display.append(
+                    f"Removed permission {i}"
+                )
             to_display = "\n".join(to_display)
             embed = discord.Embed(
                 color=self.bot.color,
@@ -351,9 +343,7 @@ class logging(commands.Cog):
                 description=f"**Old Name:** {before.name}*\n*New name:** {after.name}",
                 timestamp=datetime.datetime.utcnow(),
             )
-            return await self.send_webhook(
-                after.guild.id, embed, "guild_update"
-            )
+            return await self.send_webhook(after.guild.id, embed, "guild_update")
         embed = discord.Embed(
             color=self.bot.color,
             title="Guild Updated",
@@ -406,9 +396,7 @@ class logging(commands.Cog):
                 )
             else:
                 roles = set(after.roles)
-                removed_roles = [
-                    i.mention for i in before.roles if i not in roles
-                ]
+                removed_roles = [i.mention for i in before.roles if i not in roles]
                 embed = discord.Embed(
                     color=self.bot.color,
                     title="Role Removed",
@@ -417,9 +405,7 @@ class logging(commands.Cog):
                 )
 
             embed.set_footer(text=f"User ID: {after.id}")
-            return await self.send_webhook(
-                after.guild.id, embed, "member_update"
-            )
+            return await self.send_webhook(after.guild.id, embed, "member_update")
 
     @commands.Cog.listener()
     async def on_member_ban(self, guild, user):
@@ -540,8 +526,7 @@ class logging(commands.Cog):
             or "message don't have content could be a attachment or embed"
         )
         after_content = (
-            after.content
-            or "message don't have content could be a attachment or embed"
+            after.content or "message don't have content could be a attachment or embed"
         )
         embed = discord.Embed(
             color=self.bot.color,
@@ -589,9 +574,7 @@ class logging(commands.Cog):
             )
             embed.set_author(
                 name=str(message.author),
-                icon_url=str(
-                    message.author.avatar_url_as(static_format="png")
-                ),
+                icon_url=str(message.author.avatar_url_as(static_format="png")),
             )
             embed.set_footer(
                 text=f"User ID: {message.author.id} Message ID: {message.id}"
