@@ -770,7 +770,7 @@ class pictures(commands.Cog):
             buffer = BytesIO()
             img.save(buffer, "PNG")
             buffer.seek(0)
-        np_array = np.asarray(bytearray(image.read()), dtype=np.uint8)
+        np_array = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
         img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = cv2.medianBlur(img, 5)
