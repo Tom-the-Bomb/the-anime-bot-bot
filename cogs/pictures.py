@@ -361,6 +361,9 @@ class pictures(commands.Cog):
     def save_transparent_gif(self, images: List[Image.Image], durations: Union[int, List[int]], save_file):
         root_frame, save_args = self._create_animated_gif(images, durations)
         root_frame.save(save_file, **save_args)
+        root_frame.close()
+        for i in images:
+            i.close()
 
     def resize(self, image: Image) -> Image:
         if image.height > 500 or image.width > 500:
@@ -505,13 +508,18 @@ class pictures(commands.Cog):
         return b, "png"
         
     def spin__(self, image, speed):
-        im = self.open_pil_image(BytesIO(image))
-        im = self.resize(im)
-        im = im.convert("RGBA")
-        to_make_gif = [im.rotate(degree, resample=Image.BICUBIC, expand=0) for degree in range(0, 360, 10)]
+        im_ = self.open_pil_image(BytesIO(image))
+        im__ = self.resize(im_)
+        im___ = im__.convert("RGBA")
+        to_make_gif = [im___.rotate(degree, resample=Image.BICUBIC, expand=0) for degree in range(0, 360, 10)]
         final = BytesIO()
         self.save_transparent_gif(to_make_gif, speed, final)
         final.seek(0)
+        im_.close()
+        im__.close()
+        im___.close()
+        for i in to_make_gif:
+            i.close()
         return final, "gif"
         
     async def spin_(self, url, speed):
