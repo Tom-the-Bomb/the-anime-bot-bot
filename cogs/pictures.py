@@ -783,7 +783,7 @@ class pictures(commands.Cog):
         with Image.open(image) as img:
             buffer = BytesIO()
             if 'A' in img.getbands():
-                background = Image.new("RGB", img, (255, 255, 255))
+                background = Image.new("RGB", img.size, (255, 255, 255))
                 background.paste(img, (0, 0), img.getchannel('A'))
                 img = background
             img.save(buffer, "PNG")
