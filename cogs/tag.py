@@ -242,7 +242,7 @@ class tag(commands.Cog):
         )
     
     @tag.command()
-    async def edit(self, ctx: AnimeContext, name, member: discord.Member):
+    async def transfer(self, ctx: AnimeContext, name, member: discord.Member):
         tags = await self.bot.db.fetch(
             "SELECT * FROM tags WHERE tag_name = $1 AND author_id = $2",
             name,
