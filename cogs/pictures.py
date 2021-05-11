@@ -768,8 +768,7 @@ class pictures(commands.Cog):
     def ocr_(self, image):
         with Image.open(image) as img:
             buffer = BytesIO()
-            img_.save(buffer, "PNG")
-            img_.close()
+            img.save(buffer, "PNG")
             buffer.seek(0)
         np_array = np.asarray(bytearray(image.read()), dtype=np.uint8)
         img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
