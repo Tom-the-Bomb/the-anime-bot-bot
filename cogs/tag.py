@@ -235,6 +235,17 @@ class tag(commands.Cog):
         await self.bot.db.execute(
             "UPDATE tags SET uses = uses + 1 WHERE tag_name = $1", name
         )
+    
+    @tag.command()
+    async def search(self, ctx, *, name):
+        tags = await self.bot.db.fetch("SELECT tag_name FROM tags WHERE tag_name % $1 ORDER BY similarity(tag_name, $1) DESC", name)
+        pages = menus.MenuPages(
+            source=TagMenuSource(
+                [discord.utils.escape_markdown(i["tag_name"]) for i in tags],
+            ),
+            delete_message_after=True,
+        )
+        await pages.start(ctx)
 
     @tag.command()
     async def forceclaim(self, ctx, *, name):
