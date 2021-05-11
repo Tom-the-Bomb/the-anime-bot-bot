@@ -296,6 +296,11 @@ class pictures(commands.Cog):
                     pass
                 elif b[:2] in (b'MM', b'II'):
                     pass
+                elif len(h) >= 3 and \
+                    b[0] == ord(b'P') and b[1] in b'25' and b[2] in b' \t\n\r':
+                    pass
+                elif b.startswith(b'BM'):
+                    pass
                 elif b.startswith(b"RIFF") and b[8:12] == b"WEBP":
                     pass
                 else:
