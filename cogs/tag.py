@@ -234,6 +234,7 @@ class tag(commands.Cog):
             if tags:
                 tags = "\n".join(i["tag_name"] for i in tags)
                 return await ctx.send(f"Tag not found\nDid you mean:\n{tags}")
+            return
 
 
         await ctx.send(tags["tag_content"])
