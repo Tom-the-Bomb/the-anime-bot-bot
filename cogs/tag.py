@@ -362,11 +362,13 @@ class tag(commands.Cog):
             return msg.author == ctx.author and ctx.channel == msg.channel
         try:
             name = await self.bot.wait_for("message", timeout=60, check=check)
+            name = name.content
         except asyncio.TimeoutError:
             return await ctx.send("smh u took too long run the command again if u want to remake")
         await ctx.send(f"ok {name} it will be what about content?")
         try:
             content = await self.bot.wait_for("message", timeout=60, check=check)
+            content = content.content
         except asyncio.TimeoutError:
             return await ctx.send("smh u took too long run the command again if u want to remake")
         await ctx.invoke(self.add, name=name, content=content)
