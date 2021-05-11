@@ -233,7 +233,7 @@ class tag(commands.Cog):
             tags = await self.bot.db.fetch("SELECT tag_name FROM tags WHERE tag_name % $1 ORDER BY similarity(tag_name, $1) DESC LIMIT 3", name)
             if tags:
                 tags = "\n".join(i["tag_name"] for i in tags)
-            return await ctx.send(f"Tag not found\nDid you mean:\n{tags}")
+                return await ctx.send(f"Tag not found\nDid you mean:\n{tags}")
 
 
         await ctx.send(tags["tag_content"])
@@ -354,8 +354,23 @@ class tag(commands.Cog):
             return await ctx.send("Tag not found or you don't own the tag")
         await self.bot.db.execute("DELETE FROM tags WHERE tag_name = $1", name)
         await ctx.send(f"Deleted tag `{discord.utils.escape_markdown(name)}`")
-
+    
     @tag.command()
+    async def make(self, ctx):
+        await ctx.send("oh hi what the tag name is?")
+        def check(msg):
+            return msg.author == ctx.author and ctx.channel == msg.channel
+        try:
+            name = await self.bot.wait_for("message", timeout=60, check=check)
+        except asyncio.TimeoutError:
+            return await ctx.send("smh u took too long run the command again if u want to remake")
+         try:
+            content = await self.bot.wait_for("message", timeout=60, check=check)
+        except asyncio.TimeoutError:
+            return await ctx.send("smh u took too long run the command again if u want to remake")
+        await ctx.invoke(self.add, name=name, content=content)
+
+    @tag.command(aliases=["create"])
     async def add(self, ctx: AnimeContext, name, *, content):
         tags = await self.bot.db.fetch("SELECT * FROM tags")
         if len(name) > 200:
