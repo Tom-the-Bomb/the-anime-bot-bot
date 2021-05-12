@@ -86,11 +86,14 @@ class fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.talk_channels = []
-        self.bot.loop.create_task(self.prepare_chatterbot())
+        self.bot.loop.create_task(self.prepare_chatterbot_())
     
     @asyncexe()
     def prepare_chatterbot(self):
         self.bot.chatterbot = ChatBot("bot")
+    
+    async def prepare_chatterbot_(self):
+        await self.prepare_chatterbot()
 
     async def get_quote(self):
         async with self.bot.session.get(
