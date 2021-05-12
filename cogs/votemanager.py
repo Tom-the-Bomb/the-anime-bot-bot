@@ -1,0 +1,41 @@
+import discord
+from discord.ext import commands, tasks
+import config
+from utils.subclasses import AnimeContext
+import os
+import asyncio
+import time
+from contextlib import suppress
+import aiohttp
+import quart
+from quart import Abort
+from hypercorn.asyncio import serve
+from hypercorn.config import Config
+from quart import Quart
+
+
+class VoteManager(commands.Cog):
+    app = Quart("vote_manager")
+    shut_down = asyncio.Event()
+    def __init__(self, bot):
+        self.bot = bot
+        self.app = app
+    
+    @app.route("/")
+    async def index(self):
+        return {"hello": "o"}
+    
+    # @app.route("/topgg")
+    # async def topgg(self):
+    #     auth = request.headers["Authorization"]
+    #     if auth != config.vote_webhook_token:
+
+
+    def cog_unload(self):
+        shut_down.set()
+
+def setup(bot):
+    bot.add_cog(VoteManager(bot))
+    config = Config()
+    config.bind = ["0.0.0.0:50000"]
+    bot.loop.create_task(serve(app, config, shutdown_trigger=shut_down.wait))
