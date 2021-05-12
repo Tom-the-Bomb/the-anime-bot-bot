@@ -31,10 +31,9 @@ class VoteManager(commands.Cog):
     #     auth = request.headers["Authorization"]
     #     if auth != config.vote_webhook_token:
 
-
-    def cog_unload(self):
-        app.shutdown()
-        shut_down.set()
+def teardown(bot):
+    app.shutdown()
+    shut_down.set()
 
 def setup(bot):
     bot.add_cog(VoteManager(bot))
