@@ -36,6 +36,9 @@ class Currency(commands.Cog):
     @commands.command(aliases=["bal"])
     async def balance(self, ctx):
         basket, bank = await self.get_balance(ctx.author.id)
-        await ctx.send(f"your balance: Basket: {basket} Bank: {bank}")
+        embed = discord.Embed(color=self.bot.color, title=f"{ctx.author.name}'s balance")
+        embed.add_field(name="Basket", value=basket, inline=False)
+        embed.add_field(name="Bank", value=bank, inline=False)
+        await ctx.send(embed=embed)
 def setup(bot):
     bot.add_cog(Currency(bot))
