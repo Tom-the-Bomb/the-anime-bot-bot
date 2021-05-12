@@ -46,7 +46,7 @@ class reactionrole(commands.Cog):
         m = await commands.MessageConverter().convert(ctx, m.content)
         await m.add_reaction(r.emoji)
         await ctx.send("oh ok made")
-        if not self.bot.reactionrole_cache.get(ctx.guild.id)
+        if not self.bot.reactionrole_cache.get(ctx.guild.id):
             self.bot.reactionrole_cache[ctx.guild.id] = {}
         self.bot.reactionrole_cache[ctx.guild.id][m.id] = role.id or role.name
         await self.bot.db.fetchrow("INSERT INTO VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET roles = $2", ctx.guild.id, ujson.dumps(self.bot.reactionrole_cache[ctx.guild.id]))
