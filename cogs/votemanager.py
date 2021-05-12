@@ -27,7 +27,7 @@ class VoteManager(commands.Cog):
     def cog_unload(self):
         self.bot.loop.create_task(self._webserver.stop())
     
-    async def topgg(self, request):
+    async def votes(self, request):
         if not request.headers.get("Authorization"):
             return web.Response(status=401, text="Unauthorized")
         if request.headers.get("Authorization") != config.vote_webhook_token:
@@ -58,7 +58,7 @@ class VoteManager(commands.Cog):
     async def run(self):
         await self.bot.wait_until_ready()
         self.app.router.add_get("/", self.index)
-        self.app.router.add_post("/topgg", self.topgg)
+        self.app.router.add_post("/votes", self.votes)
         runner = web.AppRunner(self.app)
         await runner.setup()
         self._webserver = web.TCPSite(runner, "0.0.0.0", "15000")
