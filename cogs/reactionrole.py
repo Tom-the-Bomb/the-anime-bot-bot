@@ -1,31 +1,23 @@
 import discord
-import asyncio
 import ujson
 from discord.ext import commands
 from utils.subclasses import AnimeContext
 import typing
 import ratelimiter
-
-
 class reactionrole(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.reactionrole_cache = {}
-        self.reactionrole_remove_lock = {}
-        self.reactionrole_lock = {}
         self.ratelimiter = ratelimiter.RateLimiter(max_calls=5, period=10)
         self.bot.loop.create_task(self.make_cache())
-
     async def make_cache(self):
-        roles = await self.bot.db.fetch("SELECT * FROM reactionrole")
+        roles = await self.bot.db.fetch("SELCT * FROM reactionrole")
         if roles:
             for i in roles:
                 self.bot.reactionrole_cache[i["guild_id"]] = ujson.loads(i["roles"])
-
     @commands.group()
     async def reactionrole(self, ctx):
         ...
-
     @reactionrole.command()
     async def add(
         self,
@@ -65,44 +57,30 @@ class reactionrole(commands.Cog):
             return
         if payload.guild_id not in self.bot.reactionrole_cache.keys():
             return
-        if not self.reactionrole_lock.get(payload.user_id):
-            self.reactionrole_lock[payload.user_id] = asyncio.Lock()
-        lock = self.reactionrole_lock[payload.user_id]
-        if lock.locked:
-            return
-        await lock.acquire()
         try:
-            try:
-                role_id = self.bot.reactionrole_cache[payload.guild_id][payload.message_id][
-                    payload.emoji.id or payload.emoji.name
-                ]
-            except KeyError:
-                # If the emoji isn't the one we care about then exit as well.
-                return
-
-            guild = self.bot.get_guild(payload.guild_id)
-            if guild is None:
-                # Check if we're still in the guild and it's cached.
-                return
-
-            role = guild.get_role(role_id)
-            if role is None:
-                # Make sure the role still exists and is valid.
-                return
-
-            try:
-                # Finally add the role
-                async with self.ratelimiter:
-                    await payload.member.add_roles(
-                        role, reason="The Anime Bot reaction role"
-                    )
-            except discord.HTTPException:
-                # If we want to do something in case of errors we'd do it here.
-                pass
-        finally:
-            await asyncio.sleep(1)
-            lock.release()
-
+            role_id = self.bot.reactionrole_cache[payload.guild_id][payload.message_id][
+                payload.emoji.id or payload.emoji.name
+            ]
+        except KeyError:
+            # If the emoji isn't the one we care about then exit as well.
+            return
+        guild = self.bot.get_guild(payload.guild_id)
+        if guild is None:
+            # Check if we're still in the guild and it's cached.
+            return
+        role = guild.get_role(role_id)
+        if role is None:
+            # Make sure the role still exists and is valid.
+            return
+        try:
+            # Finally add the role
+            async with self.ratelimiter:
+                await payload.member.add_roles(
+                    role, reason="The Anime Bot reaction role"
+                )
+        except discord.HTTPException:
+            # If we want to do something in case of errors we'd do it here.
+            pass
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
         """Removes a role based on a reaction emoji."""
@@ -111,48 +89,31 @@ class reactionrole(commands.Cog):
             return
         if payload.guild_id not in self.bot.reactionrole_cache.keys():
             return
-        
-        if not self.reactionrole_remove_lock.get(payload.user_id):
-            self.reactionrole_remove_lock[payload.user_id] = asyncio.Lock()
-        lock = self.reactionrole_remove_lock[payload.user_id]
-        if lock.locked:
+        try:
+            role_id = self.bot.reactionrole_cache[payload.guild_id][payload.message_id][
+                payload.emoji.id or payload.emoji.name
+            ]
+        except KeyError:
+            # If the emoji isn't the one we care about then exit as well.
+            return
+        guild = self.bot.get_guild(payload.guild_id)
+        if guild is None:
+            # Check if we're still in the guild and it's cached.
+            return
+        role = guild.get_role(role_id)
+        if role is None:
+            # Make sure the role still exists and is valid.
+            return
+        member = guild.get_member(payload.user_id)
+        if member is None:
+            # Makes sure the member still exists and is valid
             return
         try:
-
-            try:
-                role_id = self.bot.reactionrole_cache[payload.guild_id][payload.message_id][
-                    payload.emoji.id or payload.emoji.name
-                ]
-            except KeyError:
-                # If the emoji isn't the one we care about then exit as well.
-                return
-
-            guild = self.bot.get_guild(payload.guild_id)
-            if guild is None:
-                # Check if we're still in the guild and it's cached.
-                return
-
-            role = guild.get_role(role_id)
-            if role is None:
-                # Make sure the role still exists and is valid.
-                return
-
-            member = guild.get_member(payload.user_id)
-            if member is None:
-                # Makes sure the member still exists and is valid
-                return
-
-            try:
-                # Finally, remove the role
-                async with self.ratelimiter:
-                    await member.remove_roles(role, reason="The Anime Bot reaction role")
-            except discord.HTTPException:
-                # If we want to do something in case of errors we'd do it here.
-                pass
-        finally:
-            await asyncio.sleep(1)
-            lock.release()
-
-
+            # Finally, remove the role
+            async with self.ratelimiter:
+                await member.remove_roles(role, reason="The Anime Bot reaction role")
+        except discord.HTTPException:
+            # If we want to do something in case of errors we'd do it here.
+            pass
 def setup(bot):
     bot.add_cog(reactionrole(bot))
