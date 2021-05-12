@@ -1,8 +1,5 @@
 import asyncio
 from utils.subclasses import AnimeContext
-import chatterbot_corpus
-from chatterbot import ChatBot
-from chatterbot.trainers import ChatterBotCorpusTrainer
 import config
 import json
 import os
@@ -86,15 +83,6 @@ class fun(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.talk_channels = []
-        self.bot.chatterbot = ChatBot("bot")
-        self.bot.loop.create_task(self.prepare_chatterbot_())
-    
-    @asyncexe()
-    def prepare_chatterbot(self):
-        ...
-    
-    async def prepare_chatterbot_(self):
-        await self.prepare_chatterbot()
 
     async def get_quote(self):
         async with self.bot.session.get(
