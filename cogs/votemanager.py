@@ -32,7 +32,7 @@ class VoteManager(commands.Cog):
     
 
     async def run(self):
-        self.app.router.add_get("/", index)
+        self.app.router.add_get("/", self.index)
         runner = web.AppRunner(self.app, print=None)
         await runner.setup()
         self._webserver = web.TCPSite(runner, "0.0.0.0", "15000")
