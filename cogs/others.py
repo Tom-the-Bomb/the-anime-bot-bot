@@ -90,22 +90,17 @@ class others(commands.Cog):
             )
         )
 
-    @commands.command()
+    @commands.group(invoke_without_command=True)
     async def votes(self, ctx):
-        async with self.bot.session.get(
-            "https://top.gg/api/bots/787927476177076234/votes",
-            headers={"Authorization": (config.topgg)},
-        ) as resp:
-            js = await resp.json()
-            js = js[:5]
-            voters = [f"**{i.get('username')}**" for i in js]
-            embed = discord.Embed(
-                color=self.bot.color,
-                title="Top 5 Voters",
-                description="\n".join(voters),
-            )
-            embed.set_footer
-            await ctx.send(embed=embed)
+        count = await self.bot.db.fetchval("SELECT count FROM votes WHERE user_id = $1", ctx.author.id)
+        if not count:
+            return await ctx.send("you never voted for The Anime Bot before.")
+        await ctx.send(f"You have voted {count} times for The Anime Bot.")
+    
+    @votes.command()
+    async def lb(self, ctx):
+        count = await self.bot.db.fetch("SELECT * FROM votes ORDER BY count DESC")
+        embed = discord.Embed(color=self.bot.color, title="Vote Leaderboard", description="\n".join([f"{str(await bot.getch(i['user_id'])} - {i['count']}" for i in count]))
 
     @commands.command()
     async def snipe(self, ctx):
@@ -182,7 +177,7 @@ class others(commands.Cog):
         embed = discord.Embed(color=self.bot.color)
         embed.add_field(
             name="Click here to vote",
-            value="[Top.gg Link](https://top.gg/bot/787927476177076234/vote)\n[Bot for discord](https://botsfordiscord.com/bot/787927476177076234/vote)\n[discord bot list](https://discordbotlist.com/bots/anime-quotepic-bot/upvote)\n[botlist.space](https://botlist.space/bot/787927476177076234/upvote)\n[discord extreme list](https://discordextremelist.xyz/en-US/bots/787927476177076234)",
+            value="[Top.gg Link](https://top.gg/bot/787927476177076234)\n[Bot for discord](https://botsfordiscord.com/bot/787927476177076234/vote)\n[discord bot list](https://discordbotlist.com/bots/anime-quotepic-bot/upvote)\n[botlist.space](https://botlist.space/bot/787927476177076234/upvote)\n[discord extreme list](https://discordextremelist.xyz/en-US/bots/787927476177076234)",
         )
         embed.set_footer(
             text="Thank you so much <3",
