@@ -17,7 +17,6 @@ class reactionrole(commands.Cog):
         roles = await self.bot.db.fetch("SELCT * FROM reactionrole")
         if roles:
             for i in roles:
-                self.bot.reactionrole_cache[i["guild_id"]] = {}
                 self.bot.reactionrole_cache[i["guild_id"]] = ujson.loads(i["roles"])
 
     @commands.group()
@@ -27,41 +26,31 @@ class reactionrole(commands.Cog):
     @reactionrole.command()
     async def add(
         self,
-        ctx: AnimeContext,
-        role: discord.Role,
-        message_id: int,
-        reaction: typing.Union[discord.Emoji, discord.PartialEmoji, str],
+        ctx: AnimeContext
     ):
-        """
-        Reaction Role is currently in beta so bugs are expected
-        Adding a existing reaction role message will override it
-        For guide on how to find message id
-        https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID-
-        Usage:
-        ovo reactionrole add (@rolename or role id) messageid reaction
-        ovo reactionrole add @humans 928328288232222 :rooHi:
-        """
-        if isinstance(reaction, (discord.Emoji, discord.PartialEmoji)):
-            emoji = reaction.id
-        else:
-            try:
-                await ctx.message.add_reaction(reaction)
-                emoji = reaction
-            except:
-                return await ctx.send("Invalid Emoji")
-        if not self.bot.reactionrole_cache.get(ctx.guild.id):
+        reaction = await ctx.send("hi react reaction to this message")
+        r = await self.bot.wait_for("raw_reaction_add", check=lambda x: x.message_id == reaction.id and x.user_id == ctx.author.id, timeout=60)
+        try:
+            m = await ctx.send("testing emoji")
+            await m.add_reaction(r.emoji)
+            await m.delete()
+        except:
+            await ctx.send("either i can't use the emoji or i can't react to it")
+        await ctx.send("ok what role?")
+        role = await self.bot.wait_for("message", check=lambda x.channel.id==ctx.channel.id and x.author.id==ctx.author.id)
+        role = await commands.RoleConverter().convert(ctx, role.content)
+        if not role:
+            await ctx.send("invalid role")
+        await ctx.send("ok what message")
+        m = await self.bot.wait_for("message", check=lambda x.channel.id==ctx.channel.id and x.author.id==ctx.author.id)
+        m = await commands.MessageConverter().convert(ctx, m.content)
+        await m.add_reaction(r.emoji)
+        await ctx.send("oh ok made")
+        if not self.bot.reactionrole_cache.get(ctx.guild.id)
             self.bot.reactionrole_cache[ctx.guild.id] = {}
-            self.bot.reactionrole_cache[ctx.guild.id][message_id] = {emoji: role.id}
-        else:
-            self.bot.reactionrole_cache[ctx.guild.id][message_id][emoji] = role.id
-        await self.bot.db.execute(
-            "INSERT INTO reactionrole VALUES ($1, $2) ON CONFLICT DO UPDATE SET roles = $2",
-            ctx.guild.id,
-            ujson.dumps(self.bot.reactionrole_cache[ctx.guild.id][message_id]),
-        )
-        await ctx.send(
-            f"Sucess role is {role.mention}, message id is {message_id}, reaction is {str(reaction)}"
-        )
+        self.bot.reactionrole_cache[ctx.guild.id][m.id] = role.id or role.name
+        await self.bot.db.fetchrow("INSERT INTO VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET roles = $2", ctx.guild.id, ujson.dumps(self.bot.reactionrole_cache[ctx.guild.id]))
+
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
