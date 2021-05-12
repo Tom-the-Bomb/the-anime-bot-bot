@@ -100,7 +100,7 @@ class others(commands.Cog):
     @votes.command()
     async def lb(self, ctx):
         count = await self.bot.db.fetch("SELECT * FROM votes ORDER BY count DESC")
-        embed = discord.Embed(color=self.bot.color, title="Vote Leaderboard", description="\n".join([f"{str(await bot.getch(i['user_id'])} - {i['count']}" for i in count]))
+        embed = discord.Embed(color=self.bot.color, title="Vote Leaderboard", description="\n".join([f"{str(await self.bot.getch(i['user_id']))} - {i['count']}" for i in count]))
 
     @commands.command()
     async def snipe(self, ctx):
