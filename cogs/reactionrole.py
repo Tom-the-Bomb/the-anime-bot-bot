@@ -37,12 +37,12 @@ class reactionrole(commands.Cog):
         except:
             await ctx.send("either i can't use the emoji or i can't react to it")
         await ctx.send("ok what role?")
-        role = await self.bot.wait_for("message", check=lambda x.channel.id==ctx.channel.id and x.author.id==ctx.author.id)
+        role = await self.bot.wait_for("message", check=lambda x: x..channel.id==ctx.channel.id and x.author.id==ctx.author.id)
         role = await commands.RoleConverter().convert(ctx, role.content)
         if not role:
             await ctx.send("invalid role")
         await ctx.send("ok what message")
-        m = await self.bot.wait_for("message", check=lambda x.channel.id==ctx.channel.id and x.author.id==ctx.author.id)
+        m = await self.bot.wait_for("message", check=lambda x: x.channel.id==ctx.channel.id and x.author.id==ctx.author.id)
         m = await commands.MessageConverter().convert(ctx, m.content)
         await m.add_reaction(r.emoji)
         await ctx.send("oh ok made")
