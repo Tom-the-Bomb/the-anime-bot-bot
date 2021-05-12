@@ -17,7 +17,7 @@ class reactionrole(commands.Cog):
         self.bot.loop.create_task(self.make_cache())
 
     async def make_cache(self):
-        roles = await self.bot.db.fetch("SELCT * FROM reactionrole")
+        roles = await self.bot.db.fetch("SELECT * FROM reactionrole")
         if roles:
             for i in roles:
                 self.bot.reactionrole_cache[i["guild_id"]] = ujson.loads(i["roles"])
@@ -100,7 +100,7 @@ class reactionrole(commands.Cog):
                 # If we want to do something in case of errors we'd do it here.
                 pass
         finally:
-            await asyncio.sleep(3)
+            await asyncio.sleep(1)
             lock.release()
 
     @commands.Cog.listener()
@@ -150,7 +150,7 @@ class reactionrole(commands.Cog):
                 # If we want to do something in case of errors we'd do it here.
                 pass
         finally:
-            await asyncio.sleep(3)
+            await asyncio.sleep(1)
             lock.release()
 
 
