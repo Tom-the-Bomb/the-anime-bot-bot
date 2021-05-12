@@ -34,7 +34,7 @@ class VoteManager(commands.Cog):
             return web.Response(status=401, text="Unauthorized")
         data = await request.json()
         try:
-            user = await self.bot.getch(data["user"])
+            user = await self.bot.getch(data.get("user") or data.get("id"))
             vote_counts = await self.bot.db.fetchval(
                 (
                     "INSERT INTO votes VALUES ($1, $2)"
