@@ -18,7 +18,11 @@ class reactionrole(commands.Cog):
     @commands.group()
     async def reactionrole(self, ctx):
         ...
+
+
     @reactionrole.command()
+    @commands.has_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
     async def add(
         self,
         ctx: AnimeContext
