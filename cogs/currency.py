@@ -40,7 +40,7 @@ class Currency(commands.Cog):
         basket, bank = await self.get_balance(ctx.author.id)
         embed = discord.Embed(color=self.bot.color, title=f"{ctx.author.name}'s balance")
         embed.add_field(name=f"{BOBO} Basket", value=basket, inline=False)
-        embed.add_field(name=f"{BOBO}Bank", value=bank, inline=False)
+        embed.add_field(name=f"{BOBO} Bank", value=bank, inline=False)
         await ctx.send(embed=embed)
     
 
