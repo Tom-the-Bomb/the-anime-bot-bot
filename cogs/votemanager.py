@@ -47,8 +47,8 @@ class VoteManager(commands.Cog):
             )
             await user.send(f"Hey, {user.mention} Thanks for voting it mean a lot this is your {vote_counts} voting for The Anime Bot thank you so much.")
             await self.bot.get_channel(791518421920907265).send(f"{user.mention}, just upvoted our bot this is their {vote_counts} voting for The Anime Bot")
-        except:
-            return web.Response(status=500)
+        except Exception as e:
+            return web.Response(status=500, text=e)
         return web.Response(status=200, text="OK")
 
     async def index(self, request):
