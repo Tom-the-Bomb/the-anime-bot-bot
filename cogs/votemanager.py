@@ -27,7 +27,7 @@ class VoteManager(commands.Cog):
     def cog_unload(self):
         self.bot.loop.create_task(self._webserver.stop())
     
-    async def index(self):
+    async def index(self, request):
         return web.Response(text="hello o")
     
 
