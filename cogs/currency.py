@@ -33,7 +33,7 @@ class Currency(commands.Cog):
         else:
             return await self.bot.db.fetchval("UPDATE economy SET bank = $2 + bank WHERE user_id = $1 RETURNING bank", user_id, amount)
     
-    @commands.command()
+    @commands.command(aliases=["bal"])
     async def balance(self, ctx):
         basket, bank = await self.get_balance(ctx.author.id)
         await ctx.send(f"your balance: Basket: {basket} Bank: {bank}")
