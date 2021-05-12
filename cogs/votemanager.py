@@ -29,9 +29,9 @@ class VoteManager(commands.Cog):
     
     async def topgg(self, request):
         if not request.headers.get("Authorization"):
-            return web.Response(status=401, "Unauthorized")
+            return web.Response(status=401, text="Unauthorized")
         if request.headers.get("Authorization") != config.vote_webhook_token:
-            return web.Response(status=401, "Unauthorized")
+            return web.Response(status=401, text="Unauthorized")
         data = await request.json()
         try:
             user = await self.bot.getch(data["user"])
