@@ -67,9 +67,7 @@ class VoteManager(commands.Cog):
         self.app.router.add_post("/votes", self.votes)
         runner = web.AppRunner(self.app)
         await runner.setup()
-        ssl_ = SSLContext()
-        ssl_.load_cert_chain("/home/cryptex/cert.pem", keyfile="/home/cryptex/key.pem")
-        self._webserver = web.TCPSite(runner, "0.0.0.0", "15000", ssl_context=ssl_)
+        self._webserver = web.TCPSite(runner, "0.0.0.0", "15000")
         await self._webserver.start()
 
     
