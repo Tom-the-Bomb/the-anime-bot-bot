@@ -21,7 +21,7 @@ from quart import Quart
 class VoteManager(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.app = web.Application(print=None)
+        self.app = web.Application()
         self.bot.loop.create_task(self.run())
 
     def cog_unload(self):
@@ -33,7 +33,7 @@ class VoteManager(commands.Cog):
 
     async def run(self):
         self.app.router.add_get("/", index)
-        runner = web.AppRunner(self.app)
+        runner = web.AppRunner(self.app, print=None)
         await runner.setup()
         self._webserver = web.TCPSite(runner, "0.0.0.0", "50000")
         await self._webserver.start()
