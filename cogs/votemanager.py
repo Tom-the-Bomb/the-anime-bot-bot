@@ -13,10 +13,11 @@ from hypercorn.asyncio import serve
 from hypercorn.config import Config
 from quart import Quart
 
+app = Quart("vote_manager")
+shut_down = asyncio.Event()
+
 
 class VoteManager(commands.Cog):
-    app = Quart("vote_manager")
-    shut_down = asyncio.Event()
     def __init__(self, bot):
         self.bot = bot
         self.app = app
