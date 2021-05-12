@@ -8,7 +8,7 @@ import time
 from contextlib import suppress
 import aiohttp
 import quart
-from quart import Abort
+from quart import abort
 from hypercorn.asyncio import serve
 from hypercorn.config import Config
 from quart import Quart
