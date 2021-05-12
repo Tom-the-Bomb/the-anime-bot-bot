@@ -5,7 +5,7 @@ import random
 import discord
 from discord.ext import commands
 
-
+BOBO = "<:bobo:842187511471145021>"
 class Currency(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
@@ -37,8 +37,10 @@ class Currency(commands.Cog):
     async def balance(self, ctx):
         basket, bank = await self.get_balance(ctx.author.id)
         embed = discord.Embed(color=self.bot.color, title=f"{ctx.author.name}'s balance")
-        embed.add_field(name="Basket", value=basket, inline=False)
-        embed.add_field(name="Bank", value=bank, inline=False)
+        embed.add_field(name=f"{bobo} Basket", value=basket, inline=False)
+        embed.add_field(name=f"{bobo}Bank", value=bank, inline=False)
         await ctx.send(embed=embed)
+    
+
 def setup(bot):
     bot.add_cog(Currency(bot))
