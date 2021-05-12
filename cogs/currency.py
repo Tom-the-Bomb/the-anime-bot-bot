@@ -5,7 +5,7 @@ import random
 import discord
 from discord.ext import commands
 
-BOBO = "<:bobo:842187511471145021>"
+BOBO = "\U0000232C"
 
 
 class Currency(commands.Cog):
