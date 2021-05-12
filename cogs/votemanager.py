@@ -30,11 +30,16 @@ class VoteManager(commands.Cog):
     async def votes(self, request):
         if not request.headers.get("Authorization"):
             return web.Response(status=401, text="Unauthorized")
-        if request.headers.get("Authorization") != config.vote_webhook_token:
+        if request.headers.get("Authorization") not in [config.vote_webhook_token, config.botlist_space]:
             return web.Response(status=401, text="Unauthorized")
         data = await request.json()
         try:
-            user = await self.bot.getch(data.get("user") or data.get("id"))
+            if data.get("site"):
+                if data.get("site") == "botlist.space":
+                    user_id = data.get("user").get("id") 
+            else:
+                user_id = data.get("user") or data.get("id")
+            user = await self.bot.getch(user_id)
             vote_counts = await self.bot.db.fetchval(
                 (
                     "INSERT INTO votes VALUES ($1, $2)"
