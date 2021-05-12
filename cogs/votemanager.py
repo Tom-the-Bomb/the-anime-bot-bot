@@ -33,10 +33,11 @@ class VoteManager(commands.Cog):
 
 
     def cog_unload(self):
+        app.shutdown()
         shut_down.set()
 
 def setup(bot):
     bot.add_cog(VoteManager(bot))
-    config = Config()
-    config.bind = ["0.0.0.0:50000"]
-    bot.loop.create_task(serve(app, config, shutdown_trigger=shut_down.wait))
+    # config = Config()
+    # config.bind = ["0.0.0.0:50000"]
+    bot.loop.create_task(app.run("0.0.0.0", "50000"))
