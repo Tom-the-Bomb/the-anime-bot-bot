@@ -83,6 +83,7 @@ class Economy(commands.Cog):
         to_sort.sort(key=sortlist)
         final_sorted = "\n".join(to_sort)
         await ctx.send(embed=discord.Embed(color=self.bot.color, title="Global economy leaderboard", descriotion=final_sorted))
+
     @commands.command(aliases=["dep"])
     async def deposit(self, ctx, amount: str):
         basket, bank = await self.get_balance(ctx.author.id)
