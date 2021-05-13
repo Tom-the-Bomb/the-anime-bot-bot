@@ -286,7 +286,7 @@ class AnimeBot(commands.Bot):
         self.default_prefix = ["ovo "]
         self.prefixes = {}
         db = self.loop.run_until_complete(
-            asyncpg.create_pool("postgres://postgres1:postgres@localhost:5432/cryptex?min_size=10&max_size=20")
+            asyncpg.create_pool(host="localhost", port="5432", user="postgres1", password="postgres", database="cryptex", min_size=10, max_size=20)
         )
         self.db = db
         self.emojioptions = {}
