@@ -30,10 +30,11 @@ class Currency(commands.Cog):
         return int(bal["basket"]), int(bal["bank"])
 
     async def change_balance(self, user_id, amount, type_="basket"):
+        bal = await self.get_balance(user_id)
         if type_ == "basket":
-            return int(await self.bot.db.fetchval("UPDATE economy SET basket = $2 :: TEXT + basket WHERE user_id = $1 RETURNING basket", user_id, str(amount)))
+            return int(await self.bot.db.fetchval("UPDATE economy SET basket = $2 WHERE user_id = $1 RETURNING basket", user_id, str(amount + bal)))
         else:
-            return int(await self.bot.db.fetchval("UPDATE economy SET bank = $2 :: TEXT + bank WHERE user_id = $1 RETURNING bank", user_id, str(amount)))
+            return int(await self.bot.db.fetchval("UPDATE economy SET bank = $2 WHERE user_id = $1 RETURNING bank", user_id, str(amount + bal)))
     
     @commands.command(aliases=["bal"])
     async def balance(self, ctx):
