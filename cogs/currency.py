@@ -46,6 +46,7 @@ class Currency(commands.Cog):
     @commands.is_owner()
     @commands.command()
     async def addmoney(self, ctx, member: discord.Member, amount: int):
+        await self.open_account(member.id)
         changed_balance = await self.change_balance(member.id, amount)
         await ctx.send(f"Changed {str(member)}'s balance to {changed_balance}")
 
