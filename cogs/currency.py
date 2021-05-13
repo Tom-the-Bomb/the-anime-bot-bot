@@ -8,7 +8,7 @@ from discord.ext import commands
 BOBO = "\U0000232C"
 
 
-class Currency(commands.Cog):
+class Economy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
@@ -30,6 +30,7 @@ class Currency(commands.Cog):
         return int(bal["basket"]), int(bal["bank"])
 
     async def change_balance(self, user_id, amount, type_="basket"):
+        await self.open_account(user_id)
         basket, bank = await self.get_balance(user_id)
         if type_ == "basket":
             return int(await self.bot.db.fetchval("UPDATE economy SET basket = $2 WHERE user_id = $1 RETURNING basket", user_id, str(amount + basket)))
@@ -96,4 +97,4 @@ class Currency(commands.Cog):
         await ctx.send(f"Changed {str(member)}'s balance to {changed_balance}")
 
 def setup(bot):
-    bot.add_cog(Currency(bot))
+    bot.add_cog(Economy(bot))
