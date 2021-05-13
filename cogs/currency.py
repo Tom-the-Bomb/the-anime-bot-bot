@@ -85,7 +85,7 @@ class Economy(commands.Cog):
         for i in e:
             to_sort.append(f"{i['basket']} - {str(await self.bot.getch(i['user_id']))}")
         final_sorted = "\n".join(to_sort)
-        await ctx.send(embed=discord.Embed(color=self.bot.color, title="Global economy leaderboard", descriotion=final_sorted).set_footer(text="Top 10 global leaderboard, this is wallet not total."))
+        await ctx.send(embed=discord.Embed(color=self.bot.color, title="Global economy leaderboard", description=final_sorted).set_footer(text="Top 10 global leaderboard, this is wallet not total."))
 
     @commands.command(aliases=["dep"])
     async def deposit(self, ctx, amount: str):
