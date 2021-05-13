@@ -58,7 +58,7 @@ class Currency(commands.Cog):
                 amount = int(float(amount))
             except:
                 return await ctx.send("Invalid amount")
-        if amount > basket:
+        if amount > bank:
             return await ctx.send("You don't have that much bobo.")
         if amount <= 0:
             return await ctx.send("You can't withdraw 0 or negative bobo.")
