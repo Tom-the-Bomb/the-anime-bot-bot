@@ -52,7 +52,7 @@ class VoteManager(commands.Cog):
                 1,
             )
             await self.bot.get_cog("Economy").change_balance(user.id, 10000)
-            await user.send(f"Hey, {str(user)} Thanks for voting it mean a lot, you have voted {vote_counts} times for The Anime Bot thank you so much.")
+            await user.send(f"Hey, {str(user)} Thanks for voting it mean a lot, as a reward I have gave you 10000 bobo run `ovo bal` to see it, you have voted {vote_counts} times for The Anime Bot thank you so much.")
             await self.bot.get_channel(791518421920907265).send(f"{str(user)}, just upvoted our bot, this is their {vote_counts} times voting for The Anime Bot")
         except Exception as e:
             return web.Response(status=500)
