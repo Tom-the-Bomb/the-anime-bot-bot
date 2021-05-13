@@ -43,6 +43,11 @@ class Currency(commands.Cog):
         embed.add_field(name=f"{BOBO} Bank", value=bank, inline=False)
         await ctx.send(embed=embed)
     
+    @commands.is_owner()
+    @commands.command()
+    async def addmoney(self, ctx, member: discord.Member, amount: int):
+        changed_balance = await self.change_balance(member.id, amount)
+        await ctx.send(f"Changed {str(member)}'s balance to {changed_balance}")
 
 def setup(bot):
     bot.add_cog(Currency(bot))
