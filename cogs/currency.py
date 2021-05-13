@@ -89,6 +89,46 @@ class Economy(commands.Cog):
         await self.change_balance(ctx.author.id, amount, "bank")
         await ctx.send(f"Deposited {BOBO} {amount} bobo to bank.")
     
+    @commands.command()
+    async def beg(self, ctx):
+        characters = [
+            "Tanjiro Kamado",
+            "Nezuko Kamado",
+            "Zenitsu Agatsuma",
+            "Inosuke Hashibira",
+            "Kanao Tsuyuri",
+            "Kagaya Ubuyashiki",
+            "Amane Ubuyashiki",
+            "Hinaki Ubuyashiki",
+            "Nichika Ubuyashiki",
+            "Kiriya Ubuyashiki",
+            "Kanata Ubuyashiki",
+            "Kuina Ubuyashiki",
+            "Giyū Tomioka",
+            "Shinobu Kochō",
+            "Kyōjurō Rengoku",
+            "Tengen Uzui",
+            "Mitsuri Kanroji",
+            "Muichirō Tokitō",
+            "Gyōmei Himejima",
+            "Obanai Iguro",
+            "Sanemi Shinazugawa",
+            "Aoi Kanzaki",
+            "Goto",
+            "Sumi Nakahara",
+            "Hotaru Haganezuka",
+            "Kozo Kanamori",
+            "Kotetsu",
+            "Murata",
+            "Ozaki",
+            "Kanae Kocho",
+        ]
+        rand = random.randint(-1, 10000)
+        if number <= 0:
+            await self.change_balance(ctx.author.id, -1)
+            return await ctx.send(f"smh Muzan Kibutsuji almost killed you and take away {BOBO} 1 bobo")
+        await self.change_balance(ctx.author.id, rand)
+        await ctx.send(f"{random.choice(characters)} just gave you {BOBO} {rand} bobo")
     @commands.is_owner()
     @commands.command()
     async def addmoney(self, ctx, member: discord.Member, amount: int):
