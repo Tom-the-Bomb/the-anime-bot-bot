@@ -44,6 +44,19 @@ class Currency(commands.Cog):
         embed.add_field(name=f"{BOBO} Bank", value=bank, inline=False)
         await ctx.send(embed=embed)
     
+    @commands.command(aliases=["dep"])
+    async def deposit(self, ctx, amount: str):
+        basket, bank = await self.get_balance(ctx.author.id)
+        if amount in ["max", "all"]:
+            await self.change_balance(member.id, -1 * basket)
+            changed_balance = await self.change_balance(member.id, basket, "bank")
+            return await ctx.send(f"Deposited {BOBO} {basket} to bank.")
+        if amount > basket:
+            return await ctx.send("You don't have that much bobo.")
+        if amount <= 0:
+            return await ctx.send("You can't deposit 0 or negative bobo.")
+        await ctx.send(f"Deposited {BOBO} {amount} bobo.")
+    
     @commands.is_owner()
     @commands.command()
     async def addmoney(self, ctx, member: discord.Member, amount: int):
