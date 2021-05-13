@@ -70,6 +70,19 @@ class Economy(commands.Cog):
         await self.change_balance(ctx.author.id, amount)
         await ctx.send(f"Withdrawed {BOBO} {amount} bobo to basket.")
 
+    @commands.command()
+    async def lb(self, ctx):
+        e = await self.bot.db.fetch("SELECT * FROM economy LIMIT 10")
+        to_sort = []
+        for i in e:
+            basket, bank = int(i["basket"]), int(i["bank"])
+            u = await self.bot.getch(i["user_id"])
+            to_sort.append(f"{basket + bank} - {str(u)}")
+        def sortlist(e):
+            return e.split("-")[0]
+        to_sort.sort(key=sortlist)
+        final_sorted = "\n".join(to_sort)
+        await ctx.send(embed=discord.Embed(color=self.bot.color, title="Global economy leaderboard", descriotion=final_sorted))
     @commands.command(aliases=["dep"])
     async def deposit(self, ctx, amount: str):
         basket, bank = await self.get_balance(ctx.author.id)
