@@ -48,8 +48,8 @@ class Currency(commands.Cog):
     async def deposit(self, ctx, amount: str):
         basket, bank = await self.get_balance(ctx.author.id)
         if amount in ["max", "all"]:
-            await self.change_balance(member.id, -1 * basket)
-            changed_balance = await self.change_balance(member.id, basket, "bank")
+            await self.change_balance(ctx.author.id, -1 * basket)
+            changed_balance = await self.change_balance(ctx.author.id, basket, "bank")
             return await ctx.send(f"Deposited {BOBO} {basket} to bank.")
         if amount > basket:
             return await ctx.send("You don't have that much bobo.")
