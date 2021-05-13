@@ -290,7 +290,7 @@ class AnimeBot(commands.Bot):
         )
         self.db = db
         self.emojioptions = {}
-        self.loop.run_until_complete(self.create_cache())
+        self.loop.create_task(self.create_cache())
         self.url_regex = re.compile(
             r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
             re.IGNORECASE,
