@@ -20,7 +20,7 @@ class Economy(commands.Cog):
     
     async def open_account(self, user_id):
         try:
-            await self.bot.db.execute("INSERT INTO economy VALUES ($1, $2, $2, $2)", user_id, "0")
+            await self.bot.db.execute("INSERT INTO economy VALUES ($1, $2, $2, $2)", user_id, 0)
             return True
         except asyncpg.UniqueViolationError:
             return False
@@ -34,11 +34,11 @@ class Economy(commands.Cog):
         basket, bank = await self.get_balance(user_id)
         total_earned = await self.bot.db.fetchval("SELECT total_earned FROM economy WHERE user_id = $1", user_id)
         if amount > 0:
-            await self.bot.db.execute("UPDATE economy SET total_earned = $2 WHERE user_id = $1", user_id, str(int(total_earned) + int(amount)))
+            await self.bot.db.execute("UPDATE economy SET total_earned = $2 WHERE user_id = $1", user_id, int(total_earned) + int(amount))
         if type_ == "basket":
-            return int(await self.bot.db.fetchval("UPDATE economy SET basket = $2 WHERE user_id = $1 RETURNING basket", user_id, str(amount + basket)))
+            return int(await self.bot.db.fetchval("UPDATE economy SET basket = $2 WHERE user_id = $1 RETURNING basket", user_id, int(amount) + int(basket)))
         else:
-            return int(await self.bot.db.fetchval("UPDATE economy SET bank = $2 WHERE user_id = $1 RETURNING bank", user_id, str(amount + bank)))
+            return int(await self.bot.db.fetchval("UPDATE economy SET bank = $2 WHERE user_id = $1 RETURNING bank", user_id, int(amount) + int(bank)))
     
     @commands.command(aliases=["bal"])
     async def balance(self, ctx):
