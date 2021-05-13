@@ -51,9 +51,10 @@ class Currency(commands.Cog):
             await self.change_balance(ctx.author.id, -1 * bank, "bank")
             changed_balance = await self.change_balance(ctx.author.id, bank, "basket")
             return await ctx.send(f"Withdrawed {BOBO} {bank} bobo to basket.")
-        if not amount.isdigit():
+        try:
+            amount = int(amount)
+        except:
             return await ctx.send("Invalid amount")
-        amount = int(amount)
         if amount > basket:
             return await ctx.send("You don't have that much bobo.")
         if amount <= 0:
@@ -67,9 +68,10 @@ class Currency(commands.Cog):
             await self.change_balance(ctx.author.id, -1 * basket)
             changed_balance = await self.change_balance(ctx.author.id, basket, "bank")
             return await ctx.send(f"Deposited {BOBO} {basket} bobo to bank.")
-        if not amount.isdigit():
+        try:
+            amount = int(amount)
+        except:
             return await ctx.send("Invalid amount")
-        amount = int(amount)
         if amount > basket:
             return await ctx.send("You don't have that much bobo.")
         if amount <= 0:
