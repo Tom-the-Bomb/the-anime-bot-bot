@@ -45,6 +45,7 @@ class Player(wavelink.Player):
         super().__init__(*args, **kwargs)
         self.now_playing = None
         self.retry = asyncio.Lock()
+        self.no_leave = False
         self.query = None
         self.started = False
         self.is_waiting = True
@@ -146,7 +147,10 @@ class Player(wavelink.Player):
         self.started = True
 
     async def do_next(self):
-        if all(i.bot for i in self.bot.get_channel(self.channel_id).members):
+        if self.no_leave:
+            self.queue_position = 0
+            song = self.queue[self.queue_position]
+        if all(i.bot for i in self.bot.get_channel(self.channel_id).members) and not self.no_leave:
             return await self.destory()
         if self.repeat:
             self.queue_position -= 1
@@ -285,6 +289,13 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             delete_message_after=True,
         )
         await pages.start(ctx)
+    
+    @commands.command(aliases=["nl"])
+    @commands.is_owner()
+    async def noleave(self, ctx):
+        player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
+        player.no_leave = True
+        await ctx.send("ok")
 
     @commands.command(aliases=["np", "currentsong"])
     async def now(self, ctx):
