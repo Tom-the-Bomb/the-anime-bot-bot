@@ -32,7 +32,7 @@ class Economy(commands.Cog):
     async def change_balance(self, user_id, amount, type_="basket"):
         await self.open_account(user_id)
         basket, bank = await self.get_balance(user_id)
-        total_earned = await self.bot.db.fetval("SELECT total_earned FROM economy WHERE user_id = $1", user_id)
+        total_earned = await self.bot.db.fetchval("SELECT total_earned FROM economy WHERE user_id = $1", user_id)
         if amount > 0:
             await self.bot.db.execute("UPDATE economy SET total_earned = $2 WHERE user_id = $1", user_id, int(total_earned) + int(amount))
         if type_ == "basket":
