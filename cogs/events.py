@@ -209,12 +209,14 @@ class events(commands.Cog):
     @tasks.loop(minutes=1)
     async def post(self, bot):
         await bot.wait_until_ready()
-        await bot.session.post(
+        async with bot.session.post(
             "https://top.gg/api/bots/787927476177076234/stats",
             headers={"Authorization": topgg},
             data={"server_count": len(bot.guilds)},
-        )
-        await bot.session.post(
+        ):
+            pass
+
+        async with bot.session.post(
             "https://discordbotlist.com/api/v1/bots/anime-quotepic-bot/stats",
             headers={"Authorization": discord_bot_list},
             data={
@@ -222,7 +224,8 @@ class events(commands.Cog):
                 "users": len(bot.users),
                 "guilds": len(bot.guilds),
             },
-        )
+        ):
+            pass
         async with bot.session.post(
             "https://api.discordextremelist.xyz/v2/bot/787927476177076234/stats",
             headers={
@@ -232,24 +235,27 @@ class events(commands.Cog):
             json={
                 "guildCount": len(bot.guilds),
             },
-        ) as resp:
+        ):
             pass
-        await bot.session.post(
+        async with bot.session.post(
             "https://botsfordiscord.com/api/bot/787927476177076234",
             headers={
                 "Content-Type": "application/json",
                 "Authorization": bots_for_discord,
             },
             json={"server_count": len(bot.guilds)},
-        )
-        await bot.session.post(
+        ):
+            pass
+
+        async with bot.session.post(
             "https://api.botlist.space/v1/bots/787927476177076234",
             headers={
                 "Authorization": botlist_space,
                 "Content-Type": "application/json",
             },
             json={"server_count": len(bot.guilds)},
-        )
+        ):
+            pass
 
     @commands.Cog.listener()
     async def on_command_completion(self, ctx):
