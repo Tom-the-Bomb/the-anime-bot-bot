@@ -806,7 +806,7 @@ class pictures(commands.Cog):
         url = await self.get_url(ctx, thing)
         async with self.bot.session.get(url) as resp:
             image = BytesIO(await resp.read())
-        await ctx.send(f"```\n{await self.ocr_(image)}\n```")
+        await ctx.send(f"```\n{await self.ocr_(image)}\n```") if len(f"```\n{await self.ocr_(image)}\n```") <= 2000 else await ctx.send(await ctx.paste(f"```\n{await self.ocr_(image)}\n```"))
 
     @commands.command()
     async def aww(self, ctx):
