@@ -26,7 +26,7 @@ class Currency(commands.Cog):
             return False
 
     async def get_balance(self, user_id):
-        basket, bank = await self.bot.db.fetchrow("SELECT * FROM economy WHERE user_id = $1", user_id)
+        bal = await self.bot.db.fetchrow("SELECT * FROM economy WHERE user_id = $1", user_id)
         return int(bal["basket"]), int(bal["bank"])
 
     async def change_balance(self, user_id, amount, type_="basket"):
