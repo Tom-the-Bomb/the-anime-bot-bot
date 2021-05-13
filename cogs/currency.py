@@ -34,7 +34,7 @@ class Economy(commands.Cog):
         basket, bank = await self.get_balance(user_id)
         total_earned = await self.bot.db.fetchval("SELECT total_earned FROM economy WHERE user_id = $1", user_id)
         if amount > 0:
-            await self.bot.db.execute("UPDATE economy SET total_earned = $2 WHERE user_id = $1", user_id, int(total_earned) + int(amount))
+            await self.bot.db.execute("UPDATE economy SET total_earned = $2 WHERE user_id = $1", user_id, str(int(total_earned) + int(amount)))
         if type_ == "basket":
             return int(await self.bot.db.fetchval("UPDATE economy SET basket = $2 WHERE user_id = $1 RETURNING basket", user_id, str(amount + basket)))
         else:
