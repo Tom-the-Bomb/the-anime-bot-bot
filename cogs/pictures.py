@@ -791,7 +791,6 @@ class pictures(commands.Cog):
         np_array = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
         img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-        img = cv2.medianBlur(img, 5)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         ocr_config = r'--tessdata-dir "/home/cryptex/ocr_data"'
         return pytesseract.image_to_string(img, config=ocr_config)
