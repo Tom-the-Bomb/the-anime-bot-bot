@@ -139,7 +139,7 @@ class Player(wavelink.Player):
                     requester=ctx.author,
                 )
             )
-        )
+        , delete_after=10)
         self.queue_position += 1
         await self.play(self.now_playing)
         self.ctx = ctx
@@ -165,7 +165,7 @@ class Player(wavelink.Player):
         self.queue_position += 1
         self.now_playing = song
         await self.play(song)
-        await self.ctx.send(embed=self.make_embed(song))
+        await self.ctx.send(embed=self.make_embed(song), delete_after=10)
 
 
 class Music(commands.Cog, wavelink.WavelinkMixin):
@@ -220,7 +220,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             player.queue.append(track)
             player.now_playing = track
             await player.play(player.now_playing)
-            await player.ctx.send(embed=player.make_embed(player.now_playing))
+            await player.ctx.send(embed=player.make_embed(player.now_playing), delete_after=10)
             await player.ctx.send(
                 "Due to YouTube ratelimiting our IP address, we have searched this song on soundcloud. Please include author name for a more accurate result."
             )
@@ -290,7 +290,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     async def now(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
 
-        await ctx.send(embed=player.make_embed(player.now_playing))
+        await ctx.send(embed=player.make_embed(player.now_playing), delete_after=10)
 
     @commands.command(aliases=["vol"])
     async def volume(self, ctx: AnimeContext, volume: int = 100):
