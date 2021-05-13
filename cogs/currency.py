@@ -143,7 +143,7 @@ class Economy(commands.Cog):
             "Ozaki",
             "Kanae Kocho",
         ]
-        rand = random.randint(-1, 10000)
+        rand = random.randint(-1, 1000)
         if rand <= 0:
             await self.change_balance(ctx.author.id, -1)
             return await ctx.send(f"smh Muzan Kibutsuji almost killed you and take away {BOBO} 1 bobo")
