@@ -72,17 +72,20 @@ class Economy(commands.Cog):
 
     @commands.command()
     async def lb(self, ctx):
-        e = await self.bot.db.fetch("SELECT * FROM economy LIMIT 10")
+        e = await self.bot.db.fetch("SELECT * FROM economy ORDER BY basket DESC LIMIT 10")
         to_sort = []
+        # for i in e:
+        #     basket, bank = int(i["basket"]), int(i["bank"])
+        #     u = await self.bot.getch(i["user_id"])
+        #     to_sort.append(f"{basket + bank} - {str(u)}")
+        # def sortlist(e):
+        #     return e.split("-")[0]
+        # to_sort.sort(key=sortlist)
+        # final_sorted = "\n".join(to_sort)
         for i in e:
-            basket, bank = int(i["basket"]), int(i["bank"])
-            u = await self.bot.getch(i["user_id"])
-            to_sort.append(f"{basket + bank} - {str(u)}")
-        def sortlist(e):
-            return e.split("-")[0]
-        to_sort.sort(key=sortlist)
+            to_sort.append(f"{i['basket']} - {str(await self.bot.getch(i['user_id']))}")
         final_sorted = "\n".join(to_sort)
-        await ctx.send(embed=discord.Embed(color=self.bot.color, title="Global economy leaderboard", descriotion=final_sorted))
+        await ctx.send(embed=discord.Embed(color=self.bot.color, title="Global economy leaderboard", descriotion=final_sorted).set_footer(text="Top 10 global leaderboard, this is wallet not total."))
 
     @commands.command(aliases=["dep"])
     async def deposit(self, ctx, amount: str):
