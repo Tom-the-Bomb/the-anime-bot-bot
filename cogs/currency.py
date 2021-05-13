@@ -44,18 +44,31 @@ class Currency(commands.Cog):
         embed.add_field(name=f"{BOBO} Bank", value=bank, inline=False)
         await ctx.send(embed=embed)
     
+    @commands.command(aliases=["with", "wd"])
+    async def withdraw(self, ctx, amount: str):
+        basket, bank = await self.get_balance(ctx.author.id)
+        if amount in ["max", "all"]:
+            await self.change_balance(ctx.author.id, -1 * bank, "bank")
+            changed_balance = await self.change_balance(ctx.author.id, bank, "basket")
+            return await ctx.send(f"Withdrawed {BOBO} {bank} bobo to basket.")
+        if amount > basket:
+            return await ctx.send("You don't have that much bobo.")
+        if amount <= 0:
+            return await ctx.send("You can't withdraw 0 or negative bobo.")
+        await ctx.send(f"Withdrawed {BOBO} {amount} bobo to basket.")
+
     @commands.command(aliases=["dep"])
     async def deposit(self, ctx, amount: str):
         basket, bank = await self.get_balance(ctx.author.id)
         if amount in ["max", "all"]:
             await self.change_balance(ctx.author.id, -1 * basket)
             changed_balance = await self.change_balance(ctx.author.id, basket, "bank")
-            return await ctx.send(f"Deposited {BOBO} {basket} to bank.")
+            return await ctx.send(f"Deposited {BOBO} {basket} bobo to bank.")
         if amount > basket:
             return await ctx.send("You don't have that much bobo.")
         if amount <= 0:
             return await ctx.send("You can't deposit 0 or negative bobo.")
-        await ctx.send(f"Deposited {BOBO} {amount} bobo.")
+        await ctx.send(f"Deposited {BOBO} {amount} bobo to bank.")
     
     @commands.is_owner()
     @commands.command()
