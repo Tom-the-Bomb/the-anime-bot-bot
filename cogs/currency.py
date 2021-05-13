@@ -54,7 +54,10 @@ class Currency(commands.Cog):
         try:
             amount = int(amount)
         except:
-            return await ctx.send("Invalid amount")
+            try:
+                amount = int(float(amount))
+            except:
+                return await ctx.send("Invalid amount")
         if amount > basket:
             return await ctx.send("You don't have that much bobo.")
         if amount <= 0:
@@ -71,7 +74,10 @@ class Currency(commands.Cog):
         try:
             amount = int(amount)
         except:
-            return await ctx.send("Invalid amount")
+            try:
+                amount = int(float(amount))
+            except:
+                return await ctx.send("Invalid amount")
         if amount > basket:
             return await ctx.send("You don't have that much bobo.")
         if amount <= 0:
