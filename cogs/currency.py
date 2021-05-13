@@ -62,6 +62,8 @@ class Currency(commands.Cog):
             return await ctx.send("You don't have that much bobo.")
         if amount <= 0:
             return await ctx.send("You can't withdraw 0 or negative bobo.")
+        await self.change_balance(ctx.author.id, -1 * amount, "bank")
+        await self.change_balance(ctx.author.id, amount)
         await ctx.send(f"Withdrawed {BOBO} {amount} bobo to basket.")
 
     @commands.command(aliases=["dep"])
@@ -82,6 +84,8 @@ class Currency(commands.Cog):
             return await ctx.send("You don't have that much bobo.")
         if amount <= 0:
             return await ctx.send("You can't deposit 0 or negative bobo.")
+        await self.change_balance(ctx.author.id, -1 * amount)
+        await self.change_balance(ctx.author.id, amount, "bank")
         await ctx.send(f"Deposited {BOBO} {amount} bobo to bank.")
     
     @commands.is_owner()
