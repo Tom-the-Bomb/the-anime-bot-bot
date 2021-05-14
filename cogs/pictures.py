@@ -178,7 +178,7 @@ class pictures(commands.Cog):
             if message.stickers:
                 sticker = message.stickers[0]
                 if not isinstance(sticker, type(discord.StickerType.lottie)):
-                    url = sticker.image_url_as()
+                    url = str(sticker.image_url_as())
 
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             url = ctx.message.attachments[0].url
@@ -186,7 +186,7 @@ class pictures(commands.Cog):
         if ctx.message.stickers:
             sticker = ctx.message.stickers[0]
             if not isinstance(sticker, type(discord.StickerType.lottie)):
-                url = sticker.image_url_as()
+                url = str(sticker.image_url_as())
 
         if thing is None and avatar and url is None:
             url = str(ctx.author.avatar_url_as(static_format="png"))
@@ -247,14 +247,14 @@ class pictures(commands.Cog):
             if message.stickers:
                 sticker = message.stickers[0]
                 if not isinstance(sticker, type(discord.StickerType.lottie)):
-                    url = sticker.image_url_as()
+                    url = str(sticker.image_url_as())
 
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             url = ctx.message.attachments[0].url
         if ctx.message.stickers:
             sticker = ctx.message.stickers[0]
             if not isinstance(sticker, type(discord.StickerType.lottie)):
-                url = sticker.image_url_as()
+                url = str(sticker.image_url_as())
         if thing is None and avatar and url is None:
             url = str(ctx.author.avatar_url_as(static_format="png"))
         elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
