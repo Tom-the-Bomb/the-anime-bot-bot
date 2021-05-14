@@ -133,6 +133,8 @@ class Economy(commands.Cog):
         await ctx.send(f"Deposited {BOBO} {amount} bobo to bank.")
 
     @commands.command()
+    @commands.cooldown(100, 60, commands.BucketType.user)
+    @commands.max_concurrency(5, commands.BucketType.user)
     async def beg(self, ctx):
         characters = [
             "Tanjiro Kamado",
