@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands, tasks
+from datetime import datetime
 from ssl import SSLContext
 import config
 from utils.subclasses import AnimeContext
@@ -69,7 +70,7 @@ class VoteManager(commands.Cog):
             user = await self.bot.getch(user_id)
             vote_counts = await self.bot.db.fetchval(
                 (
-                    "INSERT INTO votes VALUES ($1, $2)"
+                    "INSERT INTO votes (user_id, count) VALUES ($1, $2)"
                     " ON CONFLICT (user_id) "
                     "DO UPDATE SET count = votes.count + 1"
                     " RETURNING count"
@@ -77,6 +78,7 @@ class VoteManager(commands.Cog):
                 user.id,
                 1,
             )
+            await self.bot.db.execute("UPDATE votes SET recent_voted = $2 WHERE user_id = $1", user.id, datetime.utcnow())
             await self.bot.get_cog("Economy").change_balance(user.id, 10000)
             self.bot.loop.create_task(self.give_role(user.id))
             await user.send(
