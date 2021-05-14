@@ -638,8 +638,7 @@ class events(commands.Cog):
             )
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.CommandOnCooldown):
-            embed = self.embed(f"dude chill try again in {round(error.retry_after)} seconds")
-            await ctx.reply(embed=embed)
+            return
         elif isinstance(error, commands.BotMissingPermissions):
             embed = self.embed(f"Bot is missing {', '.join(error.missing_perms)} to do that")
             await ctx.reply(embed=embed)
