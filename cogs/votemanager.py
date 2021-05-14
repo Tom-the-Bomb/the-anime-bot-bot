@@ -23,10 +23,26 @@ class VoteManager(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.app = web.Application()
+        self.voted_role.start()
         self.bot.loop.create_task(self.run())
 
     def cog_unload(self):
         self.bot.loop.create_task(self._webserver.stop())
+        self.voted_role.cancel()
+
+
+    @tasks.loop(minutes=1)
+    async def voted_role(self):
+        await self.bot.wait_until_ready()
+        votes = await self.bot.db.fetch("SELECT user_id FROM votes")
+        guild = self.bot.get_guild(786359602241470464)
+        await guild.chunk()
+        for i in votes:
+            user_id = i["user_id"]
+            if user_id in guild._members.keys():
+                member = guild.get_member(user_id)
+                if not member._roles.has(842564732078522418):
+                    await member.add_roles(discord.Object(842564732078522418))
     
     async def votes(self, request):
         if not request.headers.get("Authorization"):
@@ -52,6 +68,13 @@ class VoteManager(commands.Cog):
                 1,
             )
             await self.bot.get_cog("Economy").change_balance(user.id, 10000)
+            guild = self.bot.get_guild(786359602241470464)
+            await guild.chunk()
+            if user.id in guild._members.keys():
+                member = guild.get_member(user.id)
+                if not member._roles.has(842564732078522418):
+                    await member.add_roles(discord.Object(842564732078522418))
+
             await user.send(f"Hey, {str(user)} Thanks for voting it mean a lot, as a reward I have gave you 10000 bobo run `ovo bal` to see it, you have voted {vote_counts} times for The Anime Bot thank you so much.")
             await self.bot.get_channel(791518421920907265).send(f"{str(user)}, just upvoted our bot, this is their {vote_counts} times voting for The Anime Bot")
         except Exception as e:
