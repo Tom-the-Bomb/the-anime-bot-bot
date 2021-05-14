@@ -267,7 +267,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     @commands.command()
     async def selfdeafen(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
-        await self.ws.voice_state(player.guild_id, player.channel_id, self_deafen=not player.deafen)
+        await self.bot.ws.voice_state(player.guild_id, player.channel_id, self_deafen=not player.deafen)
         player.deafen = not player.deafen
         await ctx.send("\U0001f44c")
 
