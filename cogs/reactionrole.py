@@ -14,7 +14,7 @@ class reactionrole(commands.Cog):
         self.bot.loop.create_task(self.make_cache())
 
     async def make_cache(self):
-        roles = await self.bot.db.fetch("SELCT * FROM reactionrole")
+        roles = await self.bot.db.fetch("SELECT * FROM reactionrole")
         if roles:
             for i in roles:
                 self.bot.reactionrole_cache[i["guild_id"]] = ujson.loads(i["roles"])
