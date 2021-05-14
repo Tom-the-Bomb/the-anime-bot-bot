@@ -15,7 +15,7 @@ class Economy(commands.Cog):
     async def cog_before_invoke(self, ctx):
         opened = await self.open_account(ctx.author.id)
         if opened:
-            await ctx.send(
+            await ctx.reply(
                 f"hi {ctx.author.mention} I have created a bobo basket for you and I made the bank person to make a account for you have fun."
             )
 
@@ -63,7 +63,7 @@ class Economy(commands.Cog):
         embed = discord.Embed(color=self.bot.color, title=f"{ctx.author.name}'s balance")
         embed.add_field(name=f"{BOBO} Basket", value=basket, inline=False)
         embed.add_field(name=f"{BOBO} Bank", value=bank, inline=False)
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command(aliases=["with", "wd"])
     async def withdraw(self, ctx, amount: str):
@@ -71,21 +71,21 @@ class Economy(commands.Cog):
         if amount in ["max", "all"]:
             await self.change_balance(ctx.author.id, -1 * bank, "bank")
             changed_balance = await self.change_balance(ctx.author.id, bank, "basket")
-            return await ctx.send(f"Withdrawed {BOBO} {bank} bobo to basket.")
+            return await ctx.reply(f"Withdrawed {BOBO} {bank} bobo to basket.")
         try:
             amount = int(amount)
         except:
             try:
                 amount = int(float(amount))
             except:
-                return await ctx.send("Invalid amount")
+                return await ctx.reply("Invalid amount")
         if amount > bank:
-            return await ctx.send("You don't have that much bobo.")
+            return await ctx.reply("You don't have that much bobo.")
         if amount <= 0:
-            return await ctx.send("You can't withdraw 0 or negative bobo.")
+            return await ctx.reply("You can't withdraw 0 or negative bobo.")
         await self.change_balance(ctx.author.id, -1 * amount, "bank")
         await self.change_balance(ctx.author.id, amount)
-        await ctx.send(f"Withdrawed {BOBO} {amount} bobo to basket.")
+        await ctx.reply(f"Withdrawed {BOBO} {amount} bobo to basket.")
 
     @commands.command()
     async def lb(self, ctx):
@@ -102,7 +102,7 @@ class Economy(commands.Cog):
         for i in e:
             to_sort.append(f"{i['basket']} - {str(await self.bot.getch(i['user_id']))}")
         final_sorted = "\n".join(to_sort)
-        await ctx.send(
+        await ctx.reply(
             embed=discord.Embed(
                 color=self.bot.color,
                 title="Global economy leaderboard",
@@ -116,21 +116,21 @@ class Economy(commands.Cog):
         if amount in ["max", "all"]:
             await self.change_balance(ctx.author.id, -1 * basket)
             changed_balance = await self.change_balance(ctx.author.id, basket, "bank")
-            return await ctx.send(f"Deposited {BOBO} {basket} bobo to bank.")
+            return await ctx.reply(f"Deposited {BOBO} {basket} bobo to bank.")
         try:
             amount = int(amount)
         except:
             try:
                 amount = int(float(amount))
             except:
-                return await ctx.send("Invalid amount")
+                return await ctx.reply("Invalid amount")
         if amount > basket:
-            return await ctx.send("You don't have that much bobo.")
+            return await ctx.reply("You don't have that much bobo.")
         if amount <= 0:
-            return await ctx.send("You can't deposit 0 or negative bobo.")
+            return await ctx.reply("You can't deposit 0 or negative bobo.")
         await self.change_balance(ctx.author.id, -1 * amount)
         await self.change_balance(ctx.author.id, amount, "bank")
-        await ctx.send(f"Deposited {BOBO} {amount} bobo to bank.")
+        await ctx.reply(f"Deposited {BOBO} {amount} bobo to bank.")
 
     @commands.command()
     @commands.cooldown(100, 60, commands.BucketType.user)
@@ -171,16 +171,16 @@ class Economy(commands.Cog):
         rand = random.randint(-1, 1000)
         if rand <= 0:
             await self.change_balance(ctx.author.id, -1)
-            return await ctx.send(f"smh Muzan Kibutsuji almost killed you and take away {BOBO} 1 bobo")
+            return await ctx.reply(f"smh Muzan Kibutsuji almost killed you and take away {BOBO} 1 bobo")
         await self.change_balance(ctx.author.id, rand)
-        await ctx.send(f"{random.choice(characters)} just gave you {BOBO} {rand} bobo")
+        await ctx.reply(f"{random.choice(characters)} just gave you {BOBO} {rand} bobo")
 
     @commands.is_owner()
     @commands.command()
     async def addmoney(self, ctx, member: discord.Member, amount: int):
         await self.open_account(member.id)
         changed_balance = await self.change_balance(member.id, amount)
-        await ctx.send(f"Changed {str(member)}'s balance to {changed_balance}")
+        await ctx.reply(f"Changed {str(member)}'s balance to {changed_balance}")
 
 
 def setup(bot):
