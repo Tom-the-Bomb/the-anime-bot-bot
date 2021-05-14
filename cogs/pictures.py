@@ -177,19 +177,15 @@ class pictures(commands.Cog):
                 url = message.attachments[0].url
             if message.stickers:
                 sticker = message.stickers[0]
-                if isinstance(sticker, discord.StickerType.lottie):
-                    pass
-                else:
+                if not isinstance(discord.StickerType.lottie, sticker):
                     url = sticker.image_url_as()
 
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             url = ctx.message.attachments[0].url
-        
+
         if ctx.message.stickers:
             sticker = ctx.message.stickers[0]
-            if isinstance(sticker, discord.StickerType.lottie):
-                pass
-            else:
+            if not isinstance(discord.StickerType.lottie, sticker):
                 url = sticker.image_url_as()
 
         if thing is None and avatar and url is None:
@@ -229,9 +225,7 @@ class pictures(commands.Cog):
                     pass
                 elif b.startswith(b"BM"):
                     pass
-                elif b.startswith(b"RIFF") and b[8:12] == b"WEBP":
-                    pass
-                else:
+                elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
                     raise discord.InvalidArgument("Unsupported image type given")
         return url
 
@@ -252,18 +246,14 @@ class pictures(commands.Cog):
                 url = message.attachments[0].url
             if message.stickers:
                 sticker = message.stickers[0]
-                if isinstance(sticker, discord.StickerType.lottie):
-                    pass
-                else:
+                if not isinstance(discord.StickerType.lottie, sticker):
                     url = sticker.image_url_as()
 
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             url = ctx.message.attachments[0].url
         if ctx.message.stickers:
             sticker = ctx.message.stickers[0]
-            if isinstance(sticker, discord.StickerType.lottie):
-                pass
-            else:
+            if not isinstance(discord.StickerType.lottie, sticker):
                 url = sticker.image_url_as()
         if thing is None and avatar and url is None:
             url = str(ctx.author.avatar_url_as(static_format="png"))
@@ -302,9 +292,7 @@ class pictures(commands.Cog):
                     pass
                 elif b.startswith(b"BM"):
                     pass
-                elif b.startswith(b"RIFF") and b[8:12] == b"WEBP":
-                    pass
-                else:
+                elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
                     raise discord.InvalidArgument("Unsupported image type given")
         return url
 
