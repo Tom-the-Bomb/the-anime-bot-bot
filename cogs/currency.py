@@ -1,5 +1,5 @@
 from datetime import timedelta
-from datetime.datetime import utcnow
+from datetime import datetime
 import asyncpg
 import random
 
@@ -29,7 +29,7 @@ class Economy(commands.Cog):
     
     async def is_recent_voted(self, user_id):
         date = await self.bot.db.fetchval("SELECT recent_voted FROM votes WHERE user_id = $1", user_id)
-        return bool(date and date >= utcnow - timedelta(hours=12))
+        return bool(date and date >= datetime.utcnow() - timedelta(hours=12))
 
     async def get_balance(self, user_id):
         bal = await self.bot.db.fetchrow("SELECT * FROM economy WHERE user_id = $1", user_id)
