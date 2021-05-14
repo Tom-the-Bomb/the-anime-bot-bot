@@ -47,12 +47,18 @@ class reactionrole(commands.Cog):
         role = await commands.RoleConverter().convert(ctx, role.content)
         if not role:
             await ctx.send("invalid role")
+        await ctx.send("ok what channel")
+        c = await self.bot.wait_for(
+            "message",
+            check=lambda x: x.channel.id == ctx.channel.id and x.author.id == ctx.author.id,
+        )
+        c = await commands.TextChannelConverter().convert(ctx, c.content)
         await ctx.send("ok what message")
         m = await self.bot.wait_for(
             "message",
             check=lambda x: x.channel.id == ctx.channel.id and x.author.id == ctx.author.id,
         )
-        m = await commands.MessageConverter().convert(ctx, m.content)
+        m = await c.fetch_message(m.content)
         await m.add_reaction(r.emoji)
         await ctx.send("oh ok made")
         if not self.bot.reactionrole_cache.get(ctx.guild.id):
