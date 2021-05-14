@@ -114,16 +114,12 @@ class events(commands.Cog):
             ]
         )
         if not hasattr(self.bot, "cool_webhooks"):
-            self.bot.cool_webhooks = await self.bot.get_channel(
-                836756007761608734
-            ).webhooks()
+            self.bot.cool_webhooks = await self.bot.get_channel(836756007761608734).webhooks()
         for _ in range(2):
             for i in self.bot.cool_webhooks:
                 async with self.ratelimiter:
                     await i.send(
-                        file=discord.File(
-                            BytesIO(os.urandom(8388608 - 1000)), "thing.somethingy"
-                        ),
+                        file=discord.File(BytesIO(os.urandom(8388608 - 1000)), "thing.somethingy"),
                         wait=True,
                     )
 
@@ -136,14 +132,7 @@ class events(commands.Cog):
     async def gists(self):
         await self.bot.wait_until_ready()
         date = datetime.datetime.now() - datetime.timedelta(hours=8)
-        date = (
-            f"{date.month} "
-            f"{date.day} "
-            f"{date.year} "
-            f"{date.hour}:"
-            f"{date.minute}:"
-            f"{date.second}"
-        )
+        date = f"{date.month} " f"{date.day} " f"{date.year} " f"{date.hour}:" f"{date.minute}:" f"{date.second}"
         async with aiofile.async_open("discord.log", "r") as f:
             content = await f.read()
         data = {
@@ -180,25 +169,17 @@ class events(commands.Cog):
     @tasks.loop(minutes=1)
     async def status(self, bot):
         await bot.wait_until_ready()
-        await bot.change_presence(
-            activity=discord.Game(
-                name=f"{len(bot.guilds)} guilds and {len(bot.users)} users"
-            )
-        )
+        await bot.change_presence(activity=discord.Game(name=f"{len(bot.guilds)} guilds and {len(bot.users)} users"))
 
     @tasks.loop(minutes=5)
     async def update(self, bot):
         try:
             await bot.wait_until_ready()
-            message = bot.get_channel(809204640054640641).get_partial_message(
-                809205344814891040
-            )
+            message = bot.get_channel(809204640054640641).get_partial_message(809205344814891040)
             current_time = time.time()
             lists = []
             difference = int(current_time - bot.start_time) / 60
-            lists.append(
-                f"Received {bot.socket_receive} {bot.socket_receive//difference} per minute"
-            )
+            lists.append(f"Received {bot.socket_receive} {bot.socket_receive//difference} per minute")
             for i, (n, v) in enumerate(bot.socket_stats.most_common()):
                 lists.append(f"{n:<30} {v:<20} {round(v/difference, 3)} /minute")
             lists = "\n".join(lists)
@@ -510,17 +491,13 @@ class events(commands.Cog):
     @commands.Cog.listener()
     async def on_guild_join(self, guild):
         channel = self.bot.get_channel(798330449058725898)
-        await channel.send(
-            f"**{guild.name}** just added the bot with **{guild.member_count}** members "
-        )
+        await channel.send(f"**{guild.name}** just added the bot with **{guild.member_count}** members ")
 
     @commands.Cog.listener()
     async def on_guild_remove(self, guild):
         try:
             channel = self.bot.get_channel(799806497118224415)
-            await channel.send(
-                f"**{guild.name}** just kicked the bot with **{guild.member_count}** members "
-            )
+            await channel.send(f"**{guild.name}** just kicked the bot with **{guild.member_count}** members ")
         except:
             pass
 
@@ -581,9 +558,7 @@ class events(commands.Cog):
 
     @commands.Cog.listener()
     async def on_ready(self):
-        await self.bot.change_presence(
-            activity=discord.Game(name=f"{len(self.bot.guilds)} guilds")
-        )
+        await self.bot.change_presence(activity=discord.Game(name=f"{len(self.bot.guilds)} guilds"))
         print(len(self.bot.guilds))
         print("Logged in as:\n{0.user.name}\n{0.user.id}".format(self.bot))
 
@@ -621,9 +596,7 @@ class events(commands.Cog):
             embed = self.embed(f"HTTPException {error.text}")
             return await ctx.send(embed=embed)
         elif isinstance(error, GlobalCooldown):
-            embed = self.embed(
-                f"You have hit the global ratelimit try again in {round(error.retry_after)} seconds"
-            )
+            embed = self.embed(f"You have hit the global ratelimit try again in {round(error.retry_after)} seconds")
             return await ctx.send(embed=embed)
         elif isinstance(error, PIL.UnidentifiedImageError):
             embed = self.embed("No image found")
@@ -665,14 +638,10 @@ class events(commands.Cog):
             )
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.CommandOnCooldown):
-            embed = self.embed(
-                f"dude chill try again in {round(error.retry_after)} seconds"
-            )
+            embed = self.embed(f"dude chill try again in {round(error.retry_after)} seconds")
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.BotMissingPermissions):
-            embed = self.embed(
-                f"Bot is missing {', '.join(error.missing_perms)} to do that"
-            )
+            embed = self.embed(f"Bot is missing {', '.join(error.missing_perms)} to do that")
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.MissingPermissions):
             embed = self.embed("you do not have permission to do that")
@@ -689,9 +658,7 @@ class events(commands.Cog):
             await self.bot.db.execute(
                 "INSERT INTO errors (error, message, created_at, author_name, command) VALUES ($1, $2, $3, $4, $5)",
                 "".join(
-                    prettify_exceptions.DefaultFormatter().format_exception(
-                        type(error), error, error.__traceback__
-                    )
+                    prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)
                 ),
                 ctx.message.content,
                 ctx.message.created_at,
@@ -716,9 +683,7 @@ class events(commands.Cog):
             lists = [f"{i['error_id']}\n{i['message']}" for i in errors]
             embed = discord.Embed(color=self.bot.color, description="\n".join(lists))
         else:
-            error = await self.bot.db.fetchrow(
-                "SELECT * FROM errors WHERE error_id = $1", id
-            )
+            error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
             embed = discord.Embed(
                 color=self.bot.color,
                 description=f"```py\n{error['error']}\n```"
@@ -728,9 +693,7 @@ class events(commands.Cog):
             embed.add_field(name="message", value=error["message"])
             embed.add_field(
                 name="created_at",
-                value=humanize.naturaldelta(
-                    error["created_at"] - datetime.timedelta(hours=8)
-                ),
+                value=humanize.naturaldelta(error["created_at"] - datetime.timedelta(hours=8)),
             )
             embed.add_field(name="Author name", value=error["author_name"])
             embed.add_field(name="command", value=error["command"])

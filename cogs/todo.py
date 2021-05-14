@@ -95,10 +95,7 @@ class todo(commands.Cog):
                     description=f"you have no todos `{ctx.prefix}todo add sometodos` to make one",
                 )
             )
-        lists = [
-            f"[{counter}]({i['jump_url']}). {i['content']}"
-            for counter, i in enumerate(todos, start=1)
-        ]
+        lists = [f"[{counter}]({i['jump_url']}). {i['content']}" for counter, i in enumerate(todos, start=1)]
 
         pages = menus.MenuPages(source=TodoMenuSource(lists), delete_message_after=True)
         await pages.start(ctx)
@@ -145,9 +142,7 @@ class todo(commands.Cog):
             ctx.message.id,
             ctx.message.jump_url,
         )
-        todos = await self.bot.db.fetch(
-            "SELECT * FROM todos WHERE author_id = $1", ctx.author.id
-        )
+        todos = await self.bot.db.fetch("SELECT * FROM todos WHERE author_id = $1", ctx.author.id)
         return await ctx.send(
             embed=discord.Embed(
                 color=self.bot.color,

@@ -44,15 +44,11 @@ T = TypeVar("T", bound="BaseFlags")
 class _flag_property:
     __slots__ = ("_original_func", "__doc__")
 
-    def __init__(
-        self, func: Union[Callable[[T], bool], Callable[[None], bool]]
-    ) -> None:
+    def __init__(self, func: Union[Callable[[T], bool], Callable[[None], bool]]) -> None:
         self._original_func = func
         self.__doc__ = func.__doc__
 
-    def __get__(
-        self, instance: Optional[T], owner: Optional[Type[T]] = None
-    ) -> Union[_flag_property, bool]:
+    def __get__(self, instance: Optional[T], owner: Optional[Type[T]] = None) -> Union[_flag_property, bool]:
         if instance is None:
             # return super().__get__(instance, owner)
             # raise AttributeError(f'"{self._original_func.__name__}"')
@@ -132,11 +128,7 @@ class BaseFlags:
             return None
 
         if val.count("1") > (len(self.flag_values) / 2):
-            return (
-                "-("
-                + "|".join(getattr(self.__class__, k).__doc__ for k, v in self if not v)
-                + ")"
-            )
+            return "-(" + "|".join(getattr(self.__class__, k).__doc__ for k, v in self if not v) + ")"
         return "|".join(getattr(self.__class__, k).__doc__ for k, v in self if v)
 
 

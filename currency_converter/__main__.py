@@ -30,28 +30,19 @@ def main():
     parser.add_argument("amount", type=float)
     parser.add_argument("currency")
 
-    parser.add_argument(
-        "-t", "--to", help="target currency, default is %(default)s", default="EUR"
-    )
+    parser.add_argument("-t", "--to", help="target currency, default is %(default)s", default="EUR")
 
-    parser.add_argument(
-        "-d", "--date", help="date of rate, with format %%Y-%%m-%%d", default=None
-    )
+    parser.add_argument("-d", "--date", help="date of rate, with format %%Y-%%m-%%d", default=None)
 
     parser.add_argument(
         "-v",
         "--verbose",
-        help=(
-            "display available currencies, use twice (-vv) to "
-            "also display details of missing rates completion"
-        ),
+        help=("display available currencies, use twice (-vv) to " "also display details of missing rates completion"),
         action="count",
         default=0,
     )
 
-    parser.add_argument(
-        "--decimal", help="use decimal.Decimal internally", action="store_true"
-    )
+    parser.add_argument("--decimal", help="use decimal.Decimal internally", action="store_true")
 
     parser.add_argument(
         "-f",
@@ -99,15 +90,9 @@ def main():
     else:
         date = c.bounds[args.currency].last_date
 
-    new_amount = c.convert(
-        amount=args.amount, currency=args.currency, new_currency=args.to, date=date
-    )
+    new_amount = c.convert(amount=args.amount, currency=args.currency, new_currency=args.to, date=date)
 
-    print(
-        "{0:.3f} {1} = {2:.3f} {3} on {4}".format(
-            args.amount, args.currency, new_amount, args.to, date
-        )
-    )
+    print("{0:.3f} {1} = {2:.3f} {3} on {4}".format(args.amount, args.currency, new_amount, args.to, date))
 
 
 if __name__ == "__main__":

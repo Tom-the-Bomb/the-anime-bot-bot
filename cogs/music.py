@@ -23,10 +23,7 @@ class QueueMenuSource(menus.ListPageSource):
             "embed": discord.Embed(
                 color=menu.ctx.bot.color,
                 title=f"Music queue",
-                description="\n".join(
-                    f"[**{i.title}**]({i.uri})\n{i.author or 'no author'}"
-                    for i in entries
-                ),
+                description="\n".join(f"[**{i.title}**]({i.uri})\n{i.author or 'no author'}" for i in entries),
             )
         }
 
@@ -63,32 +60,19 @@ class Player(wavelink.Player):
             description=f"Now playing: **{track.title}**\nVolume: {self.volume}",
         )
         try:
-            duration = humanize.precisedelta(
-                datetime.timedelta(milliseconds=track.length)
-            )
+            duration = humanize.precisedelta(datetime.timedelta(milliseconds=track.length))
         except:
             duration = "Duration too long"
         try:
-            position = humanize.precisedelta(
-                datetime.timedelta(milliseconds=self.position)
-            )
+            position = humanize.precisedelta(datetime.timedelta(milliseconds=self.position))
         except:
             position = "Position too long"
         try:
             percentage = 100 / track.length * self.position
-            bar = (
-                "`"
-                + "⬜" * int(20 / 100 * percentage)
-                + "⬛" * int(20 - (20 / 100 * percentage))
-                + "`"
-            )
+            bar = "`" + "⬜" * int(20 / 100 * percentage) + "⬛" * int(20 - (20 / 100 * percentage)) + "`"
         except:
             bar = ""
-        embed.description += (
-            f"\nCurrent Position: {position} / {duration}"
-            if not track.is_stream
-            else "Live Stream"
-        )
+        embed.description += f"\nCurrent Position: {position} / {duration}" if not track.is_stream else "Live Stream"
         embed.description += f"\n{bar}" if not track.is_stream else "Live Stream"
         embed.set_thumbnail(url=track.thumb) if track.thumb else "Live Stream"
         embed.add_field(name="Requester", value=track.requester)
@@ -98,9 +82,7 @@ class Player(wavelink.Player):
             try:
                 embed.add_field(
                     name="Duration",
-                    value=humanize.precisedelta(
-                        datetime.timedelta(milliseconds=track.length)
-                    ),
+                    value=humanize.precisedelta(datetime.timedelta(milliseconds=track.length)),
                 )
             except:
                 embed.add_field(name="Duration", value="Duration too long to display.")
@@ -118,13 +100,9 @@ class Player(wavelink.Player):
             for track in song.tracks:
                 track = Track(track.id, track.info, requester=ctx.author)
                 self.queue.append(track)
-            self.now_playing = Track(
-                song.tracks[0].id, song.tracks[0].info, requester=ctx.author
-            )
+            self.now_playing = Track(song.tracks[0].id, song.tracks[0].info, requester=ctx.author)
             playlist_name = song.data["playlistInfo"]["name"]
-            await ctx.send(
-                f"Added playlist `{playlist_name}` with `{len(song.tracks)}` songs to the queue. "
-            )
+            await ctx.send(f"Added playlist `{playlist_name}` with `{len(song.tracks)}` songs to the queue. ")
 
         else:
             track = Track(song[0].id, song[0].info, requester=ctx.author)
@@ -139,8 +117,9 @@ class Player(wavelink.Player):
                     self.now_playing.info,
                     requester=ctx.author,
                 )
-            )
-        , delete_after=10)
+            ),
+            delete_after=10,
+        )
         self.queue_position += 1
         await self.play(self.now_playing)
         self.ctx = ctx
@@ -208,13 +187,9 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             return
         player = event.player
         if player.bot.url_regex.fullmatch(player.query):
-            new_track = await player.ctx.bot.wavelink.get_tracks(
-                f"scsearch:{player.track.title}"
-            )
+            new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.track.title}")
         else:
-            new_track = await player.ctx.bot.wavelink.get_tracks(
-                f"scsearch:{player.query}"
-            )
+            new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.query}")
         if new_track:
             track = Track(
                 new_track[0].id,
@@ -249,9 +224,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             await ctx.send("You must be in a voice channel to use this command.")
             return False
         if ctx.author.voice.channel.id != player.channel_id:
-            await ctx.send(
-                "You must be in the same voice channel as me to use this command."
-            )
+            await ctx.send("You must be in the same voice channel as me to use this command.")
             return False
         if ctx.command.qualified_name != "play" and player.now_playing is None:
             await ctx.send("Nothing is being played right now.")
@@ -289,7 +262,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             delete_message_after=True,
         )
         await pages.start(ctx)
-    
+
     @commands.command(aliases=["nl"])
     @commands.is_owner()
     async def noleave(self, ctx):
@@ -389,9 +362,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             tracks = await self.bot.wavelink.get_tracks(f"ytsearch:{music}")
 
         if not tracks:
-            return await ctx.send(
-                "Could not find any songs with that query. maybe you made a typo?"
-            )
+            return await ctx.send("Could not find any songs with that query. maybe you made a typo?")
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         player.query = music
         if not player.is_connected:
@@ -403,9 +374,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 track = Track(track.id, track.info, requester=ctx.author)
                 player.queue.append(track)
             playlist_name = tracks.data["playlistInfo"]["name"]
-            await ctx.send(
-                f"Added playlist `{playlist_name}` with `{len(tracks.tracks)}` songs to the queue. "
-            )
+            await ctx.send(f"Added playlist `{playlist_name}` with `{len(tracks.tracks)}` songs to the queue. ")
         else:
             track = Track(tracks[0].id, tracks[0].info, requester=ctx.author)
             player.queue.append(track)

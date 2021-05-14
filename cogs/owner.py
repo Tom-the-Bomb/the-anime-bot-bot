@@ -104,13 +104,9 @@ class owners(commands.Cog):
         stdout, stderr = await proc.communicate()
 
         if stdout:
-            await ctx.send(
-                f'```py\n{stdout.decode().replace("jadonvps", "secrect")}\n```'
-            )
+            await ctx.send(f'```py\n{stdout.decode().replace("jadonvps", "secrect")}\n```')
         if stderr:
-            await ctx.send(
-                f'```py\n{stderr.decode().replace("jadonvps", "secrect")}\n```'
-            )
+            await ctx.send(f'```py\n{stderr.decode().replace("jadonvps", "secrect")}\n```')
 
     @commands.command(aliases=["sync"])
     @commands.is_owner()
@@ -144,18 +140,13 @@ class owners(commands.Cog):
                 description=f"```\n{stdout}\n{stderr}\n```",
             ).add_field(
                 name="Reloaded cogs",
-                value=", ".join(self.cog_regex.findall(final))
-                if self.cog_regex.findall(final)
-                else "No cogs reloaded",
+                value=", ".join(self.cog_regex.findall(final)) if self.cog_regex.findall(final) else "No cogs reloaded",
             ),
         )
 
     @classmethod
     def check(self, payload):
-        return (
-            payload.user_id == 590323594744168494
-            and payload.emoji.name == "\{NBLACK UNIVERSAL RECYCLING SYMBOL}"
-        )
+        return payload.user_id == 590323594744168494 and payload.emoji.name == "\{NBLACK UNIVERSAL RECYCLING SYMBOL}"
 
     @commands.command(aliases=["exe"])
     @commands.is_owner()
@@ -173,13 +164,7 @@ class owners(commands.Cog):
             for char in code:
                 if char == "`" and not in_code and not in_language:
                     backticks += 1
-                if (
-                    last
-                    and last[-1] == "`"
-                    and char != "`"
-                    or in_code
-                    and "".join(last) != "`" * backticks
-                ):
+                if last and last[-1] == "`" and char != "`" or in_code and "".join(last) != "`" * backticks:
                     in_code = True
                     code_.append(char)
                 if char == "\n":
@@ -228,16 +213,9 @@ class owners(commands.Cog):
                     result = await to_execute()
             except Exception as e:
                 return (
-                    await ctx.send(
-                        f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```"
-                    )
-                    if len(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```")
-                    <= 2000
-                    else await ctx.send(
-                        await ctx.paste(
-                            f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```"
-                        )
-                    )
+                    await ctx.send(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```")
+                    if len(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```") <= 2000
+                    else await ctx.send(await ctx.paste(f"```py\n{f.getvalue()}\n{traceback.format_exc()}\n```"))
                 )
             if result == " " and not f.getvalue():
                 return await ctx.send("\u200b")
@@ -245,9 +223,7 @@ class owners(commands.Cog):
             if result or f.getvalue():
                 await ctx.send(f"{f.getvalue()}\n{result}") if len(
                     f"{f.getvalue()}\n{result}"
-                ) <= 2000 else await ctx.send(
-                    await ctx.paste(f"{f.getvalue()}\n{result}")
-                )
+                ) <= 2000 else await ctx.send(await ctx.paste(f"{f.getvalue()}\n{result}"))
 
     # @staticmethod
     # @asyncexe()
@@ -266,9 +242,7 @@ class owners(commands.Cog):
     @asyncexe()
     def zip_emojis(emojis):
         file_ = BytesIO()
-        with zipfile.ZipFile(
-            file_, mode="w", compression=zipfile.ZIP_BZIP2, compresslevel=9
-        ) as zipfile_:
+        with zipfile.ZipFile(file_, mode="w", compression=zipfile.ZIP_BZIP2, compresslevel=9) as zipfile_:
             for n, v in emojis:
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
@@ -301,9 +275,7 @@ class owners(commands.Cog):
         website = website.replace("<", "").replace(">", "")
         if not website.startswith("http"):
             return await ctx.send("not a valid website")
-        async with self.bot.session.get(
-            f"https://image.thum.io/get/png/{website}"
-        ) as resp:
+        async with self.bot.session.get(f"https://image.thum.io/get/png/{website}") as resp:
             pic = BytesIO(await resp.read())
         await ctx.send(file=discord.File(pic, f"website_screemshot_{website}.png"))
 
@@ -359,9 +331,7 @@ class owners(commands.Cog):
     async def reload(self, ctx: AnimeContext, text_):
         text_ = text_.lower()
         await ctx.message.add_reaction("<:greenTick:596576670815879169>")
-        embed = discord.Embed(
-            color=0x00FF6A, description=f"<a:loading:747680523459231834>"
-        )
+        embed = discord.Embed(color=0x00FF6A, description=f"<a:loading:747680523459231834>")
         message = await ctx.reply(embed=embed)
         self.list = []
         if text_ == "all":
@@ -432,14 +402,10 @@ class owners(commands.Cog):
         if ctx.message.reference:
             id = ctx.message.reference.message_id
         try:
-            await asyncio.wait_for(
-                ctx.channel.get_partial_message(id).delete(), timeout=5
-            )
+            await asyncio.wait_for(ctx.channel.get_partial_message(id).delete(), timeout=5)
         except asyncio.TimeoutError:
             try:
-                await asyncio.wait_for(
-                    self.bot.http.delete_message(ctx.channel.id, id), timeout=5
-                )
+                await asyncio.wait_for(self.bot.http.delete_message(ctx.channel.id, id), timeout=5)
             except asyncio.TimeoutError:
                 await ctx.send("guess what retarded discord ratelimit me again")
 
@@ -477,12 +443,8 @@ class owners(commands.Cog):
             .replace("(", "\u200b(")
             .replace(")", "\u200b)")
         )
-        embed = discord.Embed(
-            color=self.bot.color, description=f"**said:** {str(text)}"
-        )
-        embed.set_author(
-            name=ctx.author.display_name, icon_url=str(ctx.author.avatar_url)
-        )
+        embed = discord.Embed(color=self.bot.color, description=f"**said:** {str(text)}")
+        embed.set_author(name=ctx.author.display_name, icon_url=str(ctx.author.avatar_url))
         await ctx.send(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 
     @commands.command()
@@ -529,9 +491,7 @@ class owners(commands.Cog):
 
         fmt = f"```\n{render}\n```\n*Returned {plural(rows):row} in {dt:.2f}ms*"
         if len(fmt) > 2000:
-            return await ctx.send(
-                file=discord.File(BytesIO(fmt.encode("utf-8")), "result.txt")
-            )
+            return await ctx.send(file=discord.File(BytesIO(fmt.encode("utf-8")), "result.txt"))
         else:
             await ctx.send(fmt)
 

@@ -43,11 +43,7 @@ class AnimePages(menus.MenuPages):
         to_delete.append(await channel.send("What page you want to teleport to"))
 
         def message_check(m):
-            return (
-                m.author.id == author_id
-                and channel == m.channel
-                and m.content.isdigit()
-            )
+            return m.author.id == author_id and channel == m.channel and m.content.isdigit()
 
         try:
             msg = await self.bot.wait_for("message", check=message_check, timeout=30.0)

@@ -36,8 +36,7 @@ class HelpCommand(commands.HelpCommand):
         embed = discord.Embed(
             color=self.context.bot.color,
             title=self.get_command_signature(command),
-            description=command.help
-            or "oh seems like my owner is too lazy to add help for this command sorry",
+            description=command.help or "oh seems like my owner is too lazy to add help for this command sorry",
         )
         await self.context.send(embed=embed)
 

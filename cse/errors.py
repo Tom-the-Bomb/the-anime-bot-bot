@@ -30,6 +30,4 @@ class QuotaExceededError(SearchError):
     """Raised when the active API key has run out of uses."""
 
     def __init__(self) -> None:
-        Exception.__init__(
-            self, "100 queries/day quota has been exceeded for this API key"
-        )
+        Exception.__init__(self, "100 queries/day quota has been exceeded for this API key")

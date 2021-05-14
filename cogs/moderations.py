@@ -126,9 +126,7 @@ class moderations(commands.Cog):
         if user.id == 590323594744168494:
             return await ctx.send("nope")
         embed = discord.Embed(color=self.bot.color)
-        embed.add_field(
-            name=f"`{user}` have been warned", value=f"with reason: `{reason}`"
-        )
+        embed.add_field(name=f"`{user}` have been warned", value=f"with reason: `{reason}`")
         await ctx.send(embed=embed)
         embed = discord.Embed(color=self.bot.color)
         embed.add_field(name=f"You have been warned", value=f"with reason: `{reason}`")

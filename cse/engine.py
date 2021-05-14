@@ -46,11 +46,7 @@ class Search:
     CSE_URL = "https://customsearch.googleapis.com/customsearch/v1?{}"
 
     def __init__(
-        self,
-        api_key: str,
-        *,
-        session: Optional[aiohttp.ClientSession] = None,
-        engine_id: str = "0013301c62cb228c5"
+        self, api_key: str, *, session: Optional[aiohttp.ClientSession] = None, engine_id: str = "0013301c62cb228c5"
     ):
         self.session = session
         self.api_key = api_key

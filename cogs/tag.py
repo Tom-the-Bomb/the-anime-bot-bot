@@ -19,18 +19,14 @@ class TagMenuSource(menus.ListPageSource):
                 color=menu.ctx.bot.color,
                 title="Tags" if not self.name else f"Tags for {self.name}",
                 description="\n".join(entries),
-            ).set_footer(
-                text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}"
-            )
+            ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
         }
 
 
 class tag(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.random_tag_regex = re.compile(
-            r"Random tag found: (?P<tag_name>.+)\n(?P<tag_content>(.|\n)+)"
-        )
+        self.random_tag_regex = re.compile(r"Random tag found: (?P<tag_name>.+)\n(?P<tag_content>(.|\n)+)")
 
     @commands.Cog.listener("on_message")
     async def on_message_for_random_tag_(self, message):
@@ -38,8 +34,7 @@ class tag(commands.Cog):
             return
         m = await self.bot.wait_for(
             "message",
-            check=lambda i: i.author.id == 80528701850124288
-            and i.channel.id == message.channel.id,
+            check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
             timeout=1,
         )
         if m.embeds and m.embeds[0].type == "rich":
@@ -59,9 +54,7 @@ class tag(commands.Cog):
                     0,
                 )
             except asyncpg.exceptions.UniqueViolationError:
-                tags = await self.bot.db.fetchrow(
-                    "SELECT author_id FROM tags WHERE tag_name = $1", tag_name
-                )
+                tags = await self.bot.db.fetchrow("SELECT author_id FROM tags WHERE tag_name = $1", tag_name)
                 if tags["author_id"] == 80528701850124288:
                     await self.bot.db.execute(
                         "UPDATE tags SET tag_content = $1 WHERE tag_name = $2",
@@ -75,8 +68,7 @@ class tag(commands.Cog):
             return
         m = await self.bot.wait_for(
             "message",
-            check=lambda i: i.author.id == 80528701850124288
-            and i.channel.id == message.channel.id,
+            check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
             timeout=1,
         )
         if m.embeds and m.embeds[0].type == "rich":
@@ -96,9 +88,7 @@ class tag(commands.Cog):
                     0,
                 )
             except asyncpg.exceptions.UniqueViolationError:
-                tags = await self.bot.db.fetchrow(
-                    "SELECT author_id FROM tags WHERE tag_name = $1", tag_name
-                )
+                tags = await self.bot.db.fetchrow("SELECT author_id FROM tags WHERE tag_name = $1", tag_name)
                 if tags["author_id"] == 80528701850124288:
                     await self.bot.db.execute(
                         "UPDATE tags SET tag_content = $1 WHERE tag_name = $2",
@@ -136,8 +126,7 @@ class tag(commands.Cog):
             return
         m = await self.bot.wait_for(
             "message",
-            check=lambda i: i.author.id == 80528701850124288
-            and i.channel.id == message.channel.id,
+            check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
             timeout=2,
         )
         if m.embeds and m.embeds[0].type == "rich":
@@ -155,9 +144,7 @@ class tag(commands.Cog):
                 0,
             )
         except asyncpg.exceptions.UniqueViolationError:
-            tags = await self.bot.db.fetchrow(
-                "SELECT author_id FROM tags WHERE tag_name = $1", tag_name
-            )
+            tags = await self.bot.db.fetchrow("SELECT author_id FROM tags WHERE tag_name = $1", tag_name)
             if tags["author_id"] == 80528701850124288:
                 await self.bot.db.execute(
                     "UPDATE tags SET tag_content = $1 WHERE tag_name = $2",
@@ -195,8 +182,7 @@ class tag(commands.Cog):
             return
         m = await self.bot.wait_for(
             "message",
-            check=lambda i: i.author.id == 80528701850124288
-            and i.channel.id == message.channel.id,
+            check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
             timeout=2,
         )
         if m.embeds and m.embeds[0].type == "rich":
@@ -214,9 +200,7 @@ class tag(commands.Cog):
                 0,
             )
         except asyncpg.exceptions.UniqueViolationError:
-            tags = await self.bot.db.fetchrow(
-                "SELECT author_id FROM tags WHERE tag_name = $1", tag_name
-            )
+            tags = await self.bot.db.fetchrow("SELECT author_id FROM tags WHERE tag_name = $1", tag_name)
             if tags["author_id"] == 80528701850124288:
                 await self.bot.db.execute(
                     "UPDATE tags SET tag_content = $1 WHERE tag_name = $2",
@@ -226,22 +210,20 @@ class tag(commands.Cog):
 
     @commands.group(invoke_without_command=True)
     async def tag(self, ctx: AnimeContext, *, name):
-        tags = await self.bot.db.fetchrow(
-            "SELECT * FROM tags WHERE tag_name = $1", name
-        )
+        tags = await self.bot.db.fetchrow("SELECT * FROM tags WHERE tag_name = $1", name)
         if not tags:
-            tags = await self.bot.db.fetch("SELECT tag_name FROM tags WHERE tag_name % $1 ORDER BY similarity(tag_name, $1) DESC LIMIT 3", name)
+            tags = await self.bot.db.fetch(
+                "SELECT tag_name FROM tags WHERE tag_name % $1 ORDER BY similarity(tag_name, $1) DESC LIMIT 3",
+                name,
+            )
             if tags:
                 tags = "\n".join(i["tag_name"] for i in tags)
                 return await ctx.send(f"Tag not found\nDid you mean:\n{tags}")
             return await ctx.send(f"Tag not found")
 
-
         await ctx.send(tags["tag_content"])
-        await self.bot.db.execute(
-            "UPDATE tags SET uses = uses + 1 WHERE tag_name = $1", name
-        )
-    
+        await self.bot.db.execute("UPDATE tags SET uses = uses + 1 WHERE tag_name = $1", name)
+
     @tag.command()
     async def transfer(self, ctx: AnimeContext, name, member: discord.Member):
         tags = await self.bot.db.fetch(
@@ -251,17 +233,15 @@ class tag(commands.Cog):
         )
         if not tags:
             return await ctx.send("Tag not found or you don't own the tag")
-        await self.bot.db.execute(
-            "UPDATE tags SET author_id = $2 WHERE tag_name = $1",
-            name,
-            member.id
-        )
+        await self.bot.db.execute("UPDATE tags SET author_id = $2 WHERE tag_name = $1", name, member.id)
         await ctx.send(f"Successfully transferred tag `{discord.utils.escape_markdown(name)}` to {member.mention}")
-
 
     @tag.command()
     async def search(self, ctx, *, name):
-        tags = await self.bot.db.fetch("SELECT tag_name FROM tags WHERE tag_name % $1 ORDER BY similarity(tag_name, $1) DESC", name)
+        tags = await self.bot.db.fetch(
+            "SELECT tag_name FROM tags WHERE tag_name % $1 ORDER BY similarity(tag_name, $1) DESC",
+            name,
+        )
         pages = menus.MenuPages(
             source=TagMenuSource(
                 [discord.utils.escape_markdown(i["tag_name"]) for i in tags],
@@ -274,9 +254,7 @@ class tag(commands.Cog):
     async def forceclaim(self, ctx, *, name):
         if ctx.author.id != 590323594744168494:
             return await ctx.send("no")
-        tags = await self.bot.db.fetchrow(
-            "SELECT * FROM tags WHERE tag_name = $1", name
-        )
+        tags = await self.bot.db.fetchrow("SELECT * FROM tags WHERE tag_name = $1", name)
         if not tags:
             return await ctx.send("Tag not found")
         await self.bot.db.execute(
@@ -288,9 +266,7 @@ class tag(commands.Cog):
 
     @tag.command()
     async def info(self, ctx, *, name):
-        tags = await self.bot.db.fetchrow(
-            "SELECT * FROM tags WHERE tag_name = $1", name
-        )
+        tags = await self.bot.db.fetchrow("SELECT * FROM tags WHERE tag_name = $1", name)
         if not tags:
             return await ctx.send("Tag not found")
         embed = discord.Embed(color=self.bot.color, title=tags["tag_name"])
@@ -321,9 +297,7 @@ class tag(commands.Cog):
     async def all(self, ctx):
         tags = await self.bot.db.fetch("SELECT tag_name FROM tags ORDER BY tag_name")
         pages = menus.MenuPages(
-            source=TagMenuSource(
-                [discord.utils.escape_markdown(i["tag_name"]) for i in tags]
-            ),
+            source=TagMenuSource([discord.utils.escape_markdown(i["tag_name"]) for i in tags]),
             delete_message_after=True,
         )
         await pages.start(ctx)
@@ -355,12 +329,14 @@ class tag(commands.Cog):
             return await ctx.send("Tag not found or you don't own the tag")
         await self.bot.db.execute("DELETE FROM tags WHERE tag_name = $1", name)
         await ctx.send(f"Deleted tag `{discord.utils.escape_markdown(name)}`")
-    
+
     @tag.command()
     async def make(self, ctx):
         await ctx.send("oh hi what the tag name is?")
+
         def check(msg):
             return msg.author == ctx.author and ctx.channel == msg.channel
+
         try:
             name = await self.bot.wait_for("message", timeout=60, check=check)
             name = name.content
@@ -390,9 +366,7 @@ class tag(commands.Cog):
             ctx.message.id,
             0,
         )
-        await ctx.send(
-            f"Successfully added tag `{discord.utils.escape_markdown(name)}`"
-        )
+        await ctx.send(f"Successfully added tag `{discord.utils.escape_markdown(name)}`")
 
 
 def setup(bot):

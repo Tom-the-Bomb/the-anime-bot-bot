@@ -32,9 +32,7 @@ class DontExitArgumentParser(argparse.ArgumentParser):
             if module.startswith("discord") and not module.endswith("converter"):
                 # gets the default discord.py converter
                 try:
-                    type_func = getattr(
-                        commands.converter, type_func.__name__ + "Converter"
-                    )
+                    type_func = getattr(commands.converter, type_func.__name__ + "Converter")
                 except AttributeError:
                     pass
 

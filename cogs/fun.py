@@ -47,11 +47,7 @@ class UrbanDictionaryPageSource(menus.ListPageSource):
 
     def format_page(self, menu, entry):
         maximum = self.get_max_pages()
-        title = (
-            f'{entry["word"]}: {menu.current_page + 1} / {maximum}'
-            if maximum
-            else entry["word"]
-        )
+        title = f'{entry["word"]}: {menu.current_page + 1} / {maximum}' if maximum else entry["word"]
         embed = discord.Embed(title=title, colour=0x00FF6A, url=entry["permalink"])
         embed.set_footer(text=f'By {entry["author"]}')
         embed.description = self.cleanup_definition(
@@ -85,9 +81,7 @@ class fun(commands.Cog):
         self.talk_channels = []
 
     async def get_quote(self):
-        async with self.bot.session.get(
-            "https://leksell.io/zen/api/quotes/random"
-        ) as resp:
+        async with self.bot.session.get("https://leksell.io/zen/api/quotes/random") as resp:
             quotes = await resp.json()
         return quotes["quote"]
 
@@ -125,9 +119,7 @@ class fun(commands.Cog):
         return random.choice(tenor_)
 
     async def reddit_(self, text):
-        async with self.bot.session.get(
-            f"https://meme-api.herokuapp.com/gimme/{text}"
-        ) as resp:
+        async with self.bot.session.get(f"https://meme-api.herokuapp.com/gimme/{text}") as resp:
             meme = await resp.json()
             if meme["nsfw"] == True:
                 return True
@@ -175,11 +167,7 @@ class fun(commands.Cog):
         user_2: typing.Union[discord.Member, discord.User],
     ):
         random.seed(user_1.id + user_2.id + 34 + 35 + 69)
-        amount = (
-            int(str(random.randint(0, 100))[0])
-            if len(str(random.randint(0, 100))) >= 2
-            else 1
-        )
+        amount = int(str(random.randint(0, 100))[0]) if len(str(random.randint(0, 100))) >= 2 else 1
         embed = discord.Embed(
             color=self.bot.color,
             description=f"{user_1.name} + {user_2.name} = **{random.randint(0, 100)}**%\n{'<a:rooLove:744346239075877518>'* amount}",
@@ -188,9 +176,7 @@ class fun(commands.Cog):
 
     @commands.command()
     async def pic(self, ctx: AnimeContext, animal: str):
-        async with self.bot.session.get(
-            f"https://some-random-api.ml/img/{animal}"
-        ) as resp:
+        async with self.bot.session.get(f"https://some-random-api.ml/img/{animal}") as resp:
             if resp.status == 404:
                 return await ctx.send("we can't find picture of that animal")
             pic = await resp.json()
@@ -200,9 +186,7 @@ class fun(commands.Cog):
 
     @commands.command()
     async def fact(self, ctx: AnimeContext, animal: str):
-        async with self.bot.session.get(
-            f"https://some-random-api.ml/facts/{animal}"
-        ) as resp:
+        async with self.bot.session.get(f"https://some-random-api.ml/facts/{animal}") as resp:
             if resp.status == 404:
                 return await ctx.send("we can't find fact about that animal")
             fact = await resp.json()
@@ -266,24 +250,15 @@ class fun(commands.Cog):
         await message.add_reaction("<:stab:744345955637395586>")
 
         def check(payload):
-            return (
-                payload.emoji.id == 744345955637395586
-                and payload.message_id == message.id
-            )
+            return payload.emoji.id == 744345955637395586 and payload.message_id == message.id
 
         async with async_timeout.timeout(10):
             while True:
                 tasks = [
-                    asyncio.ensure_future(
-                        self.bot.wait_for("raw_reaction_add", check=check)
-                    ),
-                    asyncio.ensure_future(
-                        self.bot.wait_for("raw_reaction_remove", check=check)
-                    ),
+                    asyncio.ensure_future(self.bot.wait_for("raw_reaction_add", check=check)),
+                    asyncio.ensure_future(self.bot.wait_for("raw_reaction_remove", check=check)),
                 ]
-                done, pending = await asyncio.wait(
-                    tasks, return_when=asyncio.FIRST_COMPLETED
-                )
+                done, pending = await asyncio.wait(tasks, return_when=asyncio.FIRST_COMPLETED)
                 counter += 1
                 for task in pending:
                     task.cancel()
@@ -310,9 +285,7 @@ class fun(commands.Cog):
             else:
                 content = msg.content
             embed.add_field(name="Content", value=content, inline=False)
-            embed.add_field(
-                name="Jump link", value=f"[url]({msg.jump_url})", inline=False
-            )
+            embed.add_field(name="Jump link", value=f"[url]({msg.jump_url})", inline=False)
             await ctx.send(embed=embed)
             if msg.attachments != []:
                 await ctx.send(msg.attachments[0].url)
@@ -360,9 +333,7 @@ class fun(commands.Cog):
             else:
                 content = msg.content
             embed.add_field(name="Content", value=content, inline=False)
-            embed.add_field(
-                name="Jump link", value=f"[url]({msg.jump_url})", inline=False
-            )
+            embed.add_field(name="Jump link", value=f"[url]({msg.jump_url})", inline=False)
             await ctx.send(embed=embed)
             if msg.attachments != []:
                 await ctx.send(msg.attachments[0].url)
@@ -386,18 +357,14 @@ class fun(commands.Cog):
 
     @commands.command()
     async def bottomdecode(self, ctx: AnimeContext, *, text):
-        bottoms = await self.bot.loop.run_in_executor(
-            None, self.bottoms, "from_bottom", text
-        )
+        bottoms = await self.bot.loop.run_in_executor(None, self.bottoms, "from_bottom", text)
         if len(bottoms) > 500:
             return await ctx.send(str(await self.bot.mystbin.post(bottoms)))
         await ctx.send(bottoms)
 
     @commands.command()
     async def bottomencode(self, ctx: AnimeContext, *, text):
-        bottoms = await self.bot.loop.run_in_executor(
-            None, self.bottoms, "to_bottom", text
-        )
+        bottoms = await self.bot.loop.run_in_executor(None, self.bottoms, "to_bottom", text)
         if len(bottoms) > 500:
             return await ctx.send(str(await self.bot.mystbin.post(bottoms)))
         await ctx.send(bottoms)
@@ -419,9 +386,7 @@ class fun(commands.Cog):
 
     @commands.command(aliases=["grid", "toemoji"])
     async def renderemoji(self, ctx: AnimeContext, *, codes: int):
-        codes_ = await self.bot.loop.run_in_executor(
-            None, self.render_emoji, str(codes)
-        )
+        codes_ = await self.bot.loop.run_in_executor(None, self.render_emoji, str(codes))
         await ctx.reply(codes_)
 
     @commands.command()
@@ -443,9 +408,7 @@ class fun(commands.Cog):
             ]
             if any(i in search for i in lists):
                 return await ctx.send("Can not search nsfw words in non nsfw channel")
-        async with self.bot.session.get(
-            f"http://api.urbandictionary.com/v0/define?term={search}"
-        ) as resp:
+        async with self.bot.session.get(f"http://api.urbandictionary.com/v0/define?term={search}") as resp:
             if resp.status != 200:
                 return await ctx.send(f"An error occurred: {resp.status} {resp.reason}")
             js = await resp.json()
@@ -470,9 +433,7 @@ class fun(commands.Cog):
         #     embed = discord.Embed(color=0x00ff6a, description="A chat session has already been established in this channel")
         #     return await ctx.reply(embed=embed)
         self.talk_channels.append(ctx.message.channel.id)
-        embed = discord.Embed(
-            color=0x00FF6A, description="A chat session has been established"
-        )
+        embed = discord.Embed(color=0x00FF6A, description="A chat session has been established")
         await ctx.reply(embed=embed)
 
         def check(m):
@@ -654,11 +615,7 @@ class fun(commands.Cog):
         start = time.perf_counter()
 
         def check(reaction, user):
-            return (
-                reaction.message.id == message.id
-                and user != self.bot.user
-                and str(reaction.emoji) == "\U0001f363"
-            )
+            return reaction.message.id == message.id and user != self.bot.user and str(reaction.emoji) == "\U0001f363"
 
         reaction, user = await self.bot.wait_for("reaction_add", check=check)
         end = time.perf_counter()
@@ -767,9 +724,7 @@ class fun(commands.Cog):
 
     @commands.command()
     async def ovoly(self, ctx: AnimeContext, *, text):
-        ovo = (
-            text.replace("l", "v").replace("L", "v").replace("r", "v").replace("R", "v")
-        )
+        ovo = text.replace("l", "v").replace("L", "v").replace("r", "v").replace("R", "v")
         await ctx.reply(f"{ovo} ovo")
 
     @commands.command()
@@ -779,13 +734,9 @@ class fun(commands.Cog):
         if member == self.bot.user or member.id == 590323594744168494:
             return await ctx.send("nope")
         await ctx.trigger_typing()
-        async with self.bot.session.get(
-            "https://evilinsult.com/generate_insult.php"
-        ) as resp:
+        async with self.bot.session.get("https://evilinsult.com/generate_insult.php") as resp:
             response = await resp.text()
-        async with self.bot.session.get(
-            "https://insult.mattbas.org/api/insult"
-        ) as resp:
+        async with self.bot.session.get("https://insult.mattbas.org/api/insult") as resp:
             response3 = await resp.text()
         response2 = await self.bot.dag.roast()
         choice = random.randint(1, 3)

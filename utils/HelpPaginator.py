@@ -82,9 +82,7 @@ class Pages:
                 raise CannotPaginate("Bot does not have add reactions permission.")
 
             if not self.permissions.read_message_history:
-                raise CannotPaginate(
-                    "Bot does not have Read Message History permission."
-                )
+                raise CannotPaginate("Bot does not have Read Message History permission.")
 
     def get_page(self, page):
         base = (page - 1) * self.per_page
@@ -93,10 +91,7 @@ class Pages:
     async def show_page(self, page, *, first=False):
         self.current_page = page
         entries = self.get_page(page)
-        p = [
-            f"{index}. {entry}"
-            for index, entry in enumerate(entries, 1 + ((page - 1) * self.per_page))
-        ]
+        p = [f"{index}. {entry}" for index, entry in enumerate(entries, 1 + ((page - 1) * self.per_page))]
 
         if self.maximum_pages > 1:
             if self.show_entry_count:
@@ -158,11 +153,7 @@ class Pages:
         to_delete.append(await self.channel.send("What page do you want to go to?"))
 
         def message_check(m):
-            return (
-                m.author == self.author
-                and self.channel == m.channel
-                and m.content.isdigit()
-            )
+            return m.author == self.author and self.channel == m.channel and m.content.isdigit()
 
         try:
             msg = await self.bot.wait_for("message", check=message_check, timeout=30.0)
@@ -175,11 +166,7 @@ class Pages:
             if page != 0 and page <= self.maximum_pages:
                 await self.show_page(page)
             else:
-                to_delete.append(
-                    await self.channel.send(
-                        f"Invalid page given. ({page}/{self.maximum_pages})"
-                    )
-                )
+                to_delete.append(await self.channel.send(f"Invalid page given. ({page}/{self.maximum_pages})"))
                 await asyncio.sleep(5)
 
         try:
@@ -191,8 +178,7 @@ class Pages:
         """shows this message"""
         messages = ["Welcome to the interactive paginator!\n"]
         messages.append(
-            "This interactively allows you to see pages of text by navigating with "
-            "reactions. They are as follows:\n"
+            "This interactively allows you to see pages of text by navigating with " "reactions. They are as follows:\n"
         )
 
         for (emoji, func) in self.reaction_emojis:
@@ -200,9 +186,7 @@ class Pages:
 
         self.embed.description = "\n".join(messages)
         self.embed.clear_fields()
-        self.embed.set_footer(
-            text=f"We were on page {self.current_page} before this message."
-        )
+        self.embed.set_footer(text=f"We were on page {self.current_page} before this message.")
         await self.message.edit(embed=self.embed)
 
         async def go_back_to_current_page():
@@ -241,16 +225,10 @@ class Pages:
         while self.paginating:
             try:
                 tasks = [
-                    asyncio.ensure_future(
-                        self.bot.wait_for("raw_reaction_add", check=self.react_check)
-                    ),
-                    asyncio.ensure_future(
-                        self.bot.wait_for("raw_reaction_remove", check=self.react_check)
-                    ),
+                    asyncio.ensure_future(self.bot.wait_for("raw_reaction_add", check=self.react_check)),
+                    asyncio.ensure_future(self.bot.wait_for("raw_reaction_remove", check=self.react_check)),
                 ]
-                done, pending = await asyncio.wait(
-                    tasks, timeout=7200, return_when=asyncio.FIRST_COMPLETED
-                )
+                done, pending = await asyncio.wait(tasks, timeout=7200, return_when=asyncio.FIRST_COMPLETED)
                 for task in pending:
                     task.cancel()
                 if len(done) == 0:
@@ -358,11 +336,7 @@ def _command_signature(cmd):
         if param.default is not param.empty:
             # We don't want None or '' to trigger the [name=value] case and instead it should
             # do [name] since [name=None] or [name=] are not exactly useful for the user.
-            should_print = (
-                param.default
-                if isinstance(param.default, str)
-                else param.default is not None
-            )
+            should_print = param.default if isinstance(param.default, str) else param.default is not None
             if should_print:
                 result.append(f"[{name}={param.default!r}]")
             else:
@@ -378,9 +352,7 @@ def _command_signature(cmd):
 class HelpPaginator(Pages):
     def __init__(self, ctx, entries, *, per_page=4):
         super().__init__(ctx, entries=entries, per_page=per_page)
-        self.reaction_emojis.append(
-            ("\N{WHITE QUESTION MARK ORNAMENT}", self.show_bot_help)
-        )
+        self.reaction_emojis.append(("\N{WHITE QUESTION MARK ORNAMENT}", self.show_bot_help))
         self.total = len(entries)
 
     @classmethod
@@ -391,9 +363,7 @@ class HelpPaginator(Pages):
         entries = sorted(cog.get_commands(), key=lambda c: c.name)
 
         # remove the ones we can't run
-        entries = [
-            cmd for cmd in entries if (await _can_run(cmd, ctx)) and not cmd.hidden
-        ]
+        entries = [cmd for cmd in entries if (await _can_run(cmd, ctx)) and not cmd.hidden]
 
         self = cls(ctx, entries)
         self.title = f"{cog_name} Commands"
@@ -409,9 +379,7 @@ class HelpPaginator(Pages):
         except AttributeError:
             entries = []
         else:
-            entries = [
-                cmd for cmd in entries if (await _can_run(cmd, ctx)) and not cmd.hidden
-            ]
+            entries = [cmd for cmd in entries if (await _can_run(cmd, ctx)) and not cmd.hidden]
 
         self = cls(ctx, entries)
         self.title = f"{command.qualified_name} {command.signature}"
@@ -419,9 +387,7 @@ class HelpPaginator(Pages):
         if command.description:
             self.description = f"{command.description}\n\n{command.help}"
         else:
-            self.description = (
-                command.help or "No help provided for now try it yourself"
-            )
+            self.description = command.help or "No help provided for now try it yourself"
 
         self.prefix = cleanup_prefix(ctx.bot, ctx.prefix)
         return self
@@ -440,9 +406,7 @@ class HelpPaginator(Pages):
         # ...
 
         for cog, commands in itertools.groupby(entries, key=key):
-            plausible = [
-                cmd for cmd in commands if (await _can_run(cmd, ctx)) and not cmd.hidden
-            ]
+            plausible = [cmd for cmd in commands if (await _can_run(cmd, ctx)) and not cmd.hidden]
             if len(plausible) == 0:
                 continue
 
@@ -453,8 +417,7 @@ class HelpPaginator(Pages):
                 description = inspect.getdoc(description) or discord.Embed.Empty
 
             nested_pages.extend(
-                (cog, description, plausible[i : i + per_page])
-                for i in range(0, len(plausible), per_page)
+                (cog, description, plausible[i : i + per_page]) for i in range(0, len(plausible), per_page)
             )
 
         self = cls(ctx, nested_pages, per_page=1)  # this forces the pagination session
@@ -486,9 +449,7 @@ class HelpPaginator(Pages):
             value = "For more help, join the official bot [support server](https://discord.gg/BqneVkQDug)"
             self.embed.add_field(name="Support", value=value, inline=False)
 
-        self.embed.set_footer(
-            text=f'Use "{self.prefix}help command" for more info on a command.'
-        )
+        self.embed.set_footer(text=f'Use "{self.prefix}help command" for more info on a command.')
 
         signature = _command_signature
 
@@ -500,9 +461,7 @@ class HelpPaginator(Pages):
             )
 
         if self.maximum_pages:
-            self.embed.set_author(
-                name=f"Page {page}/{self.maximum_pages} ({self.total} commands)"
-            )
+            self.embed.set_author(name=f"Page {page}/{self.maximum_pages} ({self.total} commands)")
 
         if not self.paginating:
             return await self.channel.send(embed=self.embed)
@@ -535,9 +494,7 @@ class HelpPaginator(Pages):
             inline=False,
         )
 
-        self.embed.set_footer(
-            text=f"We were on page {self.current_page} before this message."
-        )
+        self.embed.set_footer(text=f"We were on page {self.current_page} before this message.")
         await self.message.edit(embed=self.embed)
 
         async def go_back_to_current_page():
@@ -573,9 +530,7 @@ class HelpPaginator(Pages):
         for name, value in entries:
             self.embed.add_field(name=name, value=value, inline=False)
 
-        self.embed.set_footer(
-            text=f"We were on page {self.current_page} before this message."
-        )
+        self.embed.set_footer(text=f"We were on page {self.current_page} before this message.")
         await self.message.edit(embed=self.embed)
 
         async def go_back_to_current_page():

@@ -11,9 +11,7 @@ class cooldown(commands.Cog):
         self.bot = bot
         # bot.add_check(self.global_concurrency, call_once=True)
         bot.add_check(self.global_cooldown, call_once=True)
-        self.normal_cooldown = commands.CooldownMapping.from_cooldown(
-            5, 1, commands.BucketType.user
-        )
+        self.normal_cooldown = commands.CooldownMapping.from_cooldown(5, 1, commands.BucketType.user)
 
     @commands.Cog.listener()
     async def on_command(self, ctx: AnimeContext):

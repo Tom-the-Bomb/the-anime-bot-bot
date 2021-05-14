@@ -45,9 +45,7 @@ class SearchResult:
         self.image: Optional[str] = image and image[0]["src"]
 
     def __repr__(self) -> str:
-        return "<SearchResult title={0.title!r} snippet={0.snippet!r} link={0.link!r} image={0.image!r}>".format(
-            self
-        )
+        return "<SearchResult title={0.title!r} snippet={0.snippet!r} link={0.link!r} image={0.image!r}>".format(self)
 
     def __eq__(self, other: object) -> bool:
         return isinstance(other, SearchResult) and self.title == other.title

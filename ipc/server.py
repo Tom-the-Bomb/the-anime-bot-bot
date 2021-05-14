@@ -161,9 +161,7 @@ class Server:
                     response = {"error": "Invalid or no endpoint given.", "code": 400}
                 else:
                     server_response = IpcServerResponse(request)
-                    attempted_cls = self.bot.cogs.get(
-                        self.endpoints[endpoint].__qualname__.split(".")[0]
-                    )
+                    attempted_cls = self.bot.cogs.get(self.endpoints[endpoint].__qualname__.split(".")[0])
 
                     if attempted_cls:
                         arguments = (attempted_cls, server_response)
@@ -177,18 +175,14 @@ class Server:
                         self.bot.dispatch("ipc_error", endpoint, error)
 
                         response = {
-                            "error": "IPC route raised error of type {}".format(
-                                type(error).__name__
-                            ),
+                            "error": "IPC route raised error of type {}".format(type(error).__name__),
                             "code": 500,
                         }
 
             try:
                 await websocket.send_str(json.dumps(response))
             except TypeError as error:
-                if str(error).startswith("Object of type") and str(error).endswith(
-                    "is not JSON serializable"
-                ):
+                if str(error).startswith("Object of type") and str(error).endswith("is not JSON serializable"):
                     error_response = (
                         "IPC route returned values which are not able to be sent over sockets."
                         " If you are trying to send a discord.py object,"
@@ -247,8 +241,6 @@ class Server:
             self._multicast_server = aiohttp.web.Application()
             self._multicast_server.router.add_route("GET", "/", self.handle_multicast)
 
-            self.loop.run_until_complete(
-                self.__start(self._multicast_server, self.multicast_port)
-            )
+            self.loop.run_until_complete(self.__start(self._multicast_server, self.multicast_port))
 
         self.loop.run_until_complete(self.__start(self._server, self.port))

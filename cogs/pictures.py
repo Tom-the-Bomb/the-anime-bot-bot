@@ -62,9 +62,7 @@ class TransparentAnimatedGifConverter(object):
         """Set the transparent pixels to the color 0."""
         self._transparent_pixels = {
             idx
-            for idx, alpha in enumerate(
-                self._img_rgba.getchannel(channel="A").getdata()
-            )
+            for idx, alpha in enumerate(self._img_rgba.getchannel(channel="A").getdata())
             if alpha <= self._alpha_threshold
         }
 
@@ -72,14 +70,11 @@ class TransparentAnimatedGifConverter(object):
         """Parse the RGB palette color `tuple`s from the palette."""
         palette = self._img_p.getpalette()
         self._img_p_used_palette_idxs = {
-            idx
-            for pal_idx, idx in enumerate(self._img_p_data)
-            if pal_idx not in self._transparent_pixels
+            idx for pal_idx, idx in enumerate(self._img_p_data) if pal_idx not in self._transparent_pixels
         }
 
         self._img_p_parsedpalette = {
-            idx: tuple(palette[idx * 3 : idx * 3 + 3])
-            for idx in self._img_p_used_palette_idxs
+            idx: tuple(palette[idx * 3 : idx * 3 + 3]) for idx in self._img_p_used_palette_idxs
         }
 
     def _get_similar_color_idx(self):
@@ -141,9 +136,7 @@ class TransparentAnimatedGifConverter(object):
     def _adjust_palette(self):
         """Modify the palette in the new `Image`."""
         unused_color = self._get_unused_color()
-        final_palette = chain.from_iterable(
-            self._img_p_parsedpalette.get(x, unused_color) for x in range(256)
-        )
+        final_palette = chain.from_iterable(self._img_p_parsedpalette.get(x, unused_color) for x in range(256))
         self._img_p.putpalette(data=final_palette)
 
     def process(self) -> Image.Image:
@@ -180,17 +173,9 @@ class pictures(commands.Cog):
                     url = message.embeds[0].image.url
                 elif message.embeds[0].thumbnail.url:
                     url = message.embeds[0].thumbnail.url
-            elif (
-                message.attachments
-                and message.attachments[0].width
-                and message.attachments[0].height
-            ):
+            elif message.attachments and message.attachments[0].width and message.attachments[0].height:
                 url = message.attachments[0].url
-        if (
-            ctx.message.attachments
-            and ctx.message.attachments[0].width
-            and ctx.message.attachments[0].height
-        ):
+        if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             url = ctx.message.attachments[0].url
 
         if thing is None and avatar and url is None:
@@ -222,16 +207,13 @@ class pictures(commands.Cog):
                     pass
                 elif b[0:3] == b"\xff\xd8\xff" or b[6:10] in (b"JFIF", b"Exif"):
                     pass
-                elif b.startswith(
-                    (b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")
-                ):
+                elif b.startswith((b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")):
                     pass
-                elif b[:2] in (b'MM', b'II'):
+                elif b[:2] in (b"MM", b"II"):
                     pass
-                elif len(b) >= 3 and \
-                    b[0] == ord(b'P') and b[1] in b'25' and b[2] in b' \t\n\r':
+                elif len(b) >= 3 and b[0] == ord(b"P") and b[1] in b"25" and b[2] in b" \t\n\r":
                     pass
-                elif b.startswith(b'BM'):
+                elif b.startswith(b"BM"):
                     pass
                 elif b.startswith(b"RIFF") and b[8:12] == b"WEBP":
                     pass
@@ -252,18 +234,10 @@ class pictures(commands.Cog):
                     url = message.embeds[0].image.url
                 elif message.embeds[0].thumbnail.url:
                     url = message.embeds[0].thumbnail.url
-            elif (
-                message.attachments
-                and message.attachments[0].width
-                and message.attachments[0].height
-            ):
+            elif message.attachments and message.attachments[0].width and message.attachments[0].height:
                 url = message.attachments[0].url
 
-        if (
-            ctx.message.attachments
-            and ctx.message.attachments[0].width
-            and ctx.message.attachments[0].height
-        ):
+        if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             url = ctx.message.attachments[0].url
 
         if thing is None and avatar and url is None:
@@ -295,16 +269,13 @@ class pictures(commands.Cog):
                     pass
                 elif b[0:3] == b"\xff\xd8\xff" or b[6:10] in (b"JFIF", b"Exif"):
                     pass
-                elif b.startswith(
-                    (b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")
-                ):
+                elif b.startswith((b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")):
                     pass
-                elif b[:2] in (b'MM', b'II'):
+                elif b[:2] in (b"MM", b"II"):
                     pass
-                elif len(b) >= 3 and \
-                    b[0] == ord(b'P') and b[1] in b'25' and b[2] in b' \t\n\r':
+                elif len(b) >= 3 and b[0] == ord(b"P") and b[1] in b"25" and b[2] in b" \t\n\r":
                     pass
-                elif b.startswith(b'BM'):
+                elif b.startswith(b"BM"):
                     pass
                 elif b.startswith(b"RIFF") and b[8:12] == b"WEBP":
                     pass
@@ -381,9 +352,7 @@ class pictures(commands.Cog):
         )
         return output_image, save_kwargs
 
-    def save_transparent_gif(
-        self, images: List[Image.Image], durations: Union[int, List[int]], save_file
-    ):
+    def save_transparent_gif(self, images: List[Image.Image], durations: Union[int, List[int]], save_file):
         root_frame, save_args = self._create_animated_gif(images, durations)
         root_frame.save(save_file, **save_args)
         root_frame.close()
@@ -528,10 +497,7 @@ class pictures(commands.Cog):
         im_ = self.open_pil_image(BytesIO(image))
         im__ = self.resize(im_)
         im___ = im__.convert("RGBA")
-        to_make_gif = [
-            im___.rotate(degree, resample=Image.BICUBIC, expand=0)
-            for degree in range(0, 360, 10)
-        ]
+        to_make_gif = [im___.rotate(degree, resample=Image.BICUBIC, expand=0) for degree in range(0, 360, 10)]
         final = BytesIO()
         self.save_transparent_gif(to_make_gif, speed, final)
         final.seek(0)
@@ -596,18 +562,14 @@ class pictures(commands.Cog):
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
-        result, format_ = await self.bot.loop.run_in_executor(
-            e, self.process_gif, image1, ImageOps.solarize
-        )
+        result, format_ = await self.bot.loop.run_in_executor(e, self.process_gif, image1, ImageOps.solarize)
         e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_solarize.{format_}")
         return result
 
     async def circle_(self, background_color, circle_color):
         e = ThreadPoolExecutor(max_workers=5)
-        result = await self.bot.loop.run_in_executor(
-            e, self.circle__, background_color, circle_color
-        )
+        result = await self.bot.loop.run_in_executor(e, self.circle__, background_color, circle_color)
         e.shutdown()
         return result
 
@@ -657,20 +619,14 @@ class pictures(commands.Cog):
         eye_cascade = cv2.CascadeClassifier(
             "/usr/local/lib/python3.9/site-packages/cv2/data/haarcascade_eye_tree_eyeglasses.xml"
         )
-        smile_cascade = cv2.CascadeClassifier(
-            "/usr/local/lib/python3.9/site-packages/cv2/data/haarcascade_smile.xml"
-        )
-        faces = haar_face_cascade.detectMultiScale(
-            gray_img, scaleFactor=1.1, minNeighbors=5
-        )
+        smile_cascade = cv2.CascadeClassifier("/usr/local/lib/python3.9/site-packages/cv2/data/haarcascade_smile.xml")
+        faces = haar_face_cascade.detectMultiScale(gray_img, scaleFactor=1.1, minNeighbors=5)
         for (x, y, w, h) in faces:
             cv2.rectangle(img, (x, y), (x + w, y + h), (0, 255, 0), 2)
             roi_gray = gray_img[y : y + h, x : x + w]
             roi_color = img[y : y + h, x : x + w]
             eyes = eye_cascade.detectMultiScale(roi_gray)
-            smiles = smile_cascade.detectMultiScale(
-                roi_gray, scaleFactor=1.1, minNeighbors=30
-            )
+            smiles = smile_cascade.detectMultiScale(roi_gray, scaleFactor=1.1, minNeighbors=30)
             for (ex, ey, ew, eh) in eyes:
                 cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (255, 0, 0), 2)
             for (ex, ey, ew, eh) in smiles:
@@ -705,9 +661,7 @@ class pictures(commands.Cog):
                 embed=discord.Embed(title="LaTeX", color=self.bot.color).set_image(
                     url="attachment://The_Anime_Bot_latex.png"
                 ),
-                file=discord.File(
-                    BytesIO(await resp.read()), "The_Anime_Bot_latex.png"
-                ),
+                file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_latex.png"),
             )
 
     @commands.command()
@@ -782,9 +736,9 @@ class pictures(commands.Cog):
     def ocr_(self, image):
         with Image.open(image) as img:
             buffer = BytesIO()
-            if 'A' in img.getbands():
+            if "A" in img.getbands():
                 background = Image.new("RGB", img.size, (255, 255, 255))
-                background.paste(img, (0, 0), img.getchannel('A'))
+                background.paste(img, (0, 0), img.getchannel("A"))
                 img = background
             img.save(buffer, "PNG")
             buffer.seek(0)
@@ -795,8 +749,6 @@ class pictures(commands.Cog):
         ocr_config = r'--tessdata-dir "/home/cryptex/ocr_data"'
         return pytesseract.image_to_string(img, config=ocr_config)
 
-
-
     @commands.command()
     async def ocr(
         self,
@@ -806,7 +758,9 @@ class pictures(commands.Cog):
         url = await self.get_url(ctx, thing)
         async with self.bot.session.get(url) as resp:
             image = BytesIO(await resp.read())
-        await ctx.reply(f"```\n{await self.ocr_(image)}\n```") if len(f"```\n{await self.ocr_(image)}\n```") <= 2000 else await ctx.send(await ctx.paste(f"```\n{await self.ocr_(image)}\n```"))
+        await ctx.reply(f"```\n{await self.ocr_(image)}\n```") if len(
+            f"```\n{await self.ocr_(image)}\n```"
+        ) <= 2000 else await ctx.send(await ctx.paste(f"```\n{await self.ocr_(image)}\n```"))
 
     @commands.command()
     async def aww(self, ctx):
@@ -830,14 +784,10 @@ class pictures(commands.Cog):
         url = await self.get_url(ctx, woman)
         url1 = await self.get_url(ctx, cat)
         pic = await self.bot.vacefron_api.woman_yelling_at_cat(woman=url, cat=url1)
-        await ctx.send(
-            file=discord.File(await pic.read(), filename=f"woman_yelling_at_cat.png")
-        )
+        await ctx.send(file=discord.File(await pic.read(), filename=f"woman_yelling_at_cat.png"))
 
     @commands.command()
-    async def circle(
-        self, ctx: AnimeContext, background_color="white", circle_color="blue"
-    ):
+    async def circle(self, ctx: AnimeContext, background_color="white", circle_color="blue"):
         igif = await self.circle_(background_color, circle_color)
         await ctx.send(file=discord.File(igif, "circle.gif"))
 
@@ -849,14 +799,10 @@ class pictures(commands.Cog):
         text2: str = "yeye",
     ):
         pic = await self.bot.vacefron_api.npc(text1, text2)
-        await ctx.send(
-            file=discord.File(await pic.read(), filename=f"npc_{text1}_{text2}.png")
-        )
+        await ctx.send(file=discord.File(await pic.read(), filename=f"npc_{text1}_{text2}.png"))
 
     @commands.command()
-    async def amongus(
-        self, ctx, name: str = "you", color: str = "red", imposter: bool = True
-    ):
+    async def amongus(self, ctx, name: str = "you", color: str = "red", imposter: bool = True):
         pic = await self.bot.vacefron_api.ejected(name, color, imposter)
         await ctx.send(
             file=discord.File(
@@ -868,9 +814,7 @@ class pictures(commands.Cog):
     @commands.command()
     async def randompicture(self, ctx: AnimeContext, *, seed: str = None):
         if seed:
-            async with self.bot.session.get(
-                f"https://picsum.photos/seed/{seed}/3840/2160"
-            ) as resp:
+            async with self.bot.session.get(f"https://picsum.photos/seed/{seed}/3840/2160") as resp:
                 pic = BytesIO(await resp.read())
         else:
             async with self.bot.session.get("https://picsum.photos/3840/2160") as resp:
@@ -910,23 +854,17 @@ class pictures(commands.Cog):
             level = min(level, 1)
             url = await self.get_url(ctx, thing)
         embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
-        image = discord.File(
-            await (await self.bot.alex.amiajoke(url)).read(), "alex.png"
-        )
+        image = discord.File(await (await self.bot.alex.amiajoke(url)).read(), "alex.png")
         await ctx.send(embed=embed, file=image)
 
     @commands.group(invoke_without_command=True)
     async def supreme(self, ctx: AnimeContext, *, text: str = "enter something here"):
         embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
-        image = discord.File(
-            await (await self.bot.alex.supreme(text=text)).read(), "alex.png"
-        )
+        image = discord.File(await (await self.bot.alex.supreme(text=text)).read(), "alex.png")
         await ctx.send(embed=embed, file=image)
 
     @supreme.command(name="dark")
-    async def supreme_dark(
-        self, ctx: AnimeContext, *, text: str = "enter something here"
-    ):
+    async def supreme_dark(self, ctx: AnimeContext, *, text: str = "enter something here"):
         embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
         image = discord.File(
             await (await self.bot.alex.supreme(text=text, dark=True)).read(),
@@ -957,9 +895,7 @@ class pictures(commands.Cog):
                 image = await self.bot.zaneapi.pixelate(url, level)
             except asyncio.TimeoutError:
                 raise commands.CommandError("Zaneapi timeout")
-            embed = discord.Embed(color=0x00FF6A).set_image(
-                url="attachment://pixelate.png"
-            )
+            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://pixelate.png")
             await ctx.send(
                 file=discord.File(fp=image, filename="pixelate.png"),
                 embed=embed,
@@ -977,12 +913,8 @@ class pictures(commands.Cog):
                 image = await self.bot.zaneapi.swirl(url)
             except asyncio.TimeoutError:
                 raise commands.CommandError("Zaneapi timeout")
-            embed = discord.Embed(color=0x00FF6A).set_image(
-                url="attachment://swirl.gif"
-            )
-            await ctx.send(
-                file=discord.File(fp=image, filename="swirl.gif"), embed=embed
-            )
+            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://swirl.gif")
+            await ctx.send(file=discord.File(fp=image, filename="swirl.gif"), embed=embed)
 
     @commands.command()
     async def sobel(
@@ -993,12 +925,8 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.sobel(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(
-                url="attachment://sobel.png"
-            )
-            await ctx.send(
-                file=discord.File(fp=image, filename="sobel.png"), embed=embed
-            )
+            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://sobel.png")
+            await ctx.send(file=discord.File(fp=image, filename="sobel.png"), embed=embed)
 
     @commands.command()
     async def palette(
@@ -1009,9 +937,7 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.palette(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(
-                url="attachment://palette.png"
-            )
+            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://palette.png")
             await ctx.send(
                 file=discord.File(fp=image, filename="palette.png"),
                 embed=embed,
@@ -1027,9 +953,7 @@ class pictures(commands.Cog):
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.sort(url)
             embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://sort.png")
-            await ctx.send(
-                file=discord.File(fp=image, filename="sort.png"), embed=embed
-            )
+            await ctx.send(file=discord.File(fp=image, filename="sort.png"), embed=embed)
 
     @commands.command()
     async def cube(
@@ -1044,9 +968,7 @@ class pictures(commands.Cog):
             except asyncio.TimeoutError:
                 raise commands.CommandError("Zaneapi timeout")
             embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://cube.png")
-            await ctx.send(
-                file=discord.File(fp=image, filename="cube.png"), embed=embed
-            )
+            await ctx.send(file=discord.File(fp=image, filename="cube.png"), embed=embed)
 
     @commands.command()
     async def braille(
@@ -1069,9 +991,7 @@ class pictures(commands.Cog):
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.dots(url)
             embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://dots.png")
-            await ctx.send(
-                file=discord.File(fp=image, filename="dots.png"), embed=embed
-            )
+            await ctx.send(file=discord.File(fp=image, filename="dots.png"), embed=embed)
 
     @commands.command()
     async def threshold(
@@ -1082,9 +1002,7 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.threshold(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(
-                url="attachment://threshold.png"
-            )
+            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://threshold.png")
             await ctx.send(
                 file=discord.File(fp=image, filename="threshold.png"),
                 embed=embed,
@@ -1099,12 +1017,8 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.spread(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(
-                url="attachment://spread.gif"
-            )
-            await ctx.send(
-                file=discord.File(fp=image, filename="spread.gif"), embed=embed
-            )
+            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://spread.gif")
+            await ctx.send(file=discord.File(fp=image, filename="spread.gif"), embed=embed)
 
     @commands.command()
     async def jpeg(
@@ -1116,9 +1030,7 @@ class pictures(commands.Cog):
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.jpeg(url)
             embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://jpeg.gif")
-            await ctx.send(
-                file=discord.File(fp=image, filename="jpeg.gif"), embed=embed
-            )
+            await ctx.send(file=discord.File(fp=image, filename="jpeg.gif"), embed=embed)
 
     @commands.command(aliases=["magik"])
     async def magic(
@@ -1130,12 +1042,8 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.magic(url, level)
-            embed = discord.Embed(color=0x00FF6A).set_image(
-                url="attachment://magic.gif"
-            )
-            await ctx.send(
-                file=discord.File(fp=image, filename="magic.gif"), embed=embed
-            )
+            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://magic.gif")
+            await ctx.send(file=discord.File(fp=image, filename="magic.gif"), embed=embed)
 
     # @commands.command()
     # @commands.max_concurrency(1, commands.BucketType.user)

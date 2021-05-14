@@ -4,31 +4,35 @@ from discord.ext import commands
 from utils.subclasses import AnimeContext
 import typing
 import ratelimiter
+
+
 class reactionrole(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.reactionrole_cache = {}
         self.ratelimiter = ratelimiter.RateLimiter(max_calls=5, period=10)
         self.bot.loop.create_task(self.make_cache())
+
     async def make_cache(self):
         roles = await self.bot.db.fetch("SELCT * FROM reactionrole")
         if roles:
             for i in roles:
                 self.bot.reactionrole_cache[i["guild_id"]] = ujson.loads(i["roles"])
+
     @commands.group()
     async def reactionrole(self, ctx):
         ...
 
-
     @reactionrole.command()
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
-    async def add(
-        self,
-        ctx: AnimeContext
-    ):
+    async def add(self, ctx: AnimeContext):
         reaction = await ctx.send("hi react reaction to this message")
-        r = await self.bot.wait_for("raw_reaction_add", check=lambda x: x.message_id == reaction.id and x.user_id == ctx.author.id, timeout=60)
+        r = await self.bot.wait_for(
+            "raw_reaction_add",
+            check=lambda x: x.message_id == reaction.id and x.user_id == ctx.author.id,
+            timeout=60,
+        )
         try:
             m = await ctx.send("testing emoji")
             await m.add_reaction(r.emoji)
@@ -36,12 +40,18 @@ class reactionrole(commands.Cog):
         except:
             await ctx.send("either i can't use the emoji or i can't react to it")
         await ctx.send("ok what role?")
-        role = await self.bot.wait_for("message", check=lambda x: x.channel.id==ctx.channel.id and x.author.id==ctx.author.id)
+        role = await self.bot.wait_for(
+            "message",
+            check=lambda x: x.channel.id == ctx.channel.id and x.author.id == ctx.author.id,
+        )
         role = await commands.RoleConverter().convert(ctx, role.content)
         if not role:
             await ctx.send("invalid role")
         await ctx.send("ok what message")
-        m = await self.bot.wait_for("message", check=lambda x: x.channel.id==ctx.channel.id and x.author.id==ctx.author.id)
+        m = await self.bot.wait_for(
+            "message",
+            check=lambda x: x.channel.id == ctx.channel.id and x.author.id == ctx.author.id,
+        )
         m = await commands.MessageConverter().convert(ctx, m.content)
         await m.add_reaction(r.emoji)
         await ctx.send("oh ok made")
@@ -50,8 +60,11 @@ class reactionrole(commands.Cog):
         if not self.bot.reactionrole_cache.get(ctx.guild.id).get(m.id):
             self.bot.reactionrole_cache[ctx.guild.id][m.id] = {}
         self.bot.reactionrole_cache[ctx.guild.id][m.id][r.emoji.id] = role.id or role.name
-        await self.bot.db.execute("INSERT INTO reactionrole VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET roles = $2", ctx.guild.id, ujson.dumps(self.bot.reactionrole_cache[ctx.guild.id]))
-
+        await self.bot.db.execute(
+            "INSERT INTO reactionrole VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET roles = $2",
+            ctx.guild.id,
+            ujson.dumps(self.bot.reactionrole_cache[ctx.guild.id]),
+        )
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
@@ -79,12 +92,11 @@ class reactionrole(commands.Cog):
         try:
             # Finally add the role
             async with self.ratelimiter:
-                await payload.member.add_roles(
-                    role, reason="The Anime Bot reaction role"
-                )
+                await payload.member.add_roles(role, reason="The Anime Bot reaction role")
         except discord.HTTPException:
             # If we want to do something in case of errors we'd do it here.
             pass
+
     @commands.Cog.listener()
     async def on_raw_reaction_remove(self, payload):
         """Removes a role based on a reaction emoji."""
@@ -119,5 +131,7 @@ class reactionrole(commands.Cog):
         except discord.HTTPException:
             # If we want to do something in case of errors we'd do it here.
             pass
+
+
 def setup(bot):
     bot.add_cog(reactionrole(bot))

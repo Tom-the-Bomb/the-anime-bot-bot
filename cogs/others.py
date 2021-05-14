@@ -96,12 +96,17 @@ class others(commands.Cog):
         if not count:
             return await ctx.send("you never voted for The Anime Bot before.")
         await ctx.send(f"You have voted {count} times for The Anime Bot.")
-    
+
     @votes.command()
     async def lb(self, ctx):
         count = await self.bot.db.fetch("SELECT * FROM votes ORDER BY count DESC")
-        embed = discord.Embed(color=self.bot.color, title="Vote Leaderboard", description="\n".join([f"{str(await self.bot.getch(i['user_id']))} - {i['count']}" for i in count]))
-        await ctx.send(embed=embed)        
+        embed = discord.Embed(
+            color=self.bot.color,
+            title="Vote Leaderboard",
+            description="\n".join([f"{str(await self.bot.getch(i['user_id']))} - {i['count']}" for i in count]),
+        )
+        await ctx.send(embed=embed)
+
     @commands.command()
     async def snipe(self, ctx):
         """
@@ -224,13 +229,9 @@ class others(commands.Cog):
     @commands.command()
     async def charles(self, ctx: AnimeContext, *, text):
         await ctx.trigger_typing()
-        res = await self.bot.session.post(
-            "https://bin.charles-bot.com/documents", data=text
-        )
+        res = await self.bot.session.post("https://bin.charles-bot.com/documents", data=text)
         if res.status != 200:
-            raise commands.CommandError(
-                f"charles bin down with status code {res.status}"
-            )
+            raise commands.CommandError(f"charles bin down with status code {res.status}")
         data = await res.json()
         await ctx.send(f"https://bin.charles-bot.com/{data['key']}")
 
@@ -253,9 +254,7 @@ class others(commands.Cog):
         # raw = str(resp).replace("|", "\u200b|").replace("*", "\u200b*").replace("`", "\u200b`").replace("~", "\u200b~").replace(">", "\u200b>").replace('"', "'")
         # raw = json.loads(raw)
         # raw = json.dumps(raw, indent=4)
-        raw = ujson.dumps(
-            raw, indent=4, ensure_ascii=True, escape_forward_slashes=False
-        )
+        raw = ujson.dumps(raw, indent=4, ensure_ascii=True, escape_forward_slashes=False)
         raw = (
             raw.replace("|", "\u200b|")
             .replace("*", "\u200b*")
@@ -269,9 +268,7 @@ class others(commands.Cog):
             paginator.add_line(raw)
             interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
             return await interface.send_to(ctx)
-        embed = discord.Embed(
-            color=AnimeColor.lighter_green(), description=f"```json\n{raw}```"
-        )
+        embed = discord.Embed(color=AnimeColor.lighter_green(), description=f"```json\n{raw}```")
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -289,9 +286,7 @@ class others(commands.Cog):
     async def dm(self, ctx):
         await ctx.trigger_typing()
         embed = await embedbase.embed(self, ctx)
-        embed.set_author(
-            name="Most commands can be done here if you don't want other people to see it"
-        )
+        embed.set_author(name="Most commands can be done here if you don't want other people to see it")
         await ctx.author.send(embed=embed)
         embed = await embedbase.embed(self, ctx)
         embed.set_author(name="your dm here")
@@ -389,12 +384,8 @@ class others(commands.Cog):
         ovo prefix remove "prefixname "
         """
         if prefix_to_remove not in self.bot.prefixes[ctx.guild.id]:
-            return await ctx.send(
-                "This prefix don't exist maybe you made a typo? Case and space Sensitive"
-            )
-        old_prefixes = await self.bot.db.fetchrow(
-            "SELECT * FROM prefix WHERE guild_id=$1", ctx.guild.id
-        )
+            return await ctx.send("This prefix don't exist maybe you made a typo? Case and space Sensitive")
+        old_prefixes = await self.bot.db.fetchrow("SELECT * FROM prefix WHERE guild_id=$1", ctx.guild.id)
         old_prefixes = old_prefixes["prefix"]
         new_prefixes = old_prefixes
         new_prefixes.remove(prefix_to_remove)
@@ -422,9 +413,7 @@ class others(commands.Cog):
         if your prefix contain space:
         ovo prefix add "newprefix "
         """
-        old_prefixes = await self.bot.db.fetchrow(
-            "SELECT * FROM prefix WHERE guild_id=$1", ctx.guild.id
-        )
+        old_prefixes = await self.bot.db.fetchrow("SELECT * FROM prefix WHERE guild_id=$1", ctx.guild.id)
         old_prefixes = old_prefixes["prefix"]
         new_prefixes = old_prefixes
         new_prefixes.append(prefixforbot)
@@ -495,10 +484,7 @@ class others(commands.Cog):
             headers={"Authorization": "token " + gittoken},
         ) as resp:
             repo = await resp.json()
-        lists = [
-            f"[`{i.get('sha')[:7]}`]({i.get('html_url')}) {i.get('commit').get('message')}"
-            for i in repo
-        ]
+        lists = [f"[`{i.get('sha')[:7]}`]({i.get('html_url')}) {i.get('commit').get('message')}" for i in repo]
 
         paginator = commands.Paginator(prefix="", suffix="", max_size=1000)
         for i in lists:
@@ -602,9 +588,7 @@ class others(commands.Cog):
         else:
             self.countdownused.append(str(ctx.channel.id))
             counter = count_to
-            message = await ctx.reply(
-                f"start counting down to {counter} will dm you when is done"
-            )
+            message = await ctx.reply(f"start counting down to {counter} will dm you when is done")
             for _ in range(counter):
                 counter -= 1
                 await asyncio.sleep(1)

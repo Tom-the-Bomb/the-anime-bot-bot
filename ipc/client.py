@@ -68,11 +68,7 @@ class Client:
 
         if not self.port:
             self.multicast = await self.session.ws_connect(self.url, autoping=False)
-            await self.multicast.send_str(
-                json.dumps(
-                    {"connect": True, "headers": {"Authorization": self.secret_key}}
-                )
-            )
+            await self.multicast.send_str(json.dumps({"connect": True, "headers": {"Authorization": self.secret_key}}))
             recv = await self.multicast.receive()
 
             if recv.type in (aiohttp.WSMsgType.CLOSE, aiohttp.WSMsgType.CLOSED):
@@ -81,9 +77,7 @@ class Client:
             port_data = json.loads(recv.data)
             self.port = port_data["port"]
 
-        self.websocket = await self.session.ws_connect(
-            self.url, autoping=False, autoclose=False
-        )
+        self.websocket = await self.session.ws_connect(self.url, autoping=False, autoclose=False)
         print("Client connected to", self.url)
 
         return self.websocket

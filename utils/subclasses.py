@@ -36,9 +36,7 @@ from discord.ext import commands
 
 from utils.HelpPaginator import CannotPaginate, HelpPaginator
 
-token = re.compile(
-    r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-zA-Z0-9_\-]{84})"
-)
+token = re.compile(r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-zA-Z0-9_\-]{84})")
 
 
 class AnimeContext(commands.Context):
@@ -51,9 +49,7 @@ class AnimeContext(commands.Context):
         await m.add_reaction("\U0000274c")
         await self.bot.wait_for(
             "reaction_add",
-            check=lambda i, v: i.message.id == m.id
-            and v.id == self.message.author.id
-            and i.emoji == "\U0000274c",
+            check=lambda i, v: i.message.id == m.id and v.id == self.message.author.id and i.emoji == "\U0000274c",
         )
         await m.delete()
 
@@ -72,9 +68,7 @@ class AnimeContext(commands.Context):
         return embed
 
     async def ovoly(self, msg):
-        ovo = (
-            msg.replace("l", "v").replace("L", "v").replace("r", "v").replace("R", "v")
-        )
+        ovo = msg.replace("l", "v").replace("L", "v").replace("r", "v").replace("R", "v")
         return f"{ovo} ovo"
 
     async def get_paste(self, link):
@@ -95,21 +89,15 @@ class AnimeContext(commands.Context):
             content = f"```{lang}\n" + str(content) + "\n```"
         if self.message.id in self.bot._message_cache:
             if self.message.edited_at:
-                msg = self.channel.get_partial_message(
-                    self.bot._message_cache[self.message.id]
-                )
+                msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
                 await msg.edit(content=content, **kwargs)
                 return msg
             else:
-                message = await super().send(
-                    content, nonce=random.randint(0, 9223372036854775807), **kwargs
-                )
+                message = await super().send(content, nonce=random.randint(0, 9223372036854775807), **kwargs)
                 self.bot.to_delete_message_cache[self.message.id].append(message.id)
                 return message
         else:
-            message = await super().send(
-                content, nonce=random.randint(0, 9223372036854775807), **kwargs
-            )
+            message = await super().send(content, nonce=random.randint(0, 9223372036854775807), **kwargs)
             self.bot._message_cache[self.message.id] = message.id
             self.bot.to_delete_message_cache[self.message.id] = [message.id]
             return message
@@ -119,9 +107,7 @@ class AnimeContext(commands.Context):
             content = f"```{lang}\n" + str(content) + "\n```"
         if self.message.id in self.bot._message_cache:
             if self.message.edited_at:
-                msg = self.channel.get_partial_message(
-                    self.bot._message_cache[self.message.id]
-                )
+                msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
                 if not kwargs.get("allowed_mentions"):
                     msg = await msg.edit(
                         content=content,
@@ -132,15 +118,11 @@ class AnimeContext(commands.Context):
                     msg = await msg.edit(content=content, **kwargs)
                 return msg
             else:
-                message = await super().reply(
-                    content, nonce=random.randint(0, 9223372036854775807), **kwargs
-                )
+                message = await super().reply(content, nonce=random.randint(0, 9223372036854775807), **kwargs)
                 self.bot.to_delete_message_cache[self.message.id].append(message.id)
                 return message
         else:
-            message = await super().reply(
-                content, nonce=random.randint(0, 9223372036854775807), **kwargs
-            )
+            message = await super().reply(content, nonce=random.randint(0, 9223372036854775807), **kwargs)
             self.bot._message_cache[self.message.id] = message.id
             self.bot.to_delete_message_cache[self.message.id] = [message.id]
             return message
@@ -226,13 +208,9 @@ class AnimeBot(commands.Bot):
         super().add_command(command)
         command.cooldown_after_parsing = True
         if not getattr(command._buckets, "_cooldown", None):
-            command._buckets = commands.CooldownMapping.from_cooldown(
-                1, 3, commands.BucketType.user
-            )
+            command._buckets = commands.CooldownMapping.from_cooldown(1, 3, commands.BucketType.user)
         if command._max_concurrency is None:
-            command._max_concurrency = MaxConcurrency(
-                1, per=commands.BucketType.user, wait=False
-            )
+            command._max_concurrency = MaxConcurrency(1, per=commands.BucketType.user, wait=False)
 
     async def create_cache(self):
         await self.wait_until_ready()
@@ -276,9 +254,7 @@ class AnimeBot(commands.Bot):
                 await ctx.command._max_concurrency.release()
         except:
             pass
-        await ctx.trigger_typing() if not ctx.command.qualified_name.startswith(
-            "jishaku"
-        ) else ...
+        await ctx.trigger_typing() if not ctx.command.qualified_name.startswith("jishaku") else ...
         ctx.bot.loop.create_task(self.chunk_(ctx))
 
     def run(self, *args, **kwargs):
@@ -286,7 +262,15 @@ class AnimeBot(commands.Bot):
         self.default_prefix = ["ovo "]
         self.prefixes = {}
         db = self.loop.run_until_complete(
-            asyncpg.create_pool(host="localhost", port="5432", user="postgres1", password="postgres", database="cryptex", min_size=10, max_size=20)
+            asyncpg.create_pool(
+                host="localhost",
+                port="5432",
+                user="postgres1",
+                password="postgres",
+                database="cryptex",
+                min_size=10,
+                max_size=20,
+            )
         )
         self.db = db
         self.emojioptions = {}
@@ -322,9 +306,7 @@ class AnimeBot(commands.Bot):
         self.mystbin = mystbin.Client(session=self.session)
         self.vacefron_api = vacefron.Client(session=self.session, loop=self.loop)
         self.dag = Client(api_token, session=self.session, loop=self.loop)
-        self.alex = alexflipnote.Client(
-            alexflipnote_, session=self.session, loop=self.loop
-        )
+        self.alex = alexflipnote.Client(alexflipnote_, session=self.session, loop=self.loop)
         self.ball = eight_ball.ball()
         self.zaneapi = aiozaneapi.Client(zane_api)
         for command in self.commands:
@@ -334,19 +316,13 @@ class AnimeBot(commands.Bot):
                 for subcommand in command.commands:
                     self.command_list.append(str(subcommand))
                     self.command_list.extend(
-                        [
-                            f"{command} {subcommand_alias}"
-                            for subcommand_alias in subcommand.aliases
-                        ]
+                        [f"{command} {subcommand_alias}" for subcommand_alias in subcommand.aliases]
                     )
                     if isinstance(subcommand, commands.Group):
                         for subcommand2 in subcommand.commands:
                             self.command_list.append(str(subcommand2))
                             self.command_list.extend(
-                                [
-                                    f"{subcommand} {subcommand2_alias}"
-                                    for subcommand2_alias in subcommand2.aliases
-                                ]
+                                [f"{subcommand} {subcommand2_alias}" for subcommand2_alias in subcommand2.aliases]
                             )
                             if isinstance(subcommand2, commands.Group):
                                 for subcommand3 in subcommand2.commands:

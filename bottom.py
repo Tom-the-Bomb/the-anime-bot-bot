@@ -23,9 +23,7 @@ def from_bottom(text: str) -> str:
     out = bytearray()
     text = text.strip().removesuffix(SECTION_SEPERATOR)
 
-    if any(
-        c not in CHARACTER_VALUES.values() for c in text.replace(SECTION_SEPERATOR, "")
-    ):
+    if any(c not in CHARACTER_VALUES.values() for c in text.replace(SECTION_SEPERATOR, "")):
         raise TypeError(f"Invalid bottom text: {text}")
 
     for char in text.split(SECTION_SEPERATOR):

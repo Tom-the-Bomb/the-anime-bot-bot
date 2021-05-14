@@ -64,9 +64,7 @@ class socket(commands.Cog):
         current_time = time.time()
         lists = []
         difference = int(current_time - self.bot.start_time) / 60
-        lists.append(
-            f"Received {self.bot.socket_receive} {self.bot.socket_receive//difference} per minute"
-        )
+        lists.append(f"Received {self.bot.socket_receive} {self.bot.socket_receive//difference} per minute")
         for i, (n, v) in enumerate(self.bot.socket_stats.most_common()):
             lists.append(f"{n:<30} {v:<15} {round(v/difference, 3)} /minute")
         paginator = commands.Paginator(max_size=500, prefix="```", suffix="```")

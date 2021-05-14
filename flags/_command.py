@@ -63,9 +63,7 @@ class FlagCommand(commands.Command):
 
                 # TypeErrors or ValueErrors also indicate errors
                 except (TypeError, ValueError):
-                    name = getattr(
-                        value.action.type, "__name__", repr(value.action.type)
-                    )
+                    name = getattr(value.action.type, "__name__", repr(value.action.type))
                     args = {"type": name, "value": value.arg_string}
                     msg = "invalid %(type)s value: %(value)r"
                     raise argparse.ArgumentError(value.action, msg % args)
@@ -95,16 +93,10 @@ class FlagCommand(commands.Command):
             if param.default is not param.empty:
                 # We don't want None or '' to trigger the [name=value] case and instead it should
                 # do [name] since [name=None] or [name=] are not exactly useful for the user.
-                should_print = (
-                    param.default
-                    if isinstance(param.default, str)
-                    else param.default is not None
-                )
+                should_print = param.default if isinstance(param.default, str) else param.default is not None
                 if should_print:
                     result.append(
-                        "[%s=%s]" % (name, param.default)
-                        if not greedy
-                        else "[%s=%s]..." % (name, param.default)
+                        "[%s=%s]" % (name, param.default) if not greedy else "[%s=%s]..." % (name, param.default)
                     )
                     continue
                 else:
@@ -137,16 +129,12 @@ class FlagCommand(commands.Command):
                 should_print = action.default is not None and action.default != ""
                 if action.required:
                     if should_print:
-                        to_append.append(
-                            "<%s%s %s=%s>" % (k, flag, name, action.default)
-                        )
+                        to_append.append("<%s%s %s=%s>" % (k, flag, name, action.default))
                     else:
                         to_append.append("<%s%s %s>" % (k, flag, name))
                 else:
                     if should_print:
-                        to_append.append(
-                            "[%s%s %s=%s]" % (k, flag, name, action.default)
-                        )
+                        to_append.append("[%s%s %s=%s]" % (k, flag, name, action.default))
                     else:
                         to_append.append("[%s%s %s]" % (k, flag, name))
 
@@ -202,9 +190,7 @@ class FlagCommand(commands.Command):
                 if self.rest_is_raw:
                     converter = self._get_converter(param)
                     argument = view.read_rest()
-                    kwargs[name] = await self.do_conversion(
-                        ctx, converter, argument, param
-                    )
+                    kwargs[name] = await self.do_conversion(ctx, converter, argument, param)
                 else:
                     kwargs[name] = await self.transform(ctx, param)
                 break
@@ -220,9 +206,7 @@ class FlagCommand(commands.Command):
                 break
 
         if not self.ignore_extra and not view.eof:
-            raise commands.TooManyArguments(
-                "Too many arguments passed to " + self.qualified_name
-            )
+            raise commands.TooManyArguments("Too many arguments passed to " + self.qualified_name)
 
 
 class FlagGroup(FlagCommand, commands.Group):

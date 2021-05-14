@@ -84,9 +84,7 @@ class GoogleMenuSource(menus.ListPageSource):
         )
         # if self.datas[self.counter].image != None and self.datas[self.counter].image.startswith("http"):
         #   embed.set_image(url=self.datas[self.counter].image)
-        embed.set_footer(
-            text=f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}"
-        )
+        embed.set_footer(text=f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}")
         await self.message.edit(embed=embed)
 
     @menus.button("\U000025b6")
@@ -100,9 +98,7 @@ class GoogleMenuSource(menus.ListPageSource):
             description=f"{self.datas[self.counter].snippet or ''}\n{self.datas[self.counter].link}",
         )
         # if self.datas[self.counter].image != None and self.datas[self.counter].image.startswith("http"):             embed.set_image(url=self.datas[self.counter].image)
-        embed.set_footer(
-            text=f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}"
-        )
+        embed.set_footer(text=f"Page: {self.counter + 1}/{len(self.datas)} Safe Search: {self.safe_search}")
         await self.message.edit(embed=embed)
 
     @menus.button("\N{BLACK SQUARE FOR STOP}\ufe0f")
@@ -263,9 +259,7 @@ class utility(commands.Cog):
             sub = cache[key] = {}
             async with self.bot.session.get(page + "/objects.inv") as resp:
                 if resp.status != 200:
-                    raise RuntimeError(
-                        "Cannot build rtfm lookup table, try again later."
-                    )
+                    raise RuntimeError("Cannot build rtfm lookup table, try again later.")
                 stream = SphinxObjectFileReader(await resp.read())
                 cache[key] = self.parse_object_inv(stream, page)
         self.bot._rtfm_cache = cache
@@ -319,9 +313,7 @@ class utility(commands.Cog):
         if len(results) > 30:
             builder.append("Showing the top 30 results")
         for index, (elem, count) in enumerate(results.most_common(30), start=1):
-            builder.append(
-                f"**{index}. {elem} ** `({plural(count):time}, {count/times:.2%})`"
-            )
+            builder.append(f"**{index}. {elem} ** `({plural(count):time}, {count/times:.2%})`")
         return builder
 
     @staticmethod
@@ -342,9 +334,7 @@ class utility(commands.Cog):
 
     async def get_incidents(self):
         lists = []
-        async with self.bot.session.get(
-            "https://srhpyqt94yxb.statuspage.io/api/v2/incidents.json"
-        ) as resp:
+        async with self.bot.session.get("https://srhpyqt94yxb.statuspage.io/api/v2/incidents.json") as resp:
             r = await resp.json()
             for i in r["incidents"]:
                 name = i["name"]
@@ -354,9 +344,7 @@ class utility(commands.Cog):
 
     async def get_status(self):
         lists = []
-        async with self.bot.session.get(
-            "https://srhpyqt94yxb.statuspage.io/api/v2/components.json"
-        ) as resp:
+        async with self.bot.session.get("https://srhpyqt94yxb.statuspage.io/api/v2/components.json") as resp:
             r = await resp.json()
             for i in r["components"]:
                 name = i["name"]
@@ -453,9 +441,7 @@ class utility(commands.Cog):
     @asyncexe()
     def zip_emojis(emojis, method):
         file_ = BytesIO()
-        with zipfile.ZipFile(
-            file_, mode="w", compression=method, compresslevel=9
-        ) as zipfile_:
+        with zipfile.ZipFile(file_, mode="w", compression=method, compresslevel=9) as zipfile_:
             for n, v in emojis:
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
@@ -481,13 +467,7 @@ class utility(commands.Cog):
             for char in code:
                 if char == "`" and not in_code and not in_language:
                     backticks += 1
-                if (
-                    last
-                    and last[-1] == "`"
-                    and char != "`"
-                    or in_code
-                    and "".join(last) != "`" * backticks
-                ):
+                if last and last[-1] == "`" and char != "`" or in_code and "".join(last) != "`" * backticks:
                     in_code = True
                     code_.append(char)
                 if char == "\n":
@@ -506,36 +486,23 @@ class utility(commands.Cog):
             code = "".join(code_[len(language) : -backticks])
         js = {"language": lang, "source": code}
         async with self.ratelimiter:
-            async with self.bot.session.post(
-                "https://emkc.org/api/v1/piston/execute", json=js
-            ) as resp:
+            async with self.bot.session.post("https://emkc.org/api/v1/piston/execute", json=js) as resp:
                 js = await resp.json()
                 if resp.status == 400:
                     return await ctx.send(
                         "Language not supported"
-                        if js["message"]
-                        == "Supplied language is not supported by Piston"
+                        if js["message"] == "Supplied language is not supported by Piston"
                         else js["message"]
                     )
-                result = (
-                    f"```{lang}\n{js['output'].replace('code.code', 'cogs.eval')}\n```"
-                )
+                result = f"```{lang}\n{js['output'].replace('code.code', 'cogs.eval')}\n```"
                 if len(result) >= 1900 or len(result.split("\n")) >= 40:
-                    return await ctx.send(
-                        await ctx.paste(
-                            f"{js['output'].replace('code.code', 'cogs.eval')}"
-                        )
-                    )
+                    return await ctx.send(await ctx.paste(f"{js['output'].replace('code.code', 'cogs.eval')}"))
 
-                return await ctx.send(
-                    f"```{lang}\n{js['output'].replace('code.code', 'cogs.eval')}\n```"
-                )
+                return await ctx.send(f"```{lang}\n{js['output'].replace('code.code', 'cogs.eval')}\n```")
 
     @commands.command()
     @commands.has_permissions(manage_emojis=True)
-    async def zipemoji(
-        self, ctx, compression_method: lambda x: str(x).upper() = "DEFLATED"
-    ):
+    async def zipemoji(self, ctx, compression_method: lambda x: str(x).upper() = "DEFLATED"):
         """
         Zip all emojis in this server it could take a while since we try to compress it as small as we can
         if you have 7zip installed on your computer choose LZMA compression method is way faster and the file will be way smaller
@@ -608,18 +575,14 @@ class utility(commands.Cog):
     @commands.command()
     async def txt(self, ctx, *, anything: str = None):
         if anything.startswith("https://mystb.in/"):
-            return await ctx.send(
-                file=await self.txt_(str(await self.bot.mystbin.get(anything)))
-            )
+            return await ctx.send(file=await self.txt_(str(await self.bot.mystbin.get(anything))))
         await ctx.send(file=await self.txt_(anything))
 
     @commands.command()
     async def mystbin(self, ctx, *, code: str = None):
         if ctx.message.reference:
             message = ctx.message.reference.resolve
-            if message.attachments and message.attachments.filename.endswith(
-                (".txt", ".py", ".json", ".html", ".csv")
-            ):
+            if message.attachments and message.attachments.filename.endswith((".txt", ".py", ".json", ".html", ".csv")):
                 message_ = await message.attachments[0].read()
                 message_ = message_.decode("utf-8")
                 return await ctx.send(
@@ -638,24 +601,18 @@ class utility(commands.Cog):
                 if message.filename.endswith((".txt", ".py", ".json", ".html", ".csv")):
                     message = await message.read()
                     message = message.decode("utf-8")
-                    await ctx.send(
-                        str(await self.bot.mystbin.post(message, syntax=syntax))
-                    )
+                    await ctx.send(str(await self.bot.mystbin.post(message, syntax=syntax)))
         else:
             if code.startswith("http"):
                 async with self.bot.session.get(code) as resp:
                     message = await resp.read()
                     try:
                         message = message.decode("utf-8")
-                        return await ctx.send(
-                            str(await self.bot.mystbin.post(message, syntax="html"))
-                        )
+                        return await ctx.send(str(await self.bot.mystbin.post(message, syntax="html")))
                     except:
 
                         message = f"Unable to decode so here is the byte {message}"
-                        return await ctx.send(
-                            str(await self.bot.mystbin.post(message, syntax="python"))
-                        )
+                        return await ctx.send(str(await self.bot.mystbin.post(message, syntax="python")))
             await ctx.send(str(await self.bot.mystbin.post(code)))
 
     @commands.command()
@@ -675,9 +632,7 @@ class utility(commands.Cog):
             if canonical:
                 return await ctx.send(f"`{canonical['href']}`")
             if refresh:
-                return await ctx.send(
-                    f"`{refresh.get('content').lower().split('; url=')[1]}`"
-                )
+                return await ctx.send(f"`{refresh.get('content').lower().split('; url=')[1]}`")
             await ctx.send(f"`{resp.url}`")
 
     @commands.command()
@@ -738,14 +693,9 @@ class utility(commands.Cog):
             "num": "10",
             "safe": "off" if ctx.channel.is_nsfw() else "active",
         }
-        async with self.bot.session.get(
-            f"https://www.googleapis.com/customsearch/v1", params=params
-        ) as resp:
+        async with self.bot.session.get(f"https://www.googleapis.com/customsearch/v1", params=params) as resp:
             js = await resp.json()
-            results = [
-                f"{i['title']}\n{i['link']}\n{i.get('snippet', 'No description')}\n"
-                for i in js["items"]
-            ]
+            results = [f"{i['title']}\n{i['link']}\n{i.get('snippet', 'No description')}\n" for i in js["items"]]
 
         pages = menus.MenuPages(
             source=GoogleMenuSource(results, safesearch=not ctx.channel.is_nsfw()),
@@ -802,9 +752,7 @@ class utility(commands.Cog):
         """
         if channel is None:
             channel = ctx.channel
-        msg = await channel.history(
-            around=channel.created_at, oldest_first=True, limit=10
-        ).flatten()
+        msg = await channel.history(around=channel.created_at, oldest_first=True, limit=10).flatten()
         msg = msg[0]
         embed = discord.Embed(color=self.bot.color, timestamp=msg.created_at)
         embed.set_author(name=msg.author, icon_url=str(msg.author.avatar_url))
@@ -849,12 +797,7 @@ class utility(commands.Cog):
         """
         Calculate some math
         """
-        thing = (
-            thing.replace(" ", "")
-            .replace("^", "**")
-            .replace("pi", str(math.pi))
-            .replace("tau", str(math.tau))
-        )
+        thing = thing.replace(" ", "").replace("^", "**").replace("pi", str(math.pi)).replace("tau", str(math.tau))
         lists = ['"', "'", "()", ".."]
         if any(i in thing for i in lists):
             return await ctx.send("nope don't even think about it")
@@ -1095,21 +1038,15 @@ class utility(commands.Cog):
         if times == "max":
             times = 1000000
         times = int(times)
-        embed = discord.Embed(
-            color=self.bot.color, description="<a:loading:747680523459231834>"
-        )
+        embed = discord.Embed(color=self.bot.color, description="<a:loading:747680523459231834>")
         message = await ctx.reply(embed=embed)
 
-        builder = await self.bot.loop.run_in_executor(
-            None, self.choosebstofcal, ctx, times, choices
-        )
+        builder = await self.bot.loop.run_in_executor(None, self.choosebstofcal, ctx, times, choices)
         embed = discord.Embed(color=self.bot.color, description="\n".join(builder))
         await message.edit(embed=embed)
 
     @commands.command(aliases=["ui", "userinformation", "userinformations"])
-    async def userinfo(
-        self, ctx, member: typing.Union[discord.Member, discord.User] = None
-    ):
+    async def userinfo(self, ctx, member: typing.Union[discord.Member, discord.User] = None):
         """
         Shows you the user's informations.
         """

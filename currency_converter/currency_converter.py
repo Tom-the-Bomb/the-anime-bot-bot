@@ -67,9 +67,7 @@ def memoize(function):
 @memoize
 def list_dates_between(first_date, last_date):
     """Returns all dates from first to last included."""
-    return [
-        first_date + timedelta(days=n) for n in range(1 + (last_date - first_date).days)
-    ]
+    return [first_date + timedelta(days=n) for n in range(1 + (last_date - first_date).days)]
 
 
 @memoize
@@ -208,9 +206,7 @@ class CurrencyConverter(object):
                     raise ValueError("Unknown fallback method {0!r}".format(method))
 
     def _compute_bounds(self):
-        self.bounds = {
-            currency: Bounds(min(r), max(r)) for currency, r in iteritems(self._rates)
-        }
+        self.bounds = {currency: Bounds(min(r), max(r)) for currency, r in iteritems(self._rates)}
 
         self.bounds[self.ref_currency] = Bounds(
             min(b.first_date for b in itervalues(self.bounds)),
@@ -274,10 +270,9 @@ class CurrencyConverter(object):
             rates[date] = (r0 * d1 + r1 * d0) / (d0 + d1)
             if self.verbose:
                 print(
-                    (
-                        "{0}: filling {1} missing rate using {2} ({3}d old) and "
-                        "{4} ({5}d later)"
-                    ).format(currency, date, r0, d0, r1, d1)
+                    ("{0}: filling {1} missing rate using {2} ({3}d old) and " "{4} ({5}d later)").format(
+                        currency, date, r0, d0, r1, d1
+                    )
                 )
 
     def _use_last_known(self, currency):
@@ -297,9 +292,7 @@ class CurrencyConverter(object):
                 rates[date] = last_rate
                 if self.verbose:
                     print(
-                        "{0}: filling {1} missing rate using {2} from {3}".format(
-                            currency, date, last_rate, last_date
-                        )
+                        "{0}: filling {1} missing rate using {2} from {3}".format(currency, date, last_rate, last_date)
                     )
 
     def _get_rate(self, currency, date):
@@ -322,11 +315,7 @@ class CurrencyConverter(object):
             first_date, last_date = self.bounds[currency]
 
             if not self.fallback_on_wrong_date:
-                raise RateNotFoundError(
-                    "{0} not in {1} bounds {2}/{3}".format(
-                        date, currency, first_date, last_date
-                    )
-                )
+                raise RateNotFoundError("{0} not in {1} bounds {2}/{3}".format(date, currency, first_date, last_date))
 
             if date < first_date:
                 fallback_date = first_date

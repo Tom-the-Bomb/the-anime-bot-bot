@@ -31,9 +31,7 @@ class animes(commands.Cog):
         *,
         search: lambda x: urllib.parse.quote_plus(x),
     ):
-        async with self.bot.session.get(
-            f"https://crunchy-bot.live/api/anime/details?terms={search}"
-        ) as resp:
+        async with self.bot.session.get(f"https://crunchy-bot.live/api/anime/details?terms={search}") as resp:
             animes = await resp.json()
             embed_list = []
             for anime in animes:
@@ -67,9 +65,7 @@ class animes(commands.Cog):
                 characters = []
                 for i in anime["characters_and_actor"]:
                     actor = i.get("voice_actor") or i.get("actor")
-                    characters.append(
-                        (f"Character: {i['character']} - Actor: " f"{actor}")
-                    )
+                    characters.append((f"Character: {i['character']} - Actor: " f"{actor}"))
                 embed.add_field(
                     name="Characters and Actor",
                     value="\n".join(characters).replace("||", "\||"),
@@ -77,9 +73,7 @@ class animes(commands.Cog):
                 )
                 embed.set_image(url=anime["img_src"]) if anime.get("img_src") else ...
                 embed_list.append(embed)
-            pages = menus.MenuPages(
-                source=AnimeMenuSource(embed_list), delete_message_after=True
-            )
+            pages = menus.MenuPages(source=AnimeMenuSource(embed_list), delete_message_after=True)
             await pages.start(ctx)
 
     @commands.command()
@@ -94,9 +88,7 @@ class animes(commands.Cog):
         Anime memes from reddit
         """
         await ctx.trigger_typing()
-        async with self.bot.session.get(
-            "https://meme-api.herokuapp.com/gimme/Animemes"
-        ) as resp:
+        async with self.bot.session.get("https://meme-api.herokuapp.com/gimme/Animemes") as resp:
             meme = await resp.json()
             if meme["nsfw"]:
                 return True
@@ -110,10 +102,7 @@ class animes(commands.Cog):
         embed.set_author(name=title, url=link)
         embed.set_image(url=image)
         embed.set_footer(
-            text=(
-                f"requested by {ctx.author} response time:"
-                f"{round(self.bot.latency * 1000)} ms"
-            ),
+            text=(f"requested by {ctx.author} response time:" f"{round(self.bot.latency * 1000)} ms"),
             icon_url=ctx.author.avatar_url,
         )
         await ctx.reply(embed=embed)
@@ -127,15 +116,11 @@ class animes(commands.Cog):
         embed.set_image(url=image)
         return embed
 
-    @commands.command(
-        aliases=["animequotes"], brief=" new new anime quote from the web "
-    )
+    @commands.command(aliases=["animequotes"], brief=" new new anime quote from the web ")
     async def animequote(self, ctx: AnimeContext):
         await ctx.trigger_typing()
         num = random.randint(1, 7830)
-        async with self.bot.session.get(
-            f"https://www.less-real.com/quotes/{num}"
-        ) as resp:
+        async with self.bot.session.get(f"https://www.less-real.com/quotes/{num}") as resp:
             embed = await self.animequote_(await resp.text())
             await ctx.send(embed=embed)
 

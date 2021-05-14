@@ -7,9 +7,7 @@ from utils.asyncstuff import asyncexe
 class utils:
     @asyncexe()
     def all_possible_caps(self, text):
-        return list(
-            map("".join, itertools.product(*((c.upper(), c.lower()) for c in text)))
-        )
+        return list(map("".join, itertools.product(*((c.upper(), c.lower()) for c in text))))
 
     async def get_pic(self, ctx):
         msg = ctx.message
@@ -26,9 +24,7 @@ class utils:
                 return msg.reference.cached_message.embeds[0].url
         else:
             if msg.reference.message_id and msg.reference.channel_id:
-                msg = await ctx.bot.get_channel(msg.reference.channel_id).fetch_message(
-                    msg.reference.message_id
-                )
+                msg = await ctx.bot.get_channel(msg.reference.channel_id).fetch_message(msg.reference.message_id)
                 if msg.attachments:
                     return msg.attachments[0].url
                 if msg.embeds and msg.embeds[0].url and msg.embeds[0].type == "image":

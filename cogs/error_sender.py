@@ -35,13 +35,8 @@ class error_sender(commands.Cog):
             title="An error occured",
             description=f"```py\n{''.join(exception)}\n```",
         )
-        [
-            embed.add_field(name=f"**{n}**", value=f"```py\n{v}```", inline=False)
-            for n, v in fields
-        ]
-        webhook = Webhook.from_url(
-            webhook_url, adapter=AsyncWebhookAdapter(self.bot.session)
-        )
+        [embed.add_field(name=f"**{n}**", value=f"```py\n{v}```", inline=False) for n, v in fields]
+        webhook = Webhook.from_url(webhook_url, adapter=AsyncWebhookAdapter(self.bot.session))
         return await webhook.send(embed=embed)
 
 

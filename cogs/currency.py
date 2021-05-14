@@ -11,13 +11,14 @@ BOBO = "\U0000232C"
 class Economy(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
+
     async def cog_before_invoke(self, ctx):
         opened = await self.open_account(ctx.author.id)
         if opened:
-            await ctx.send(f"hi {ctx.author.mention} I have created a bobo basket for you and I made the bank person to make a account for you have fun.")
+            await ctx.send(
+                f"hi {ctx.author.mention} I have created a bobo basket for you and I made the bank person to make a account for you have fun."
+            )
 
-    
     async def open_account(self, user_id):
         try:
             await self.bot.db.execute("INSERT INTO economy VALUES ($1, $2, $2, $2)", user_id, 0)
@@ -34,12 +35,28 @@ class Economy(commands.Cog):
         basket, bank = await self.get_balance(user_id)
         total_earned = await self.bot.db.fetchval("SELECT total_earned FROM economy WHERE user_id = $1", user_id)
         if amount > 0:
-            await self.bot.db.execute("UPDATE economy SET total_earned = $2 WHERE user_id = $1", user_id, int(total_earned) + int(amount))
+            await self.bot.db.execute(
+                "UPDATE economy SET total_earned = $2 WHERE user_id = $1",
+                user_id,
+                int(total_earned) + int(amount),
+            )
         if type_ == "basket":
-            return int(await self.bot.db.fetchval("UPDATE economy SET basket = $2 WHERE user_id = $1 RETURNING basket", user_id, int(amount) + int(basket)))
+            return int(
+                await self.bot.db.fetchval(
+                    "UPDATE economy SET basket = $2 WHERE user_id = $1 RETURNING basket",
+                    user_id,
+                    int(amount) + int(basket),
+                )
+            )
         else:
-            return int(await self.bot.db.fetchval("UPDATE economy SET bank = $2 WHERE user_id = $1 RETURNING bank", user_id, int(amount) + int(bank)))
-    
+            return int(
+                await self.bot.db.fetchval(
+                    "UPDATE economy SET bank = $2 WHERE user_id = $1 RETURNING bank",
+                    user_id,
+                    int(amount) + int(bank),
+                )
+            )
+
     @commands.command(aliases=["bal"])
     async def balance(self, ctx):
         basket, bank = await self.get_balance(ctx.author.id)
@@ -47,7 +64,7 @@ class Economy(commands.Cog):
         embed.add_field(name=f"{BOBO} Basket", value=basket, inline=False)
         embed.add_field(name=f"{BOBO} Bank", value=bank, inline=False)
         await ctx.send(embed=embed)
-    
+
     @commands.command(aliases=["with", "wd"])
     async def withdraw(self, ctx, amount: str):
         basket, bank = await self.get_balance(ctx.author.id)
@@ -85,7 +102,13 @@ class Economy(commands.Cog):
         for i in e:
             to_sort.append(f"{i['basket']} - {str(await self.bot.getch(i['user_id']))}")
         final_sorted = "\n".join(to_sort)
-        await ctx.send(embed=discord.Embed(color=self.bot.color, title="Global economy leaderboard", description=final_sorted).set_footer(text="Top 10 global leaderboard, this is wallet not total."))
+        await ctx.send(
+            embed=discord.Embed(
+                color=self.bot.color,
+                title="Global economy leaderboard",
+                description=final_sorted,
+            ).set_footer(text="Top 10 global leaderboard, this is wallet not total.")
+        )
 
     @commands.command(aliases=["dep"])
     async def deposit(self, ctx, amount: str):
@@ -108,7 +131,7 @@ class Economy(commands.Cog):
         await self.change_balance(ctx.author.id, -1 * amount)
         await self.change_balance(ctx.author.id, amount, "bank")
         await ctx.send(f"Deposited {BOBO} {amount} bobo to bank.")
-    
+
     @commands.command()
     async def beg(self, ctx):
         characters = [
@@ -149,12 +172,14 @@ class Economy(commands.Cog):
             return await ctx.send(f"smh Muzan Kibutsuji almost killed you and take away {BOBO} 1 bobo")
         await self.change_balance(ctx.author.id, rand)
         await ctx.send(f"{random.choice(characters)} just gave you {BOBO} {rand} bobo")
+
     @commands.is_owner()
     @commands.command()
     async def addmoney(self, ctx, member: discord.Member, amount: int):
         await self.open_account(member.id)
         changed_balance = await self.change_balance(member.id, amount)
         await ctx.send(f"Changed {str(member)}'s balance to {changed_balance}")
+
 
 def setup(bot):
     bot.add_cog(Economy(bot))
