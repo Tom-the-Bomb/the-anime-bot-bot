@@ -42,6 +42,14 @@ class VoteManager(commands.Cog):
                 member = guild.get_member(user_id)
                 if not member._roles.has(842564732078522418):
                     await member.add_roles(discord.Object(842564732078522418))
+    
+    async def give_role(self, user_id):
+        guild = self.bot.get_guild(786359602241470464)
+        await guild.chunk()
+        if user_id in guild._members.keys():
+            member = guild.get_member(user_id)
+            if not member._roles.has(842564732078522418):
+                await member.add_roles(discord.Object(842564732078522418))
 
     async def votes(self, request):
         if not request.headers.get("Authorization"):
@@ -70,13 +78,7 @@ class VoteManager(commands.Cog):
                 1,
             )
             await self.bot.get_cog("Economy").change_balance(user.id, 10000)
-            guild = self.bot.get_guild(786359602241470464)
-            await guild.chunk()
-            if user.id in guild._members.keys():
-                member = guild.get_member(user.id)
-                if not member._roles.has(842564732078522418):
-                    await member.add_roles(discord.Object(842564732078522418))
-
+            self.bot.loop.create_task(self.give_role(user.id))
             await user.send(
                 f"Hey, {str(user)} Thanks for voting it mean a lot, as a reward I have gave you 10000 bobo run `ovo bal` to see it, you have voted {vote_counts} times for The Anime Bot thank you so much."
             )
