@@ -231,7 +231,7 @@ class pictures(commands.Cog):
                     resp.headers.get("Content-Length")
                     and int(resp.headers.get("Content-Length")) > 10000000
                 ):
-                    raise discord.InvalidArgument("Image Larger then 6 MB")
+                    raise discord.InvalidArgument("Image Larger then 10 MB")
         return url
 
     async def get_url(self, ctx: AnimeContext, thing, **kwargs):
@@ -303,7 +303,7 @@ class pictures(commands.Cog):
                     resp.headers.get("Content-Length")
                     and int(resp.headers.get("Content-Length")) > 10000000
                 ):
-                    raise discord.InvalidArgument("Image Larger then 6 MB")
+                    raise discord.InvalidArgument("Image Larger then 10 MB")
         return url
 
     async def bot_cdn(self, url):
