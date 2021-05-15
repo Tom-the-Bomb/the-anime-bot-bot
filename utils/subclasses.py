@@ -345,6 +345,3 @@ class AnimeBot(commands.Bot):
     async def get_context(self, message, *, cls=None):
         return await super().get_context(message, cls=self.context)
 
-    async def is_ratelimited(self):
-        result = await self.is_ws_ratelimited()
-        return result
