@@ -229,7 +229,7 @@ class pictures(commands.Cog):
                     raise discord.InvalidArgument("Unsupported image type given")
                 if (
                     resp.headers.get("Content-Length")
-                    and int(resp.headers.get("Content-Length")) > 6000000
+                    and int(resp.headers.get("Content-Length")) > 10000000
                 ):
                     raise discord.InvalidArgument("Image Larger then 6 MB")
         return url
@@ -301,7 +301,7 @@ class pictures(commands.Cog):
                     raise discord.InvalidArgument("Unsupported image type given")
                 if (
                     resp.headers.get("Content-Length")
-                    and int(resp.headers.get("Content-Length")) > 6000000
+                    and int(resp.headers.get("Content-Length")) > 10000000
                 ):
                     raise discord.InvalidArgument("Image Larger then 6 MB")
         return url
