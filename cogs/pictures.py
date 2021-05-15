@@ -227,6 +227,11 @@ class pictures(commands.Cog):
                     pass
                 elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
                     raise discord.InvalidArgument("Unsupported image type given")
+                if (
+                    resp.headers.get("Content-Length")
+                    and resp.headers.get("Content-Length") > 6000000
+                ):
+                    raise discord.InvalidArgument("Image Larger then 6 MB")
         return url
 
     async def get_url(self, ctx: AnimeContext, thing, **kwargs):
@@ -294,6 +299,11 @@ class pictures(commands.Cog):
                     pass
                 elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
                     raise discord.InvalidArgument("Unsupported image type given")
+                if (
+                    resp.headers.get("Content-Length")
+                    and resp.headers.get("Content-Length") > 6000000
+                ):
+                    raise discord.InvalidArgument("Image Larger then 6 MB")
         return url
 
     async def bot_cdn(self, url):
