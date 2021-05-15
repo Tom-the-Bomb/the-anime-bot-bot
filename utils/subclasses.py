@@ -335,6 +335,7 @@ class AnimeBot(commands.Bot):
         super().run(*args, **kwargs)
 
     async def close(self):
+        await self.db.close()
         await self.session.close()
         await super().close()
 
