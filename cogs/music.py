@@ -160,9 +160,28 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             self.bot.wavelink.set_serializer(ujson.dumps)
 
         self.bot.loop.create_task(self.start_nodes())
+        self.ensure_node_task = self.bot.create_task(self.ensure_node())
 
     def cog_unload(self):
         self.bot.loop.create_task(self.destroy_players())
+        self.ensure_node_task.cancel()
+
+    async def ensure_node(self):
+        await self.bot.wait_until_ready()
+        await asyncio.sleep(5)
+        while True:
+            if not self.bot.wavelink.nodes["MAIN"].is_available:
+                await self.bot.wavelink.nodes["MAIN"].destroy()
+                await self.bot.wavelink.initiate_node(
+                    host="127.0.0.1",
+                    port=2333,
+                    rest_uri="http://127.0.0.1:2333",
+                    password="youshallnotpass",
+                    identifier="MAIN",
+                    region="us_central",
+                    heartbeat=60
+            )
+            await asyncio.sleep(5)
 
     async def destroy_players(self):
         for i in self.bot.wavelink.players.values():
@@ -178,6 +197,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 password="youshallnotpass",
                 identifier="MAIN",
                 region="us_central",
+                heartbeat=60
             )
         except:
             raise NoNodesAvaiable
