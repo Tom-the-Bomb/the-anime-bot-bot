@@ -609,7 +609,7 @@ class pictures(commands.Cog):
         return result
     
     @asyncexe()
-    def floor_(b):
+    def floor_(self, b):
         with WandImage(file=b) as img:
             img.virtual_pixel = 'tile'
             arguments = (0, 0, img.width * 0.3, img.height * 0.5,
