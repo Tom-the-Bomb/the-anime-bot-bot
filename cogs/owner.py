@@ -249,11 +249,6 @@ class owners(commands.Cog):
         return discord.File(file_, "emojis.zip")
     
     @commands.command()
-    async def shutdown(self, ctx):
-        await ctx.send("fine ok bye I will be back soon")
-        await ctx.bot.close()
-
-    @commands.command()
     async def zipallemoji(self, ctx):
         emojis = []
         for i in ctx.bot.emojis:
