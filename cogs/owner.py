@@ -247,6 +247,12 @@ class owners(commands.Cog):
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
         return discord.File(file_, "emojis.zip")
+    
+    @commands.command()
+    @commands.is_owner()
+    async def shutdown(self, ctx):
+        await ctx.send("fine ok bye I will be back soon")
+        await self.bot.close()
 
     @commands.command()
     @commands.is_owner()
