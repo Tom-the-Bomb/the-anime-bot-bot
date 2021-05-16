@@ -251,7 +251,7 @@ class owners(commands.Cog):
     @commands.command()
     async def shutdown(self, ctx):
         await ctx.send("fine ok bye I will be back soon")
-        await self.bot.close()
+        await ctx.bot.close()
 
     @commands.command()
     async def zipallemoji(self, ctx):
