@@ -637,7 +637,7 @@ class pictures(commands.Cog):
                             img.width, img.height, img.width * 0.9, img.height)
                 img.distort('perspective', arguments)
                 final = BytesIO()
-                img_.save(file=final)
+                img.save(file=final)
                 final.seek(0)
                 return final
 
