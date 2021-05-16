@@ -362,12 +362,38 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await player.seek(player.position + 1)
         await ctx.send(f"equalizer setted to {name}")
 
-    @commands.command()
+    @commands.group(invoke_without_command=True)
     async def play(self, ctx: AnimeContext, *, music):
         if self.bot.url_regex.fullmatch(music):
             tracks = await self.bot.wavelink.get_tracks(music)
         else:
             tracks = await self.bot.wavelink.get_tracks(f"ytsearch:{music}")
+
+        if not tracks:
+            return await ctx.send("Could not find any songs with that query. maybe you made a typo?")
+        player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
+        player.query = music
+        if not player.is_connected:
+            await ctx.invoke(self.join)
+        if not player.started:
+            return await player.start(ctx, tracks, music)
+        if isinstance(tracks, wavelink.TrackPlaylist):
+            for track in tracks.tracks:
+                track = Track(track.id, track.info, requester=ctx.author)
+                player.queue.append(track)
+            playlist_name = tracks.data["playlistInfo"]["name"]
+            await ctx.send(f"Added playlist `{playlist_name}` with `{len(tracks.tracks)}` songs to the queue. ")
+        else:
+            track = Track(tracks[0].id, tracks[0].info, requester=ctx.author)
+            player.queue.append(track)
+            await ctx.send(f"Added `{track}` to the queue.")
+    
+    @play.command()
+    async def soundcloud(self, ctx, *, music):
+        if self.bot.url_regex.fullmatch(music):
+            tracks = await self.bot.wavelink.get_tracks(music)
+        else:
+            tracks = await self.bot.wavelink.get_tracks(f"scsearch:{music}")
 
         if not tracks:
             return await ctx.send("Could not find any songs with that query. maybe you made a typo?")
