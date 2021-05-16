@@ -1,4 +1,5 @@
 from utils.asyncstuff import asyncexe
+import wavelink
 import config
 import ratelimiter
 import ujson
@@ -586,6 +587,8 @@ class events(commands.Cog):
         elif isinstance(error, commands.errors.MemberNotFound):
             embed = self.embed("Member not found")
             return await ctx.send(embed=embed)
+        elif isinstance(error, wavelink.errors.ZeroConnectedNodes):
+             return await ctx.send("hmm our music system is having some problem right now")
         elif isinstance(error, asyncio.TimeoutError):
             embed = self.embed("timeout")
             return await ctx.send(embed=embed)
