@@ -239,7 +239,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if ctx.command.qualified_name in ["node_info"]:
             return True
-        if ctx.command.qualified_name in ["play", "join", "play soundcloud"] and player.started:
+        if ctx.command.qualified_name in ["play", "join", "play soundcloud"] and not player.started:
             return True
         if not ctx.guild:
             raise commands.NoPrivateMessage
