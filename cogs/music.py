@@ -144,6 +144,8 @@ class Player(wavelink.Player):
                 if not self.is_playing:
                     return await self.destroy()
 
+        if song is None:
+            return await self.destroy()
         self.queue_position += 1
         self.now_playing = song
         await self.play(song)
