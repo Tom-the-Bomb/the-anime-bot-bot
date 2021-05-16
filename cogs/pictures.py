@@ -616,7 +616,7 @@ class pictures(commands.Cog):
     @asyncexe()
     def floor_(self, b):
         with WandImage(file=b) as img_:
-            img = img.sequence[0]
+            img = img_.sequence[0]
             if img.height > 600 or img.width > 600:
             # I robbed from preselany I can't do math ok
                 siz = 500
