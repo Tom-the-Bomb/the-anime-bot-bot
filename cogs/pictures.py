@@ -699,7 +699,7 @@ class pictures(commands.Cog):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
                 b = BytesIO(await resp.read())
-            await ctx.reply(file=discord.File(await self.floor_(b), "The_Anime_Bot_floor.png")
+            await ctx.reply(file=discord.File(await self.floor_(b), "The_Anime_Bot_floor.png"))
 
     @commands.command()
     async def facereg(self, ctx, thing: Image_Union = None):
