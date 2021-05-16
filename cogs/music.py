@@ -184,30 +184,31 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
     @wavelink.WavelinkMixin.listener("on_track_exception")
     async def on_node_event_(self, node, event):
-        if "YouTube (429)" not in event.error:
-            return
-        player = event.player
-        if player.bot.url_regex.fullmatch(player.query):
-            new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.track.title}")
+        if "YouTube (429)" in event.error:
+            player = event.player
+            if player.bot.url_regex.fullmatch(player.query):
+                new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.track.title}")
+            else:
+                new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.query}")
+            if new_track:
+                track = Track(
+                    new_track[0].id,
+                    new_track[0].info,
+                    requester=player.ctx.author,
+                )
+                player.queue.append(track)
+                player.now_playing = track
+                await player.play(player.now_playing)
+                await player.ctx.send(embed=player.make_embed(player.now_playing), delete_after=10)
+                await player.ctx.send(
+                    "Due to YouTube ratelimiting our IP address, we have searched this song on soundcloud. Please include author name for a more accurate result."
+                )
+            else:
+                await player.ctx.send(
+                    "We are so sorry, Youtube has ratelimited us so we can't play anything. We have tried searching on SoundCloud but we can't find anything. Please try a direct link to soundcloud."
+                )
         else:
-            new_track = await player.ctx.bot.wavelink.get_tracks(f"scsearch:{player.query}")
-        if new_track:
-            track = Track(
-                new_track[0].id,
-                new_track[0].info,
-                requester=player.ctx.author,
-            )
-            player.queue.append(track)
-            player.now_playing = track
-            await player.play(player.now_playing)
-            await player.ctx.send(embed=player.make_embed(player.now_playing), delete_after=10)
-            await player.ctx.send(
-                "Due to YouTube ratelimiting our IP address, we have searched this song on soundcloud. Please include author name for a more accurate result."
-            )
-        else:
-            await player.ctx.send(
-                "We are so sorry, Youtube has ratelimited us so we can't play anything. We have tried searching on SoundCloud but we can't find anything. Please try a direct link to soundcloud."
-            )
+            await event.player.ctx.send(f"An error occured while trying to play your music. `{event.error}`")
 
     @wavelink.WavelinkMixin.listener("on_track_stuck")
     @wavelink.WavelinkMixin.listener("on_track_end")
