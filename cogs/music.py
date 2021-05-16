@@ -160,7 +160,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             self.bot.wavelink.set_serializer(ujson.dumps)
 
         self.bot.loop.create_task(self.start_nodes())
-        self.ensure_node_task = self.bot.create_task(self.ensure_node())
+        self.ensure_node_task = self.bot.loop.create_task(self.ensure_node())
 
     def cog_unload(self):
         self.bot.loop.create_task(self.destroy_players())
