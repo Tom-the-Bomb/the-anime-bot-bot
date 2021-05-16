@@ -1,4 +1,5 @@
 import itertools
+import asyncio
 import ujson
 import asyncpg
 import config
@@ -335,7 +336,10 @@ class AnimeBot(commands.Bot):
         super().run(*args, **kwargs)
 
     async def close(self):
-        await self.db.close()
+        try:
+            asyncio.wait_for(10, self.db.close())
+        except (asyncio.TimeoutError, Exception):
+            self.db.terminate()
         await self.session.close()
         await super().close()
 
