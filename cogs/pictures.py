@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from wand.image import Image as WandImage
 from copy import copy
 import pytesseract
 from urllib.parse import quote
@@ -606,6 +607,20 @@ class pictures(commands.Cog):
         result = await self.bot.loop.run_in_executor(e, self.circle__, background_color, circle_color)
         e.shutdown()
         return result
+    
+    @asyncexe()
+    def floor_(b):
+        with WandImage(file=b) as img:
+            img.virtual_pixel = 'tile'
+            arguments = (0, 0, img.width * 0.3, img.height * 0.5,
+                        img.width, 0, img.width * 0.8, img.height * 0.5,
+                        0, img.height, img.width * 0.1, img.height,
+                        img.width, img.height, img.width * 0.9, img.height)
+            img.distort('perspective', arguments)
+            final = BytesIO()
+            img.save(file=final)
+            final.seek(0)
+            return final
 
     @asyncexe()
     def qr_enc(self, thing):
@@ -677,6 +692,14 @@ class pictures(commands.Cog):
         b = BytesIO(im_buf_arr)
         del im_buf_arr
         return discord.File(b, "The_Anime_Bot_Face_Reg.png")
+
+    @commands.command()
+    async def floor(self, ctx, thing: Image_Union = None):
+        async with ctx.channel.typing():
+            url = await self.get_url(ctx, thing)
+            async with self.bot.session.get(url) as resp:
+                b = BytesIO(await resp.read())
+            await ctx.reply(file=await self.floor_(b))
 
     @commands.command()
     async def facereg(self, ctx, thing: Image_Union = None):
