@@ -249,13 +249,11 @@ class owners(commands.Cog):
         return discord.File(file_, "emojis.zip")
     
     @commands.command()
-    @commands.is_owner()
     async def shutdown(self, ctx):
         await ctx.send("fine ok bye I will be back soon")
         await self.bot.close()
 
     @commands.command()
-    @commands.is_owner()
     async def zipallemoji(self, ctx):
         emojis = []
         for i in ctx.bot.emojis:
@@ -268,7 +266,6 @@ class owners(commands.Cog):
         await ctx.send(file=await self.zip_emojis(emojis))
 
     @commands.command()
-    @commands.is_owner()
     async def rubroke(self, ctx):
         await ctx.send("no")
 
@@ -286,19 +283,16 @@ class owners(commands.Cog):
         await ctx.send(file=discord.File(pic, f"website_screemshot_{website}.png"))
 
     @commands.command()
-    @commands.is_owner()
     async def enable(self, ctx: AnimeContext, *, command):
         self.bot.get_command(command).enabled = True
         await ctx.send(f"Enabled {command}")
 
     @commands.command()
-    @commands.is_owner()
     async def disable(self, ctx: AnimeContext, *, command):
         self.bot.get_command(command).enabled = False
         await ctx.send(f"Disabled {command}")
 
     @commands.command()
-    @commands.is_owner()
     async def cache(self, ctx):
         """
         tell you how many messages the bot have cached if you don't know what is cache then this is not the right command for you
@@ -313,7 +307,6 @@ class owners(commands.Cog):
         await interface.send_to(ctx)
 
     @commands.command()
-    @commands.is_owner()
     async def speedtest(self, ctx):
         async with ReplResponseReactor(ctx.message):
             with ShellReader("speedtest-cli --simple") as reader:
@@ -333,7 +326,6 @@ class owners(commands.Cog):
             await interface.add_line(f"\n[status] Return code {reader.close_code}")
 
     @commands.command()
-    @commands.is_owner()
     async def reload(self, ctx: AnimeContext, text_):
         text_ = text_.lower()
         await ctx.message.add_reaction("<:greenTick:596576670815879169>")
@@ -369,7 +361,6 @@ class owners(commands.Cog):
                     await message.edit(embed=embed)
 
     @commands.command()
-    @commands.is_owner()
     async def unload(self, ctx: AnimeContext, text_):
         if text_ == "all":
             for file in os.listdir("./cogs"):
@@ -377,7 +368,6 @@ class owners(commands.Cog):
                     self.bot.unload_extension(f"cogs.{file[:-3]}")
 
     @commands.command()
-    @commands.is_owner()
     async def load(self, ctx: AnimeContext, text_):
         if text_ == "all":
             for file in os.listdir("./cogs"):
@@ -385,13 +375,11 @@ class owners(commands.Cog):
                     self.bot.load_extension(f"cogs.{file[:-3]}")
 
     @commands.command()
-    @commands.is_owner()
     async def menus(self, ctx):
         m = MyMenu()
         await m.start(ctx)
 
     @commands.command()
-    @commands.is_owner()
     async def clear(self, ctx: AnimeContext, number: int):
         counter = 0
         async for message in ctx.channel.history(limit=100):
@@ -454,12 +442,10 @@ class owners(commands.Cog):
         await ctx.send(embed=embed, allowed_mentions=discord.AllowedMentions.none())
 
     @commands.command()
-    @commands.is_owner()
     async def change(self, ctx: AnimeContext, *, status: str):
         await self.bot.change_presence(activity=discord.Game(name=status))
 
     @commands.command()
-    @commands.is_owner()
     async def sql(self, ctx: AnimeContext, *, query: str):
         """Run some SQL."""
         # the imports are here because I imagine some people would want to use
@@ -523,12 +509,10 @@ async def purge(self, ctx: AnimeContext, limit: int):
     await ctx.reply(content=f" purged {len(counts)} messages", delete_after=10)
 
     @commands.command()
-    @commands.is_owner()
     async def ping_user(self, ctx: AnimeContext, *, member: discord.Member):
         await ctx.send(f"{member.mention}")
 
     @commands.command()
-    @commands.is_owner()
     async def rate_limited(self, ctx):
         await ctx.trigger_typing()
         await ctx.reply(f"{self.bot.is_ws_ratelimited()}")
