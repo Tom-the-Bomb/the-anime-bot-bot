@@ -42,7 +42,6 @@ class Player(wavelink.Player):
         super().__init__(*args, **kwargs)
         self.now_playing = None
         self.deafen = False
-        self.retry = asyncio.Lock()
         self.no_leave = False
         self.query = None
         self.started = False
@@ -142,7 +141,6 @@ class Player(wavelink.Player):
                 self.queue_position = 0
                 song = self.queue[self.queue_position]
             else:
-                await asyncio.sleep(10)
                 if not self.is_playing:
                     return await self.destroy()
 
@@ -213,8 +211,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     @wavelink.WavelinkMixin.listener("on_track_stuck")
     @wavelink.WavelinkMixin.listener("on_track_end")
     async def on_node_event(self, node, event):
-        async with event.player.retry:
-            await event.player.do_next()
+        await event.player.do_next()
 
     async def cog_check(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
