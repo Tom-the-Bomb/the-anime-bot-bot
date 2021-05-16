@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from wand.resource import limits
 from wand.image import Image as WandImage
 from copy import copy
 import pytesseract
@@ -36,6 +37,10 @@ from PIL import ImageOps
 from io import BytesIO
 from asyncdagpi import ImageFeatures
 import typing
+
+limits['width'] = 1000
+limits['height'] = 1000
+limits['thread'] = 10
 
 warnings.simplefilter("error", Image.DecompressionBombWarning)
 Image.MAX_IMAGE_PIXELS = 44739243
