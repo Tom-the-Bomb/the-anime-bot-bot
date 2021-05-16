@@ -280,7 +280,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
     async def now(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
 
-        await ctx.send(embed=player.make_embed(player.now_playing), delete_after=10)
+        await ctx.send(embed=player.make_embed(player.now_playing))
 
     @commands.command(aliases=["vol"])
     async def volume(self, ctx: AnimeContext, volume: int = 100):
