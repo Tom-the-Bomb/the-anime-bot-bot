@@ -616,30 +616,30 @@ class pictures(commands.Cog):
     @asyncexe()
     def floor_(self, b):
         with WandImage(file=b) as img_:
-            img = img_.sequence[0]
-            if img.height > 600 or img.width > 600:
-            # I robbed from preselany I can't do math ok
-                siz = 500
-                w, h = img.size
-                if w > h:
-                    the_key = w / siz
-                    size = (siz, int(h / the_key))
-                elif h > w:
-                    the_key = h / siz
-                    size = (int(w / the_key), siz)
-                else:
-                    size = (siz, siz)
-                img.resize(size[0], size[1])
-            img.virtual_pixel = 'tile'
-            arguments = (0, 0, img.width * 0.3, img.height * 0.5,
-                        img.width, 0, img.width * 0.8, img.height * 0.5,
-                        0, img.height, img.width * 0.1, img.height,
-                        img.width, img.height, img.width * 0.9, img.height)
-            img.distort('perspective', arguments)
-            final = BytesIO()
-            img_.save(file=final)
-            final.seek(0)
-            return final
+            with WandImage(img_.sequence[0]) as img:
+                if img.height > 600 or img.width > 600:
+                # I robbed from preselany I can't do math ok
+                    siz = 500
+                    w, h = img.size
+                    if w > h:
+                        the_key = w / siz
+                        size = (siz, int(h / the_key))
+                    elif h > w:
+                        the_key = h / siz
+                        size = (int(w / the_key), siz)
+                    else:
+                        size = (siz, siz)
+                    img.resize(size[0], size[1])
+                img.virtual_pixel = 'tile'
+                arguments = (0, 0, img.width * 0.3, img.height * 0.5,
+                            img.width, 0, img.width * 0.8, img.height * 0.5,
+                            0, img.height, img.width * 0.1, img.height,
+                            img.width, img.height, img.width * 0.9, img.height)
+                img.distort('perspective', arguments)
+                final = BytesIO()
+                img_.save(file=final)
+                final.seek(0)
+                return final
 
     @asyncexe()
     def qr_enc(self, thing):
