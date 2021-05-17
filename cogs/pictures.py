@@ -775,9 +775,9 @@ class pictures(commands.Cog):
         return channel
     
     def rgb_to_xy_bri(self, r, g, b):
-        r = correct_rgb2xyz_gamma(r)
-        g = correct_rgb2xyz_gamma(g)
-        b = correct_rgb2xyz_gamma(b)
+        r = self.correct_rgb2xyz_gamma(r)
+        g = self.correct_rgb2xyz_gamma(g)
+        b = self.correct_rgb2xyz_gamma(b)
         X = r * 0.664511 + g * 0.154324 + b * 0.162028
         Y = r * 0.283881 + g * 0.668433 + b * 0.047685
         Z = r * 0.000088 + g * 0.072310 + b * 0.986039
