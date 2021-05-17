@@ -45,7 +45,7 @@ class UserHistory(commands.Cog):
                 wait=True,
             )
             await self.bot.db.execute(
-                "INSERT INTO user_history (user_id, avatar_id) VALUES ($1, ARRAY [$2]) ON CONFLICT (user_id) DO UPDATE SET avatar_id = array_append (user_history.avatar_id, $2)",
+                "INSERT INTO user_history (user_id, avatar_id) VALUES ($1, ARRAY [$2 :: BIGINT ]) ON CONFLICT (user_id) DO UPDATE SET avatar_id = array_append (user_history.avatar_id, $2 :: BIGINT)",
                 after.id,
                 m.id,
             )
