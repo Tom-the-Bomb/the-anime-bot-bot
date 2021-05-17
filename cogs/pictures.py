@@ -766,25 +766,9 @@ class pictures(commands.Cog):
         v = mx*100
         return h, s, v
     
-    def correct_rgb2xyz_gamma(self, channel):
-        channel /= 255
-        if channel > 0.04045:
-            channel = pow((channel + 0.055) / 1.055, 2.4)
-        else:
-            channel = channel / 12.92
-        return channel
-    
     def rgb_to_xy_bri(self, r, g, b):
-        r = self.correct_rgb2xyz_gamma(r)
-        g = self.correct_rgb2xyz_gamma(g)
-        b = self.correct_rgb2xyz_gamma(b)
-        X = r * 0.664511 + g * 0.154324 + b * 0.162028
-        Y = r * 0.283881 + g * 0.668433 + b * 0.047685
-        Z = r * 0.000088 + g * 0.072310 + b * 0.986039
-        denominator = X + Y + Z
-        x = X / denominator if denominator > 0 else 0
-        y = Y / denominator if denominator > 0 else 0
-        return x, y, min(255, max(0, int(Y * 255.0)))
+        r, g, b = r/255.0, g/255.0, b/255.0
+        return ((r * 0.4124 + g * 0.3576 + b * 0.1805), (r * 0.2126 + g * 0.7152 + b * 0.0722), (r * 0.0193 + g * 0.1192 + b * 0.9505))
     
     def rgb_to_hsl(self, r, g, b):
         r, g, b = r/255.0, g/255.0, b/255.0
