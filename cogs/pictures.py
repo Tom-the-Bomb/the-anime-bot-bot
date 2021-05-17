@@ -813,7 +813,7 @@ class pictures(commands.Cog):
         embed.add_field(name="YIQ", value=colorsys.rgb_to_yiq(*color))
         embed.add_field(name="HSL", value=self.rgb_to_hsl(color))
         embed.add_field(name="HSL", value=convert_color(sRGBColor(*color), XYZColor).get_value_tuple())
-        embed.set_image(url=f"attachment://The_Anime_Bot_color_{name}")
+        embed.set_thumbnail(url=f"attachment://The_Anime_Bot_color_{name}")
         await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}"))
 
     @commands.command()
