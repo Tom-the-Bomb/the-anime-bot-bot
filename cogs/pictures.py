@@ -77,7 +77,7 @@ class ColorConverter(commands.Converter):
         try:
             color = await converter.convert(ctx, argument)
             color = color.to_rgb()
-        except commands.BadColorArgument:
+        except commands.BadColourArgument:
             try:
                 color = colors[argument]
             except IndexError:
