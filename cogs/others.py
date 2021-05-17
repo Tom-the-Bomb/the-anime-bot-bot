@@ -278,7 +278,7 @@ class others(commands.Cog):
         embed.set_author(name="Use this link to invite")
         embed.add_field(
             name="link ",
-            value="[Invite me](https://cryptex-github.github.io/the-anime-bot-bot/invite)",
+            value="[Invite me](https://theanimebot.epizy.com/invite.html)",
         )
         await ctx.reply(embed=embed)
 
@@ -524,7 +524,7 @@ class others(commands.Cog):
         embed.set_author(name=self.bot.user, icon_url=self.bot.user.avatar_url)
         embed.add_field(
             name="Info",
-            value=f"Guilds: {len(self.bot.guilds)} \nMembers: {len(self.bot.users)} \nCreator: {owner} \nLibrary: discord.py \nCommands used (since last reboot): {self.bot.counter} \nInvite link: [click here](https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2146823543&scope=bot) \nMessages Cached: {len(self.bot.cached_messages)}",
+            value=f"Guilds: {len(self.bot.guilds)} \nMembers: {len(self.bot.users)} \nCreator: {owner} \nLibrary: discord.py \nCommands used (since last reboot): {self.bot.counter} \nInvite link: [click here](https://theanimebot.epizy.com/invite.html) \nMessages Cached: {len(self.bot.cached_messages)}",
             inline=False,
         )
         embed.add_field(
