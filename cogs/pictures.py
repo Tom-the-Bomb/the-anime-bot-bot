@@ -49,6 +49,9 @@ from io import BytesIO
 from asyncdagpi import ImageFeatures
 import typing
 
+RGB_SCALE = 255
+CMYK_SCALE = 100
+
 limits['width'] = 1000
 limits['height'] = 1000
 limits['thread'] = 10
