@@ -265,19 +265,6 @@ class owners(commands.Cog):
         await ctx.send("no")
 
     @commands.command()
-    @commands.is_nsfw()
-    async def takepic(self, ctx: AnimeContext, *, website: str):
-        """
-        take picture of website
-        """
-        website = website.replace("<", "").replace(">", "")
-        if not website.startswith("http"):
-            return await ctx.send("not a valid website")
-        async with self.bot.session.get(f"https://image.thum.io/get/png/{website}") as resp:
-            pic = BytesIO(await resp.read())
-        await ctx.send(file=discord.File(pic, f"website_screemshot_{website}.png"))
-
-    @commands.command()
     async def enable(self, ctx: AnimeContext, *, command):
         self.bot.get_command(command).enabled = True
         await ctx.send(f"Enabled {command}")
