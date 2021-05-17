@@ -751,26 +751,23 @@ class pictures(commands.Cog):
             return b
 
     def rgb_to_hsv(self, r, g, b):
-        r = float(r/255)
-        g = float(g/255)
-        b = float(b/255)
-        high = max(r, g, b)
-        low = min(r, g, b)
-        h, s, v = high, high, high
-
-        d = high - low
-        s = 0 if high == 0 else d/high
-
-        if high == low:
-            h = 0.0
+       r, g, b = r/255.0, g/255.0, b/255.0
+        mx = max(r, g, b)
+        mn = min(r, g, b)
+        df = mx-mn
+        if mx == mn:
+            h = 0
+        elif mx == r:
+            h = (60 * ((g-b)/df) + 360) % 360
+        elif mx == g:
+            h = (60 * ((b-r)/df) + 120) % 360
+        elif mx == b:
+            h = (60 * ((r-g)/df) + 240) % 360
+        if mx == 0:
+            s = 0
         else:
-            h = {
-                r: (g - b) / d + (6 if g < b else 0),
-                g: (b - r) / d + 2,
-                b: (r - g) / d + 4,
-            }[high]
-            h /= 6
-
+            s = (df/mx)*100
+        v = mx*100
         return h, s, v
     
     def hsv_to_hsl(self, color_tuple):
