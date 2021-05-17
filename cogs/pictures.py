@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import math
+from numba import jit
 from colormath.color_objects import sRGBColor, XYZColor
 from colormath.color_conversions import convert_color
 import colorsys
@@ -767,11 +767,44 @@ class pictures(commands.Cog):
         v = mx*100
         return h, s, v
     
-    def hsv_to_hsl(self, color_tuple):
-        h, s, v = color_tuple[0], color_tuple[1], color_tuple[2]
-        l = 0.5 * v  * (2 - s)
-        s = v * s / (1 - math.fabs(2*l-1))
-        return f"({round(h)}, {round(s * 100)}%, {round(v * 100)}%)"
+    @jit(nopython=True)
+    def correct_rgb2xyz_gamma(channel):
+        channel /= 255
+        if channel > 0.04045:
+            channel = pow((channel + 0.055) / 1.055, 2.4)
+        else:
+            channel = channel / 12.92
+        return channel
+    
+    @jit(nopython=True)
+    def rgb_to_xy_bri(r, g, b):
+        r = correct_rgb2xyz_gamma(r)
+        g = correct_rgb2xyz_gamma(g)
+        b = correct_rgb2xyz_gamma(b)
+        X = r * 0.664511 + g * 0.154324 + b * 0.162028
+        Y = r * 0.283881 + g * 0.668433 + b * 0.047685
+        Z = r * 0.000088 + g * 0.072310 + b * 0.986039
+        denominator = X + Y + Z
+        x = X / denominator if denominator > 0 else 0
+        y = Y / denominator if denominator > 0 else 0
+        return (x, y), min(255, max(0, int(Y * 255.0)))
+    
+    def rgb_to_hsl(self, r, g, b):
+        r, g, b = r/255.0, g/255.0, b/255.0
+        mx = max(r, g, b)
+        mn = min(r, g, b)
+        df = mx-mn
+        if mx == mn:
+            h = 0
+        elif mx == r:
+            h = (60 * ((g-b)/df) + 360) % 360
+        elif mx == g:
+            h = (60 * ((b-r)/df) + 120) % 360
+        elif mx == b:
+            h = (60 * ((r-g)/df) + 240) % 360
+        s = 0 if mx == 0 else (df/mx)*100
+        l = ((mx + mn) / 2) *100
+        return f"({round(h)}, {round(s * 100)}%, {round(l * 100)}%)"
 
     def rgb_to_cmyk(self, rgb_tuple):
         r, g, b = rgb_tuple[0], rgb_tuple[1], rgb_tuple[2]
@@ -813,7 +846,7 @@ class pictures(commands.Cog):
         embed.add_field(name="CMYK", value=tuple((round(i) for i in self.rgb_to_cmyk(color))))
         embed.add_field(name="HSV", value=f"({round(self.rgb_to_hsv(*color)[0])}, {round(self.rgb_to_hsv(*color)[1])}%, {round(self.rgb_to_hsv(*color)[2])}%)")
         embed.add_field(name="HEX", value=f"#{'%02x%02x%02x' % color} | 0x{'%02x%02x%02x' % color}")
-        embed.add_field(name="HSL", value=self.hsv_to_hsl(self.rgb_to_hsv(*color)))
+        embed.add_field(name="HSL", value=self.rgb_to_hsl(*color))
         embed.add_field(name="XYZ", value=tuple((round(i) for i in convert_color(sRGBColor(*color), XYZColor).get_value_tuple())))
         embed.set_thumbnail(url=f"attachment://The_Anime_Bot_color_{name}.png")
         await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}.png"))
