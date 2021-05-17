@@ -817,9 +817,9 @@ class pictures(commands.Cog):
         embed = discord.Embed(color=discord.Color.from_rgb(*color), title=name)
         embed.add_field(name="RGB", value=color)
         embed.add_field(name="CMYK", value=tuple((int(i) for i in self.rgb_to_cmyk(color))))
-        embed.add_field(name="HSV", value=self.rgb_to_hsv(*color))
+        embed.add_field(name="HSV", value=f"({int(self.rgb_to_hsv(*color))}, {int(self.rgb_to_hsv(*color)) * 100}%, {int(self.rgb_to_hsv(*color)) * 100}%)")
         embed.add_field(name="HEX", value=f"#{'%02x%02x%02x' % color} | 0x{'%02x%02x%02x' % color}")
-        embed.add_field(name="HSL", value=self.hsv_to_hsl(self.rgb_to_hsv(*color)))
+        embed.add_field(name="HSL", value=f"({int(self.hsv_to_hsl(self.rgb_to_hsv(*color))))}, {int(self.hsv_to_hsl(self.rgb_to_hsv(*color)))) * 100}%, {int(self.hsv_to_hsl(self.rgb_to_hsv(*color)))) * 100}%)"
         embed.add_field(name="XYZ", value=tuple((int(i) for i in convert_color(sRGBColor(*color), XYZColor).get_value_tuple())))
         embed.set_thumbnail(url=f"attachment://The_Anime_Bot_color_{name}.png")
         await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}.png"))
