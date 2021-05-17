@@ -576,72 +576,6 @@ class pictures(commands.Cog):
         for i in to_make_gif:
             i.close()
         return final, "gif"
-    
-    def invert__(self, image):
-        img= self.open_pil_image(BytesIO(image))
-        if img.is_animated and img.n_frames < 200:
-            to_make_gif = []
-            for im in ImageSequence.Iterator(img):
-                im_ = self.resize(im)
-                if im_.mode == "RGBA":
-                    a_band = im_.getdata(band=3)
-                    im_ = im_.convert("RGB")
-                    array = np.array(im_)
-                    array = 255 - array
-                    im_ = Image.fromarray(array)
-                    im_ = im_.convert("RGBA")
-                    im_.putdata(a_band)
-                    to_make_gif.append(im_)
-                else:
-                    array = np.array(im_)
-                    array = 255 - array
-                    im_ = Image.fromarray(array)
-                    to_make_gif.append(im_)
-            final = BytesIO()
-            self.save_transparent_gif(to_make_gif, img.info["duration"], final)
-            for i in to_make_gif:
-                i.close()
-                del i
-            final.seek(0)
-            img.close()
-            return final, "gif"
-        img_ = img
-        format_ = img_.format
-        img_ = self.resize(img_)
-        if img_.mode == "RGBA":
-            a_band = img_.getdata(band=3)
-            img_ = img_.convert("RGB")
-            array = np.array(img_)
-            array = 255 - array
-            img_ = Image.fromarray(array)
-            img_ = img_.convert("RGBA")
-            img_.putdata(a_band)
-            b = BytesIO()
-            img_.save(b, "PNG")
-            b.seek(0)
-            img_.close()
-            img.close()
-            return b, "png"
-        else:
-            img_ = img_.convert("RGB")
-            array = np.array(img_)
-            array = 255 - array
-            img_ = Image.fromarray(array)
-            b = BytesIO()
-            img_.save(b, "PNG")
-            b.seek(0)
-            img_.close()
-            img.close()
-            return b, "png"
-
-    
-    async def invert_(self, url):
-        async with self.bot.session.get(url) as resp:
-            image1 = await resp.read()
-        f = functools.partial(self.invert__, image1)
-        result, format_ = await self.bot.loop.run_in_executor(None, f)
-        result = discord.File(result, f"The_Anime_Bot_invert.{format_}")
-        return result
 
     async def spin_(self, url, speed):
         async with self.bot.session.get(url) as resp:
@@ -1429,7 +1363,7 @@ class pictures(commands.Cog):
     ):
         async with ctx.channel.typing():
             url = await self.get_gif_url(ctx, thing)
-        await ctx.reply(file=await self.invert_(url))
+        await ctx.reply(file=await self.polaroid_(url, "invert"))
 
     @commands.command()
     async def oil(
