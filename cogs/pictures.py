@@ -768,7 +768,7 @@ class pictures(commands.Cog):
         return h, s, v
     
     @jit(nopython=True)
-    def correct_rgb2xyz_gamma(channel):
+    def correct_rgb2xyz_gamma(self, channel):
         channel /= 255
         if channel > 0.04045:
             channel = pow((channel + 0.055) / 1.055, 2.4)
@@ -777,7 +777,7 @@ class pictures(commands.Cog):
         return channel
     
     @jit(nopython=True)
-    def rgb_to_xy_bri(r, g, b):
+    def rgb_to_xy_bri(self, r, g, b):
         r = correct_rgb2xyz_gamma(r)
         g = correct_rgb2xyz_gamma(g)
         b = correct_rgb2xyz_gamma(b)
@@ -847,7 +847,7 @@ class pictures(commands.Cog):
         embed.add_field(name="HSV", value=f"({round(self.rgb_to_hsv(*color)[0])}, {round(self.rgb_to_hsv(*color)[1])}%, {round(self.rgb_to_hsv(*color)[2])}%)")
         embed.add_field(name="HEX", value=f"#{'%02x%02x%02x' % color} | 0x{'%02x%02x%02x' % color}")
         embed.add_field(name="HSL", value=self.rgb_to_hsl(*color))
-        embed.add_field(name="XYZ", value=tuple((round(i) for i in convert_color(sRGBColor(*color), XYZColor).get_value_tuple())))
+        embed.add_field(name="XYZ", value=tuple((round(i) for i in self.rgb_to_xy_bri(*color))))
         embed.set_thumbnail(url=f"attachment://The_Anime_Bot_color_{name}.png")
         await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}.png"))
 
