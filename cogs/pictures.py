@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from numba import jit
 from colormath.color_objects import sRGBColor, XYZColor
 from colormath.color_conversions import convert_color
 import colorsys
@@ -767,7 +766,6 @@ class pictures(commands.Cog):
         v = mx*100
         return h, s, v
     
-    @jit(nopython=True)
     def correct_rgb2xyz_gamma(self, channel):
         channel /= 255
         if channel > 0.04045:
@@ -776,7 +774,6 @@ class pictures(commands.Cog):
             channel = channel / 12.92
         return channel
     
-    @jit(nopython=True)
     def rgb_to_xy_bri(self, r, g, b):
         r = correct_rgb2xyz_gamma(r)
         g = correct_rgb2xyz_gamma(g)
