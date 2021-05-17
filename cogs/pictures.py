@@ -448,22 +448,24 @@ class pictures(commands.Cog):
         # image1 = self.resize(BytesIO(image1))
         img = self.open_pil_image(BytesIO(image1))
         if img.is_animated and img.n_frames < 200:
-            to_process = []
             to_make_gif = []
             for im in ImageSequence.Iterator(img):
                 b = BytesIO()
                 im_ = self.resize(im)
-                im_.save(b, "PNG")
+                im_ = im_.convert("RGBA")
+                r, g, b, a = im_.split()
+                rgb_image = Image.merge('RGB', (r, g, b))
+                rgb_image.save(b, "PNG")
                 b.seek(0)
-                to_process.append(b)
-            for i in to_process:
-                p_image = polaroid.Image(i.read())
+                p_image = polaroid.Image(b.read())
                 method1 = getattr(p_image, method)
                 method1(*args, **kwargs)
                 b = BytesIO(p_image.save_bytes("png"))
-                to_make_gif.append(Image.open(b).convert("RGBA"))
-                b.flush()
-                del p_image
+                im_ = Image.open(b, "RGB")
+                r2, g2, b2 = im_.split()
+                final = Image.merge('RGBA', (r2, g2, b2, a))
+                to_make_gif.append(final)
+
             final = BytesIO()
             self.save_transparent_gif(to_make_gif, img.info["duration"], final)
             for i in to_process:
@@ -476,20 +478,24 @@ class pictures(commands.Cog):
             img.close()
             return discord.File(final, filename=f"{method}.gif")
 
-        i = img
-        image1_ = self.resize(i)
-        image1 = BytesIO()
-        image1_.save(image1, "PNG")
-        image1.seek(0)
-        im = polaroid.Image(image1.read())
-        method1 = getattr(im, method)
+        im = img
+        b = BytesIO()
+        im_ = self.resize(im)
+        im_ = im_.convert("RGBA")
+        r, g, b, a = im_.split()
+        rgb_image = Image.merge('RGB', (r, g, b))
+        rgb_image.save(b, "PNG")
+        b.seek(0)
+        p_image = polaroid.Image(b.read())
+        method1 = getattr(p_image, method)
         method1(*args, **kwargs)
-        b = BytesIO(im.save_bytes("png"))
-        del im
-        i.close()
-        del i
-        image1.flush()
-        del image1
+        b = BytesIO(p_image.save_bytes("png"))
+        im_ = Image.open(b, "RGB")
+        r2, g2, b2 = im_.split()
+        final = Image.merge('RGBA', (r2, g2, b2, a))
+        b = BytesIO()
+        final.save(b, "PNG")
+        b.seek(0)
         return discord.File(b, filename=f"{method}.png")
 
     async def polaroid_(self, image, method, *args, **kwargs):
