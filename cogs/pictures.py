@@ -628,7 +628,7 @@ class pictures(commands.Cog):
             array = 255 - array
             img_ = Image.fromarray(array)
             b = BytesIO()
-            img.save(b, "PNG")
+            img_.save(b, "PNG")
             b.seek(0)
             img_.close()
             img.close()
