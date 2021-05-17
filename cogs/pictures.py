@@ -749,7 +749,7 @@ class pictures(commands.Cog):
             b.seek(0)
             return b
     
-    def rgb_to_hsl(self, color_tueple):
+    def rgb_to_hsl(self, color_turple):
         r = float(color_turple[0])
         g = float(color_turple[1])
         b = float(color_turple[2])
