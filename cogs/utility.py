@@ -351,87 +351,7 @@ class utility(commands.Cog):
                 status = i["status"]
                 lists.append(f"{name}: {status}")
         return lists
-
-    # lists = ["assert", "class", "as", "lambda", "\\", "()", "while", "int", "float", "str", "aiohttp", "utility", "cog", "main", "py"]
-    #   if "bot" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   if thing in lists:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif len(thing) > 1000:
-    #     return await ctx.send("too long")
-    #   elif ".." in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "ellipsis" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "in" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "local" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "global" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "raw" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "ord" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "\'" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "\"" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "while" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "yield" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "async" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "=" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "return" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "raise" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "()" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "discord" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "__" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "foo" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "import" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "env" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "process" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "os" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "sys" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "self" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "eval" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "exec" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "await" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "print" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "ctx" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "token" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "http" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   elif "connection" in thing:
-    #     return await ctx.send("nope don't even think about it")
-    #   # elif "^" in thing:
-    #   #   return await ctx.send("power not supported for now ")
-    #   # elif "**" in thing:
-    #   #   return await ctx.send("power not supported for now ")
-    #   # elif "* *" in thing:
-    #   #   return await ctx.send("power not supported for now ")
-    #   else:
+        
     @staticmethod
     @asyncexe()
     def translate_(from_lang, to_lang, thing):
@@ -446,6 +366,19 @@ class utility(commands.Cog):
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
         return discord.File(file_, "emojis.zip")
+   
+    @commands.command()
+    @commands.is_nsfw()
+    async def takepic(self, ctx: AnimeContext, *, website: str):
+        """
+        take picture of website
+        """
+        website = website.replace("<", "").replace(">", "")
+        if not website.startswith("http"):
+            return await ctx.send("not a valid website")
+        async with self.bot.session.get(f"https://image.thum.io/get/png/{website}") as resp:
+            pic = BytesIO(await resp.read())
+        await ctx.send(file=discord.File(pic, f"website_screemshot_{website}.png"))
 
     @commands.command()
     async def eval(self, ctx, lang: lambda i: str(i).lower(), *, code: str):
