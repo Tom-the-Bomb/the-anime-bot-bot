@@ -45,13 +45,13 @@ class UserHistory(commands.Cog):
                 wait=True,
             )
             await self.bot.db.execute(
-                "INSERT INTO user_history (user_id, avatar_id) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET avatar_id = array_append (user_history.avatar_id, $2)",
+                "INSERT INTO user_history (user_id, avatar_id) VALUES ($1, ARRAY [$2]) ON CONFLICT (user_id) DO UPDATE SET avatar_id = array_append (user_history.avatar_id, $2)",
                 after.id,
                 m.id,
             )
         elif str(before) != str(after):
             await self.bot.db.execute(
-                "INSERT INTO user_history (user_id, user_names) VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET user_names = array_append (user_history.user_names, $2)",
+                "INSERT INTO user_history (user_id, user_names) VALUES ($1, ARRAY [$2]) ON CONFLICT (user_id) DO UPDATE SET user_names = array_append (user_history.user_names, $2)",
                 after.id,
                 str(after),
             )
