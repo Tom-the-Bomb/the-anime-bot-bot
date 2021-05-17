@@ -5,7 +5,7 @@ from colormath.color_conversions import convert_color
 import colorsys
 from scipy.spatial import KDTree
 from webcolors import (
-    css3_hex_to_names,
+    CSS3_HEX_TO_NAMES,
     hex_to_rgb,
 )
 from colordict import ColorDict
@@ -788,7 +788,7 @@ class pictures(commands.Cog):
 
     @asyncexe()
     def convert_rgb_to_names(self, rgb_tuple):
-        css3_db = css3_hex_to_names
+        css3_db = CSS3_HEX_TO_NAMES
         names = []
         rgb_values = []
         for color_hex, color_name in css3_db.items():
