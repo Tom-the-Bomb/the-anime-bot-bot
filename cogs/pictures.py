@@ -469,9 +469,6 @@ class pictures(commands.Cog):
 
             final = BytesIO()
             self.save_transparent_gif(to_make_gif, img.info["duration"], final)
-            for i in to_process:
-                i.flush()
-                del i
             for i in to_make_gif:
                 i.close()
                 del i
