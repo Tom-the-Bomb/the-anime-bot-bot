@@ -486,7 +486,7 @@ class pictures(commands.Cog):
         rgb_image = Image.merge('RGB', (r, g, b))
         rgb_image.save(buffer, "PNG")
         buffer.seek(0)
-        p_image = polaroid.Image(bbuffer.read())
+        p_image = polaroid.Image(buffer.read())
         method1 = getattr(p_image, method)
         method1(*args, **kwargs)
         buffer_ = BytesIO(p_image.save_bytes("png"))
