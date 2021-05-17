@@ -811,7 +811,7 @@ class pictures(commands.Cog):
         embed = discord.Embed(color=discord.Color.from_rgb(*color), title=name)
         embed.add_field(name="RGB", value=color)
         embed.add_field(name="CMYK", value=tuple((round(i) for i in self.rgb_to_cmyk(color))))
-        embed.add_field(name="HSV", value=f"({round(self.rgb_to_hsv(*color)[0])}, {round(self.rgb_to_hsv(*color)[1]) * 10}%, {round(self.rgb_to_hsv(*color)[2]) * 10}%)")
+        embed.add_field(name="HSV", value=f"({round(self.rgb_to_hsv(*color)[0])}, {round(self.rgb_to_hsv(*color)[1])}%, {round(self.rgb_to_hsv(*color)[2])}%)")
         embed.add_field(name="HEX", value=f"#{'%02x%02x%02x' % color} | 0x{'%02x%02x%02x' % color}")
         embed.add_field(name="HSL", value=self.hsv_to_hsl(self.rgb_to_hsv(*color)))
         embed.add_field(name="XYZ", value=tuple((round(i) for i in convert_color(sRGBColor(*color), XYZColor).get_value_tuple())))
