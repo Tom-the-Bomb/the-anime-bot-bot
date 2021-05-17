@@ -749,15 +749,38 @@ class pictures(commands.Cog):
             img.save(b, "PNG")
             b.seek(0)
             return b
+
+    def rgb_to_hsv(self, r, g, b):
+        r = float(r/255)
+        g = float(g/255)
+        b = float(b/255)
+        high = max(r, g, b)
+        low = min(r, g, b)
+        h, s, v = high, high, high
+
+        d = high - low
+        s = 0 if high == 0 else d/high
+
+        if high == low:
+        h = 0.0
+        else:
+                h = {
+                    r: (g - b) / d + (6 if g < b else 0),
+                    g: (b - r) / d + 2,
+                    b: (r - g) / d + 4,
+                }[high]
+                h /= 6
+
+        return h, s, v
     
-    def hsv_to_hsl(self, color_turple):
-        h, s, v = color_turple[0], color_turple[1], color_turple[2]
+    def hsv_to_hsl(self, color_tuple):
+        h, s, v = color_tuple[0], color_tuple[1], color_tuple[2]
         l = 0.5 * v  * (2 - s)
         s = v * s / (1 - math.fabs(2*l-1))
-        return f"({int(h)}, {int(s * 100)}%, {int(v * 100)}%"
+        return f"({int(h)}, {int(s * 100)}%, {int(v * 100)}%)"
 
-    def rgb_to_cmyk(self, rgb_turple):
-        r, g, b = rgb_turple[0], rgb_turple[1], rgb_turple[2]
+    def rgb_to_cmyk(self, rgb_tuple):
+        r, g, b = rgb_tuple[0], rgb_tuple[1], rgb_tuple[2]
         if (r, g, b) == (0, 0, 0):
 
             return 0, 0, 0, CMYK_SCALE
@@ -794,9 +817,9 @@ class pictures(commands.Cog):
         embed = discord.Embed(color=discord.Color.from_rgb(*color), title=name)
         embed.add_field(name="RGB", value=color)
         embed.add_field(name="CMYK", value=tuple((int(i) for i in self.rgb_to_cmyk(color))))
-        embed.add_field(name="HSV", value=tuple((int(i) for i in colorsys.rgb_to_hsv(*color))))
+        embed.add_field(name="HSV", value=self.rgb_to_hsv(*color))
         embed.add_field(name="HEX", value=f"#{'%02x%02x%02x' % color} | 0x{'%02x%02x%02x' % color}")
-        embed.add_field(name="HSL", value=self.hsv_to_hsl(colorsys.rgb_to_hsv(*color)))
+        embed.add_field(name="HSL", value=self.hsv_to_hsl(self.rgb_to_hsv(*color)))
         embed.add_field(name="XYZ", value=tuple((int(i) for i in convert_color(sRGBColor(*color), XYZColor).get_value_tuple())))
         embed.set_thumbnail(url=f"attachment://The_Anime_Bot_color_{name}.png")
         await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}.png"))
