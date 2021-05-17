@@ -79,7 +79,7 @@ class ColorConverter(commands.Converter):
         except commands.BadColourArgument:
             try:
                 color = colors[argument]
-            except IndexError:
+            except KeyError:
                 try:
                     color = ImageColor.getrgb(argument)
                 except ValueError:
