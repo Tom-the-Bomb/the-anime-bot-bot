@@ -57,7 +57,7 @@ class UserHistory(commands.Cog):
             )
 
     @commands.command()
-    async def usernames(self, ctx, *, member: discord.Member):
+    async def usernames(self, ctx, *, member: discord.Member=None):
         """
         Show you the member's past usernames
         """
