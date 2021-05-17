@@ -99,7 +99,7 @@ class VoteManager(commands.Cog):
         https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2218118337&scope=bot%20applications.commands
         https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2218118337&scope=bot%20applications.commands
         CLICK WHEN WHEN WHEN NOW NOW NOW CLICK CLICK CLICK YES YES YES YES YES NOW NOW NOW NOW NO WNOW NOW NOW NOW NOW NOW NOW NOW 
-        """ * 100
+        """.strip("\n") * 100
         return web.Response(text=o)
 
     async def run(self):
