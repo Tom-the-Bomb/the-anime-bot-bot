@@ -579,7 +579,7 @@ class pictures(commands.Cog):
     
     def invert__(self, image):
         img= self.open_pil_image(BytesIO(image))
-         if img.is_animated and img.n_frames < 200:
+        if img.is_animated and img.n_frames < 200:
             to_make_gif = []
             for im in ImageSequence.Iterator(img):
                 im_ = self.resize(im)
