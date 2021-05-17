@@ -58,8 +58,13 @@ class UserHistory(commands.Cog):
 
     @commands.command()
     async def usernames(self, ctx, *, member: discord.Member):
+        """
+        Show you the member's past usernames
+        """
         member = member or ctx.author
         user_names = await self.bot.db.fetchval("SELECT user_names FROM user_history WHERE user_id = $1", member.id)
+        if not user_names:
+            return await ctx.send(f"We can't find any  past usernames for {str(member)} in our database, try again later.")
         final = ", ".join(
             discord.utils.escape_mentions(discord.utils.escape_markdown(i))
             for i in user_names
