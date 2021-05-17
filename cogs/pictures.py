@@ -784,7 +784,7 @@ class pictures(commands.Cog):
         denominator = X + Y + Z
         x = X / denominator if denominator > 0 else 0
         y = Y / denominator if denominator > 0 else 0
-        return (x, y), min(255, max(0, int(Y * 255.0)))
+        return x, y, min(255, max(0, int(Y * 255.0)))
     
     def rgb_to_hsl(self, r, g, b):
         r, g, b = r/255.0, g/255.0, b/255.0
