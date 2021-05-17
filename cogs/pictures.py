@@ -803,7 +803,7 @@ class pictures(commands.Cog):
     async def colorinfo(self, ctx, *, color: ColorConverter):
         img = await self.make_color_image(color)
         name = await self.convert_rgb_to_names(color)
-        embed = discord.Embed(color=discord.Color.from_rgb(color), title=name)
+        embed = discord.Embed(color=discord.Color.from_rgb(*color), title=name)
         embed.add_field(name="RGB", value=color)
         embed.add_field(name="CMYK", value=self.rgb_to_cmyk(color))
         embed.add_field(name="HSV", value=colorsys.rgb_to_hsv(*color))
