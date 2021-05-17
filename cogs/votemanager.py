@@ -92,15 +92,7 @@ class VoteManager(commands.Cog):
         return web.Response(status=200, text="OK")
 
     async def index(self, request):
-        o = r"""
-        anime bot is the best bot invite it when now yes when when when now now now https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2218118337&scope=bot%20applications.commands
-        cLICK CLICK CLICK https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2218118337&scope=bot%20applications.commands
-        https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2218118337&scope=bot%20applications.commands
-        https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2218118337&scope=bot%20applications.commands
-        https://discord.com/api/oauth2/authorize?client_id=787927476177076234&permissions=2218118337&scope=bot%20applications.commands
-        CLICK WHEN WHEN WHEN NOW NOW NOW CLICK CLICK CLICK YES YES YES YES YES NOW NOW NOW NOW NO WNOW NOW NOW NOW NOW NOW NOW NOW 
-        """.strip("\n") * 100
-        return web.Response(text=o)
+        return web.Response(text=f"In {len(self.bot.guilds)}, with {len(self.bot.users)} users")
 
     async def run(self):
         await self.bot.wait_until_ready()
