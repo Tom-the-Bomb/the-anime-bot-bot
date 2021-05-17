@@ -801,7 +801,7 @@ class pictures(commands.Cog):
             h = (60 * ((r-g)/df) + 240) % 360
         s = 0 if mx == 0 else (df/mx)*100
         l = ((mx + mn) / 2) *100
-        return f"({round(h)}, {round(s * 100)}%, {round(l * 100)}%)"
+        return f"({round(h)}, {round(s)}%, {round(l)}%)"
 
     def rgb_to_cmyk(self, rgb_tuple):
         r, g, b = rgb_tuple[0], rgb_tuple[1], rgb_tuple[2]
