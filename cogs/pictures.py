@@ -85,7 +85,7 @@ class ColorConverter(commands.Converter):
                     color = ImageColor.getrgb(argument)
                 except ValueError:
                     raise commands.BadArgument
-        return color
+        return tuple((int(i) for i in color))
 
 class TransparentAnimatedGifConverter(object):
     _PALETTE_SLOTSET = set(range(256))
