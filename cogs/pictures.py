@@ -495,10 +495,8 @@ class pictures(commands.Cog):
     async def polaroid_(self, image, method, *args, **kwargs):
         async with self.bot.session.get(image) as resp:
             image1 = await resp.read()
-        e = ThreadPoolExecutor(max_workers=5)
         f = functools.partial(self.run_polaroid, image1, method, *args, **kwargs)
-        result = await self.bot.loop.run_in_executor(e, f)
-        e.shutdown()
+        result = await self.bot.loop.run_in_executor(None, f)
         return result
 
     @staticmethod
