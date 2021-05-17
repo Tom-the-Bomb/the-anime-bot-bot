@@ -762,14 +762,14 @@ class pictures(commands.Cog):
         s = 0 if high == 0 else d/high
 
         if high == low:
-        h = 0.0
+            h = 0.0
         else:
-                h = {
-                    r: (g - b) / d + (6 if g < b else 0),
-                    g: (b - r) / d + 2,
-                    b: (r - g) / d + 4,
-                }[high]
-                h /= 6
+            h = {
+                r: (g - b) / d + (6 if g < b else 0),
+                g: (b - r) / d + 2,
+                b: (r - g) / d + 4,
+            }[high]
+            h /= 6
 
         return h, s, v
     
