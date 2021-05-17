@@ -771,7 +771,7 @@ class pictures(commands.Cog):
         h, s, v = color_tuple[0], color_tuple[1], color_tuple[2]
         l = 0.5 * v  * (2 - s)
         s = v * s / (1 - math.fabs(2*l-1))
-        return f"({int(h)}, {int(s * 100)}%, {int(v * 100)}%)"
+        return f"({round(h)}, {round(s * 100)}%, {round(v * 100)}%)"
 
     def rgb_to_cmyk(self, rgb_tuple):
         r, g, b = rgb_tuple[0], rgb_tuple[1], rgb_tuple[2]
@@ -810,11 +810,11 @@ class pictures(commands.Cog):
         name = await self.convert_rgb_to_names(color)
         embed = discord.Embed(color=discord.Color.from_rgb(*color), title=name)
         embed.add_field(name="RGB", value=color)
-        embed.add_field(name="CMYK", value=tuple((int(i) for i in self.rgb_to_cmyk(color))))
-        embed.add_field(name="HSV", value=f"({int(self.rgb_to_hsv(*color)[0])}, {int(self.rgb_to_hsv(*color)[1]) * 100}%, {int(self.rgb_to_hsv(*color)[2]) * 100}%)")
+        embed.add_field(name="CMYK", value=tuple((round(i) for i in self.rgb_to_cmyk(color))))
+        embed.add_field(name="HSV", value=f"({round(self.rgb_to_hsv(*color)[0])}, {round(self.rgb_to_hsv(*color)[1]) * 10}%, {round(self.rgb_to_hsv(*color)[2]) * 10}%)")
         embed.add_field(name="HEX", value=f"#{'%02x%02x%02x' % color} | 0x{'%02x%02x%02x' % color}")
         embed.add_field(name="HSL", value=self.hsv_to_hsl(self.rgb_to_hsv(*color)))
-        embed.add_field(name="XYZ", value=tuple((int(i) for i in convert_color(sRGBColor(*color), XYZColor).get_value_tuple())))
+        embed.add_field(name="XYZ", value=tuple((round(i) for i in convert_color(sRGBColor(*color), XYZColor).get_value_tuple())))
         embed.set_thumbnail(url=f"attachment://The_Anime_Bot_color_{name}.png")
         await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}.png"))
 
