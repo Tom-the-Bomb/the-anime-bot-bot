@@ -9,6 +9,7 @@ from webcolors import (
     hex_to_rgb,
 )
 from colordict import ColorDict
+
 colors = ColorDict()
 from wand.resource import limits
 from wand.image import Image as WandImage
@@ -52,9 +53,9 @@ import typing
 RGB_SCALE = 255
 CMYK_SCALE = 100
 
-limits['width'] = 1000
-limits['height'] = 1000
-limits['thread'] = 10
+limits["width"] = 1000
+limits["height"] = 1000
+limits["thread"] = 10
 
 warnings.simplefilter("error", Image.DecompressionBombWarning)
 Image.MAX_IMAGE_PIXELS = 44739243
@@ -69,6 +70,7 @@ Image_Union = typing.Union[
     discord.Emoji,
     str,
 ]
+
 
 class ColorConverter(commands.Converter):
     async def convert(self, ctx, argument):
@@ -85,6 +87,7 @@ class ColorConverter(commands.Converter):
                 except ValueError:
                     raise commands.BadArgument
         return tuple((int(i) for i in color))
+
 
 class TransparentAnimatedGifConverter(object):
     _PALETTE_SLOTSET = set(range(256))
@@ -262,10 +265,7 @@ class pictures(commands.Cog):
                     pass
                 elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
                     raise discord.InvalidArgument("Unsupported image type given")
-                if (
-                    resp.headers.get("Content-Length")
-                    and int(resp.headers.get("Content-Length")) > 10000000
-                ):
+                if resp.headers.get("Content-Length") and int(resp.headers.get("Content-Length")) > 10000000:
                     raise discord.InvalidArgument("Image Larger then 10 MB")
         return url
 
@@ -334,10 +334,7 @@ class pictures(commands.Cog):
                     pass
                 elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
                     raise discord.InvalidArgument("Unsupported image type given")
-                if (
-                    resp.headers.get("Content-Length")
-                    and int(resp.headers.get("Content-Length")) > 10000000
-                ):
+                if resp.headers.get("Content-Length") and int(resp.headers.get("Content-Length")) > 10000000:
                     raise discord.InvalidArgument("Image Larger then 10 MB")
         return url
 
@@ -424,12 +421,12 @@ class pictures(commands.Cog):
             w, h = image.size
             if w > h:
                 the_key = w / siz
-                size = (siz,int(h / the_key))
+                size = (siz, int(h / the_key))
             elif h > w:
                 the_key = h / siz
-                size = (int(w / the_key),siz)
+                size = (int(w / the_key), siz)
             else:
-                size = (siz,siz)
+                size = (siz, siz)
             resized = image.resize(size, resample=Image.BICUBIC, reducing_gap=2)
             image.close()
             return resized
@@ -639,13 +636,13 @@ class pictures(commands.Cog):
         result = await self.bot.loop.run_in_executor(e, self.circle__, background_color, circle_color)
         e.shutdown()
         return result
-    
+
     @asyncexe()
     def floor_(self, b):
         with WandImage(file=b) as img_:
             with WandImage(img_.sequence[0]) as img:
                 if img.height > 600 or img.width > 600:
-                # I robbed from preselany I can't do math ok
+                    # I robbed from preselany I can't do math ok
                     siz = 500
                     w, h = img.size
                     if w > h:
@@ -657,12 +654,26 @@ class pictures(commands.Cog):
                     else:
                         size = (siz, siz)
                     img.resize(size[0], size[1])
-                img.virtual_pixel = 'tile'
-                arguments = (0, 0, img.width * 0.3, img.height * 0.5,
-                            img.width, 0, img.width * 0.8, img.height * 0.5,
-                            0, img.height, img.width * 0.1, img.height,
-                            img.width, img.height, img.width * 0.9, img.height)
-                img.distort('perspective', arguments)
+                img.virtual_pixel = "tile"
+                arguments = (
+                    0,
+                    0,
+                    img.width * 0.3,
+                    img.height * 0.5,
+                    img.width,
+                    0,
+                    img.width * 0.8,
+                    img.height * 0.5,
+                    0,
+                    img.height,
+                    img.width * 0.1,
+                    img.height,
+                    img.width,
+                    img.height,
+                    img.width * 0.9,
+                    img.height,
+                )
+                img.distort("perspective", arguments)
                 final = BytesIO()
                 img.save(file=final)
                 final.seek(0)
@@ -748,43 +759,46 @@ class pictures(commands.Cog):
             return b
 
     def rgb_to_hsv(self, r, g, b):
-        r, g, b = r/255.0, g/255.0, b/255.0
+        r, g, b = r / 255.0, g / 255.0, b / 255.0
         mx = max(r, g, b)
         mn = min(r, g, b)
-        df = mx-mn
+        df = mx - mn
         if mx == mn:
             h = 0
         elif mx == r:
-            h = (60 * ((g-b)/df) + 360) % 360
+            h = (60 * ((g - b) / df) + 360) % 360
         elif mx == g:
-            h = (60 * ((b-r)/df) + 120) % 360
+            h = (60 * ((b - r) / df) + 120) % 360
         elif mx == b:
-            h = (60 * ((r-g)/df) + 240) % 360
-        s = 0 if mx == 0 else (df/mx)*100
-        v = mx*100
+            h = (60 * ((r - g) / df) + 240) % 360
+        s = 0 if mx == 0 else (df / mx) * 100
+        v = mx * 100
         return h, s, v
-    
+
     def rgb_to_xy_bri(self, r, g, b):
-        r, g, b = r/255.0, g/255.0, b/255.0
-        o = ((0.412453 * r + 0.35758 * g + 0.180423 * b), (0.212671 * r + 0.71516 * g + 0.072169 * b), (0.019334 * r + 0.119193 * g + 0.950227 * b))
+        r, g, b = r / 255.0, g / 255.0, b / 255.0
+        o = (
+            (0.412453 * r + 0.35758 * g + 0.180423 * b),
+            (0.212671 * r + 0.71516 * g + 0.072169 * b),
+            (0.019334 * r + 0.119193 * g + 0.950227 * b),
+        )
         return tuple((round(i * 100) for i in o))
 
-    
     def rgb_to_hsl(self, r, g, b):
-        r, g, b = r/255.0, g/255.0, b/255.0
+        r, g, b = r / 255.0, g / 255.0, b / 255.0
         mx = max(r, g, b)
         mn = min(r, g, b)
-        df = mx-mn
+        df = mx - mn
         if mx == mn:
             h = 0
         elif mx == r:
-            h = (60 * ((g-b)/df) + 360) % 360
+            h = (60 * ((g - b) / df) + 360) % 360
         elif mx == g:
-            h = (60 * ((b-r)/df) + 120) % 360
+            h = (60 * ((b - r) / df) + 120) % 360
         elif mx == b:
-            h = (60 * ((r-g)/df) + 240) % 360
-        s = 0 if mx == 0 else (df/mx)*100
-        l = ((mx + mn) / 2) *100
+            h = (60 * ((r - g) / df) + 240) % 360
+        s = 0 if mx == 0 else (df / mx) * 100
+        l = ((mx + mn) / 2) * 100
         return f"({round(h)}, {round(s)}%, {round(l)}%)"
 
     def rgb_to_cmyk(self, rgb_tuple):
@@ -813,7 +827,7 @@ class pictures(commands.Cog):
         for color_hex, color_name in css3_db.items():
             names.append(color_name)
             rgb_values.append(hex_to_rgb(color_hex))
-        
+
         kdt_db = KDTree(rgb_values)
         distance, index = kdt_db.query(rgb_tuple)
         return names[index]
@@ -825,7 +839,10 @@ class pictures(commands.Cog):
         embed = discord.Embed(color=discord.Color.from_rgb(*color), title=name)
         embed.add_field(name="RGB", value=color)
         embed.add_field(name="CMYK", value=tuple((round(i) for i in self.rgb_to_cmyk(color))))
-        embed.add_field(name="HSV", value=f"({round(self.rgb_to_hsv(*color)[0])}, {round(self.rgb_to_hsv(*color)[1])}%, {round(self.rgb_to_hsv(*color)[2])}%)")
+        embed.add_field(
+            name="HSV",
+            value=f"({round(self.rgb_to_hsv(*color)[0])}, {round(self.rgb_to_hsv(*color)[1])}%, {round(self.rgb_to_hsv(*color)[2])}%)",
+        )
         embed.add_field(name="HEX", value=f"#{'%02x%02x%02x' % color} | 0x{'%02x%02x%02x' % color}")
         embed.add_field(name="HSL", value=self.rgb_to_hsl(*color))
         embed.add_field(name="XYZ", value=tuple((round(i) for i in self.rgb_to_xy_bri(*color))))

@@ -179,8 +179,8 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                     password="youshallnotpass",
                     identifier="MAIN",
                     region="us_central",
-                    heartbeat=60
-            )
+                    heartbeat=60,
+                )
             await asyncio.sleep(5)
 
     async def destroy_players(self):
@@ -197,7 +197,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 password="youshallnotpass",
                 identifier="MAIN",
                 region="us_central",
-                heartbeat=60
+                heartbeat=60,
             )
         except:
             raise NoNodesAvaiable
@@ -249,7 +249,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         if ctx.author.voice.channel.id != player.channel_id:
             await ctx.send("You must be in the same voice channel as me to use this command.")
             return False
-        if ctx.command.qualified_name not in  ["play", "selfdeafen"] and player.now_playing is None:
+        if ctx.command.qualified_name not in ["play", "selfdeafen"] and player.now_playing is None:
             await ctx.send("Nothing is being played right now.")
             return False
         return True
@@ -285,7 +285,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             delete_message_after=True,
         )
         await pages.start(ctx)
-    
+
     @commands.command()
     async def selfdeafen(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
@@ -409,7 +409,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             track = Track(tracks[0].id, tracks[0].info, requester=ctx.author)
             player.queue.append(track)
             await ctx.send(f"Added `{track}` to the queue.")
-    
+
     @play.command()
     async def soundcloud(self, ctx, *, music):
         if self.bot.url_regex.fullmatch(music):

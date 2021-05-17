@@ -26,7 +26,7 @@ class Economy(commands.Cog):
             return True
         except asyncpg.UniqueViolationError:
             return False
-    
+
     async def is_recent_voted(self, user_id):
         date = await self.bot.db.fetchval("SELECT recent_voted FROM votes WHERE user_id = $1", user_id)
         return bool(date and date >= datetime.utcnow() - timedelta(hours=12))
@@ -179,7 +179,9 @@ class Economy(commands.Cog):
             return await ctx.reply(f"smh Muzan Kibutsuji almost killed you and take away {BOBO} 1 bobo")
         if await self.is_recent_voted(ctx.author.id):
             await self.change_balance(ctx.author.id, rand * 2)
-            return await ctx.reply(f"{random.choice(characters)} just gave you {BOBO} {rand} bobo because you voted within 12 hours so it doubled to {rand * 2}")
+            return await ctx.reply(
+                f"{random.choice(characters)} just gave you {BOBO} {rand} bobo because you voted within 12 hours so it doubled to {rand * 2}"
+            )
         await self.change_balance(ctx.author.id, rand)
         await ctx.reply(f"{random.choice(characters)} just gave you {BOBO} {rand} bobo")
 

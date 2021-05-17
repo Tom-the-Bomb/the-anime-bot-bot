@@ -351,7 +351,7 @@ class utility(commands.Cog):
                 status = i["status"]
                 lists.append(f"{name}: {status}")
         return lists
-        
+
     @staticmethod
     @asyncexe()
     def translate_(from_lang, to_lang, thing):
@@ -366,7 +366,7 @@ class utility(commands.Cog):
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
         return discord.File(file_, "emojis.zip")
-   
+
     @commands.command()
     @commands.is_nsfw()
     async def takepic(self, ctx: AnimeContext, *, website: str):

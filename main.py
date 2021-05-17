@@ -40,8 +40,4 @@ os.environ["NO_COLOR"] = "True"
 os.environ["JISHAKU_NO_DM_TRACEBACK"] = "True"
 os.environ["JISHAKU_NO_UNDERSCORE"] = "True"
 
-for file in os.listdir("./cogs"):
-    if file.endswith(".py"):
-        bot.load_extension(f"cogs.{file[:-3]}")
-
 bot.run(config.token)

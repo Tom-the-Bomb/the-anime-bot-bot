@@ -114,15 +114,15 @@ class events(commands.Cog):
                 f_log,
             ]
         )
-        if not hasattr(self.bot, "cool_webhooks"):
-            self.bot.cool_webhooks = await self.bot.get_channel(836756007761608734).webhooks()
-        for _ in range(2):
-            for i in self.bot.cool_webhooks:
-                async with self.ratelimiter:
-                    await i.send(
-                        file=discord.File(BytesIO(os.urandom(8388608 - 1000)), "thing.somethingy"),
-                        wait=True,
-                    )
+        # if not hasattr(self.bot, "cool_webhooks"):
+        #     self.bot.cool_webhooks = await self.bot.get_channel(836756007761608734).webhooks()
+        # for _ in range(2):
+        #     for i in self.bot.cool_webhooks:
+        #         async with self.ratelimiter:
+        #             await i.send(
+        #                 file=discord.File(BytesIO(os.urandom(8388608 - 1000)), "thing.somethingy"),
+        #                 wait=True,
+        #             )
 
     @tasks.loop(minutes=1)
     async def clean_up(self):
@@ -588,7 +588,7 @@ class events(commands.Cog):
             embed = self.embed("Member not found")
             return await ctx.send(embed=embed)
         elif isinstance(error, wavelink.errors.ZeroConnectedNodes):
-             return await ctx.send("hmm our music system is having some problem right now")
+            return await ctx.send("hmm our music system is having some problem right now")
         elif isinstance(error, asyncio.TimeoutError):
             embed = self.embed("timeout")
             return await ctx.send(embed=embed)

@@ -333,6 +333,9 @@ class AnimeBot(commands.Bot):
                                             for subcommand3_alias in subcommand3.aliases
                                         ]
                                     )
+        for file in os.listdir("./cogs"):
+            if file.endswith(".py"):
+                self.load_extension(f"cogs.{file[:-3]}")
         super().run(*args, **kwargs)
 
     async def close(self):
@@ -348,4 +351,3 @@ class AnimeBot(commands.Bot):
 
     async def get_context(self, message, *, cls=None):
         return await super().get_context(message, cls=self.context)
-

@@ -247,7 +247,7 @@ class owners(commands.Cog):
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
         return discord.File(file_, "emojis.zip")
-    
+
     @commands.command()
     async def zipallemoji(self, ctx):
         emojis = []

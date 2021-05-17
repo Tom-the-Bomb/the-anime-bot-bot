@@ -43,7 +43,7 @@ class VoteManager(commands.Cog):
                 member = guild.get_member(user_id)
                 if not member._roles.has(842564732078522418):
                     await member.add_roles(discord.Object(842564732078522418))
-    
+
     async def give_role(self, user_id):
         guild = self.bot.get_guild(786359602241470464)
         await guild.chunk() if not guild.chunked else ...
@@ -78,7 +78,9 @@ class VoteManager(commands.Cog):
                 user.id,
                 1,
             )
-            await self.bot.db.execute("UPDATE votes SET recent_voted = $2 WHERE user_id = $1", user.id, datetime.utcnow())
+            await self.bot.db.execute(
+                "UPDATE votes SET recent_voted = $2 WHERE user_id = $1", user.id, datetime.utcnow()
+            )
             await self.bot.get_cog("Economy").change_balance(user.id, 10000)
             self.bot.loop.create_task(self.give_role(user.id))
             await user.send(
