@@ -1,5 +1,15 @@
 import discord
 from discord.ext import commands
+from colormath.color_objects import sRGBColor, XYZColor
+from colormath.color_conversions import convert_color
+import colorsys
+from scipy.spatial import KDTree
+from webcolors import (
+    css3_hex_to_names,
+    hex_to_rgb,
+)
+from colordict import ColorDict
+colors = ColorDict()
 from wand.resource import limits
 from wand.image import Image as WandImage
 from copy import copy
@@ -30,6 +40,7 @@ from typing import Tuple, List, Union
 from collections import defaultdict
 from random import randrange
 from itertools import chain
+from PIL import ImageColor
 from PIL import Image, ImageDraw, ImageFilter
 from PIL import ImageEnhance
 from PIL import ImageSequence
@@ -56,6 +67,21 @@ Image_Union = typing.Union[
     str,
 ]
 
+class ColorConverter(commands.Converter):
+    async def convert(self, ctx, argument):
+        converter = commands.ColourConverter()
+        try:
+            color = await converter.convert(ctx, argument)
+            color = color.to_rgb()
+        except commands.BadColorArgument:
+            try:
+                color = colors[argument]
+            except IndexError:
+                try:
+                    color = ImageColor.getrgb(argument)
+                except ValueError:
+                    raise commands.BadArgument
+        return color
 
 class TransparentAnimatedGifConverter(object):
     _PALETTE_SLOTSET = set(range(256))
@@ -711,6 +737,81 @@ class pictures(commands.Cog):
         b = BytesIO(im_buf_arr)
         del im_buf_arr
         return discord.File(b, "The_Anime_Bot_Face_Reg.png")
+
+    @asyncexe()
+    def make_color_image(self, color):
+        with Image.new("RGB", (200, 200), color) as img:
+            b = BytesIO()
+            img.save(b, "PNG")
+            b.seek(0)
+            return b
+    
+    def rgb_to_hsl(self, color_tueple):
+        r = float(color_turple[0])
+        g = float(color_turple[1])
+        b = float(color_turple[2])
+        high = max(r, g, b)
+        low = min(r, g, b)
+        h, s, v = ((high + low) / 2,)*3
+
+        if high == low:
+            h = 0.0
+            s = 0.0
+        else:
+            d = high - low
+            s = d / (2 - high - low) if l > 0.5 else d / (high + low)
+            h = {
+                r: (g - b) / d + (6 if g < b else 0),
+                g: (b - r) / d + 2,
+                b: (r - g) / d + 4,
+            }[high]
+            h /= 6
+
+        return h, s, v
+    def rgb_to_cmyk(self, rgb_turple):
+        r, g, b = rgb_turple[0], rgb_turple[1], rgb_turple[2]
+        if (r, g, b) == (0, 0, 0):
+
+            return 0, 0, 0, CMYK_SCALE
+
+        c = 1 - r / RGB_SCALE
+        m = 1 - g / RGB_SCALE
+        y = 1 - b / RGB_SCALE
+
+        min_cmy = min(c, m, y)
+        c = (c - min_cmy) / (1 - min_cmy)
+        m = (m - min_cmy) / (1 - min_cmy)
+        y = (y - min_cmy) / (1 - min_cmy)
+        k = min_cmy
+
+        return c * CMYK_SCALE, m * CMYK_SCALE, y * CMYK_SCALE, k * CMYK_SCALE
+
+    @asyncexe()
+    def convert_rgb_to_names(self, rgb_tuple):
+        css3_db = css3_hex_to_names
+        names = []
+        rgb_values = []
+        for color_hex, color_name in css3_db.items():
+            names.append(color_name)
+            rgb_values.append(hex_to_rgb(color_hex))
+        
+        kdt_db = KDTree(rgb_values)
+        distance, index = kdt_db.query(rgb_tuple)
+        return names[index]
+
+    @commands.command()
+    async def colorinfo(self, ctx, *, color: ColorConverter):
+        img = await self.make_color_image(color)
+        name = await self.convert_rgb_to_names(color)
+        embed = discord.Embed(color=discord.Color.from_rgb(color), title=name)
+        embed.add_field(name="RGB", value=color)
+        embed.add_field(name="CMYK", value=self.rgb_to_cmyk(color))
+        embed.add_field(name="HSV", value=colorsys.rgb_to_hsv(*color))
+        embed.add_field(name="YIQ", value=colorsys.rgb_to_yiq(*color))
+        embed.add_field(name="HSL", value=self.rgb_to_hsl(color))
+        embed.add_field(name="HSL", value=convert_color(sRGBColor(*color), XYZColor).get_value_tuple())
+        embed.set_image(url=f"attachment://The_Anime_Bot_color_{name}")
+        await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}"))
 
     @commands.command()
     async def floor(self, ctx, thing: Image_Union = None):
