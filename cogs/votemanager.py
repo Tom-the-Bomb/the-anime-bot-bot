@@ -92,7 +92,7 @@ class VoteManager(commands.Cog):
         return web.Response(status=200, text="OK")
 
     async def index(self, request):
-        return web.Response(text=f"In {len(self.bot.guilds)}, with {len(self.bot.users)} users")
+        return web.Response(text=f"In {len(self.bot.guilds)} guilds, with {len(self.bot.users)} users")
 
     async def run(self):
         await self.bot.wait_until_ready()
