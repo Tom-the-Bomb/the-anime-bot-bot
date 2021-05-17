@@ -763,10 +763,7 @@ class pictures(commands.Cog):
             h = (60 * ((b-r)/df) + 120) % 360
         elif mx == b:
             h = (60 * ((r-g)/df) + 240) % 360
-        if mx == 0:
-            s = 0
-        else:
-            s = (df/mx)*100
+        s = 0 if mx == 0 else (df/mx)*100
         v = mx*100
         return h, s, v
     
