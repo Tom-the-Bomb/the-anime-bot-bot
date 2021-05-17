@@ -56,6 +56,14 @@ class UserHistory(commands.Cog):
                 str(after),
             )
 
-
+    @commands.command()
+    async def usernames(self, ctx, *, member: discord.Member):
+        member = member or ctx.author
+        user_names = await self.bot.db.fetchval("SELECT user_names FROM user_history WHERE user_id = $1", member.id)
+        final = ", ".join(
+            discord.utils.escape_mentions(discord.utils.escape_markdown(i))
+            for i in user_names
+        )
+        await ctx.send(f"{str(member)}'s past usernames: {final}")
 def setup(bot):
     bot.add_cog(UserHistory(bot))
