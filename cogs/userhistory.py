@@ -49,7 +49,7 @@ class UserHistory(commands.Cog):
         if before.avatar_url_as(static_format="png") != after.avatar_url_as(static_format="png"):
             m = await next(self.UPLOADERS).send(
                 after.id,
-                username="Avatar Uploder",
+                username="Avatar Uploader",
                 avatar_url=self.bot.user.avatar_url_as(format="png"),
                 file=discord.File(
                     BytesIO(await after.avatar_url_as(static_format="png").read()),
