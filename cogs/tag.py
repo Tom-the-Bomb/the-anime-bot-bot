@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from io import BytesIO
 import ujson
 import re
 import asyncpg
@@ -230,16 +231,14 @@ class tag(commands.Cog):
         tags = await self.bot.db.fetch(
             "SELECT * FROM tags"
         )
-        json = {}
-        for i in tags:
-            json[i["tag_name"]] = {
+        json = {i["tag_name"]: {
                 "tag_content": i["tag_content"],
                 "author_id": i["author_id"],
                 "message_id": i["message_id"],
                 "uses": i["uses"],
                 "aliases": i["aliases"],
-            }
-        await ctx.send(file=discord.File(ujson.dumps(json, escape_forward_slashes=False, indent=4).encode("utf-8"), "The_Anime_Bot_tags_export.json"))
+            } for i in tags}
+        await ctx.send(file=discord.File(BytesIO(ujson.dumps(json, escape_forward_slashes=False, indent=4).encode("utf-8")), "The_Anime_Bot_tags_export.json"))
 
     @tag.command()
     async def transfer(self, ctx: AnimeContext, name, member: discord.Member):
