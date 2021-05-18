@@ -1,7 +1,7 @@
 import discord
 import config
 from discord import Webhook, AsyncWebhookAdapter
-from discord.ext import commands
+from discord.ext import commands, menus
 from utils.subclasses import AnimeContext
 from math import ceil, floor
 from itertools import cycle
