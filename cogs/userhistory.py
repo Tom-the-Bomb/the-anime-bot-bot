@@ -3,6 +3,7 @@ import config
 from discord import Webhook, AsyncWebhookAdapter
 from discord.ext import commands
 from utils.subclasses import AnimeContext
+from math import ceil, floor
 from itertools import cycle
 import random
 from io import BytesIO
@@ -45,9 +46,9 @@ class UserHistory(commands.Cog):
                 wait=True,
             )
             await self.bot.db.execute(
-                "INSERT INTO user_history (user_id, avatar_id) VALUES ($1, ARRAY [$2 :: BIGINT ]) ON CONFLICT (user_id) DO UPDATE SET avatar_id = array_append (user_history.avatar_id, $2 :: BIGINT)",
+                "INSERT INTO user_history (user_id, avatar_url) VALUES ($1, ARRAY [$2]) ON CONFLICT (user_id) DO UPDATE SET avatar_url = array_append (user_history.avatar_url, $2)",
                 after.id,
-                m.id,
+                m.attachments[0].url,
             )
         elif str(before) != str(after):
             await self.bot.db.execute(
@@ -55,6 +56,14 @@ class UserHistory(commands.Cog):
                 after.id,
                 str(after),
             )
+    
+    @commands.command()
+    async def avatars(self, ctx):
+        member = member or ctx.author
+        user_names = await self.bot.db.fetchval("SELECT user_names FROM user_history WHERE user_id = $1", member.id)
+        if not user_names:
+            return await ctx.send(f"We can't find any past usernames for {str(member)} in our database, try again later.")
+
 
     @commands.command()
     async def usernames(self, ctx, *, member: discord.Member=None):
