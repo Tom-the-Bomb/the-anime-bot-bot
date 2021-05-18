@@ -1,12 +1,13 @@
+import difflib
+import random
+
 import discord
 from discord.ext import commands
+from menus import menus
 from utils.subclasses import AnimeContext
 
-import difflib
-from menus import menus
-
-from jishaku.paginators import PaginatorEmbedInterface
 from jishaku.models import copy_context_with
+from jishaku.paginators import PaginatorEmbedInterface
 
 
 class HelpMenuSource(menus.ListPageSource):
@@ -93,7 +94,7 @@ class HelpCommand(commands.HelpCommand):
         embed = discord.Embed(
             color=self.context.bot.color,
             title=self.get_command_signature(command),
-            description=command.help or "oh seems like my owner is too lazy to add help for this command sorry",
+            description=command.help or random.choice(no_help_responses),
         )
         await self.context.send(embed=embed)
 
