@@ -92,7 +92,7 @@ class HelpCommand(commands.HelpCommand):
             if isinstance(i, commands.Group):
                 for v in i.walk_commands():
                     lists_.append(self.get_command_signature(v))
-                lists_.insert(0, i.root_parent)
+                lists_.insert(0, self.get_command_signature(i))
             else:
                 lists_.append(self.get_command_signature(i))
         lists = [f"**{i}**" for i in lists_]
