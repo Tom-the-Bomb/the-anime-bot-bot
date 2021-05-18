@@ -960,7 +960,7 @@ class pictures(commands.Cog):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         ocr_config = r'--tessdata-dir "/home/cryptex/ocr_data"'
-        return pytesseract.image_to_string(img)
+        return pytesseract.image_to_string(img, config=ocr_config)
 
     @commands.command()
     async def ocr(
