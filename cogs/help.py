@@ -63,7 +63,7 @@ class HelpCommand(commands.HelpCommand):
                     return await self.send_error_message(string)
                 cmd = found
 
-        if isinstance(cmd, Group):
+        if isinstance(cmd, commands.Group):
             return await self.send_group_help(cmd)
         else:
             return await self.send_command_help(cmd)
@@ -92,6 +92,7 @@ class HelpCommand(commands.HelpCommand):
             if isinstance(i, commands.Group):
                 for v in i.walk_commands():
                     lists_.append(self.get_command_signature(v))
+                lists_.insert(0, i.root_parent)
             else:
                 lists_.append(self.get_command_signature(i))
         lists = [f"**{i}**" for i in lists_]
