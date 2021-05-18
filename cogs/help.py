@@ -25,7 +25,6 @@ class HelpMenuSource(menus.ListPageSource):
 
 
 class HelpCommand(commands.HelpCommand):
-
     async def command_callback(self, ctx, *, command=None):
         await self.prepare_help_command(ctx, command)
         bot = ctx.bot
@@ -45,7 +44,7 @@ class HelpCommand(commands.HelpCommand):
         # Since we want to have detailed errors when someone
         # passes an invalid subcommand, we need to walk through
         # the command group chain ourselves.
-        keys = command.split(' ')
+        keys = command.split(" ")
         cmd = bot.all_commands.get(keys[0])
         if cmd is None:
             string = await maybe_coro(self.command_not_found, self.remove_mentions(keys[0]))
@@ -78,6 +77,19 @@ class HelpCommand(commands.HelpCommand):
         await pages.start(self.context)
 
     async def send_command_help(self, command):
+        no_help_responses = [
+            "Is a mystery",
+            "idk",
+            "<:rooThink:596576798351949847>",
+            "hmm now this is hm",
+            "cool no help idk what to do now",
+            "uhh good question idk <:rooPog:829501231000584272>",
+            "i is wonder",
+            "why no help",
+            "owner lazy u no can blame me",
+            "yes we need some help on this help command",
+            "hmm",
+        ]
         embed = discord.Embed(
             color=self.context.bot.color,
             title=self.get_command_signature(command),
