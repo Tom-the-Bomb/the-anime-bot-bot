@@ -1431,9 +1431,9 @@ class pictures(commands.Cog):
         thing: Image_Union = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
         img = await self.bot.dag.image_process(ImageFeatures.paint(), url)
-        file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
+        file = discord.File(fp=img.image, filename=f"The_Anime_Bot_paint.{img.format}")
         await ctx.reply(file=file)
 
     @commands.command()
@@ -1443,9 +1443,9 @@ class pictures(commands.Cog):
         thing: Image_Union = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
         img = await self.bot.dag.image_process(ImageFeatures.polaroid(), url)
-        file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
+        file = discord.File(fp=img.image, filename=f"The_Anime_Bot_polaroid.{img.format}")
         await ctx.reply(file=file)
 
     @commands.command()
@@ -1455,9 +1455,9 @@ class pictures(commands.Cog):
         thing: Image_Union = None,
     ):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
         img = await self.bot.dag.image_process(ImageFeatures.sepia(), url)
-        file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
+        file = discord.File(fp=img.image, filename=f"The_Anime_Bot_sepia.{img.format}")
         await ctx.reply(file=file)
 
     @commands.command()
