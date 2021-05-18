@@ -286,7 +286,7 @@ class AnimeBot(commands.Bot):
         self.utils = utils
         self.deleted_message_cache = LimitedSizeDict()
         self.concurrency = []
-        self.color = 0x00FF6A
+        self.color = 0xff4500
         self.psutil_process = psutil.Process()
         self.to_delete_message_cache = {}
         self._message_cache = {}
