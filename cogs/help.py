@@ -111,23 +111,23 @@ class HelpCommand(commands.HelpCommand):
         `{self.context.prefix}help [module]`
 
         **Available Modules are:**
-        ```
-fun
-utility
-moderations
-chat
-owners
-Music
-others
-animes
-todo
-tag
-commandsusage
-events
-pictures
-logging
-socket
-        ```
+
+<:rooAww:747680003021471825> Fun
+<:rooBless:597589960270544916> Utility
+<:rooCop:596577110982918146> Moderations
+<:rooPog:829501231000584272> Chat
+<:rooThink:596576798351949847> Music
+<:rooPopcorn:744346001304977488> Others
+<a:rooLove:744346239075877518> animes
+<a:rooCool:747680120763973654> Todo
+<a:rooClap:759933903959228446> Tag
+<:roodab:805915304190279691> CommandsUsage
+<:rooDuck:739614767941156874> ReactionRole
+<:rooEZ:596577109695266837> Reminder
+<:rooEZSip:596577108675788800> UserHistory
+<:rooFat:744345098531242125> Pictures
+<a:rooFight:747679958440345621> Logging
+<a:rooHacker:744349119061032970> Socket
         """,
         )
         embed.set_thumbnail(url=str(self.context.me.avatar_url_as(format="png")))
