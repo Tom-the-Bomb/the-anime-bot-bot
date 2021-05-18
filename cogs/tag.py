@@ -233,11 +233,11 @@ class tag(commands.Cog):
         json = {}
         for i in tags:
             json[i["tag_name"]] = {
-                "tag_content"= i["tag_content"],
-                "author_id"= i["author_id"],
-                "message_id"= i["message_id"],
-                "uses"= i["uses"],
-                "aliases"= i["aliases"],
+                "tag_content": i["tag_content"],
+                "author_id": i["author_id"],
+                "message_id": i["message_id"],
+                "uses": i["uses"],
+                "aliases": i["aliases"],
             }
         await ctx.send(file=discord.File(ujson.dumps(json, escape_forward_slashes=False, indent=4).encode("utf-8"), "The_Anime_Bot_tags_export.json"))
 
