@@ -1,5 +1,6 @@
 import discord
 import config
+import typing
 from discord import Webhook, AsyncWebhookAdapter
 from discord.ext import commands, menus
 from utils.subclasses import AnimeContext
@@ -71,7 +72,7 @@ class UserHistory(commands.Cog):
             )
     
     @commands.command()
-    async def avatars(self, ctx, *, member: discord.Member=None):
+    async def avatars(self, ctx, *, member: typing.Union[discord.Member, discord.User]=None):
         member = member or ctx.author
         avatars = await self.bot.db.fetchval("SELECT avatar_url FROM user_history WHERE user_id = $1", member.id)
         if not avatars:
@@ -80,7 +81,7 @@ class UserHistory(commands.Cog):
         await pages.start(ctx)
 
     @commands.command()
-    async def usernames(self, ctx, *, member: discord.Member=None):
+    async def usernames(self, ctx, *, member: typing.Union[discord.Member, discord.User]r=None):
         """
         Show you the member's past usernames
         """
