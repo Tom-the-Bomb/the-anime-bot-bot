@@ -11,6 +11,7 @@ from jishaku.models import copy_context_with
 
 class HelpMenuSource(menus.ListPageSource):
     def __init__(self, data):
+        self.data = data
         super().__init__(data, per_page=10)
 
     async def format_page(self, menu, entries):
@@ -19,7 +20,7 @@ class HelpMenuSource(menus.ListPageSource):
                 color=menu.ctx.bot.color,
                 title="Help command",
                 description="\n".join(entries),
-            )
+            ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
         }
 
 
@@ -66,6 +67,7 @@ class HelpCommand(commands.HelpCommand):
             return await self.send_group_help(cmd)
         else:
             return await self.send_command_help(cmd)
+
     def get_command_signature(self, command):
         return f"{self.clean_prefix}{command.qualified_name} {command.signature}"
 
