@@ -642,7 +642,7 @@ class pictures(commands.Cog):
         with WandImage(file=b) as img_:
             with WandImage(img_.sequence[0]) as img:
                 if img.height > 600 or img.width > 600:
-                    # I robbed from preselany I can't do math ok
+                    # I robbed resize from preselany I can't do math ok
                     siz = 500
                     w, h = img.size
                     if w > h:
