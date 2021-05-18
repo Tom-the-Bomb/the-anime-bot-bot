@@ -12,6 +12,18 @@ from PIL import Image
 USER_AVATAR_IMAGE_DB_GUILD_ID = 836471259344142367
 USER_AVATAR_IMAGE_DB_CHANNEL_ID = 842629929039953920
 
+class AvatarMenuSource(menus.ListPageSource):
+    def __init__(self, data, user):s
+        self.user = user
+        super().__init__(data, per_page=1)
+
+    async def format_page(self, menu, entries):
+        return {
+            "embed": discord.Embed(
+                color=menu.ctx.bot.color,
+                title=f"{self.user}'s avatars"
+            ).set_image(url=entries).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
+        }
 
 class UserHistory(commands.Cog):
     def __init__(self, bot):
@@ -60,10 +72,11 @@ class UserHistory(commands.Cog):
     @commands.command()
     async def avatars(self, ctx):
         member = member or ctx.author
-        user_names = await self.bot.db.fetchval("SELECT user_names FROM user_history WHERE user_id = $1", member.id)
+        user_names = await self.bot.db.fetchval("SELECT avatar_url FROM user_history WHERE user_id = $1", member.id)
         if not user_names:
-            return await ctx.send(f"We can't find any past usernames for {str(member)} in our database, try again later.")
-
+            return await ctx.send(f"We can't find any past avatars for {str(member)} in our database, try again later.")
+        pages = menus.MenuPages(source=AvatarMenuSource(lists, user=member), delete_message_after=True)
+        await pages.start(ctx)
 
     @commands.command()
     async def usernames(self, ctx, *, member: discord.Member=None):
