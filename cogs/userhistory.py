@@ -15,6 +15,7 @@ USER_AVATAR_IMAGE_DB_CHANNEL_ID = 842629929039953920
 class AvatarMenuSource(menus.ListPageSource):
     def __init__(self, data, user):
         self.user = user
+        self.data = data
         super().__init__(data, per_page=1)
 
     async def format_page(self, menu, entries):
