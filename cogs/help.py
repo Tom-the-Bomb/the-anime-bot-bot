@@ -73,7 +73,7 @@ class HelpCommand(commands.HelpCommand):
 
     async def send_group_help(self, group):
         lists = [self.get_command_signature(i) for i in group.walk_commands()]
-        lists.insert(0, self.get_command_signature(group))
+        lists.insert(0, self.get_command_signature(group.root_parent))
         pages = menus.MenuPages(source=HelpMenuSource(lists), delete_message_after=True)
         await pages.start(self.context)
 
