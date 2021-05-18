@@ -81,7 +81,7 @@ class UserHistory(commands.Cog):
         await pages.start(ctx)
 
     @commands.command()
-    async def usernames(self, ctx, *, member: typing.Union[discord.Member, discord.User]r=None):
+    async def usernames(self, ctx, *, member: typing.Union[discord.Member, discord.User]=None):
         """
         Show you the member's past usernames
         """
