@@ -70,7 +70,7 @@ class UserHistory(commands.Cog):
             )
     
     @commands.command()
-    async def avatars(self, ctx):
+    async def avatars(self, ctx, *, member: discord.Member=None):
         member = member or ctx.author
         avatars = await self.bot.db.fetchval("SELECT avatar_url FROM user_history WHERE user_id = $1", member.id)
         if not avatars:
