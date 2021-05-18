@@ -147,9 +147,9 @@ class AnimeColor(discord.Color):
 
 async def prefix_get(bot, message):
     if message.guild is None:
-        return bot.default_prefix
+        return ["<@787927476177076234>", "<@!787927476177076234>"] + bot.default_prefix
     if bot.prefixes.get(message.guild.id):
-        return bot.prefixes.get(message.guild.id)
+        return ["<@787927476177076234>", "<@!787927476177076234>"] + bot.prefixes.get(message.guild.id)
     if not bot.prefixes.get(message.guild.id):
         await bot.db.execute(
             "INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO NOTHING",
@@ -157,8 +157,8 @@ async def prefix_get(bot, message):
             bot.default_prefix,
         )
         bot.prefixes[message.guild.id] = bot.default_prefix
-        return bot.prefixes[message.guild.id]
-    return bot.default_prefix
+        return ["<@787927476177076234>", "<@!787927476177076234>"] + bot.prefixes[message.guild.id]
+    return ["<@787927476177076234>", "<@!787927476177076234>"] + bot.default_prefix
 
 
 class LimitedSizeDict(OrderedDict):
