@@ -1248,11 +1248,25 @@ class pictures(commands.Cog):
     @asyncexe()
     def magic_(self, image: BytesIO, intensity: float):
         with WandImage(file=image) as img:
-            img.liquid_rescale(width=round(img.width * 0.5), height=round(img.height * 0.5), delta_x=round(intensity * 0.5), rigidity=0)
-            b = BytesIO()
-            img.save(b)
-            b.seek(0)
-            return b
+            with WandImage(img.sequence[0]) as img: 
+                if img.height > 600 or img.width > 600:
+                    # I robbed resize from preselany I can't do math ok
+                    siz = 500
+                    w, h = img.size
+                    if w > h:
+                        the_key = w / siz
+                        size = (siz, int(h / the_key))
+                    elif h > w:
+                        the_key = h / siz
+                        size = (int(w / the_key), siz)
+                    else:
+                        size = (siz, siz)
+                    img.resize(size[0], size[1])
+                img.liquid_rescale(width=round(img.width * 0.5), height=round(img.height * 0.5), delta_x=round(intensity * 0.5), rigidity=0)
+                b = BytesIO()
+                img.save(b)
+                b.seek(0)
+                return b
 
 
     @commands.command(aliases=["magik"])
