@@ -415,7 +415,7 @@ class pictures(commands.Cog):
             i.close()
 
     def resize(self, image: Image) -> Image:
-        if image.height > 600 or image.width > 600:
+        if image.height > 500 or image.width > 500:
             # I robbed from preselany I can't do math ok
             siz = 500
             w, h = image.size
@@ -641,7 +641,7 @@ class pictures(commands.Cog):
     def floor_(self, b):
         with WandImage(file=b) as img_:
             with WandImage(img_.sequence[0]) as img:
-                if img.height > 600 or img.width > 600:
+                if img.height > 500 or img.width > 500:
                     # I robbed resize from preselany I can't do math ok
                     siz = 500
                     w, h = img.size
@@ -1249,7 +1249,7 @@ class pictures(commands.Cog):
     def magic_(self, image: BytesIO, intensity: float):
         with WandImage(file=image) as img:
             with WandImage(img.sequence[0]) as img: 
-                if img.height > 600 or img.width > 600:
+                if img.height > 500 or img.width > 500:
                     # I robbed resize from preselany I can't do math ok
                     siz = 500
                     w, h = img.size
