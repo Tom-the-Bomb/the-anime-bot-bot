@@ -428,7 +428,7 @@ class pictures(commands.Cog):
             else:
                 size = (siz, siz)
             resized = image.resize(size, resample=Image.BICUBIC, reducing_gap=2)
-            image.close()
+            # image.close()
             return resized
         return image
 
