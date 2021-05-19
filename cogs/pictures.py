@@ -198,81 +198,12 @@ class pictures(commands.Cog):
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
 
-    async def get_gif_url(self, ctx: AnimeContext, thing, **kwargs):
-        url = None
-        avatar = kwargs.get("avatar", True)
-        check = kwargs.get("check", True)
-        if ctx.message.reference:
-            message = ctx.message.reference.resolved
-            if message.embeds and message.embeds[0].type == "image":
-                url = message.embeds[0].thumbnail.url
-            elif message.embeds and message.embeds[0].type == "rich":
-                if message.embeds[0].image.url:
-                    url = message.embeds[0].image.url
-                elif message.embeds[0].thumbnail.url:
-                    url = message.embeds[0].thumbnail.url
-            elif message.attachments and message.attachments[0].width and message.attachments[0].height:
-                url = message.attachments[0].url
-            if message.stickers:
-                sticker = message.stickers[0]
-                if sticker.format != discord.StickerType.lottie:
-                    url = str(sticker.image_url_as())
-
-        if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
-            url = ctx.message.attachments[0].url
-
-        if ctx.message.stickers:
-            sticker = ctx.message.stickers[0]
-            if sticker.format != discord.StickerType.lottie:
-                url = str(sticker.image_url_as())
-
-        if thing is None and avatar and url is None:
-            url = str(ctx.author.avatar_url_as(static_format="png"))
-        elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
-            url = str(thing.url_as())
-        elif isinstance(thing, (discord.Member, discord.User)):
-            url = str(thing.avatar_url_as(static_format="png"))
-        elif url is None:
-            thing = str(thing).strip("<>")
-            if self.bot.url_regex.match(thing):
-                url = thing
-            else:
-                url = await emoji_to_url(thing)
-                if url == thing:
-                    raise commands.CommandError("Invalid url")
-        if not avatar:
-            return None
-        if not url:
-            raise commands.MissingRequiredArgument()
-        if check:
-            async with self.bot.session.get(url) as resp:
-                if resp.status != 200:
-                    raise commands.CommandError("Invalid Picture")
-                if "image" not in resp.content_type:
-                    raise commands.CommandError("Invalid Picture")
-                b = await resp.content.read(50)
-                if b.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"):
-                    pass
-                elif b[0:3] == b"\xff\xd8\xff" or b[6:10] in (b"JFIF", b"Exif"):
-                    pass
-                elif b.startswith((b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")):
-                    pass
-                elif b[:2] in (b"MM", b"II"):
-                    pass
-                elif len(b) >= 3 and b[0] == ord(b"P") and b[1] in b"25" and b[2] in b" \t\n\r":
-                    pass
-                elif b.startswith(b"BM"):
-                    pass
-                elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
-                    raise discord.InvalidArgument("Unsupported image type given")
-                if resp.headers.get("Content-Length") and int(resp.headers.get("Content-Length")) > 10000000:
-                    raise discord.InvalidArgument("Image Larger then 10 MB")
-        return url
 
     async def get_url(self, ctx: AnimeContext, thing, **kwargs):
         url = None
         avatar = kwargs.get("avatar", True)
         check = kwargs.get("check", True)
+        is_gif = kwargs.get("gif", False)
         if ctx.message.reference:
             message = ctx.message.reference.resolved
             if message.embeds and message.embeds[0].type == "image":
@@ -296,11 +227,20 @@ class pictures(commands.Cog):
             if sticker.format != discord.StickerType.lottie:
                 url = str(sticker.image_url_as())
         if thing is None and avatar and url is None:
-            url = str(ctx.author.avatar_url_as(static_format="png"))
+            if gif:
+                url = str(ctx.author.avatar_url_as(static_format="png"))
+            else:
+                url = str(ctx.author.avatar_url_as(format="png"))
         elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
-            url = str(thing.url_as(format="png"))
+            if gif:
+                url = str(thing.url_as(static_format="png"))
+            else:
+                url = str(thing.url_as(format="png"))
         elif isinstance(thing, (discord.Member, discord.User)):
-            url = str(thing.avatar_url_as(format="png"))
+            if gif:
+                url = str(thing.avatar_url_as(static_format="png"))
+            else:
+                url = str(thing.avatar_url_as(format="png"))
         elif url is None:
             thing = str(thing).strip("<>")
             if self.bot.url_regex.match(thing):
@@ -337,6 +277,9 @@ class pictures(commands.Cog):
                 if resp.headers.get("Content-Length") and int(resp.headers.get("Content-Length")) > 10000000:
                     raise discord.InvalidArgument("Image Larger then 10 MB")
         return url
+
+    def get_gif_url(self, ctx: AnimeContext, thing, **kwargs):
+        return self.get_url(ctx, thing, gif=True, **kwargs)
 
     async def bot_cdn(self, url):
         async with self.bot_cdn_ratelimiter:
