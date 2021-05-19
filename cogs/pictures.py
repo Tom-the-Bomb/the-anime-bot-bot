@@ -228,9 +228,9 @@ class pictures(commands.Cog):
                 url = str(sticker.image_url_as())
         if thing is None and avatar and url is None:
             if gif:
-                url = str(ctx.author.avatar_url_as(static_format="png"))
+                url = str(ctx.author.avatar_url_as(static_format="png", size=512))
             else:
-                url = str(ctx.author.avatar_url_as(format="png"))
+                url = str(ctx.author.avatar_url_as(format="png", size=512))
         elif isinstance(thing, (discord.PartialEmoji, discord.Emoji)):
             if gif:
                 url = str(thing.url_as(static_format="png"))
@@ -238,9 +238,9 @@ class pictures(commands.Cog):
                 url = str(thing.url_as(format="png"))
         elif isinstance(thing, (discord.Member, discord.User)):
             if gif:
-                url = str(thing.avatar_url_as(static_format="png"))
+                url = str(thing.avatar_url_as(static_format="png", size=512))
             else:
-                url = str(thing.avatar_url_as(format="png"))
+                url = str(thing.avatar_url_as(format="png", size=512))
         elif url is None:
             thing = str(thing).strip("<>")
             if self.bot.url_regex.match(thing):
