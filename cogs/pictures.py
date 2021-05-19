@@ -203,7 +203,7 @@ class pictures(commands.Cog):
         url = None
         avatar = kwargs.get("avatar", True)
         check = kwargs.get("check", True)
-        is_gif = kwargs.get("gif", False)
+        gif = kwargs.get("gif", False)
         if ctx.message.reference:
             message = ctx.message.reference.resolved
             if message.embeds and message.embeds[0].type == "image":
