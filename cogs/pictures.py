@@ -1244,19 +1244,29 @@ class pictures(commands.Cog):
             image = await self.bot.zaneapi.jpeg(url)
             embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://jpeg.gif")
             await ctx.reply(file=discord.File(fp=image, filename="jpeg.gif"), embed=embed)
+    
+    @asyncexe()
+    def magic_(self, image: BytesIO, intensity: float):
+        with WandImage(file=image) as img:
+            img.liquid_rescale(width=round(img.width * 0.5), height=round(img.height * 0.5), delta_x=round(intensity * 0.5), rigidity=0)
+            b = BytesIO()
+            img.save(b)
+            b.seek(0)
+            return b
+
 
     @commands.command(aliases=["magik"])
     async def magic(
         self,
         ctx,
         thing: typing.Optional[Image_Union],
-        level: float = 0.6,
+        intensity: float = 0.6,
     ):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.magic(url, level)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://magic.gif")
-            await ctx.reply(file=discord.File(fp=image, filename="magic.gif"), embed=embed)
+            async with self.bot.session.get(url) as resp:
+                image = BytesIO(await resp.read())
+            await ctx.send(file=discord.File(await self.magic_(image, intensity), "The_Anime_Bot_magic.png"))
 
     # @commands.command()
     # @commands.max_concurrency(1, commands.BucketType.user)
