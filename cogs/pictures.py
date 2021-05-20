@@ -1427,7 +1427,7 @@ class pictures(commands.Cog):
         intensity: float = 5.0
     ):
         if not intensity <= 10:
-            return await ctx.send("Intensity under 10 only when yes")
+            return await ctx.send("Intensity must be under 10 ok?")
         async with ctx.channel.typing():
             url = await self.get_gif_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
