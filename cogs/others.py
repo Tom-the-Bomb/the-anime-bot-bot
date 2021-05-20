@@ -52,6 +52,35 @@ class others(commands.Cog):
         self.bot = bot
         self.countdownused = []
         self.thing = {}
+    
+    @commands.command()
+    async def sys(self, ctx):
+        with self.bot.psutil_process.oneshot():
+            proc = self.bot.psutil_process()
+            mem = proc.memory_full_info()
+            net = psutil.net_io_counters()
+            embed = discord.Embed(color=self.bot.color, description=f"""
+```prolog
+CPU:
+    CPU Usage: {psutil.cpu_percent()}
+Process:
+    Threads: {proc.num_threads()}
+    PID: {proc.pid}
+        Memory:
+        Physical Memory: {humanize.naturalsize(mem.rss)}
+        Virtual Memory:  {humanize.naturalsize(mem.vms)}
+Disk:
+    Disk Usage: {humanize.naturalsize(psutil.disk_usage('/'))}
+Network:
+    Bytes send: {humanize.naturalsize(net.bytes_sent)}
+    Bytes Recieve: {humanize.naturalsize(net.bytes_recv)}
+    Packets Sent: {net.packets_sent:,}
+    Packets Recieve: {net.packets_recv:,}
+System:
+    Boot Time: {datetime.datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")}
+```
+            """)
+        await ctx.send(embed=embed)
 
     @commands.command()
     @is_in_server()
