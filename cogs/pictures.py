@@ -199,7 +199,6 @@ class pictures(commands.Cog):
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
 
-
     async def get_url(self, ctx: AnimeContext, thing, **kwargs):
         url = None
         avatar = kwargs.get("avatar", True)
@@ -358,14 +357,8 @@ class pictures(commands.Cog):
         # for i in images:
         #     i.close()
         images[0].save(
-                save_file,
-                format="GIF",
-                append_images=images[1:],
-                durations=durations,
-                disposal=2,
-                loop=0,
-                save_all=True
-            )
+            save_file, format="GIF", append_images=images[1:], durations=durations, disposal=2, loop=0, save_all=True
+        )
 
     def resize(self, image: Image) -> Image:
         if image.height > 500 or image.width > 500:
@@ -492,14 +485,7 @@ class pictures(commands.Cog):
                 to_make_gif.append(im_final)
             final = BytesIO()
             self.save_transparent_gif(to_make_gif, img.info["duration"], final)
-            to_make_gif[0].save(
-                final,
-                format="GIF",
-                append_images=to_make_gif[1:],
-                disposal=2,
-                loop=0,
-                save_all=True
-            )
+            to_make_gif[0].save(final, format="GIF", append_images=to_make_gif[1:], disposal=2, loop=0, save_all=True)
             for i in to_make_gif:
                 i.close()
                 del i
@@ -542,14 +528,13 @@ class pictures(commands.Cog):
         e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_spin.{format_}")
         return result
-    
+
     def invert__(self, image):
         r, g, b, a = image.split()
-        rgb_image = Image.merge('RGB', (r, g, b))
+        rgb_image = Image.merge("RGB", (r, g, b))
         inverted_image = ImageOps.invert(rgb_image)
         r2, g2, b2 = inverted_image.split()
-        return Image.merge('RGBA', (r2, g2, b2, a))
-
+        return Image.merge("RGBA", (r2, g2, b2, a))
 
     async def invert_(self, url):
         async with self.bot.session.get(url) as resp:
@@ -686,6 +671,70 @@ class pictures(commands.Cog):
             b.seek(0)
             im_.close()
             return b
+
+    @commands.command()
+    async def code(self, ctx, *, code):
+        if not code.startswith("`"):
+            code = code
+        else:
+            last = collections.deque(maxlen=3)
+            backticks = 0
+            in_language = False
+            in_code = False
+            language = []
+            code_ = []
+
+            for char in code:
+                if char == "`" and not in_code and not in_language:
+                    backticks += 1
+                if last and last[-1] == "`" and char != "`" or in_code and "".join(last) != "`" * backticks:
+                    in_code = True
+                    code_.append(char)
+                if char == "\n":
+                    in_language = False
+                    in_code = True
+                elif "".join(last) == "`" * 3 and char != "`":
+                    in_language = True
+                    language.append(char)
+                elif in_language:
+                    language.append(char)
+
+                last.append(char)
+
+            if not code_ and not language:
+                code_[:] = last
+            code = "".join(code_[len(language) : -backticks])
+
+        url = config.secret_code_api
+        bobo = {
+            "paddingVertical": "56px",
+            "paddingHorizontal": "56px",
+            "backgroundImage": None,
+            "backgroundImageSelection": None,
+            "backgroundMode": "color",
+            "backgroundColor": "rgba(26,127,220,0.62)",
+            "dropShadow": True,
+            "dropShadowOffsetY": "20px",
+            "dropShadowBlurRadius": "68px",
+            "theme": "vscode",
+            "windowTheme": "none",
+            "language": "auto",
+            "fontFamily": "Hack",
+            "fontSize": "14px",
+            "lineHeight": "133%",
+            "windowControls": True,
+            "widthAdjustment": True,
+            "lineNumbers": False,
+            "firstLineNumber": 1,
+            "exportSize": "2x",
+            "watermark": False,
+            "squaredImage": False,
+            "hiddenCharacters": False,
+            "name": "",
+            "width": 680,
+        }
+        async with self.bot.session.get(url, params={"code": code}, json=bobo) as resp:
+            await ctx.reply(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_code.png"))
 
     @asyncexe()
     def facereg_(self, image):
@@ -1223,11 +1272,11 @@ class pictures(commands.Cog):
             image = await self.bot.zaneapi.jpeg(url)
             embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://jpeg.gif")
             await ctx.reply(file=discord.File(fp=image, filename="jpeg.gif"), embed=embed)
-    
+
     @asyncexe()
     def magic_(self, image: BytesIO, intensity: float):
         with WandImage(file=image) as img:
-            with WandImage(img.sequence[0]) as img: 
+            with WandImage(img.sequence[0]) as img:
                 if img.height > 500 or img.width > 500:
                     # I robbed resize from preselany I can't do math ok
                     siz = 500
@@ -1241,12 +1290,16 @@ class pictures(commands.Cog):
                     else:
                         size = (siz, siz)
                     img.resize(size[0], size[1])
-                img.liquid_rescale(width=round(img.width * 0.5), height=round(img.height * 0.5), delta_x=round(intensity * 0.5), rigidity=0)
+                img.liquid_rescale(
+                    width=round(img.width * 0.5),
+                    height=round(img.height * 0.5),
+                    delta_x=round(intensity * 0.5),
+                    rigidity=0,
+                )
                 b = BytesIO()
                 img.save(b)
                 b.seek(0)
                 return b
-
 
     @commands.command(aliases=["magik"])
     async def magic(
@@ -1392,7 +1445,7 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             url = await self.get_gif_url(ctx, thing)
         await ctx.reply(file=await self.polaroid_(url, "oil", 3, 10))
-    
+
     @asyncexe()
     def glitch_(self, image: Image, intensity: float):
         glitcher = ImageGlitcher()
@@ -1418,14 +1471,8 @@ class pictures(commands.Cog):
                 final.seek(0)
                 return discord.File(final, "The_Anime_Bot_glitch.gif")
 
-
     @commands.command()
-    async def glitch(
-        self,
-        ctx,
-        thing: typing.Optional[Image_Union] = None,
-        intensity: float = 5.0
-    ):
+    async def glitch(self, ctx, thing: typing.Optional[Image_Union] = None, intensity: float = 5.0):
         if not intensity <= 10:
             return await ctx.send("Intensity must be under 10")
         async with ctx.channel.typing():

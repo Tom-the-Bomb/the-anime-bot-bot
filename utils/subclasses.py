@@ -302,7 +302,7 @@ class AnimeBot(commands.Bot):
             },
             connector=self.connector,
             json_serialize=ujson.dumps,
-            timeout=aiohttp.ClientTimeout(total=10)
+            timeout=aiohttp.ClientTimeout(total=10),
         )
         self.mystbin = mystbin.Client(session=self.session)
         self.vacefron_api = vacefron.Client(session=self.session, loop=self.loop)
