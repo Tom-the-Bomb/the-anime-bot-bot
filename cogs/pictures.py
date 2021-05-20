@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+from glitch_this import ImageGlitcher
 from colormath.color_objects import sRGBColor, XYZColor
 from colormath.color_conversions import convert_color
 import colorsys
@@ -1391,16 +1392,37 @@ class pictures(commands.Cog):
         async with ctx.channel.typing():
             url = await self.get_gif_url(ctx, thing)
         await ctx.reply(file=await self.polaroid_(url, "oil", 3, 10))
+    
+    @asyncexe()
+    def glitch_(self, image: Image, intensity: float):
+        glitcher = ImageGlitcher()
+        with Image.open(image) as img:
+            if img.is_animated and img.n_frames < 200:
+                glitch_img = glitcher.glitch_image(img, intensity, color_offset=True, gif=True)
+                final = BytesIO()
+                self.save_transparent_gif(glitch_img, img.info["durations"])
+                final.seek(0)
+                return discord.File(final, "The_Anime_Bot_glitch.gif")
+            else:
+                glitch_img = glitcher.glitch_image(img, intensity, color_offset=True)
+                final = BytesIO()
+                glitch_img.save(final, "PNG")
+                final.seek(0)
+                return discord.File(final, "The_Anime_Bot_glitch.png")
+
 
     @commands.command()
     async def glitch(
         self,
         ctx,
         thing: Image_Union = None,
+        intensity: float = 5.0
     ):
         async with ctx.channel.typing():
             url = await self.get_gif_url(ctx, thing)
-        await ctx.reply(file=await self.polaroid_(url, "offset_red", 30))
+            async with self.bot.session.get(url) as resp:
+                image = BytesIO(await resp.read())
+            await ctx.reply(file=await self.glitch_(image, intensity))
 
     @commands.command()
     async def rainbow(
