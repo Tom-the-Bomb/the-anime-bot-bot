@@ -351,11 +351,20 @@ class pictures(commands.Cog):
         return output_image, save_kwargs
 
     def save_transparent_gif(self, images: List[Image.Image], durations: Union[int, List[int]], save_file):
-        root_frame, save_args = self._create_animated_gif(images, durations)
-        root_frame.save(save_file, **save_args)
-        root_frame.close()
-        for i in images:
-            i.close()
+        # root_frame, save_args = self._create_animated_gif(images, durations)
+        # root_frame.save(save_file, **save_args)
+        # root_frame.close()
+        # for i in images:
+        #     i.close()
+        images[0].save(
+                save_file,
+                format="GIF",
+                append_images=images[1:],
+                durations=durations,
+                disposal=2,
+                loop=0,
+                save_all=True
+            )
 
     def resize(self, image: Image) -> Image:
         if image.height > 500 or image.width > 500:
@@ -481,7 +490,7 @@ class pictures(commands.Cog):
                 im_final = function(im_, *args)
                 to_make_gif.append(im_final)
             final = BytesIO()
-            # self.save_transparent_gif(to_make_gif, img.info["duration"], final)
+            self.save_transparent_gif(to_make_gif, img.info["duration"], final)
             to_make_gif[0].save(
                 final,
                 format="GIF",
