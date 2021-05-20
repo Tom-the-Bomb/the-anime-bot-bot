@@ -732,7 +732,7 @@ class pictures(commands.Cog):
             "hiddenCharacters": False,
             "name": "",
             "width": 680,
-            "code": "bobo"
+            "code": code
         }
         async with self.bot.session.post(url, json=bobo) as resp:
             await ctx.reply(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_code.png"))
