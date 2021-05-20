@@ -1380,7 +1380,7 @@ class pictures(commands.Cog):
     ):
         async with ctx.channel.typing():
             url = await self.get_gif_url(ctx, thing)
-        await ctx.reply(file=await self.polaroid_(url, "invert"))
+        await ctx.reply(file=await self.invert_(url))
 
     @commands.command()
     async def oil(
