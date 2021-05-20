@@ -77,7 +77,7 @@ Disk:
     Disk Used Percent: {psutil.disk_usage('/').percent}
 
 Network:
-    Bytes send: {humanize.naturalsize(net.bytes_sent)}
+    Bytes Send: {humanize.naturalsize(net.bytes_sent)}
     Bytes Recieve: {humanize.naturalsize(net.bytes_recv)}
     Packets Sent: {net.packets_sent:,}
     Packets Recieve: {net.packets_recv:,}
