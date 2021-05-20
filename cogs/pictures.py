@@ -1406,7 +1406,7 @@ class pictures(commands.Cog):
                     with Image.open(b) as img_:
                         to_make_gif.append(glitcher.glitch_image(img_, intensity, color_offset=True))
                 final = BytesIO()
-                self.save_transparent_gif(glitch_img, img.info["durations"], final)
+                self.save_transparent_gif(to_make_gif, img.info["durations"], final)
                 final.seek(0)
                 return discord.File(final, "The_Anime_Bot_glitch.gif")
             else:
