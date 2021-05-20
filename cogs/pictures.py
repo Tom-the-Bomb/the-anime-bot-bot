@@ -1423,7 +1423,7 @@ class pictures(commands.Cog):
     async def glitch(
         self,
         ctx,
-        thing: Image_Union = None,
+        thing: typing.Optional[Image_Union] = None,
         intensity: float = 5.0
     ):
         if not intensity <= 10:
