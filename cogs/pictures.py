@@ -1426,7 +1426,7 @@ class pictures(commands.Cog):
         thing: Image_Union = None,
         intensity: float = 5.0
     ):
-        if npt intensity <= 10:
+        if not intensity <= 10:
             return await ctx.send("Intensity under 10 only when yes")
         async with ctx.channel.typing():
             url = await self.get_gif_url(ctx, thing)
