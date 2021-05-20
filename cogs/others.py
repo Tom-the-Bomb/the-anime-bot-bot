@@ -70,7 +70,11 @@ Process:
         Physical Memory: {humanize.naturalsize(mem.rss)}
         Virtual Memory:  {humanize.naturalsize(mem.vms)}
 Disk:
-    Disk Usage: {humanize.naturalsize(psutil.disk_usage('/'))}
+    Disk Total: {humanize.naturalsize(psutil.disk_usage('/').total)}
+    Disk Free: {humanize.naturalsize(psutil.disk_usage('/').free)}
+    Disk Used: {humanize.naturalsize(psutil.disk_usage('/').used)}
+    Disk Used Percent: {psutil.disk_usage('/').percent}
+
 Network:
     Bytes send: {humanize.naturalsize(net.bytes_sent)}
     Bytes Recieve: {humanize.naturalsize(net.bytes_recv)}
