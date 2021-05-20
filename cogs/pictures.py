@@ -482,11 +482,11 @@ class pictures(commands.Cog):
                 to_make_gif.append(im_final)
             final = BytesIO()
             self.save_transparent_gif(to_make_gif, img.info["duration"], final)
-            for i in to_make_gif:
-                i.close()
-                del i
+            # for i in to_make_gif:
+            #     i.close()
+            #     del i
             final.seek(0)
-            img.close()
+            # img.close()
             return final, "gif"
         img_ = img
         format_ = img_.format
