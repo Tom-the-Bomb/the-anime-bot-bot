@@ -1400,8 +1400,11 @@ class pictures(commands.Cog):
             if img.is_animated and img.n_frames < 200:
                 to_make_gif = []
                 for im in ImageSequence.Iterator(img):
-                    im.format = "PNG"
-                    to_make_gif.append(glitcher.glitch_image(im, intensity, color_offset=True))
+                    b = BytesIO()
+                    im.save(b, "PNG")
+                    b.seek(0)
+                    with Image.open(b) as img_:
+                        to_make_gif.append(glitcher.glitch_image(img_, intensity, color_offset=True))
                 final = BytesIO()
                 self.save_transparent_gif(glitch_img, img.info["durations"], final)
                 final.seek(0)
