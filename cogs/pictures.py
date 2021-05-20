@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import collections
 from glitch_this import ImageGlitcher
 from colormath.color_objects import sRGBColor, XYZColor
 from colormath.color_conversions import convert_color
