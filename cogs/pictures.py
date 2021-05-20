@@ -1410,11 +1410,13 @@ class pictures(commands.Cog):
                 final.seek(0)
                 return discord.File(final, "The_Anime_Bot_glitch.gif")
             else:
-                glitch_img = glitcher.glitch_image(img, intensity, color_offset=True)
+                to_make_gif = []
+                for _ in range(10):
+                    to_make_gif.append(glitcher.glitch_image(img, intensity, color_offset=True))
                 final = BytesIO()
-                glitch_img.save(final, "PNG")
+                self.save_transparent_gif(to_make_gif, 69, final)
                 final.seek(0)
-                return discord.File(final, "The_Anime_Bot_glitch.png")
+                return discord.File(final, "The_Anime_Bot_glitch.gif")
 
 
     @commands.command()
