@@ -484,7 +484,7 @@ class pictures(commands.Cog):
             # self.save_transparent_gif(to_make_gif, img.info["duration"], final)
             to_make_gif[0].save(
                 final,
-                format="PNG",
+                format="GIF",
                 append_images=to_make_gif[1:],
                 disposal=2,
                 loop=0,
