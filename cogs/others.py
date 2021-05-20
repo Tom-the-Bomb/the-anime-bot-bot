@@ -56,7 +56,7 @@ class others(commands.Cog):
     @commands.command()
     async def sys(self, ctx):
         with self.bot.psutil_process.oneshot():
-            proc = self.bot.psutil_process()
+            proc = self.bot.psutil_process
             mem = proc.memory_full_info()
             net = psutil.net_io_counters()
             embed = discord.Embed(color=self.bot.color, description=f"""
