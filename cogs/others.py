@@ -63,6 +63,7 @@ class others(commands.Cog):
 ```prolog
 CPU:
     CPU Usage: {psutil.cpu_percent()}
+
 Process:
     Threads: {proc.num_threads()}
     PID: {proc.pid}
@@ -80,6 +81,7 @@ Network:
     Bytes Recieve: {humanize.naturalsize(net.bytes_recv)}
     Packets Sent: {net.packets_sent:,}
     Packets Recieve: {net.packets_recv:,}
+
 System:
     Boot Time: {datetime.datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")}
 ```
