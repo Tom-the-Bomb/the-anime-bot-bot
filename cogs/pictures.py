@@ -1393,6 +1393,16 @@ class pictures(commands.Cog):
         await ctx.reply(file=await self.polaroid_(url, "oil", 3, 10))
 
     @commands.command()
+    async def glitch(
+        self,
+        ctx,
+        thing: Image_Union = None,
+    ):
+        async with ctx.channel.typing():
+            url = await self.get_gif_url(ctx, thing)
+        await ctx.reply(file=await self.polaroid_(url, "offset_red", 30))
+
+    @commands.command()
     async def rainbow(
         self,
         ctx,
