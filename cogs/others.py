@@ -68,8 +68,8 @@ Process:
     Threads: {proc.num_threads()}
     PID: {proc.pid}
         Memory:
-        Physical Memory: {humanize.naturalsize(mem.rss)}
-        Virtual Memory:  {humanize.naturalsize(mem.vms)}
+            Physical Memory: {humanize.naturalsize(mem.rss)}
+            Virtual Memory:  {humanize.naturalsize(mem.vms)}
 Disk:
     Disk Total: {humanize.naturalsize(psutil.disk_usage('/').total)}
     Disk Free: {humanize.naturalsize(psutil.disk_usage('/').free)}
