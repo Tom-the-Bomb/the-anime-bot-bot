@@ -524,6 +524,24 @@ class pictures(commands.Cog):
         e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_spin.{format_}")
         return result
+    
+    def invert__(self, image):
+        r, g, b, a = image.split()
+        rgb_image = Image.merge('RGB', (r, g, b))
+        inverted_image = ImageOps.invert(rgb_image)
+        r2, g2, b2 = inverted_image.split()
+        return Image.merge('RGBA', (r2, g2, b2, a))
+
+
+    async def invert_(self, url):
+        async with self.bot.session.get(url) as resp:
+            image1 = await resp.read()
+        e = ThreadPoolExecutor(max_workers=5)
+        f = functools.partial(self.process_gif, image1, self.invert__)
+        result, format_ = await self.bot.loop.run_in_executor(e, f)
+        e.shutdown()
+        result = discord.File(result, f"The_Anime_Bot_invert.{format_}")
+        return result
 
     async def mirror_(self, url):
         async with self.bot.session.get(url) as resp:
@@ -1345,7 +1363,7 @@ class pictures(commands.Cog):
     ):
         async with ctx.channel.typing():
             url = await self.get_gif_url(ctx, thing)
-        await ctx.reply(file=await self.polaroid_(url, "invert"))
+        await ctx.reply(file=await self.invert_(url))
 
     @commands.command()
     async def oil(
