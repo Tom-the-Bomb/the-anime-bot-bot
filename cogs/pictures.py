@@ -270,7 +270,7 @@ class pictures(commands.Cog):
                 if "image" not in resp.content_type:
                     raise commands.CommandError("Invalid Picture")
                 b = await resp.content.read(50)
-                if b.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A"):
+                if b.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A") or b.startswith(b"\x89PNG"):
                     pass
                 elif b[0:3] == b"\xff\xd8\xff" or b[6:10] in (b"JFIF", b"Exif"):
                     pass
