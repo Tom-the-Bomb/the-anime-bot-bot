@@ -783,8 +783,8 @@ class pictures(commands.Cog):
         sd = ShapeDetector()
         for c in cnts:
             M = cv2.moments(c)
-            cX = int((M["m10"] / M["m00"]) * ratio)
-            cY = int((M["m01"] / M["m00"]) * ratio)
+            cX = int((M["m10"] / (M["m00"] + 1e-7)) * ratio)
+            cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
             shape = sd.detect(c)
             c = c.astype("float")
             c *= ratio
