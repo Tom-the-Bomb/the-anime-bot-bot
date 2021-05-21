@@ -84,7 +84,7 @@ class ShapeDetector:
         elif len(approx) == 4:
             (x, y, w, h) = cv2.boundingRect(approx)
             ar = w / float(h)
-		    shape = "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
+            shape = "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
         elif len(approx) == 5:
             shape = "pentagon"
         else:
@@ -778,8 +778,7 @@ class pictures(commands.Cog):
         image = cv2.cvtColor(ratio, cv2.COLOR_BGR2GRAY)
         image = cv2.GaussianBlur(image, (5, 5), 0)
         image = cv2.threshold(image, 60, 255, cv2.THRESH_BINARY)[1]
-        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-	    cv2.CHAIN_APPROX_SIMPLE)
+        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
         sd = ShapeDetector()
         for c in cnts:
