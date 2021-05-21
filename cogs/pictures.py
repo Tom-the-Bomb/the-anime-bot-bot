@@ -772,7 +772,7 @@ class pictures(commands.Cog):
             img_.close()
             buffer.seek(0)
         np_array = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
-        image = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+        image_ = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
         resized = imutils.resize(image, width=300)
         ratio = image.shape[0] / float(resized.shape[0])
         image = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
@@ -789,9 +789,9 @@ class pictures(commands.Cog):
             c = c.astype("float")
             c *= ratio
             c = c.astype("int")
-            cv2.drawContours(image, [c], -1, (20, 252, 124), 2)
-            cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-        is_success, im_buf_arr = cv2.imencode(".png", image)
+            cv2.drawContours(image_, [c], -1, (20, 252, 124), 2)
+            cv2.putText(image_, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+        is_success, im_buf_arr = cv2.imencode(".png", image_)
         b = BytesIO(im_buf_arr)
         return discord.File(b, "The_Anime_Bot_shape_detection.png")
     
