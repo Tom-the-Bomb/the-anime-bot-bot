@@ -615,19 +615,18 @@ class pictures(commands.Cog):
     def floor_(self, b):
         with WandImage(file=b) as img_:
             with WandImage(img_.sequence[0]) as img:
-                if img.height > 500 or img.width > 500:
                     # I robbed resize from preselany I can't do math ok
-                    siz = 500
-                    w, h = img.size
-                    if w > h:
-                        the_key = w / siz
-                        size = (siz, int(h / the_key))
-                    elif h > w:
-                        the_key = h / siz
-                        size = (int(w / the_key), siz)
-                    else:
-                        size = (siz, siz)
-                    img.resize(size[0], size[1])
+                siz = 500
+                w, h = img.size
+                if w > h:
+                    the_key = w / siz
+                    size = (siz, int(h / the_key))
+                elif h > w:
+                    the_key = h / siz
+                    size = (int(w / the_key), siz)
+                else:
+                    size = (siz, siz)
+                img.resize(size[0], size[1])
                 img.virtual_pixel = "tile"
                 arguments = (
                     0,
