@@ -775,10 +775,11 @@ class pictures(commands.Cog):
         image_ = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
         resized = imutils.resize(image, width=300)
         ratio = image.shape[0] / float(resized.shape[0])
-        image = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
-        image = cv2.GaussianBlur(image, (5, 5), 0)
-        image = cv2.threshold(image, 60, 255, cv2.THRESH_BINARY)[1]
-        cnts = cv2.findContours(image.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
+        thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
+        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
+            cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
         sd = ShapeDetector()
         for c in cnts:
@@ -789,8 +790,9 @@ class pictures(commands.Cog):
             c = c.astype("float")
             c *= ratio
             c = c.astype("int")
-            cv2.drawContours(image_, [c], -1, (20, 252, 124), 2)
-            cv2.putText(image_, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
+            cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
+            cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX,
+                0.5, (255, 255, 255), 2)
         is_success, im_buf_arr = cv2.imencode(".png", image_)
         b = BytesIO(im_buf_arr)
         return discord.File(b, "The_Anime_Bot_shape_detection.png")
