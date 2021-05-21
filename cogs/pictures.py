@@ -89,7 +89,7 @@ class ShapeDetector:
             shape = "pentagon"
         else:
             shape = "circle"
-            return shape
+        return shape
 
 class ColorConverter(commands.Converter):
     async def convert(self, ctx, argument):
@@ -789,7 +789,7 @@ class pictures(commands.Cog):
             c = c.astype("float")
             c *= ratio
             c = c.astype("int")
-            cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
+            cv2.drawContours(image, [c], -1, (20, 252, 124), 2)
             cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         is_success, im_buf_arr = cv2.imencode(".png", image)
         b = BytesIO(im_buf_arr)
