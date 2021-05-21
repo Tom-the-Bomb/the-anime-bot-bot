@@ -75,21 +75,21 @@ Image_Union = typing.Union[
 ]
 
 class ShapeDetector:
-	def detect(self, c):
-		shape = "unidentified"
-		peri = cv2.arcLength(c, True)
-		approx = cv2.approxPolyDP(c, 0.04 * peri, True)
+    def detect(self, c):
+        shape = "unidentified"
+        peri = cv2.arcLength(c, True)
+        approx = cv2.approxPolyDP(c, 0.04 * peri, True)
         if len(approx) == 3:
-			shape = "triangle"
-		elif len(approx) == 4:
-			(x, y, w, h) = cv2.boundingRect(approx)
-			ar = w / float(h)
-			shape = "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
-		elif len(approx) == 5:
-			shape = "pentagon"
-		else:
-			shape = "circle"
-		return shape
+            shape = "triangle"
+        elif len(approx) == 4:
+            (x, y, w, h) = cv2.boundingRect(approx)
+		    ar = w / float(h)
+		    shape = "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
+        elif len(approx) == 5:
+            shape = "pentagon"
+        else:
+            shape = "circle"
+            return shape
 
 class ColorConverter(commands.Converter):
     async def convert(self, ctx, argument):
@@ -794,15 +794,15 @@ class pictures(commands.Cog):
             cv2.putText(image, shape, (cX, cY), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
         is_success, im_buf_arr = cv2.imencode(".png", image)
         b = BytesIO(im_buf_arr)
-        return discord.File(b, "The_Anime_Bot_object_detection.png")
+        return discord.File(b, "The_Anime_Bot_shape_detection.png")
     
     @commands.command()
-    async def objectdetection(self, ctx, thing: Image_Union):
+    async def shapedetection(self, ctx, thing: Image_Union):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
                 b = BytesIO(await resp.read())
-            await ctx.reply(file=await self.objectdetection(b))
+            await ctx.reply(file=await self.shape_detection(b))
 
         
 
