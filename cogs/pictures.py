@@ -1318,6 +1318,8 @@ class pictures(commands.Cog):
         thing: typing.Optional[Image_Union],
         intensity: float = 0.6,
     ):
+        if intensity > 10:
+            return await ctx.send("intensity lower then 10")
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
