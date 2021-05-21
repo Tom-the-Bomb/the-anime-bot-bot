@@ -772,7 +772,7 @@ class pictures(commands.Cog):
             img_.close()
             buffer.seek(0)
         np_array = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
-        image_ = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+        image = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
         resized = imutils.resize(image, width=300)
         ratio = image.shape[0] / float(resized.shape[0])
         gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
