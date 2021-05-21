@@ -775,7 +775,7 @@ class pictures(commands.Cog):
         image = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
         resized = imutils.resize(image, width=300)
         ratio = image.shape[0] / float(resized.shape[0])
-        image = cv2.cvtColor(ratio, cv2.COLOR_BGR2GRAY)
+        image = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
         image = cv2.GaussianBlur(image, (5, 5), 0)
         image = cv2.threshold(image, 60, 255, cv2.THRESH_BINARY)[1]
         cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
