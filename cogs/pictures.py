@@ -81,6 +81,15 @@ class ColorConverter(commands.Converter):
             color = await converter.convert(ctx, argument)
             color = color.to_rgb()
         except commands.BadColourArgument:
+            if argument.isdigit() and int(argument) <= 15446341:
+                try:
+                    argument = int(argument)
+                    blue =  argument & 255
+                    green = (argument >> 8) & 255
+                    red =   (argument >> 16) & 255
+                    return red, green, blue
+                except:
+                    pass
             try:
                 color = colors[argument]
             except KeyError:
