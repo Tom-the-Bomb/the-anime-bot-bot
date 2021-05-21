@@ -796,7 +796,7 @@ class pictures(commands.Cog):
         return discord.File(b, "The_Anime_Bot_shape_detection.png")
     
     @commands.command()
-    async def shapedetection(self, ctx, thing: Image_Union):
+    async def shapedetection(self, ctx, thing: Image_Union=None):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
