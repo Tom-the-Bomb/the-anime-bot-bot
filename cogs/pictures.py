@@ -98,7 +98,7 @@ class ColorConverter(commands.Converter):
             color = await converter.convert(ctx, argument)
             color = color.to_rgb()
         except commands.BadColourArgument:
-            if argument.isdigit() and int(argument) <= 15446341:
+            if argument.isdigit() and int(argument) <= 16777215:
                 try:
                     argument = int(argument)
                     blue =  argument & 255
