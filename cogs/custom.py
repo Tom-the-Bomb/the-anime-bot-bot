@@ -27,7 +27,8 @@ class Custom(commands.Cog):
             await member.add_roles(discord.Object(833132759361912842))
     
     async def index(self, request):
-       return web.Response(status=200, text="OK")
+        b = await request.read()
+        return web.Response(status=200, body=b)
 
     async def run(self):
         await self.bot.wait_until_ready()
