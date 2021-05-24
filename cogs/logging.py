@@ -323,7 +323,7 @@ class Logging(commands.Cog):
                 description=f"**Old Name:** {before.name}*\n*New name:** {after.name}",
                 timestamp=datetime.datetime.utcnow(),
             )
-            return await self.send_webhook(after.guild.id, embed, "guild_update")
+            return await self.send_webhook(guild.id, embed, "guild_update")
         embed = discord.Embed(
             color=self.bot.color,
             title="Guild Updated",
