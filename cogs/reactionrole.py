@@ -19,7 +19,6 @@ class ReactionRole(commands.Cog):
             for i in roles:
                 self.bot.reactionrole_cache[i["guild_id"]] = ujson.loads(i["roles"])
 
-
     @commands.group()
     async def reactionrole(self, ctx):
         ...
@@ -86,8 +85,15 @@ class ReactionRole(commands.Cog):
                 str(payload.emoji.id) or payload.emoji.name
             ]
         except KeyError:
-            # If the emoji isn't the one we care about then exit as well.
-            return
+            # postgres can't store BIGINT in json idk so handle it here because it could be a int if is made from user and
+            # not load from db
+            try:
+                role_id = self.bot.reactionrole_cache[payload.guild_id][payload.message_id][
+                    payload.emoji.id or payload.emoji.name
+                ]
+            except:
+                # If the emoji isn't the one we care about then exit as well.
+                return
         guild = self.bot.get_guild(payload.guild_id)
         if guild is None:
             # Check if we're still in the guild and it's cached.
@@ -117,8 +123,15 @@ class ReactionRole(commands.Cog):
                 str(payload.emoji.id) or payload.emoji.name
             ]
         except KeyError:
-            # If the emoji isn't the one we care about then exit as well.
-            return
+            # postgres can't store BIGINT in json idk so handle it here because it could be a int if is made from user and
+            # not load from db
+            try:
+                role_id = self.bot.reactionrole_cache[payload.guild_id][payload.message_id][
+                    payload.emoji.id or payload.emoji.name
+                ]
+            except:
+                # If the emoji isn't the one we care about then exit as well.
+                return
         guild = self.bot.get_guild(payload.guild_id)
         if guild is None:
             # Check if we're still in the guild and it's cached.
