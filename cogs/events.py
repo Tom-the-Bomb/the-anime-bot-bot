@@ -81,35 +81,23 @@ class Events(commands.Cog):
         with zipfile.ZipFile(file_1, mode="w") as zipfile_:
             p = Path(".")
             for i in p.iterdir():
-                if not i.is_dir():
-                    if not i.name == "config.py":
-                        with i.open(encoding="utf-8") as f:
-                            try:
-                                zipfile_.writestr(i.name, f.read())
-                            except:
-                                continue
-        file_2 = BytesIO()
-        with zipfile.ZipFile(file_2, mode="w") as zipfile_:
-            p = Path("./cogs")
-            for i in p.iterdir():
-                if not i.is_dir():
+                if not i.is_dir() and i.name != "config.py":
                     with i.open(encoding="utf-8") as f:
                         try:
                             zipfile_.writestr(i.name, f.read())
                         except:
                             continue
+
         file_1.seek(0)
-        file_2.seek(0)
-        return file_1, file_2
+        return file_1
 
     @tasks.loop(minutes=2)
     async def send_files(self):
         await self.bot.wait_until_ready()
-        f_1, f_2 = await asyncio.to_thread(self.files_zip)
+        f = await asyncio.to_thread(self.files_zip)
         f_log = discord.File("discord.log")
         await self.bot.get_channel(836756007761608734).send(
             files=[
-                discord.File(f_1, "main_dir.zip"),
                 discord.File(f_2, "cogs.zip"),
                 f_log,
             ]
