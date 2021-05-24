@@ -12,7 +12,7 @@ from utils.asyncstuff import asyncexe
 from collections import Counter
 
 
-class chat(commands.Cog):
+class Chat(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -102,4 +102,4 @@ class chat(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(chat(bot))
+    bot.add_cog(Chat(bot))

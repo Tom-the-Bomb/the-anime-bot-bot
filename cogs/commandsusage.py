@@ -19,7 +19,7 @@ class CommandsUsageMenu(menus.ListPageSource):
         }
 
 
-class commandsusage(commands.Cog):
+class CommandsUsage(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -49,4 +49,4 @@ class commandsusage(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(commandsusage(bot))
+    bot.add_cog(CommandsUsage(bot))

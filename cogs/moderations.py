@@ -4,7 +4,7 @@ from utils.subclasses import AnimeContext
 from utils.fuzzy import finder
 
 
-class moderations(commands.Cog):
+class Moderations(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.loop.create_task(self.build_cache())
@@ -177,4 +177,4 @@ class moderations(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(moderations(bot))
+    bot.add_cog(Moderations(bot))

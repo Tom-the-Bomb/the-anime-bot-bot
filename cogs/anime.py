@@ -20,7 +20,7 @@ class AnimeMenuSource(menus.ListPageSource):
         return {"embed": entries[menu.current_page]}
 
 
-class animes(commands.Cog):
+class Anime(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -126,4 +126,4 @@ class animes(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(animes(bot))
+    bot.add_cog(Anime(bot))

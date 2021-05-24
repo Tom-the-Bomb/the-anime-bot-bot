@@ -47,7 +47,7 @@ class MyMenu(menus.Menu, timeout=9223372036854775807):
         await self.message.edit(content=f"{self.counter}")
 
 
-class owners(commands.Cog):
+class Owner(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.cog_regex = re.compile(r"cogs/[a-zA-Z]+\.py")
@@ -508,4 +508,4 @@ async def purge(self, ctx: AnimeContext, limit: int):
 
 
 def setup(bot):
-    bot.add_cog(owners(bot))
+    bot.add_cog(Owner(bot))

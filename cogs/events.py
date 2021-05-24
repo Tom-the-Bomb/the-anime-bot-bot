@@ -42,7 +42,7 @@ botlist_space = config.botlist_space
 POSTGRE_DATABASE_URL = config.POSTGRE_DATABASE_URL
 
 
-class events(commands.Cog):
+class Events(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.ws_recieved = 0
@@ -699,4 +699,4 @@ class events(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(events(bot))
+    bot.add_cog(Events(bot))

@@ -74,6 +74,7 @@ Image_Union = typing.Union[
     str,
 ]
 
+
 class ShapeDetector:
     def detect(self, c):
         shape = "unidentified"
@@ -91,6 +92,7 @@ class ShapeDetector:
             shape = "circle"
         return shape
 
+
 class ColorConverter(commands.Converter):
     async def convert(self, ctx, argument):
         converter = commands.ColourConverter()
@@ -101,9 +103,9 @@ class ColorConverter(commands.Converter):
             if argument.isdigit() and int(argument) <= 16777215:
                 try:
                     argument = int(argument)
-                    blue =  argument & 255
+                    blue = argument & 255
                     green = (argument >> 8) & 255
-                    red =   (argument >> 16) & 255
+                    red = (argument >> 16) & 255
                     return red, green, blue
                 except:
                     pass
@@ -219,7 +221,7 @@ class TransparentAnimatedGifConverter(object):
         return self._img_p
 
 
-class pictures(commands.Cog):
+class Images(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot_cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=1, period=6)
@@ -632,7 +634,7 @@ class pictures(commands.Cog):
     def floor_(self, b):
         with WandImage(file=b) as img_:
             with WandImage(img_.sequence[0]) as img:
-                    # I robbed resize from preselany I can't do math ok
+                # I robbed resize from preselany I can't do math ok
                 siz = 500
                 w, h = img.size
                 if w > h:
@@ -758,7 +760,7 @@ class pictures(commands.Cog):
             "hiddenCharacters": False,
             "name": "",
             "width": 680,
-            "code": code
+            "code": code,
         }
         async with self.bot.session.post(url, json=bobo) as resp:
             await ctx.reply(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_code.png"))
@@ -778,8 +780,7 @@ class pictures(commands.Cog):
         gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
         blurred = cv2.GaussianBlur(gray, (5, 5), 0)
         thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
-        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-            cv2.CHAIN_APPROX_SIMPLE)
+        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
         sd = ShapeDetector()
         for c in cnts:
@@ -795,16 +796,14 @@ class pictures(commands.Cog):
         is_success, im_buf_arr = cv2.imencode(".png", image)
         b = BytesIO(im_buf_arr)
         return discord.File(b, "The_Anime_Bot_shape_detection.png")
-    
+
     @commands.command()
-    async def shapedetection(self, ctx, thing: Image_Union=None):
+    async def shapedetection(self, ctx, thing: Image_Union = None):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
                 b = BytesIO(await resp.read())
             await ctx.reply(file=await self.shape_detection(b))
-
-        
 
     @asyncexe()
     def facereg_(self, image):
@@ -1957,4 +1956,4 @@ class pictures(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(pictures(bot))
+    bot.add_cog(Images(bot))

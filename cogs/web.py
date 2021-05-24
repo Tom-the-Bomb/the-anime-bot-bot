@@ -9,7 +9,7 @@ from contextlib import suppress
 import aiohttp
 
 
-class web(commands.Cog):
+class Web(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.func.start(bot)
@@ -45,4 +45,4 @@ class web(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(web(bot))
+    bot.add_cog(Web(bot))

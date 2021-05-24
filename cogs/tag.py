@@ -25,7 +25,7 @@ class TagMenuSource(menus.ListPageSource):
         }
 
 
-class tag(commands.Cog):
+class Tag(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.random_tag_regex = re.compile(r"Random tag found: (?P<tag_name>.+)\n(?P<tag_content>(.|\n)+)")
@@ -392,4 +392,4 @@ class tag(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(tag(bot))
+    bot.add_cog(Tag(bot))

@@ -195,7 +195,7 @@ class SphinxObjectFileReader:
                 pos = buf.find(b"\n")
 
 
-class utility(commands.Cog):
+class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.ratelimiter = ratelimiter.RateLimiter(max_calls=5, period=1)
@@ -1140,4 +1140,4 @@ class utility(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(utility(bot))
+    bot.add_cog(Utility(bot))

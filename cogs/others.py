@@ -47,19 +47,21 @@ def is_in_server():
     return commands.check(predicate)
 
 
-class others(commands.Cog):
+class Others(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.countdownused = []
         self.thing = {}
-    
+
     @commands.command()
     async def sys(self, ctx):
         with self.bot.psutil_process.oneshot():
             proc = self.bot.psutil_process
             mem = proc.memory_full_info()
             net = psutil.net_io_counters()
-            embed = discord.Embed(color=self.bot.color, description=f"""
+            embed = discord.Embed(
+                color=self.bot.color,
+                description=f"""
 ```prolog
 CPU:
     CPU Usage: {psutil.cpu_percent()}
@@ -85,7 +87,8 @@ Network:
 System:
     Boot Time: {datetime.datetime.fromtimestamp(psutil.boot_time()).strftime("%Y-%m-%d %H:%M:%S")}
 ```
-            """)
+            """,
+            )
         await ctx.send(embed=embed)
 
     @commands.command()
@@ -635,4 +638,4 @@ System:
 
 
 def setup(bot):
-    bot.add_cog(others(bot))
+    bot.add_cog(Others(bot))

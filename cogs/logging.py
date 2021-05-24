@@ -7,7 +7,7 @@ import ratelimiter
 import datetime
 
 
-class logging(commands.Cog):
+class Logging(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.ratelimiter = ratelimiter.RateLimiter(max_calls=5, period=20)
@@ -555,4 +555,4 @@ class logging(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(logging(bot))
+    bot.add_cog(Logging(bot))

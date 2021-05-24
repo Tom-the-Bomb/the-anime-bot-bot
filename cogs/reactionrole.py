@@ -6,7 +6,7 @@ import typing
 import ratelimiter
 
 
-class reactionrole(commands.Cog):
+class ReactionRole(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.reactionrole_cache = {}
@@ -140,4 +140,4 @@ class reactionrole(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(reactionrole(bot))
+    bot.add_cog(ReactionRole(bot))

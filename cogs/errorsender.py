@@ -8,7 +8,7 @@ import discord
 webhook_url = config.webhookurl
 
 
-class error_sender(commands.Cog):
+class ErrorSender(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -41,4 +41,4 @@ class error_sender(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(error_sender(bot))
+    bot.add_cog(ErrorSender(bot))

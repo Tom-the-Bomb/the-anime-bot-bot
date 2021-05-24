@@ -14,7 +14,7 @@ import warnings
 warnings.filterwarnings("ignore")
 
 
-class socket(commands.Cog):
+class Socket(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.save_socket.start()
@@ -88,4 +88,4 @@ class socket(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(socket(bot))
+    bot.add_cog(Socket(bot))

@@ -12,7 +12,7 @@ class Custom(commands.Cog):
         self.bot = bot
         self.app = web.Application()
         self.bot.loop.create_task(self.run())
-    
+
     def cog_unload(self):
         self.bot.loop.create_task(self._webserver.stop())
 
@@ -25,7 +25,7 @@ class Custom(commands.Cog):
                 await member.add_roles(discord.Object(792645158495453204))
         if member.guild.id == 796459063982030858 and member.bot:
             await member.add_roles(discord.Object(833132759361912842))
-    
+
     async def index(self, request):
         b = await request.read()
         return web.Response(status=200, body=b)
@@ -37,7 +37,6 @@ class Custom(commands.Cog):
         await runner.setup()
         self._webserver = web.TCPSite(runner, "127.0.0.1", "15500")
         await self._webserver.start()
-
 
 
 def setup(bot):

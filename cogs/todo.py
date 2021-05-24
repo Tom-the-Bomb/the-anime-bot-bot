@@ -20,7 +20,7 @@ class TodoMenuSource(menus.ListPageSource):
         }
 
 
-class todo(commands.Cog):
+class Todo(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
@@ -153,4 +153,4 @@ class todo(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(todo(bot))
+    bot.add_cog(Todo(bot))

@@ -6,7 +6,7 @@ from utils.subclasses import AnimeContext, GlobalCooldown
 #         super().__init__("There can only be one command running at a time")
 
 
-class cooldown(commands.Cog):
+class CoolDown(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         # bot.add_check(self.global_concurrency, call_once=True)
@@ -46,4 +46,4 @@ class cooldown(commands.Cog):
 
 
 def setup(bot):
-    bot.add_cog(cooldown(bot))
+    bot.add_cog(CoolDown(bot))
