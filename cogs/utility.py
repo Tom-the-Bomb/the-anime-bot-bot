@@ -6,7 +6,6 @@ from utils import fuzzy
 from twemoji_parser import emoji_to_url
 from pyfiglet import Figlet
 from PIL import Image, ImageFont
-from menus import menus
 from currency_converter import CurrencyConverter
 import numpy as np
 import humanize
@@ -28,7 +27,7 @@ import base64
 import ast
 from translate import Translator
 from utils.subclasses import AnimeContext
-from discord.ext import commands
+from discord.ext import commands, menus
 from bs4 import BeautifulSoup
 import flags
 import discord

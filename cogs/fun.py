@@ -17,8 +17,7 @@ import gtts
 from asyncdagpi import Client
 from bottom import from_bottom, to_bottom
 from cryptography.fernet import Fernet
-from discord.ext import commands
-from menus import menus
+from discord.ext import commands, menus
 from PIL import Image, ImageDraw, ImageFont
 from utils.asyncstuff import asyncexe
 from utils.embed import embedbase

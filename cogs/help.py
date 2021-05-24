@@ -2,8 +2,7 @@ import difflib
 import random
 
 import discord
-from discord.ext import commands
-from menus import menus
+from discord.ext import commands, menus
 from utils.subclasses import AnimeContext
 
 from jishaku.models import copy_context_with

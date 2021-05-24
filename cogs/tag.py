@@ -1,12 +1,11 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, menus
 from io import BytesIO
 import ujson
 import re
 import asyncpg
 from typing import Union
 from utils.subclasses import AnimeContext
-from menus import menus
 
 
 class TagMenuSource(menus.ListPageSource):

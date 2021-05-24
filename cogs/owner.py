@@ -24,8 +24,7 @@ import asyncio
 import aiohttp
 import discord
 from bs4 import BeautifulSoup
-from discord.ext import commands, tasks
-from menus import menus
+from discord.ext import commands, tasks, menus
 from PIL import Image
 from selenium import webdriver
 from utils.asyncstuff import asyncexe

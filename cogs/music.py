@@ -1,11 +1,10 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, menus
 import ujson
 from utils.subclasses import AnimeContext
 import asyncio
 import humanize
 import datetime
-from menus import menus
 import wavelink
 
 
