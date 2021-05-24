@@ -31,7 +31,7 @@ class Custom(commands.Cog):
 
     async def run(self):
         await self.bot.wait_until_ready()
-        self.app.router.add_get("/", self.index)
+        self.app.router.add_route("*", "/", self.index)
         runner = web.AppRunner(self.app)
         await runner.setup()
         self._webserver = web.TCPSite(runner, "127.0.0.1", "15500")
