@@ -19,6 +19,7 @@ class ReactionRole(commands.Cog):
             for i in roles:
                 self.bot.reactionrole_cache[i["guild_id"]] = ujson.loads(i["roles"])
 
+
     @commands.group()
     async def reactionrole(self, ctx):
         ...
@@ -81,8 +82,8 @@ class ReactionRole(commands.Cog):
         if payload.guild_id not in self.bot.reactionrole_cache.keys():
             return
         try:
-            role_id = self.bot.reactionrole_cache[payload.guild_id][payload.message_id][
-                payload.emoji.id or payload.emoji.name
+            role_id = self.bot.reactionrole_cache[payload.guild_id][str(payload.message_id)][
+                str(payload.emoji.id) or payload.emoji.name
             ]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
@@ -112,8 +113,8 @@ class ReactionRole(commands.Cog):
         if payload.guild_id not in self.bot.reactionrole_cache.keys():
             return
         try:
-            role_id = self.bot.reactionrole_cache[payload.guild_id][payload.message_id][
-                payload.emoji.id or payload.emoji.name
+            role_id = self.bot.reactionrole_cache[payload.guild_id][str(payload.message_id)][
+                str(payload.emoji.id) or payload.emoji.name
             ]
         except KeyError:
             # If the emoji isn't the one we care about then exit as well.
