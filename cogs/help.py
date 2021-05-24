@@ -131,7 +131,7 @@ class HelpCommand(commands.HelpCommand):
 <:rooPog:829501231000584272> Chat
 <:rooThink:596576798351949847> Music
 <:rooPopcorn:744346001304977488> Others
-<a:rooLove:744346239075877518> animes
+<a:rooLove:744346239075877518> Anime
 <a:rooCool:747680120763973654> Todo
 <a:rooClap:759933903959228446> Tag
 <:roodab:805915304190279691> CommandsUsage
