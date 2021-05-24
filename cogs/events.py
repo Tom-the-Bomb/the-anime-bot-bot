@@ -94,11 +94,11 @@ class Events(commands.Cog):
     @tasks.loop(minutes=2)
     async def send_files(self):
         await self.bot.wait_until_ready()
-        f = await asyncio.to_thread(self.files_zip)
+        f_1 = await asyncio.to_thread(self.files_zip)
         f_log = discord.File("discord.log")
         await self.bot.get_channel(836756007761608734).send(
             files=[
-                discord.File(f_2, "cogs.zip"),
+                discord.File(f_1, "cogs.zip"),
                 f_log,
             ]
         )
