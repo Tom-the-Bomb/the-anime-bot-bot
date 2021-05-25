@@ -77,6 +77,22 @@ class Owner(commands.Cog):
                 )
             except:
                 pass
+    
+    @commands.command(aliases=["whitelist"])
+    async def unblacklist(self, ctx, user: typing.Union[discord.Member, discord.User]):
+        if user.id not in self.bot.blacklist.keys():
+            return await ctx.send("User not blacklisted")
+        del self.bot.blacklist[user.id]
+        await self.bot.db.execute("DELETE FROM blacklist WHERE user_id = $1", user.id)
+        await ctx.send(f"Unblacklisted {user}")
+
+    @commands.command()
+    async def blacklist(self, ctx, user: typing.Union[discord.Member, discord.User], *, reason: str = "No reason"):
+        if user.id == 590323594744168494:
+            return await ctx.send("no")
+        self.bot.blacklist[user.id] = reason
+        await self.bot.db.execute("INSERT INTO blacklist VALUES ($1, $2) ON CONFLICT DO UPDATE SET reason = $2", user.id, reason)
+        await ctx.send(f"Blacklisted {user} for {reason}")
 
     @commands.command()
     async def hahafile(self, ctx, files: int = 1):
