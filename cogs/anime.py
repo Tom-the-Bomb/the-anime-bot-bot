@@ -6,10 +6,8 @@ import bs4
 import random
 from utils.asyncstuff import asyncexe
 
-from menus import menus
-
 import discord
-from discord.ext import commands
+from discord.ext import commands, menus
 
 
 class AnimeMenuSource(menus.ListPageSource):
