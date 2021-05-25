@@ -19,9 +19,9 @@ class Custom(commands.Cog):
         self.bot.loop.create_task(self._webserver.stop())
     
     @commands.Cog.listener()
-    async def on_message_edit(self, before, after):
-        if after.guild and after.guild.id == 801896886604529734 and self.bot.invite_regex.findall(after.content, re.IGNORECASE):
-            await after.delete()
+    async def on_raw_message_edit(self, payload):
+        if payload.data and payload.data.get("guild_id") and int(payload.data.get("guild_id")) == 801896886604529734 and payload.data.get("content") and self.bot.invite_regex.findall(payload.data.get("content"), re.IGNORECASE):
+            await self.bot.http.delete_message(int(payload.data.get("channel_id")), int(payload.data.get("message_id")))
     
     @commands.Cog.listener()
     async def on_message(self, message):
