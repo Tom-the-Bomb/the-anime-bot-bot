@@ -20,12 +20,12 @@ class Custom(commands.Cog):
     
     @commands.Cog.listener()
     async def on_message_edit(self, before, after):
-        if after.guild and after.guild.id == 801896886604529734 and self.bot.invite_regex.findall(after.content, re.IGNORECASE):
+        if after.guild and after.guild.id == 801896886604529734 and after.channel.id == 846614054960627732 and self.bot.invite_regex.findall(after.content, re.IGNORECASE):
             await after.delete()
     
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.guild and message.guild.id == 801896886604529734 and self.bot.invite_regex.findall(message.content, re.IGNORECASE):
+        if message.guild and message.guild.id == 801896886604529734 and message.channel.id == 846614054960627732 and self.bot.invite_regex.findall(message.content, re.IGNORECASE):
             await message.delete()
         
 
