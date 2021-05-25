@@ -223,13 +223,6 @@ class AnimeBot(commands.Bot):
             command._max_concurrency = MaxConcurrency(1, per=commands.BucketType.user, wait=False)
 
     async def create_cache(self):
-        await self.wait_until_ready()
-        for i in self.guilds:
-            await self.db.execute(
-                "INSERT INTO prefix (guild_id, prefix) VALUES ($1, $2) ON CONFLICT (guild_id) DO NOTHING",
-                i.id,
-                self.default_prefix,
-            )
         prefixes = await self.db.fetch("SELECT * FROM prefix")
         for i in prefixes:
             self.prefixes[i["guild_id"]] = i["prefix"]
