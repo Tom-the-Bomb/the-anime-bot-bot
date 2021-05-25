@@ -21,7 +21,7 @@ class Custom(commands.Cog):
     @commands.Cog.listener()
     async def on_raw_message_edit(self, payload):
         if payload.data and payload.data.get("guild_id") and int(payload.data.get("guild_id")) == 801896886604529734 and payload.data.get("content") and self.bot.invite_regex.findall(payload.data.get("content"), re.IGNORECASE):
-            await self.bot.http.delete_message(int(payload.data.get("channel_id")), int(payload.data.get("message_id")))
+            await self.bot.http.delete_message(int(payload.data.get("channel_id")), int(payload.data.get("id")))
     
     @commands.Cog.listener()
     async def on_message(self, message):
