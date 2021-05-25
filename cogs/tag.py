@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands, menus
+import asyncio
 from io import BytesIO
 import ujson
 import re
