@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import re
 import aiohttp
 from aiohttp import web
 from utils.subclasses import AnimeContext
@@ -10,11 +11,23 @@ import datetime
 class Custom(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.bot.invite_regex = re.compile(r"(?:https?://)?discord(?:app)?\.(?:com/invite|gg)/[a-zA-Z0-9]+/?")
         self.app = web.Application()
         self.bot.loop.create_task(self.run())
 
     def cog_unload(self):
         self.bot.loop.create_task(self._webserver.stop())
+    
+    @commands.Cog.listener()
+    async def on_message(self, before, after):
+        if after.guild and after.guild.id == 801896886604529734 and self.bot.invite_regex.findall(after.content, re.IGNORECASE):
+            await message.delete()
+    
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if after.guild and after.guild.id == 801896886604529734 and self.bot.invite_regex.findall(message.content, re.IGNORECASE):
+            await message.delete()
+        
 
     @commands.Cog.listener()
     async def on_member_join(self, member):
