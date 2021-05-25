@@ -25,7 +25,7 @@ class Custom(commands.Cog):
     
     @commands.Cog.listener()
     async def on_message(self, message):
-        if after.guild and after.guild.id == 801896886604529734 and self.bot.invite_regex.findall(message.content, re.IGNORECASE):
+        if message.guild and message.guild.id == 801896886604529734 and self.bot.invite_regex.findall(message.content, re.IGNORECASE):
             await message.delete()
         
 
