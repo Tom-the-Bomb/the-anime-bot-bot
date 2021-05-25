@@ -33,11 +33,14 @@ class Tag(commands.Cog):
     async def on_message_for_random_tag_(self, message):
         if not message.content.startswith("!random tag"):
             return
-        m = await self.bot.wait_for(
-            "message",
-            check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
-            timeout=1,
-        )
+        try:
+            m = await self.bot.wait_for(
+                "message",
+                check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
+                timeout=2,
+            )
+        except asyncio.TimeoutError:
+            return
         if m.embeds and m.embeds[0].type == "rich":
             return
         content = m.content
@@ -67,11 +70,14 @@ class Tag(commands.Cog):
     async def on_message_for_random_tag(self, message):
         if not message.content.startswith("?random tag"):
             return
-        m = await self.bot.wait_for(
-            "message",
-            check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
-            timeout=1,
-        )
+        try:
+            m = await self.bot.wait_for(
+                "message",
+                check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
+                timeout=2,
+            )
+        except asyncio.TimeoutError:
+            return
         if m.embeds and m.embeds[0].type == "rich":
             return
         content = m.content
@@ -125,11 +131,14 @@ class Tag(commands.Cog):
             "box",
         ]:
             return
-        m = await self.bot.wait_for(
-            "message",
-            check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
-            timeout=2,
-        )
+        try:
+            m = await self.bot.wait_for(
+                "message",
+                check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
+                timeout=2,
+            )
+        except asyncio.TimeoutError:
+            return
         if m.embeds and m.embeds[0].type == "rich":
             return
         content = m.content
@@ -181,11 +190,14 @@ class Tag(commands.Cog):
             "box",
         ]:
             return
-        m = await self.bot.wait_for(
-            "message",
-            check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
-            timeout=2,
-        )
+        try:
+            m = await self.bot.wait_for(
+                "message",
+                check=lambda i: i.author.id == 80528701850124288 and i.channel.id == message.channel.id,
+                timeout=2,
+            )
+        except asyncio.TimeoutError:
+            return
         if m.embeds and m.embeds[0].type == "rich":
             return
         content = m.content
