@@ -1,6 +1,6 @@
 import asyncio
 import discord
-from menus import menus
+from discord.ext import menus
 
 
 class AnimePages(menus.MenuPages):
