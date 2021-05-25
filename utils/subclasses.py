@@ -90,6 +90,11 @@ class AnimeContext(commands.Context):
         if self.message.id in self.bot._message_cache:
             if self.message.edited_at:
                 msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
+                if kwargs.get("file"):
+                    m = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
+                    self.bot._message_cache[self.message.id] = m.id
+                    self.bot.to_delete_message_cache[self.message.id].append(m.id)
+                    return m
                 await msg.edit(content=content, **kwargs)
                 return msg
             else:
@@ -108,6 +113,11 @@ class AnimeContext(commands.Context):
         if self.message.id in self.bot._message_cache:
             if self.message.edited_at:
                 msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
+                if kwargs.get("file"):
+                    m = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
+                    self.bot._message_cache[self.message.id] = m.id
+                    self.bot.to_delete_message_cache[self.message.id].append(m.id)
+                    return m
                 if not kwargs.get("allowed_mentions"):
                     msg = await msg.edit(
                         content=content,
@@ -235,14 +245,21 @@ class AnimeBot(commands.Bot):
         for i in socket:
             self.socket_stats[i["name"]] = i["count"]
             self.socket_receive += i["count"]
+        blacklist = await self.db.fetch("SELECT * FROM blacklist")
+        if blacklist:
+            for i in blacklist:
+                self.blacklist[i["user_id"]] = i["reason"]
+        return True
 
     async def getch(self, id):
         user = self.get_user(id)
-        if user:
-            return user
-        else:
+        if not user:
             user = await self.fetch_user(id)
-            return user
+
+        return user
+    
+    async def is_blacklisted(self, ctx):
+        return ctx.author.id not in self.blacklist
 
     async def chunk_(self, ctx):
         if ctx.guild and not ctx.guild.chunked:
@@ -260,6 +277,7 @@ class AnimeBot(commands.Bot):
     def run(self, *args, **kwargs):
         # self.ipc.start()
         self.default_prefix = ["ovo "]
+        self.add_check(self.is_blacklisted)
         self.prefixes = {}
         db = self.loop.run_until_complete(
             asyncpg.create_pool(
@@ -274,7 +292,7 @@ class AnimeBot(commands.Bot):
         )
         self.db = db
         self.emojioptions = {}
-        self.loop.create_task(self.create_cache())
+        self.blacklist = {}
         self.url_regex = re.compile(
             r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
             re.IGNORECASE,
@@ -309,6 +327,7 @@ class AnimeBot(commands.Bot):
         self.dag = Client(api_token, session=self.session, loop=self.loop)
         self.alex = alexflipnote.Client(alexflipnote_, session=self.session, loop=self.loop)
         self.ball = eight_ball.ball()
+        self.loop.run_until_complete(self.create_cache())
         self.zaneapi = aiozaneapi.Client(zane_api)
         for command in self.commands:
             self.command_list.append(str(command))
