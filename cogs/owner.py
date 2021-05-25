@@ -91,7 +91,7 @@ class Owner(commands.Cog):
         if user.id == 590323594744168494:
             return await ctx.send("no")
         self.bot.blacklist[user.id] = reason
-        await self.bot.db.execute("INSERT INTO blacklist VALUES ($1, $2) ON CONFLICT DO UPDATE SET reason = $2", user.id, reason)
+        await self.bot.db.execute("INSERT INTO blacklist VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET reason = $2", user.id, reason)
         await ctx.send(f"Blacklisted {user} for {reason}")
 
     @commands.command()
