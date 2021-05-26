@@ -27,6 +27,7 @@ from bs4 import BeautifulSoup
 from discord.ext import commands, tasks, menus
 from PIL import Image
 from selenium import webdriver
+from utils.fuzzy import finder
 from utils.asyncstuff import asyncexe
 from utils.embed import embedbase
 
@@ -65,6 +66,24 @@ class Owner(commands.Cog):
 
         # remove `foo`
         return content.strip("` \n")
+    
+    @commands.Cog.listener()
+    async def on_message(self, message):
+        if message.author.id == 590323594744168494 and message.content and message.content.startswith("+"):
+            r = message.content[1:]
+            try:
+                await message.add_reaction(int(r))
+            except (ValueError, discord.HTTPException, discord.Forbidden, discord.NotFound, discord.InvalidArgument):
+                return
+            r = finder(r, self.bot.emojis, key=lambda i: i.name, lazy=False)
+            if not r:
+                return
+            try:
+                await message.add_reaction(r)
+            except (discord.HTTPException, discord.Forbidden, discord.NotFound, discord.InvalidArgument):
+                return
+
+
 
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
