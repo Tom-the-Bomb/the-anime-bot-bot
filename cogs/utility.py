@@ -331,6 +331,27 @@ class Utility(commands.Cog):
         font = ImageFont.truetype("lexiereadable-bold.ttf", 30)
         return im, font
 
+    async def get_cloudflare_incidents(self):
+        lists = []
+        async with self.bot.session.get("https://yh6f0r4529hb.statuspage.io/api/v2/incidents.json") as resp:
+            r = await resp.json()
+            for i in r["incidents"]:
+                name = i["name"]
+                status = i["status"]
+                lists.append(f"{name}: {status}")
+        return lists
+
+    async def get_cloudflare_status(self):
+        lists = []
+        async with self.bot.session.get("https://yh6f0r4529hb.statuspage.io/api/v2/components.json") as resp:
+            r = await resp.json()
+            for i in r["components"]:
+                name = i["name"]
+                status = i["status"]
+                lists
+                .append(f"{name}: {status}")
+        return lists
+
     async def get_incidents(self):
         lists = []
         async with self.bot.session.get("https://srhpyqt94yxb.statuspage.io/api/v2/incidents.json") as resp:
@@ -772,6 +793,28 @@ class Utility(commands.Cog):
         ]
 
         for i in lists:
+            paginator.add_line(i)
+        interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
+        await interface.send_to(ctx)
+
+    @commands.command()
+    async def cfincidents(self, ctx):
+        """
+        Shows cloudflare's incidents
+        """
+        paginator = commands.Paginator(max_size=500, prefix="```yaml", suffix="```")
+        for i in await self.get_cloudflare_incidents():
+            paginator.add_line(f"{i}\n")
+        interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
+        await interface.send_to(ctx)
+
+    @commands.command()
+    async def cfstatus(self, ctx):
+        """
+        Shows cloudflare's status
+        """
+        paginator = commands.Paginator(max_size=500, prefix="```yaml", suffix="```")
+        for i in await self.get_cloudflare_status():
             paginator.add_line(i)
         interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
         await interface.send_to(ctx)
