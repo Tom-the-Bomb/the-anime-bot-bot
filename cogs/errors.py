@@ -135,7 +135,7 @@ class Errors(commands.Cog):
     
     @commands.command()
     async def texterror(self, ctx):
-        1/0
+        ...
     
     @commands.Group(invoke_without_command=True)
     @commands.is_owner()
@@ -145,7 +145,7 @@ class Errors(commands.Cog):
             if not errors:
                 return await ctx.send("There are no error")
             lists = [f"{i['error_id']} - {i['command']}" for i in errors]
-            pages = menus.MenuPages(source=ErrorsMenuSource(avatars, user=member), delete_message_after=True)
+            pages = menus.MenuPages(source=ErrorsMenuSource(lists), delete_message_after=True)
             await pages.start(ctx)
         else:
             error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
