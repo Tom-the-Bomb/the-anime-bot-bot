@@ -172,7 +172,7 @@ class Error(commands.Cog):
     
     @errors.command()
     async def fix(self, ctx, id:int):
-        error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", ctx.author.id)
+        error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
         for i in error["trackers"]:
             await (await self.bot.getch(i)).send(f"One of the error you tracking: {id} has been fixed. Command name: {error['command']}")
         await ctx.send("Marked as fixed and dmed all trackers")
