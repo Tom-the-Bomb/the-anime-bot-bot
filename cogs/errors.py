@@ -134,7 +134,7 @@ class Error(commands.Cog):
     
     @commands.command()
     async def texterror(self, ctx):
-        ...
+        1/0
     
     @commands.group(invoke_without_command=True)
     @commands.is_owner()
