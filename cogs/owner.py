@@ -80,7 +80,7 @@ class Owner(commands.Cog):
             if not r:
                 return
             try:
-                await m.add_reaction(r)
+                await m.add_reaction(r[0])
             except (discord.HTTPException, discord.Forbidden, discord.NotFound, discord.InvalidArgument):
                 return
 
