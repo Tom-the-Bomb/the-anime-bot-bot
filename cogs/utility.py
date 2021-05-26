@@ -348,8 +348,7 @@ class Utility(commands.Cog):
             for i in r["components"]:
                 name = i["name"]
                 status = i["status"]
-                lists
-                .append(f"{name}: {status}")
+                lists.append(f"{name}: {status}")
         return lists
 
     async def get_incidents(self):
