@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands, menus
+import wavelink
 import prettify_exceptions
 import humanize
 from utils.subclasses import GlobalCooldown
