@@ -6,6 +6,7 @@ import humanize
 from utils.subclasses import GlobalCooldown
 from utils.subclasses import AnimeContext
 import PIL
+from PIL import Image
 import asyncio
 import aiozaneapi
 import asyncdagpi
