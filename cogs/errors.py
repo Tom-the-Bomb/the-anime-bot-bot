@@ -133,8 +133,8 @@ class Error(commands.Cog):
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
     @commands.command()
-    async def texterror(self, ctx):
-        1/0
+    async def testerror(self, ctx):
+        raise commands.CommandError
     
     @commands.group(invoke_without_command=True)
     @commands.is_owner()
