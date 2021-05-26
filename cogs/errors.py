@@ -9,7 +9,7 @@ import asyncio
 import aiozaneapi
 import asyncdagpi
 
-class ErrorMenuSource(menus.ListPageSource):
+class ErrorsMenuSource(menus.ListPageSource):
     def __init__(self, data):
         self.data = data
         super().__init__(data, per_page=10)
@@ -138,6 +138,8 @@ class Errors(commands.Cog):
     async def errors(self, ctx: AnimeContext, id: int = None):
         if not id:
             errors = await self.bot.db.fetch("SELECT * FROM errors")
+            if not errors:
+                return await ctx.send("There are no error")
             lists = [f"{i['error_id']} - {i['command']}" for i in errors]
             pages = menus.MenuPages(source=ErrorsMenuSource(avatars, user=member), delete_message_after=True)
             await pages.start(ctx)
