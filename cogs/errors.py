@@ -113,8 +113,8 @@ class Errors(commands.Cog):
         elif isinstance(error, commands.CheckFailure):
             return
         else:
-            await self.bot.db.execute(
-                "INSERT INTO errors (error, message, created_at, author_name, command) VALUES ($1, $2, $3, $4, $5)",
+            error_id = await self.bot.db.fetchval(
+                "INSERT INTO errors (error, message, created_at, author_name, command) VALUES ($1, $2, $3, $4, $5) RETURNING error_id",
                 "".join(
                     prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)
                 ),
@@ -125,15 +125,15 @@ class Errors(commands.Cog):
             )
             embed = discord.Embed(
                 color=0xFF0000,
-                description=f"some weird error occured, I have told my developer to fix it"
+                description=f"some weird error occured, I have told my developer to fix it, if you wish to track this error you may run `{ctx.prefix}errors track {error_id}`"
             )
             await ctx.send(embed=embed)
             # print(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
             print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
             # traceback.print_exception(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
-
-    @commands.command()
+    
+    @commands.Group(invoke_without_command=True)
     @commands.is_owner()
     async def errors(self, ctx: AnimeContext, id: int = None):
         if not id:
@@ -161,6 +161,29 @@ class Errors(commands.Cog):
             embed.add_field(name="command", value=error["command"], inline=False)
 
             return await ctx.send(embed=embed)
+    
+    @errors.command()
+    async def fix(self, ctx, id:int):
+        error = await self.bot.row("SELECT * FROM errors WHERE error_id = $1", ctx.author.id)
+        for i in error["trackers"]:
+            await (await self.bot.getch(i)).send(f"One of the error you tracking: {id} has been fixed. Command name: {error['command']}")
+        await ctx.send("Marked as fixed and dmed all trackers")
+    
+    @errors.command()
+    async def track(self, ctx, id: int):
+        """
+        Track a error
+        """
+        await self.bot.db.execute("UPDATE errors SET trackers = array_append(trackers, $1)", ctx.author.id)
+        await ctx.send(f"Ok, you are now tracking error {id} I will dm you if it get fixed")
+    
+    @errors.command()
+    async def untrack(self, ctx, id: int):
+        """
+        untrack a error
+        """
+        await self.bot.db.execute("UPDATE errors SET trackers = array_remove(trackers, $1)", ctx.author.id)
+        await ctx.send(f"Ok, you are no longer tracking error {id}")
 
 def setup(bot):
     bot.add_cog(Errors(bot))
