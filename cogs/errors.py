@@ -19,7 +19,6 @@ class ErrorMenuSource(menus.ListPageSource):
             "embed": discord.Embed(color=menu.ctx.bot.color, title=f"Errors", description="\n".join(entries))
             .set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
         }
-        }
 
 class Errors(commands.Cog):
     def __init__(self, bot):
@@ -160,3 +159,6 @@ class Errors(commands.Cog):
             embed.add_field(name="command", value=error["command"], inline=False)
 
             return await ctx.send(embed=embed)
+
+def setup(bot):
+    bot.add_cog(Errors(bot))
