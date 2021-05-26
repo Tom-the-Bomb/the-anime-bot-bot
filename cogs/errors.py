@@ -16,11 +16,10 @@ class ErrorsMenuSource(menus.ListPageSource):
 
     async def format_page(self, menu, entries):
         return {
-            "embed": discord.Embed(color=menu.ctx.bot.color, title=f"Errors", description="\n".join(entries))
-            .set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
+            "embed": discord.Embed(color=menu.ctx.bot.color, title=f"Errors", description="\n".join(entries)).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
         }
 
-class Errors(commands.Cog):
+class Error(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
     
@@ -190,4 +189,4 @@ class Errors(commands.Cog):
         await ctx.send(f"Ok, you are no longer tracking error {id}")
 
 def setup(bot):
-    bot.add_cog(Errors(bot))
+    bot.add_cog(Error(bot))
