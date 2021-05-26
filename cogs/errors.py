@@ -133,6 +133,10 @@ class Errors(commands.Cog):
             # traceback.print_exception(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
+    @commands.command()
+    async def texterror(self, ctx):
+        1/0
+    
     @commands.Group(invoke_without_command=True)
     @commands.is_owner()
     async def errors(self, ctx: AnimeContext, id: int = None):
