@@ -75,7 +75,7 @@ class Owner(commands.Cog):
             try:
                 await m.add_reaction(int(r))
             except (ValueError, discord.HTTPException, discord.Forbidden, discord.NotFound, discord.InvalidArgument):
-                return
+                pass
             r = finder(r, self.bot.emojis, key=lambda i: i.name, lazy=False)
             if not r:
                 return
