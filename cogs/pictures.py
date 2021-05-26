@@ -1054,6 +1054,10 @@ class Images(commands.Cog):
             buffer.seek(0)
         np_array = np.asarray(bytearray(buffer.read()), dtype=np.uint8)
         img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+        norm_img = np.zeros((img.shape[0], img.shape[1]))
+        img = cv2.normalize(img, norm_img, 0, 255, cv2.NORM_MINMAX)
+        img = cv2.threshold(img, 100, 255, cv2.THRESH_BINARY)[1]
+        img = cv2.GaussianBlur(img, (1, 1), 0)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         ocr_config = r'--tessdata-dir "/home/cryptex/ocr_data"'
