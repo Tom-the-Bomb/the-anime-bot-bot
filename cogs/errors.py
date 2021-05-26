@@ -1,5 +1,7 @@
 import discord
 from discord.ext import commands, menus
+import sys
+import traceback
 import wavelink
 import prettify_exceptions
 import humanize
