@@ -136,7 +136,7 @@ class Error(commands.Cog):
     async def texterror(self, ctx):
         ...
     
-    @commands.Group(invoke_without_command=True)
+    @commands.group(invoke_without_command=True)
     @commands.is_owner()
     async def errors(self, ctx: AnimeContext, id: int = None):
         if not id:
