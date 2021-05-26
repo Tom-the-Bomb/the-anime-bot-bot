@@ -71,7 +71,7 @@ class Owner(commands.Cog):
     async def on_message(self, message):
         if message.author.id == 590323594744168494 and message.content and message.content.startswith("+"):
             r = message.content[1:]
-            m = (await message.channel.history(limit=2, before=message, oldest_first=True).flatten())[0]
+            m = (await message.channel.history(limit=2, before=message).flatten())[1]
             try:
                 await m.add_reaction(int(r))
             except (ValueError, discord.HTTPException, discord.Forbidden, discord.NotFound, discord.InvalidArgument):
