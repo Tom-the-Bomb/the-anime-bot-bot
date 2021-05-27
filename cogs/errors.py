@@ -175,6 +175,7 @@ class Error(commands.Cog):
         error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
         for i in error["trackers"]:
             await (await self.bot.getch(i)).send(f"One of the error you tracking: {id} has been fixed. Command name: {error['command']}")
+        await self.bot.db.execute("DELETE FROM errors WHERE error_id = $1", id)
         await ctx.send("Marked as fixed and dmed all trackers")
     
     @errors.command()
