@@ -137,10 +137,6 @@ class Error(commands.Cog):
             # traceback.print_exception(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
     
-    @commands.command()
-    async def testerror(self, ctx):
-        raise commands.CommandError
-    
     @commands.group(invoke_without_command=True)
     @commands.is_owner()
     async def errors(self, ctx: AnimeContext, id: int = None):
@@ -171,6 +167,7 @@ class Error(commands.Cog):
             return await ctx.send(embed=embed)
     
     @errors.command()
+    @commands.is_owner()
     async def fix(self, ctx, id:int):
         error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
         for i in error["trackers"]:
