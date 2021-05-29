@@ -324,25 +324,6 @@ class Owner(commands.Cog):
         await interface.send_to(ctx)
 
     @commands.command()
-    async def speedtest(self, ctx):
-        async with ReplResponseReactor(ctx.message):
-            with ShellReader("speedtest-cli --simple") as reader:
-                prefix = "```" + reader.highlight
-
-                paginator = WrappedPaginator(prefix=prefix, max_size=1975)
-                paginator.add_line(f"{reader.ps1} 'speedtest-cli --simple'\n")
-
-                interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
-                self.bot.loop.create_task(interface.send_to(ctx))
-
-                async for line in reader:
-                    if interface.closed:
-                        return
-                    await interface.add_line(line)
-
-            await interface.add_line(f"\n[status] Return code {reader.close_code}")
-
-    @commands.command()
     async def reload(self, ctx: AnimeContext, text_):
         text_ = text_.lower()
         await ctx.message.add_reaction("<:greenTick:596576670815879169>")
