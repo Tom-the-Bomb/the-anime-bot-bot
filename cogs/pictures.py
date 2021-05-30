@@ -75,7 +75,7 @@ Image_Union = typing.Union[
     str,
 ]
 
-class InvalidImage(Exception):
+class InvalidImage(commands.CommandInvokeError):
     pass
 
 
