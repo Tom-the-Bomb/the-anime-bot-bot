@@ -691,7 +691,7 @@ class Images(commands.Cog):
         with WandImage(file=image, format=f) as img:
             b = BytesIO(img.make_blob(format))
             b.seek(0)
-            return b
+            return b, img.format
 
 
     
@@ -706,7 +706,8 @@ class Images(commands.Cog):
                 if h.startswith(b"<svg") or h.startswith(b"<?xml"):
                     f = "svg"
                 b.seek(0)
-                await ctx.reply(file=discord.File(await self.convertimage_(b, format, f), f"The_Anime_Bot_image_format_convert.{format.lower()}"))
+                b, f = await self.convertimage_(b, format, f)
+                await ctx.reply(file=discord.File(b, f"The_Anime_Bot_image_format_convert.{f}"))
         
 
     @commands.command()
