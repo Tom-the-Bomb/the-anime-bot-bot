@@ -687,8 +687,8 @@ class Images(commands.Cog):
             return decode(img)[0].data.decode("utf-8")
 
     @asyncexe()
-    def convertimage_(self, image, format):
-        with WandImage(file=image) as img:
+    def convertimage_(self, image, format, f):
+        with WandImage(file=image, format=f) as img:
             b = BytesIO(img.make_blob(format))
             b.seek(0)
             return b
@@ -701,7 +701,11 @@ class Images(commands.Cog):
             url = await self.get_url(ctx, thing, checktype=False)
             async with self.bot.session.get(url) as resp:
                 b = BytesIO(await resp.read())
-                await ctx.reply(file=await self.convertimage_(b, format))
+                f = None
+                if b.read(10).startswith(b"<svg"):
+                    f = "svg"
+                f.seek(0)
+                await ctx.reply(file=await self.convertimage_(b, format, f))
         
 
     @commands.command()
