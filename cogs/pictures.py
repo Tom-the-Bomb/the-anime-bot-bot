@@ -704,7 +704,7 @@ class Images(commands.Cog):
                 f = None
                 if b.read(10).startswith(b"<svg"):
                     f = "svg"
-                f.seek(0)
+                b.seek(0)
                 await ctx.reply(file=await self.convertimage_(b, format, f))
         
 
