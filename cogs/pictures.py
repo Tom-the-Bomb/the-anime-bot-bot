@@ -232,6 +232,7 @@ class Images(commands.Cog):
         url = None
         avatar = kwargs.get("avatar", True)
         check = kwargs.get("check", True)
+        checktype = kwargs.get("checktype", True)
         gif = kwargs.get("gif", False)
         if ctx.message.reference:
             message = ctx.message.reference.resolved
@@ -288,23 +289,24 @@ class Images(commands.Cog):
                     raise commands.CommandError("Invalid Picture")
                 if "image" not in resp.content_type:
                     raise commands.CommandError("Invalid Picture")
-                b = await resp.content.read(50)
-                if b.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A") or b.startswith(b"\x89PNG"):
-                    pass
-                elif b[0:3] == b"\xff\xd8\xff" or b[6:10] in (b"JFIF", b"Exif"):
-                    pass
-                elif b.startswith((b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")):
-                    pass
-                elif b[:2] in (b"MM", b"II"):
-                    pass
-                elif len(b) >= 3 and b[0] == ord(b"P") and b[1] in b"25" and b[2] in b" \t\n\r":
-                    pass
-                elif b.startswith(b"BM"):
-                    pass
-                elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
-                    raise discord.InvalidArgument("Unsupported image type given")
-                if resp.headers.get("Content-Length") and int(resp.headers.get("Content-Length")) > 10000000:
-                    raise discord.InvalidArgument("Image Larger then 10 MB")
+                if checktype:
+                    b = await resp.content.read(50)
+                    if b.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A") or b.startswith(b"\x89PNG"):
+                        pass
+                    elif b[0:3] == b"\xff\xd8\xff" or b[6:10] in (b"JFIF", b"Exif"):
+                        pass
+                    elif b.startswith((b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")):
+                        pass
+                    elif b[:2] in (b"MM", b"II"):
+                        pass
+                    elif len(b) >= 3 and b[0] == ord(b"P") and b[1] in b"25" and b[2] in b" \t\n\r":
+                        pass
+                    elif b.startswith(b"BM"):
+                        pass
+                    elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
+                        raise discord.InvalidArgument("Unsupported image type given")
+                    if resp.headers.get("Content-Length") and int(resp.headers.get("Content-Length")) > 10000000:
+                        raise discord.InvalidArgument("Image Larger then 10 MB")
         return url
 
     def get_gif_url(self, ctx: AnimeContext, thing, **kwargs):
@@ -696,7 +698,7 @@ class Images(commands.Cog):
     @commands.command(aliases=["converti"])
     async def convertimage(self, ctx, thing: typing.Optional[Image_Union], format: lambda x: str(x).upper()="PNG"):
         async with ctx.channel.typing():
-            url = await self.get_url(ctx, thing)
+            url = await self.get_url(ctx, thing, checktype=False)
             async with self.bot.session.get(url) as resp:
                 b = BytesIO(await resp.read())
                 await ctx.reply(file=await self.convertimage_(b, format))
