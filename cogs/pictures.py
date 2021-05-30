@@ -709,7 +709,7 @@ class Images(commands.Cog):
                     f = "svg"
                 b.seek(0)
                 b, f = await self.convertimage_(b, format, f)
-                await ctx.reply(file=discord.File(b, f"The_Anime_Bot_image_format_convert.{f}"))
+                await ctx.reply(file=discord.File(b, f"The_Anime_Bot_image_format_convert.{f.lower()}"))
         
 
     @commands.command()
