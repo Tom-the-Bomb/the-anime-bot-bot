@@ -689,9 +689,11 @@ class Images(commands.Cog):
     @asyncexe()
     def convertimage_(self, image, format, f):
         with WandImage(file=image, format=f) as img:
-            b = BytesIO(img.make_blob(format))
-            b.seek(0)
-            return b, img.format
+            with img.convert(format) as img:
+                b = BytesIO()
+                img.save(file=b)
+                b.seek(0)
+                return b, img.format
 
 
     
