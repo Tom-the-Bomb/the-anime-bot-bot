@@ -684,21 +684,23 @@ class Images(commands.Cog):
         with Image.open(bytes_) as img:
             return decode(img)[0].data.decode("utf-8")
 
-    def process_latex(self, buffer):
-        with Image.open(buffer) as img:
-            img_ = img.convert("RGBA")
-            im__ = img_.filter(ImageFilter.SMOOTH_MORE)
-            _im_ = im__.filter(ImageFilter.DETAIL)
-            enhancer = ImageEnhance.Sharpness(_im_)
-            im_ = enhancer.enhance(2)
-            im__.close()
-            img_.close()
-            _im_.close()
-            b = BytesIO()
-            im_.save(b, "PNG", dpi=(1000, 1000))
+    @asyncexe()
+    def convertimage_(self, image, format):
+        with WandImage.open(file=image) as img:
+            b = BytesIO(img.make_blob(format))
             b.seek(0)
-            im_.close()
             return b
+
+
+    
+    @commands.command(aliases=["converti"])
+    async def convertimage(self, ctx, thing: typing.Optional[Image_Union], format=lambda x: str(x).upper()):
+        async with ctx.channel.typing():
+            url = await self.get_url(ctx, thing)
+            async with self.bot.session.get(url) as resp:
+                b = BytesIO(await resp.read())
+                await ctx.reply(file=await self.convertimage_(b, format))
+        
 
     @commands.command()
     async def code(self, ctx, *, code):
