@@ -73,7 +73,7 @@ class Error(commands.Cog):
             error, (Image.DecompressionBombError, Image.DecompressionBombWarning)
         ):
             # embed = self.embed("eww decompression bomb eww stop or i use my ban hammer")
-            embed = self.embed(error.original)
+            embed = self.embed(error)
             await ctx.reply(embed=embed)
         elif isinstance(error, aiozaneapi.GatewayError):
             embed = self.embed("Zane api error")
