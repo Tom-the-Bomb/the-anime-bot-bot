@@ -705,7 +705,7 @@ class Images(commands.Cog):
                 if b.read(10).startswith(b"<svg"):
                     f = "svg"
                 b.seek(0)
-                await ctx.reply(file=await self.convertimage_(b, format, f))
+                await ctx.reply(file=discord.File(await self.convertimage_(b, format, f), f"The_Anime_Bot_image_format_convert.{format.lower()}"))
         
 
     @commands.command()
