@@ -61,7 +61,7 @@ limits["height"] = 1000
 limits["thread"] = 10
 
 warnings.simplefilter("error", Image.DecompressionBombWarning)
-Image.MAX_IMAGE_PIXELS = 44739243
+Image.MAX_IMAGE_PIXELS = MAX_IMAGE_PIXELS = 1000 * 1000
 
 ree = re.compile(r"\?.+")
 authorizationthing = config.ksoft

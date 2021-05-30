@@ -69,8 +69,11 @@ class Error(commands.Cog):
         elif isinstance(error, PIL.UnidentifiedImageError):
             embed = self.embed("No image found")
             await ctx.reply(embed=embed)
-        elif isinstance(error, Image.DecompressionBombError):
-            embed = self.embed("eww decompression bomb eww stop or i use my ban hammer")
+        elif isinstance(
+            error, (Image.DecompressionBombError, Image.DecompressionBombWarning)
+        ):
+            # embed = self.embed("eww decompression bomb eww stop or i use my ban hammer")
+            embed = self.embed(error.original)
             await ctx.reply(embed=embed)
         elif isinstance(error, aiozaneapi.GatewayError):
             embed = self.embed("Zane api error")
