@@ -702,7 +702,8 @@ class Images(commands.Cog):
             async with self.bot.session.get(url) as resp:
                 b = BytesIO(await resp.read())
                 f = None
-                if b.read(10).startswith(b"<svg"):
+                h = b.read(10)
+                if h.startswith(b"<svg") or h.startswith(b"<?xml"):
                     f = "svg"
                 b.seek(0)
                 await ctx.reply(file=discord.File(await self.convertimage_(b, format, f), f"The_Anime_Bot_image_format_convert.{format.lower()}"))
