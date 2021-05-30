@@ -75,6 +75,9 @@ Image_Union = typing.Union[
     str,
 ]
 
+class InvalidImage(Exception):
+    pass
+
 
 class ShapeDetector:
     def detect(self, c):
@@ -279,7 +282,7 @@ class Images(commands.Cog):
             else:
                 url = await emoji_to_url(thing)
                 if url == thing:
-                    raise commands.CommandError("Invalid url")
+                    raise InvalidImage("Invalid url")
         if not avatar:
             return None
         if not url:
@@ -287,9 +290,9 @@ class Images(commands.Cog):
         if check:
             async with self.bot.session.get(url) as resp:
                 if resp.status != 200:
-                    raise commands.CommandError("Invalid Picture")
+                    raise InvalidImage("Invalid Picture")
                 if "image" not in resp.content_type:
-                    raise commands.CommandError("Invalid Picture")
+                    raise InvalidImage("Invalid Picture")
                 if checktype:
                     b = await resp.content.read(50)
                     if b.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A") or b.startswith(b"\x89PNG"):
@@ -305,9 +308,9 @@ class Images(commands.Cog):
                     elif b.startswith(b"BM"):
                         pass
                     elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
-                        raise discord.InvalidArgument("Unsupported image type given")
+                        raise InvalidImage("Unsupported image type given")
                     if resp.headers.get("Content-Length") and int(resp.headers.get("Content-Length")) > 10000000:
-                        raise discord.InvalidArgument("Image Larger then 10 MB")
+                        raise InvalidImage("Image Larger then 10 MB")
         return url
 
     def get_gif_url(self, ctx: AnimeContext, thing, **kwargs):
@@ -391,6 +394,9 @@ class Images(commands.Cog):
         images[0].save(
             save_file, format="GIF", append_images=images[1:], durations=durations, disposal=2, loop=0, save_all=True
         )
+    
+    def wand_decompression_bomb_check(self):
+        ...
 
     def resize(self, image: Image) -> Image:
         if image.height > 500 or image.width > 500:
