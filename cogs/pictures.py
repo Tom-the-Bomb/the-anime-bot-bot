@@ -688,7 +688,7 @@ class Images(commands.Cog):
 
     @asyncexe()
     def convertimage_(self, image, format):
-        with WandImage.open(file=image) as img:
+        with WandImage(file=image) as img:
             b = BytesIO(img.make_blob(format))
             b.seek(0)
             return b
