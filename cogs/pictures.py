@@ -694,7 +694,7 @@ class Images(commands.Cog):
 
     
     @commands.command(aliases=["converti"])
-    async def convertimage(self, ctx, thing: typing.Optional[Image_Union], format=lambda x: str(x).upper()):
+    async def convertimage(self, ctx, thing: typing.Optional[Image_Union], format="PNG": lambda x: str(x).upper()):
         async with ctx.channel.typing():
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
