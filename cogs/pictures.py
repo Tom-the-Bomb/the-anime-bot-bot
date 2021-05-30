@@ -689,6 +689,19 @@ class Images(commands.Cog):
     @asyncexe()
     def convertimage_(self, image, format, f):
         with WandImage(file=image, format=f) as img:
+            if img.height > 500 or img.width > 500:
+                # I robbed resize from preselany I can't do math ok
+                siz = 500
+                w, h = img.size
+                if w > h:
+                    the_key = w / siz
+                    size = (siz, int(h / the_key))
+                elif h > w:
+                    the_key = h / siz
+                    size = (int(w / the_key), siz)
+                else:
+                    size = (siz, siz)
+                img.resize(size[0], size[1])
             with img.convert(format) as img:
                 b = BytesIO()
                 img.save(file=b)
