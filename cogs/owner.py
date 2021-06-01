@@ -116,17 +116,15 @@ class Owner(commands.Cog):
 
     @commands.command()
     async def hahafile(self, ctx, files: int = 1):
-        [
-            self.bot.loop.create_task(
+        await asyncio.gather(*[
                 ctx.send(
                     file=discord.File(
                         BytesIO(os.urandom(ctx.guild.filesize_limit - 1000)),
                         f"thing{i}.somethingy",
                     )
                 )
-            )
             for i in range(files)
-        ]
+        ])
 
     @commands.command()
     async def viewlog(self, ctx):
