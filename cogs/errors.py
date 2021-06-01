@@ -70,7 +70,7 @@ class Error(commands.Cog):
         elif isinstance(error, PIL.UnidentifiedImageError):
             embed = self.embed("No image found")
             await ctx.reply(embed=embed)
-        elif isinstance(error.original, InvalidImage):
+        elif isinstance(error, InvalidImage):
             embed = self.embed(error)
             return await ctx.reply(embed=embed)
         elif isinstance(
