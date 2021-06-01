@@ -75,8 +75,9 @@ Image_Union = typing.Union[
     str,
 ]
 
-class InvalidImage(commands.CommandInvokeError):
-    pass
+class InvalidImage(Exception):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
 
 
 class ShapeDetector:
