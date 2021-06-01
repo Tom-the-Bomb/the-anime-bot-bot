@@ -1,57 +1,52 @@
-import discord
-from discord.ext import commands
 import collections
-from glitch_this import ImageGlitcher
-from colormath.color_objects import sRGBColor, XYZColor
-from colormath.color_conversions import convert_color
 import colorsys
-from scipy.spatial import KDTree
-from webcolors import (
-    CSS3_HEX_TO_NAMES,
-    hex_to_rgb,
-)
+
+import discord
 from colordict import ColorDict
+from colormath.color_conversions import convert_color
+from colormath.color_objects import XYZColor, sRGBColor
+from discord.ext import commands
+from glitch_this import ImageGlitcher
+from scipy.spatial import KDTree
+from webcolors import CSS3_HEX_TO_NAMES, hex_to_rgb
 
 colors = ColorDict()
-from wand.resource import limits
-from wand.image import Image as WandImage
-from copy import copy
-import pytesseract
-from urllib.parse import quote
-import warnings
-import ujson
-import qrcode
-from utils.subclasses import AnimeContext
-from qrcode.image.pure import PymagingImage
-import imutils
-import cv2
-import numpy as np
-from pyzbar.pyzbar import decode
-import re
-import ratelimiter
-import config
-import flags
-import functools
-import aiohttp
 import asyncio
-from twemoji_parser import emoji_to_url
-import typing
+import functools
 import os
-from utils.asyncstuff import asyncexe
-import polaroid
-from concurrent.futures import ThreadPoolExecutor
-from typing import Tuple, List, Union
-from collections import defaultdict
-from random import randrange
-from itertools import chain
-from PIL import ImageColor
-from PIL import Image, ImageDraw, ImageFilter
-from PIL import ImageEnhance
-from PIL import ImageSequence
-from PIL import ImageOps
-from io import BytesIO
-from asyncdagpi import ImageFeatures
+import re
 import typing
+import warnings
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
+from copy import copy
+from io import BytesIO
+from itertools import chain
+from random import randrange
+from typing import List, Tuple, Union
+from urllib.parse import quote
+
+import aiohttp
+import config
+import cv2
+import flags
+import imutils
+import numpy as np
+import polaroid
+import pytesseract
+import qrcode
+import ratelimiter
+import ujson
+from asyncdagpi import ImageFeatures
+from PIL import (Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter,
+                 ImageOps, ImageSequence)
+from pyzbar.pyzbar import decode
+from qrcode.image.pure import PymagingImage
+from twemoji_parser import emoji_to_url
+from utils.asyncstuff import asyncexe
+from utils.subclasses import AnimeContext, InvalidImage
+from wand.image import Image as WandImage
+from wand.resource import limits
 
 RGB_SCALE = 255
 CMYK_SCALE = 100
@@ -74,11 +69,6 @@ Image_Union = typing.Union[
     discord.Emoji,
     str,
 ]
-
-class InvalidImage(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
 
 class ShapeDetector:
     def detect(self, c):
