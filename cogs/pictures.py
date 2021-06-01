@@ -254,6 +254,8 @@ class Images(commands.Cog):
                 sticker = message.stickers[0]
                 if sticker.format != discord.StickerType.lottie:
                     url = str(sticker.image_url_as())
+                else:
+                    raise InvalidImage("Lottie Stickers are not Accepted.")
 
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             url = ctx.message.attachments[0].url
@@ -261,6 +263,8 @@ class Images(commands.Cog):
             sticker = ctx.message.stickers[0]
             if sticker.format != discord.StickerType.lottie:
                 url = str(sticker.image_url_as())
+            else:
+                raise InvalidImage("Lottie Stickers are not Accepted.")
         if thing is None and avatar and url is None:
             if gif:
                 url = str(ctx.author.avatar_url_as(static_format="png", size=512))
