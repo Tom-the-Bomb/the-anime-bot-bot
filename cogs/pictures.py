@@ -291,9 +291,9 @@ class Images(commands.Cog):
         if check:
             async with self.bot.session.get(url) as resp:
                 if resp.status != 200:
-                    raise InvalidImage("Invalid Picture")
+                    raise InvalidImage("Unable to fetch the image.")
                 if "image" not in resp.content_type:
-                    raise InvalidImage("Invalid Picture")
+                    raise InvalidImage("Not a valid image file, could be a DOS attack.")
                 if checktype:
                     b = await resp.content.read(50)
                     if b.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A") or b.startswith(b"\x89PNG"):
