@@ -104,10 +104,11 @@ class Reminder(commands.Cog):
         )
         self.bot.loop.create_task(self.get_reminders())
     
-    @remind.command()
-    async def cancel(self, ctx, id:int):
-        try:
-            await self.bot.db.execute("DELETE FROM reminder WHERE user_id = $1, id = $2", ctx.author.id, id)
+    # @remind.command()
+    # async def cancel(self, ctx, id:int):
+    #     try:
+    #         await self.bot.db.execute("DELETE FROM reminder WHERE user_id = $1, id = $2", ctx.author.id, id)
+    #     except:
 
 
 def setup(bot):
