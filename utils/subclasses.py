@@ -351,7 +351,10 @@ class AnimeBot(commands.Bot):
                                     )
         for file in os.listdir("./cogs"):
             if file.endswith(".py"):
-                self.load_extension(f"cogs.{file[:-3]}")
+                try:
+                    self.load_extension(f"cogs.{file[:-3]}")
+                except Exception as e:
+                    print(f"Unable to load cog: {file}, ignoring. Exception: {e}")
         super().run(*args, **kwargs)
 
     async def close(self):
