@@ -808,8 +808,9 @@ class Images(commands.Cog):
             "width": 680,
             "code": code,
         }
-        async with self.bot.session.post(url, json=bobo), async with Processing(ctx):
-            await ctx.reply(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_code.png"))
+        async with Processing(ctx):
+            async with self.bot.session.post(url, json=bobo) as resp:
+                await ctx.reply(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_code.png"))
 
     @asyncexe()
     def shape_detection(self, image):
