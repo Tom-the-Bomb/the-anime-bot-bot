@@ -22,8 +22,7 @@ class Reminder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.bot.loop.create_task(
-            self.bot.loop.run_in_executor(
-                None,
+            asyncio.to_thread(
                 search_dates,
                 "in 10 seconds",
                 settings={"TIMEZONE": "UTC", "PREFER_DATES_FROM": "future", "FUZZY": True},
