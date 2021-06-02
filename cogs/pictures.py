@@ -216,23 +216,28 @@ class TransparentAnimatedGifConverter(object):
         return self._img_p
 
 
-class Processing:
+class Processing(discord.context_managers.Typing):
     __slots__ = ("ctx", "start", "m")
 
     def __init__(self, ctx):
         self.ctx = ctx
         self.start = None
         self.m = None
+        super().__init__(ctx)
 
     async def __aenter__(self, *args, **kwargs):
         self.start = time.perf_counter()
         self.m = await self.ctx.reply(f" <a:loading:849756871597490196> Image Processing.")
+        await super().__aenter__(*args, **kwargs)
+
+        return self
 
     async def __aexit__(self, *args, **kwargs):
         await self.m.delete()
         await self.ctx.reply(
             f" <:check_mark:849758044833447949> Image Process complete, took {round(time.perf_counter() - self.start, 3)} seconds"
         )
+        await super().__aexit__(*args, **kwargs)
 
 
 class Images(commands.Cog):
