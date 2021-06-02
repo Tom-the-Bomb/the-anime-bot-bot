@@ -233,7 +233,7 @@ class Processing:
     
     async def __aexit__(self, *args, **kwargs):
         await self.m.delete()
-        await self..ctx.reply(f"<:check_mark:795108709701255168> Image Process complete, took {round(time.perf_counter() - self.start, 3)} seconds")
+        await self.ctx.reply(f"<:check_mark:795108709701255168> Image Process complete, took {round(time.perf_counter() - self.start, 3)} seconds")
 
 
 class Images(commands.Cog):
