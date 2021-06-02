@@ -3,7 +3,9 @@ import itertools
 import os
 import subprocess
 import sys
+import logging
 import time
+from systemd.journal import JournalHandler
 import warnings
 from collections import Counter, OrderedDict
 
@@ -197,6 +199,8 @@ class LimitedSizeDict(OrderedDict):
 class AnimeBot(commands.Bot):
     def __init__(self):
         self.connector = aiohttp.TCPConnector(limit=200)
+        self.logger = logging.getLogger("TheAnimeBot")
+        self.logger.addHandler(JournalHandler())
         intents = discord.Intents.default()
         intents.members = True
         # self.ipc = ipc.Server(self, secret_key=ipc_key)
@@ -355,7 +359,7 @@ class AnimeBot(commands.Bot):
                 try:
                     self.load_extension(f"cogs.{file[:-3]}")
                 except Exception as e:
-                    warnings.warn(f"Unable to load cog: {file}, ignoring. Exception: {e}")
+                    self.logger.critical(f"Unable to load cog: {file}, ignoring. Exception: {e}")
         super().run(*args, **kwargs)
 
     async def close(self):

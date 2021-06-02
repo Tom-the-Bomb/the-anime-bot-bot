@@ -50,16 +50,19 @@ class UserHistory(commands.Cog):
     @commands.Cog.listener()
     async def on_user_update(self, before, after):
         if before.avatar_url_as(static_format="png") != after.avatar_url_as(static_format="png"):
-            m = await next(self.UPLOADERS).send(
-                after.id,
-                username="Avatar Uploader",
-                avatar_url=self.bot.user.avatar_url_as(format="png"),
-                file=discord.File(
-                    BytesIO(await after.avatar_url_as(static_format="png").read()),
-                    f"{after.id}_avatar.{'png' if not after.is_avatar_animated() else 'gif'}",
-                ),
-                wait=True,
-            )
+            try:
+                m = await next(self.UPLOADERS).send(
+                    after.id,
+                    username="Avatar Uploader",
+                    avatar_url=self.bot.user.avatar_url_as(format="png"),
+                    file=discord.File(
+                        BytesIO(await after.avatar_url_as(static_format="png").read()),
+                        f"{after.id}_avatar.{'png' if not after.is_avatar_animated() else 'gif'}",
+                    ),
+                    wait=True,
+                )
+            except:
+                return
             await self.bot.db.execute(
                 "INSERT INTO user_history (user_id, avatar_url) VALUES ($1, ARRAY [$2]) ON CONFLICT (user_id) DO UPDATE SET avatar_url = array_append (user_history.avatar_url, $2)",
                 after.id,

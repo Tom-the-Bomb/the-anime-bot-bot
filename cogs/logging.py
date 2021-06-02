@@ -154,8 +154,11 @@ class Logging(commands.Cog):
 
     async def send_message(self, channel_id, embed):
         async with self.ratelimiter:
-            channel = self.bot.get_channel(channel_id)
-            await channel.send("no webhook mode", embed=embed)
+            try:
+                channel = self.bot.get_channel(channel_id)
+                await channel.send("no webhook mode", embed=embed)
+            except:
+                return
 
     async def send_webhook(self, guild_id, embed, event):
         if guild_id not in self.bot.logging_cache.keys():

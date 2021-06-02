@@ -96,12 +96,15 @@ class Events(commands.Cog):
         await self.bot.wait_until_ready()
         f_1 = await asyncio.to_thread(self.files_zip)
         f_log = discord.File("discord.log")
-        await self.bot.get_channel(836756007761608734).send(
-            files=[
-                discord.File(f_1, "cogs.zip"),
-                f_log,
-            ]
-        )
+        try:
+            await self.bot.get_channel(836756007761608734).send(
+                files=[
+                    discord.File(f_1, "cogs.zip"),
+                    f_log,
+                ]
+            )
+        except:
+            return
         # if not hasattr(self.bot, "cool_webhooks"):
         #     self.bot.cool_webhooks = await self.bot.get_channel(836756007761608734).webhooks()
         # for _ in range(2):
