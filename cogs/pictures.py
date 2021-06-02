@@ -39,8 +39,7 @@ import qrcode
 import ratelimiter
 import ujson
 from asyncdagpi import ImageFeatures
-from PIL import (Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter,
-                 ImageOps, ImageSequence)
+from PIL import Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter, ImageOps, ImageSequence
 from pyzbar.pyzbar import decode
 from qrcode.image.pure import PymagingImage
 from twemoji_parser import emoji_to_url
@@ -70,6 +69,7 @@ Image_Union = typing.Union[
     discord.Emoji,
     str,
 ]
+
 
 class ShapeDetector:
     def detect(self, c):
@@ -215,12 +215,9 @@ class TransparentAnimatedGifConverter(object):
         self._img_p.info["background"] = 0
         return self._img_p
 
+
 class Processing:
-    __slots__ = (
-        "ctx",
-        "start",
-        "m"
-    )
+    __slots__ = ("ctx", "start", "m")
 
     def __init__(self, ctx):
         self.ctx = ctx
@@ -230,10 +227,12 @@ class Processing:
     async def __aenter__(self, *args, **kwargs):
         self.start = time.perf_counter()
         self.m = await self.ctx.reply(f" <a:loading:849756871597490196> Image Processing.")
-    
+
     async def __aexit__(self, *args, **kwargs):
         await self.m.delete()
-        await self.ctx.reply(f" <:check_mark:849758044833447949> Image Process complete, took {round(time.perf_counter() - self.start, 3)} seconds")
+        await self.ctx.reply(
+            f" <:check_mark:849758044833447949> Image Process complete, took {round(time.perf_counter() - self.start, 3)} seconds"
+        )
 
 
 class Images(commands.Cog):
@@ -409,7 +408,7 @@ class Images(commands.Cog):
         images[0].save(
             save_file, format="GIF", append_images=images[1:], durations=durations, disposal=2, loop=0, save_all=True
         )
-    
+
     def wand_decompression_bomb_check(self):
         ...
 
@@ -729,10 +728,8 @@ class Images(commands.Cog):
                 b.seek(0)
                 return b, img.format
 
-
-    
     @commands.command(aliases=["converti"])
-    async def convertimage(self, ctx, thing: typing.Optional[Image_Union], format: lambda x: str(x).upper()="PNG"):
+    async def convertimage(self, ctx, thing: typing.Optional[Image_Union], format: lambda x: str(x).upper() = "PNG"):
         async with Processing(ctx):
             url = await self.get_url(ctx, thing, checktype=False)
             async with self.bot.session.get(url) as resp:
@@ -744,7 +741,6 @@ class Images(commands.Cog):
                 b.seek(0)
                 b, f = await self.convertimage_(b, format, f)
                 await ctx.reply(file=discord.File(b, f"The_Anime_Bot_image_format_convert.{f.lower()}"))
-        
 
     @commands.command()
     async def code(self, ctx, *, code):

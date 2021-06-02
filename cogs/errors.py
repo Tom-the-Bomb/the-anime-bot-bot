@@ -15,6 +15,7 @@ import asyncio
 import aiozaneapi
 import asyncdagpi
 
+
 class ErrorsMenuSource(menus.ListPageSource):
     def __init__(self, data):
         self.data = data
@@ -22,13 +23,16 @@ class ErrorsMenuSource(menus.ListPageSource):
 
     async def format_page(self, menu, entries):
         return {
-            "embed": discord.Embed(color=menu.ctx.bot.color, title=f"Errors", description="\n".join(entries)).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
+            "embed": discord.Embed(
+                color=menu.ctx.bot.color, title=f"Errors", description="\n".join(entries)
+            ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
         }
+
 
 class Error(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
+
     def embed(self, text):
         return discord.Embed(color=0xFF0000, title="An error occured", description=text)
 
@@ -73,9 +77,7 @@ class Error(commands.Cog):
         elif isinstance(error, InvalidImage):
             embed = self.embed(error)
             return await ctx.reply(embed=embed)
-        elif isinstance(
-            error, (Image.DecompressionBombError, Image.DecompressionBombWarning)
-        ):
+        elif isinstance(error, (Image.DecompressionBombError, Image.DecompressionBombWarning)):
             # embed = self.embed("eww decompression bomb eww stop or i use my ban hammer")
             embed = self.embed(error)
             return await ctx.reply(embed=embed)
@@ -136,14 +138,14 @@ class Error(commands.Cog):
             )
             embed = discord.Embed(
                 color=0xFF0000,
-                description=f"some weird error occured, I have told my developer to fix it, if you wish to track this error you may run `{ctx.prefix}errors track {error_id}`"
+                description=f"some weird error occured, I have told my developer to fix it, if you wish to track this error you may run `{ctx.prefix}errors track {error_id}`",
             )
             await ctx.send(embed=embed)
             # print(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
-            print('Ignoring exception in command {}:'.format(ctx.command), file=sys.stderr)
+            print("Ignoring exception in command {}:".format(ctx.command), file=sys.stderr)
             # traceback.print_exception(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
             traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
-    
+
     @commands.group(invoke_without_command=True)
     @commands.is_owner()
     async def errors(self, ctx: AnimeContext, id: int = None):
@@ -166,23 +168,25 @@ class Error(commands.Cog):
             embed.add_field(
                 name="created_at",
                 value=humanize.naturaldelta(error["created_at"] - datetime.timedelta(hours=8)),
-                inline=False
+                inline=False,
             )
             embed.add_field(name="Author name", value=error["author_name"], inline=False)
             embed.add_field(name="command", value=error["command"], inline=False)
 
             return await ctx.send(embed=embed)
-    
+
     @errors.command()
     @commands.is_owner()
-    async def fix(self, ctx, id:int):
+    async def fix(self, ctx, id: int):
         error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
         if error["trackers"]:
             for i in error["trackers"]:
-                await (await self.bot.getch(i)).send(f"One of the error you tracking: {id} has been fixed. Command name: {error['command']}")
+                await (await self.bot.getch(i)).send(
+                    f"One of the error you tracking: {id} has been fixed. Command name: {error['command']}"
+                )
         await self.bot.db.execute("DELETE FROM errors WHERE error_id = $1", id)
         await ctx.send("Marked as fixed and dmed all trackers")
-    
+
     @errors.command()
     async def track(self, ctx, id: int):
         """
@@ -190,7 +194,7 @@ class Error(commands.Cog):
         """
         await self.bot.db.execute("UPDATE errors SET trackers = array_append(trackers, $1)", ctx.author.id)
         await ctx.send(f"Ok, you are now tracking error {id} I will dm you if it get fixed")
-    
+
     @errors.command()
     async def untrack(self, ctx, id: int):
         """
@@ -198,6 +202,7 @@ class Error(commands.Cog):
         """
         await self.bot.db.execute("UPDATE errors SET trackers = array_remove(trackers, $1)", ctx.author.id)
         await ctx.send(f"Ok, you are no longer tracking error {id}")
+
 
 def setup(bot):
     bot.add_cog(Error(bot))

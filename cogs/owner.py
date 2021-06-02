@@ -66,7 +66,7 @@ class Owner(commands.Cog):
 
         # remove `foo`
         return content.strip("` \n")
-    
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.id == 590323594744168494 and message.content and message.content.startswith("+"):
@@ -84,8 +84,6 @@ class Owner(commands.Cog):
             except (discord.HTTPException, discord.Forbidden, discord.NotFound, discord.InvalidArgument):
                 return
 
-
-
     @commands.Cog.listener()
     async def on_raw_reaction_add(self, payload):
         if payload.user_id == 590323594744168494 and payload.emoji.name == "\U0001f6ae":
@@ -97,7 +95,7 @@ class Owner(commands.Cog):
                 )
             except:
                 pass
-    
+
     @commands.command(aliases=["whitelist"])
     async def unblacklist(self, ctx, user: typing.Union[discord.Member, discord.User]):
         if user.id not in self.bot.blacklist.keys():
@@ -111,20 +109,24 @@ class Owner(commands.Cog):
         if user.id == 590323594744168494:
             return await ctx.send("no")
         self.bot.blacklist[user.id] = reason
-        await self.bot.db.execute("INSERT INTO blacklist VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET reason = $2", user.id, reason)
+        await self.bot.db.execute(
+            "INSERT INTO blacklist VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET reason = $2", user.id, reason
+        )
         await ctx.send(f"Blacklisted {user} for {reason}")
 
     @commands.command()
     async def hahafile(self, ctx, files: int = 1):
-        await asyncio.gather(*[
+        await asyncio.gather(
+            *[
                 ctx.send(
                     file=discord.File(
                         BytesIO(os.urandom(ctx.guild.filesize_limit - 1000)),
                         f"thing{i}.somethingy",
                     )
                 )
-            for i in range(files)
-        ])
+                for i in range(files)
+            ]
+        )
 
     @commands.command()
     async def viewlog(self, ctx):

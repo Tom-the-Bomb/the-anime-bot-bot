@@ -140,9 +140,11 @@ class AnimeContext(commands.Context):
             self.bot.to_delete_message_cache[self.message.id] = [message.id]
             return message
 
+
 class InvalidImage(Exception):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+
 
 class AnimeMessage(discord.Message):
     pass
@@ -258,7 +260,7 @@ class AnimeBot(commands.Bot):
             user = await self.fetch_user(id)
 
         return user
-    
+
     async def is_blacklisted(self, ctx):
         return ctx.author.id not in self.blacklist
 

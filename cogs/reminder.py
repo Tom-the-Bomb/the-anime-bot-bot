@@ -7,14 +7,7 @@ import humanize
 
 
 class Timer:
-    __slots__ = (
-        "id",
-        "user_id",
-        "time",
-        "reason",
-        "message_jump",
-        "channel_id"
-    )
+    __slots__ = ("id", "user_id", "time", "reason", "message_jump", "channel_id")
 
     def __init__(self, record):
         self.id = record["id"]
@@ -28,7 +21,14 @@ class Timer:
 class Reminder(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        self.bot.loop.create_task(self.bot.loop.run_in_executor(None, search_dates, "in 10 seconds", settings={"TIMEZONE": "UTC", "PREFER_DATES_FROM": "future", "FUZZY": True}))
+        self.bot.loop.create_task(
+            self.bot.loop.run_in_executor(
+                None,
+                search_dates,
+                "in 10 seconds",
+                settings={"TIMEZONE": "UTC", "PREFER_DATES_FROM": "future", "FUZZY": True},
+            )
+        )
         self.waiting_tasks = []
         self.already_waiting = []
         self.bot.loop.create_task(self.get_reminders())
