@@ -1286,7 +1286,7 @@ class Images(commands.Cog):
         ctx,
         thing: Image_Union = None,
     ):
-        async withProcessing(ctx):
+        async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             try:
                 image = await self.bot.zaneapi.swirl(url)
