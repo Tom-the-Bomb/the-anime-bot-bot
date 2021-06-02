@@ -1,25 +1,26 @@
-import itertools
 import asyncio
-import ujson
-import asyncpg
-import config
+import itertools
 import os
 import subprocess
 import sys
 import time
+import warnings
 from collections import Counter, OrderedDict
 
 import aiohttp
 import aiozaneapi
 import alexflipnote
+import asyncpg
+import config
 import discord
 import eight_ball
-from discord.ext.commands.cooldowns import MaxConcurrency
 import ipc
 import mystbin
 import psutil
+import ujson
 import vacefron
 from asyncdagpi import Client
+from discord.ext.commands.cooldowns import MaxConcurrency
 from discord_slash import SlashCommand
 
 from utils.asyncstuff import asyncexe
@@ -354,7 +355,7 @@ class AnimeBot(commands.Bot):
                 try:
                     self.load_extension(f"cogs.{file[:-3]}")
                 except Exception as e:
-                    print(f"Unable to load cog: {file}, ignoring. Exception: {e}")
+                    warnings.warn(f"Unable to load cog: {file}, ignoring. Exception: {e}")
         super().run(*args, **kwargs)
 
     async def close(self):
