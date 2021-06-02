@@ -1,67 +1,63 @@
-import discord
-from discord.ext import commands
 import collections
-from glitch_this import ImageGlitcher
-from colormath.color_objects import sRGBColor, XYZColor
-from colormath.color_conversions import convert_color
 import colorsys
-from scipy.spatial import KDTree
-from webcolors import (
-    CSS3_HEX_TO_NAMES,
-    hex_to_rgb,
-)
+
+import discord
 from colordict import ColorDict
+from colormath.color_conversions import convert_color
+from colormath.color_objects import XYZColor, sRGBColor
+from discord.ext import commands
+from glitch_this import ImageGlitcher
+from scipy.spatial import KDTree
+from webcolors import CSS3_HEX_TO_NAMES, hex_to_rgb
 
 colors = ColorDict()
-from wand.resource import limits
-from wand.image import Image as WandImage
-from copy import copy
-import pytesseract
-from urllib.parse import quote
-import warnings
-import ujson
-import qrcode
-from utils.subclasses import AnimeContext
-from qrcode.image.pure import PymagingImage
-import imutils
-import cv2
-import numpy as np
-from pyzbar.pyzbar import decode
-import re
-import ratelimiter
-import config
-import flags
-import functools
-import aiohttp
 import asyncio
-from twemoji_parser import emoji_to_url
-import typing
+import functools
 import os
-from utils.asyncstuff import asyncexe
-import polaroid
-from concurrent.futures import ThreadPoolExecutor
-from typing import Tuple, List, Union
-from collections import defaultdict
-from random import randrange
-from itertools import chain
-from PIL import ImageColor
-from PIL import Image, ImageDraw, ImageFilter
-from PIL import ImageEnhance
-from PIL import ImageSequence
-from PIL import ImageOps
-from io import BytesIO
-from asyncdagpi import ImageFeatures
+import re
 import typing
+import warnings
+from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor
+from copy import copy
+from io import BytesIO
+from itertools import chain
+from random import randrange
+from typing import List, Tuple, Union
+from urllib.parse import quote
+
+import aiohttp
+import config
+import cv2
+import flags
+import imutils
+import numpy as np
+import polaroid
+import pytesseract
+import qrcode
+import ratelimiter
+import ujson
+from asyncdagpi import ImageFeatures
+from PIL import (Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter,
+                 ImageOps, ImageSequence)
+from pyzbar.pyzbar import decode
+from qrcode.image.pure import PymagingImage
+from twemoji_parser import emoji_to_url
+from utils.asyncstuff import asyncexe
+from utils.subclasses import AnimeContext, InvalidImage
+from wand.image import Image as WandImage
+from wand.resource import limits
 
 RGB_SCALE = 255
 CMYK_SCALE = 100
 
 limits["width"] = 1000
 limits["height"] = 1000
+limits["time"] = 60
 limits["thread"] = 10
 
 warnings.simplefilter("error", Image.DecompressionBombWarning)
-Image.MAX_IMAGE_PIXELS = 44739243
+Image.MAX_IMAGE_PIXELS = MAX_IMAGE_PIXELS = 1000 * 1000
 
 ree = re.compile(r"\?.+")
 authorizationthing = config.ksoft
@@ -73,7 +69,6 @@ Image_Union = typing.Union[
     discord.Emoji,
     str,
 ]
-
 
 class ShapeDetector:
     def detect(self, c):
@@ -232,6 +227,7 @@ class Images(commands.Cog):
         url = None
         avatar = kwargs.get("avatar", True)
         check = kwargs.get("check", True)
+        checktype = kwargs.get("checktype", True)
         gif = kwargs.get("gif", False)
         if ctx.message.reference:
             message = ctx.message.reference.resolved
@@ -248,6 +244,8 @@ class Images(commands.Cog):
                 sticker = message.stickers[0]
                 if sticker.format != discord.StickerType.lottie:
                     url = str(sticker.image_url_as())
+                else:
+                    raise InvalidImage("Lottie Stickers are not accepted.")
 
         if ctx.message.attachments and ctx.message.attachments[0].width and ctx.message.attachments[0].height:
             url = ctx.message.attachments[0].url
@@ -255,6 +253,8 @@ class Images(commands.Cog):
             sticker = ctx.message.stickers[0]
             if sticker.format != discord.StickerType.lottie:
                 url = str(sticker.image_url_as())
+            else:
+                raise InvalidImage("Lottie Stickers are not accepted.")
         if thing is None and avatar and url is None:
             if gif:
                 url = str(ctx.author.avatar_url_as(static_format="png", size=512))
@@ -277,7 +277,7 @@ class Images(commands.Cog):
             else:
                 url = await emoji_to_url(thing)
                 if url == thing:
-                    raise commands.CommandError("Invalid url")
+                    raise InvalidImage("Invalid url")
         if not avatar:
             return None
         if not url:
@@ -285,26 +285,27 @@ class Images(commands.Cog):
         if check:
             async with self.bot.session.get(url) as resp:
                 if resp.status != 200:
-                    raise commands.CommandError("Invalid Picture")
+                    raise InvalidImage("Unable to fetch the image.")
                 if "image" not in resp.content_type:
-                    raise commands.CommandError("Invalid Picture")
-                b = await resp.content.read(50)
-                if b.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A") or b.startswith(b"\x89PNG"):
-                    pass
-                elif b[0:3] == b"\xff\xd8\xff" or b[6:10] in (b"JFIF", b"Exif"):
-                    pass
-                elif b.startswith((b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")):
-                    pass
-                elif b[:2] in (b"MM", b"II"):
-                    pass
-                elif len(b) >= 3 and b[0] == ord(b"P") and b[1] in b"25" and b[2] in b" \t\n\r":
-                    pass
-                elif b.startswith(b"BM"):
-                    pass
-                elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
-                    raise discord.InvalidArgument("Unsupported image type given")
-                if resp.headers.get("Content-Length") and int(resp.headers.get("Content-Length")) > 10000000:
-                    raise discord.InvalidArgument("Image Larger then 10 MB")
+                    raise InvalidImage("Not a valid image file, could be a DOS attack.")
+                if checktype:
+                    b = await resp.content.read(50)
+                    if b.startswith(b"\x89\x50\x4E\x47\x0D\x0A\x1A\x0A") or b.startswith(b"\x89PNG"):
+                        pass
+                    elif b[0:3] == b"\xff\xd8\xff" or b[6:10] in (b"JFIF", b"Exif"):
+                        pass
+                    elif b.startswith((b"\x47\x49\x46\x38\x37\x61", b"\x47\x49\x46\x38\x39\x61")):
+                        pass
+                    elif b[:2] in (b"MM", b"II"):
+                        pass
+                    elif len(b) >= 3 and b[0] == ord(b"P") and b[1] in b"25" and b[2] in b" \t\n\r":
+                        pass
+                    elif b.startswith(b"BM"):
+                        pass
+                    elif not b.startswith(b"RIFF") or b[8:12] != b"WEBP":
+                        raise InvalidImage("Unsupported image type given")
+                    if resp.headers.get("Content-Length") and int(resp.headers.get("Content-Length")) > 10000000:
+                        raise InvalidImage("Image Larger then 10 MB")
         return url
 
     def get_gif_url(self, ctx: AnimeContext, thing, **kwargs):
@@ -388,6 +389,9 @@ class Images(commands.Cog):
         images[0].save(
             save_file, format="GIF", append_images=images[1:], durations=durations, disposal=2, loop=0, save_all=True
         )
+    
+    def wand_decompression_bomb_check(self):
+        ...
 
     def resize(self, image: Image) -> Image:
         if image.height > 500 or image.width > 500:
@@ -684,21 +688,44 @@ class Images(commands.Cog):
         with Image.open(bytes_) as img:
             return decode(img)[0].data.decode("utf-8")
 
-    def process_latex(self, buffer):
-        with Image.open(buffer) as img:
-            img_ = img.convert("RGBA")
-            im__ = img_.filter(ImageFilter.SMOOTH_MORE)
-            _im_ = im__.filter(ImageFilter.DETAIL)
-            enhancer = ImageEnhance.Sharpness(_im_)
-            im_ = enhancer.enhance(2)
-            im__.close()
-            img_.close()
-            _im_.close()
-            b = BytesIO()
-            im_.save(b, "PNG", dpi=(1000, 1000))
-            b.seek(0)
-            im_.close()
-            return b
+    @asyncexe()
+    def convertimage_(self, image, format, f):
+        with WandImage(file=image, format=f) as img:
+            if img.height > 500 or img.width > 500:
+                # I robbed resize from preselany I can't do math ok
+                siz = 500
+                w, h = img.size
+                if w > h:
+                    the_key = w / siz
+                    size = (siz, int(h / the_key))
+                elif h > w:
+                    the_key = h / siz
+                    size = (int(w / the_key), siz)
+                else:
+                    size = (siz, siz)
+                img.resize(size[0], size[1])
+            with img.convert(format) as img:
+                b = BytesIO()
+                img.save(file=b)
+                b.seek(0)
+                return b, img.format
+
+
+    
+    @commands.command(aliases=["converti"])
+    async def convertimage(self, ctx, thing: typing.Optional[Image_Union], format: lambda x: str(x).upper()="PNG"):
+        async with ctx.channel.typing():
+            url = await self.get_url(ctx, thing, checktype=False)
+            async with self.bot.session.get(url) as resp:
+                b = BytesIO(await resp.read())
+                f = None
+                h = b.read(10)
+                if h.startswith(b"<svg") or h.startswith(b"<?xml"):
+                    f = "svg"
+                b.seek(0)
+                b, f = await self.convertimage_(b, format, f)
+                await ctx.reply(file=discord.File(b, f"The_Anime_Bot_image_format_convert.{f.lower()}"))
+        
 
     @commands.command()
     async def code(self, ctx, *, code):
