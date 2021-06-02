@@ -38,7 +38,6 @@ class Chat(commands.Cog):
     async def wordcloud(self, ctx, limit: int = 1000):
         limit = min(limit, 10000)
         counter = 0
-        text = ""
         m = await ctx.send(
             embed=discord.Embed(
                 color=self.bot.color,
@@ -47,6 +46,7 @@ class Chat(commands.Cog):
             )
         )
         async with ctx.typing():
+            text = ""
             async for message in ctx.channel.history(limit=limit):
                 counter += 1
                 if message.content:

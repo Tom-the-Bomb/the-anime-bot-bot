@@ -76,16 +76,15 @@ class ShapeDetector:
         peri = cv2.arcLength(c, True)
         approx = cv2.approxPolyDP(c, 0.04 * peri, True)
         if len(approx) == 3:
-            shape = "triangle"
+            return "triangle"
         elif len(approx) == 4:
             (x, y, w, h) = cv2.boundingRect(approx)
             ar = w / float(h)
-            shape = "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
+            return "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
         elif len(approx) == 5:
-            shape = "pentagon"
+            return "pentagon"
         else:
-            shape = "circle"
-        return shape
+            return "circle"
 
 
 class ColorConverter(commands.Converter):
@@ -394,22 +393,21 @@ class Images(commands.Cog):
         ...
 
     def resize(self, image: Image) -> Image:
-        if image.height > 500 or image.width > 500:
-            # I robbed from preselany I can't do math ok
-            siz = 500
-            w, h = image.size
-            if w > h:
-                the_key = w / siz
-                size = (siz, int(h / the_key))
-            elif h > w:
-                the_key = h / siz
-                size = (int(w / the_key), siz)
-            else:
-                size = (siz, siz)
-            resized = image.resize(size, resample=Image.NEAREST, reducing_gap=1)
+        if image.height <= 500 and image.width <= 500:
+            return image
+        # I robbed from preselany I can't do math ok
+        siz = 500
+        w, h = image.size
+        if w > h:
+            the_key = w / siz
+            size = (siz, int(h / the_key))
+        elif h > w:
+            the_key = h / siz
+            size = (int(w / the_key), siz)
+        else:
+            size = (siz, siz)
             # image.close()
-            return resized
-        return image
+        return image.resize(size, resample=Image.NEAREST, reducing_gap=1)
 
     def open_pil_image(self, buffer: BytesIO) -> Image:
         try:
@@ -1552,8 +1550,8 @@ class Images(commands.Cog):
     def glitch_(self, image: Image, intensity: float):
         glitcher = ImageGlitcher()
         with Image.open(image) as img:
+            to_make_gif = []
             if img.is_animated and img.n_frames < 200:
-                to_make_gif = []
                 for im in ImageSequence.Iterator(img):
                     b = BytesIO()
                     im.save(b, "PNG")
@@ -1562,16 +1560,14 @@ class Images(commands.Cog):
                         to_make_gif.append(glitcher.glitch_image(img_, intensity, color_offset=True))
                 final = BytesIO()
                 self.save_transparent_gif(to_make_gif, img.info["duration"], final)
-                final.seek(0)
-                return discord.File(final, "The_Anime_Bot_glitch.gif")
             else:
-                to_make_gif = []
                 for _ in range(10):
                     to_make_gif.append(glitcher.glitch_image(img, intensity, color_offset=True))
                 final = BytesIO()
                 self.save_transparent_gif(to_make_gif, 69, final)
-                final.seek(0)
-                return discord.File(final, "The_Anime_Bot_glitch.gif")
+
+            final.seek(0)
+            return discord.File(final, "The_Anime_Bot_glitch.gif")
 
     @commands.command()
     async def glitch(self, ctx, thing: typing.Optional[Image_Union] = None, intensity: float = 5.0):
