@@ -45,7 +45,6 @@ from qrcode.image.pure import PymagingImage
 from twemoji_parser import emoji_to_url
 from utils.asyncstuff import asyncexe
 from utils.subclasses import AnimeContext, InvalidImage
-from wand.image import Image as WandImage
 from wand.resource import limits
 
 RGB_SCALE = 255
