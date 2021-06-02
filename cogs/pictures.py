@@ -808,7 +808,7 @@ class Images(commands.Cog):
             "width": 680,
             "code": code,
         }
-        async with self.bot.session.post(url, json=bobo) as resp, Processing(ctx):
+        async with self.bot.session.post(url, json=bobo), async with Processing(ctx):
             await ctx.reply(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_code.png"))
 
     @asyncexe()
