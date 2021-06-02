@@ -3,6 +3,9 @@ import uvloop
 
 asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
 
+from systemd import journal
+from systemd.journal import JournalHandler
+
 import tracemalloc
 
 tracemalloc.start()
@@ -24,11 +27,14 @@ from discord_slash import SlashCommand
 from utils.HelpPaginator import CannotPaginate, HelpPaginator
 from utils.subclasses import AnimeBot
 
+sys.stdout = journal.stream()
+
 logger = logging.getLogger("discord")
 logger.setLevel(logging.INFO)
 handler = logging.FileHandler(filename="discord.log", encoding="utf-8", mode="w")
 handler.setFormatter(logging.Formatter("%(asctime)s:%(levelname)s:%(name)s: %(message)s"))
 logger.addHandler(handler)
+logger.addHandler(JournalHandler())
 
 
 warnings.filterwarnings("ignore", category=DeprecationWarning)
