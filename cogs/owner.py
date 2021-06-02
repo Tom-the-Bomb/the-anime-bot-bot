@@ -226,6 +226,7 @@ class Owner(commands.Cog):
             "inspect": inspect,
             "asyncio": asyncio,
             "aiohttp": aiohttp,
+            "BytesIO": BytesIO,
         }
         env.update(globals())
         to_execute = f"async def execute():\n{textwrap.indent(code, '  ')}"
