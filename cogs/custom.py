@@ -18,15 +18,15 @@ class Custom(commands.Cog):
     def cog_unload(self):
         self.bot.loop.create_task(self._webserver.stop())
     
-    @commands.Cog.listener()
-    async def on_raw_message_edit(self, payload):
-        if payload.data and payload.data.get("guild_id") and int(payload.data.get("guild_id")) == 801896886604529734 and payload.data.get("content") and self.bot.invite_regex.findall(payload.data.get("content"), re.IGNORECASE):
-            await self.bot.http.delete_message(int(payload.data.get("channel_id")), int(payload.data.get("id")))
+    # @commands.Cog.listener()
+    # async def on_raw_message_edit(self, payload):
+    #     if payload.data and payload.data.get("guild_id") and int(payload.data.get("guild_id")) == 801896886604529734 and payload.data.get("content") and self.bot.invite_regex.findall(payload.data.get("content"), re.IGNORECASE):
+    #         await self.bot.http.delete_message(int(payload.data.get("channel_id")), int(payload.data.get("id")))
     
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if message.guild and message.guild.id == 801896886604529734 and self.bot.invite_regex.findall(message.content, re.IGNORECASE):
-            await message.delete()
+    # @commands.Cog.listener()
+    # async def on_message(self, message):
+    #     if message.guild and message.guild.id == 801896886604529734 and self.bot.invite_regex.findall(message.content, re.IGNORECASE):
+    #         await message.delete()
         
 
     @commands.Cog.listener()
