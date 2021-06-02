@@ -229,7 +229,7 @@ class Processing:
 
     async def __aenter__(self, *args, **kwargs):
         self.start = time.perf_counter()
-        self.m = await self.ctx.reply(f"<a:loading:849756871597490196> Image Processing.")
+        self.m = await self.ctx.reply(f" <a:loading:849756871597490196> Image Processing.")
     
     async def __aexit__(self, *args, **kwargs):
         await self.m.delete()
