@@ -583,39 +583,17 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_spin.{format_}")
         return result
 
-    # def invert__(self, image: Image) -> Image:
-    #     r, g, b, a = image.split()
-    #     rgb_image = Image.merge("RGB", (r, g, b))
-    #     inverted_image = ImageOps.invert(rgb_image)
-    #     r2, g2, b2 = inverted_image.split()
-    #     return Image.merge("RGBA", (r2, g2, b2, a))
-
-    def invert__(self, image: BytesIO) -> BytesIO:
-        with WandImage(file=image) as img:
-            for i, v in enumerate(img.sequence):
-                with v.clone() as frame:
-                    # siz = 500
-                    # w, h = frame.size
-                    # if w > h:
-                    #     the_key = w / siz
-                    #     size = (siz, int(h / the_key))
-                    # elif h > w:
-                    #     the_key = h / siz
-                    #     size = (int(w / the_key), siz)
-                    # else:
-                    #     size = (siz, siz)
-                    # frame.resize(size[0], size[1])
-                    frame.negate(channel="rgb")
-                    img.sequence[i] = frame
-            b = BytesIO()
-            img.save(b)
-            b.seek(0)
-            return b, img.format
+    def invert__(self, image: Image) -> Image:
+        r, g, b, a = image.split()
+        rgb_image = Image.merge("RGB", (r, g, b))
+        inverted_image = ImageOps.invert(rgb_image)
+        r2, g2, b2 = inverted_image.split()
+        return Image.merge("RGBA", (r2, g2, b2, a))
 
     async def invert_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        f = functools.partial(self.invert__, BytesIO(image1))
+        f = functools.partial(self.process_gif, image1, self.invert__)
         result, format_ = await self.bot.loop.run_in_executor(None, f)
         result = discord.File(result, f"The_Anime_Bot_invert.{format_}")
         return result
