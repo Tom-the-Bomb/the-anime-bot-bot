@@ -227,16 +227,16 @@ class Processing:
     async def __aenter__(self, *args: List[Any], **kwargs):
         try:
             self.start = time.perf_counter()
-            self.m = await self.ctx.reply(f" <a:loading:849756871597490196> Image Processing.")
+            self.m = await asyncio.wait_for(self.ctx.reply(f" <a:loading:849756871597490196> Image Processing."), timeout=3.0)
         finally:
             return self
 
     async def __aexit__(self, *args, **kwargs):
         try:
             await self.m.delete()
-            await self.ctx.reply(
+            await asyncio.wait_for(self.ctx.reply(
                 f" <:check_mark:849758044833447949> Image Process complete, took {round(time.perf_counter() - self.start, 3)} seconds"
-            )
+            ), timeout=3.0)
         except:
             return
 
