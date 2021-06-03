@@ -223,7 +223,6 @@ class Processing:
         self.ctx = ctx
         self.start = None
         self.m = None
-        super().__init__(ctx)
 
     async def __aenter__(self, *args: List[Any], **kwargs):
         try:
