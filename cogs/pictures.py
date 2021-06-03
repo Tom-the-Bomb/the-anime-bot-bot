@@ -224,7 +224,6 @@ class Processing:
         self.m = None
 
     async def __aenter__(self, *args: List[Any], **kwargs):
-        print("enter called")
         try:
             self.start = time.perf_counter()
             self.m = await asyncio.wait_for(self.ctx.reply(f" <a:loading:849756871597490196> Image Processing."), timeout=3.0)
@@ -232,7 +231,6 @@ class Processing:
             return self
 
     async def __aexit__(self, *args, **kwargs):
-        print("exit called")
         try:
             await self.m.delete()
             await asyncio.wait_for(self.ctx.reply(
@@ -580,46 +578,50 @@ class Images(commands.Cog):
     async def spin_(self, url: str, speed: int) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        e = ThreadPoolExecutor(max_workers=5)
         f = functools.partial(self.spin__, image1, speed)
-        result, format_ = await self.bot.loop.run_in_executor(e, f)
-        e.shutdown()
+        result, format_ = await self.bot.loop.run_in_executor(None, f)
         result = discord.File(result, f"The_Anime_Bot_spin.{format_}")
         return result
 
-    def invert__(self, image: Image) -> discord.File:
-        r, g, b, a = image.split()
-        rgb_image = Image.merge("RGB", (r, g, b))
-        inverted_image = ImageOps.invert(rgb_image)
-        r2, g2, b2 = inverted_image.split()
-        return Image.merge("RGBA", (r2, g2, b2, a))
+    # def invert__(self, image: Image) -> Image:
+    #     r, g, b, a = image.split()
+    #     rgb_image = Image.merge("RGB", (r, g, b))
+    #     inverted_image = ImageOps.invert(rgb_image)
+    #     r2, g2, b2 = inverted_image.split()
+    #     return Image.merge("RGBA", (r2, g2, b2, a))
+
+    def invert__(self, image: BytesIO) -> BytesIO:
+        with WandImage(file=image) as img:
+            for i, v in enumerate(img.sequence):
+                with v.clone() as frame:
+                    frame.negate(channel="rgb")
+                    img.sequence[i] = frame
+            b = BytesIO()
+            img.save(b)
+            b.seek(0)
+            return b
 
     async def invert_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        e = ThreadPoolExecutor(max_workers=5)
         f = functools.partial(self.process_gif, image1, self.invert__)
-        result, format_ = await self.bot.loop.run_in_executor(e, f)
-        e.shutdown()
+        result, format_ = await self.bot.loop.run_in_executor(None, f)
         result = discord.File(result, f"The_Anime_Bot_invert.{format_}")
         return result
 
     async def mirror_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        e = ThreadPoolExecutor(max_workers=5)
         f = functools.partial(self.process_gif, image1, ImageOps.mirror)
-        result, format_ = await self.bot.loop.run_in_executor(e, f)
-        e.shutdown()
+        result, format_ = await self.bot.loop.run_in_executor(None, f)
         result = discord.File(result, f"The_Anime_Bot_mirror.{format_}")
         return result
 
     async def flip_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        e = ThreadPoolExecutor(max_workers=5)
         f = functools.partial(self.process_gif, image1, ImageOps.flip)
-        result, format_ = await self.bot.loop.run_in_executor(e, f)
+        result, format_ = await self.bot.loop.run_in_executor(None, f)
         e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_flip.{format_}")
         return result
@@ -627,19 +629,16 @@ class Images(commands.Cog):
     async def grayscale_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        e = ThreadPoolExecutor(max_workers=5)
         f = functools.partial(self.process_gif, image1, ImageOps.grayscale)
-        result, format_ = await self.bot.loop.run_in_executor(e, f)
-        e.shutdown()
+        result, format_ = await self.bot.loop.run_in_executor(None, f)
         result = discord.File(result, f"The_Anime_Bot_grayscale.{format_}")
         return result
 
     async def posterize_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        e = ThreadPoolExecutor(max_workers=5)
         f = functools.partial(self.process_gif, image1, ImageOps.posterize, 3)
-        result, format_ = await self.bot.loop.run_in_executor(e, f)
+        result, format_ = await self.bot.loop.run_in_executor(None, f)
         e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_posterize.{format_}")
         return result
@@ -647,16 +646,12 @@ class Images(commands.Cog):
     async def solarize_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        e = ThreadPoolExecutor(max_workers=5)
-        result, format_ = await self.bot.loop.run_in_executor(e, self.process_gif, image1, ImageOps.solarize)
-        e.shutdown()
+        result, format_ = await self.bot.loop.run_in_executor(None, self.process_gif, image1, ImageOps.solarize)
         result = discord.File(result, f"The_Anime_Bot_solarize.{format_}")
         return result
 
     async def circle_(self, background_color: str, circle_color: str):
-        e = ThreadPoolExecutor(max_workers=5)
-        result = await self.bot.loop.run_in_executor(e, self.circle__, background_color, circle_color)
-        e.shutdown()
+        result = await self.bot.loop.run_in_executor(None, self.circle__, background_color, circle_color)
         return result
 
     @asyncexe()
