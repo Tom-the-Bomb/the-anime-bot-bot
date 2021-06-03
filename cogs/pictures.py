@@ -594,6 +594,17 @@ class Images(commands.Cog):
         with WandImage(file=image) as img:
             for i, v in enumerate(img.sequence):
                 with v.clone() as frame:
+                    siz = 500
+                    w, h = frame.size
+                    if w > h:
+                        the_key = w / siz
+                        size = (siz, int(h / the_key))
+                    elif h > w:
+                        the_key = h / siz
+                        size = (int(w / the_key), siz)
+                    else:
+                        size = (siz, siz)
+                    frame.resize(size[0], size[1])
                     frame.negate(channel="rgb")
                     img.sequence[i] = frame
             b = BytesIO()
