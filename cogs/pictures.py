@@ -590,8 +590,8 @@ class Images(commands.Cog):
     #     r2, g2, b2 = inverted_image.split()
     #     return Image.merge("RGBA", (r2, g2, b2, a))
 
-    def invert__(self, image: BytesIO) -> BytesIO:
-        with WandImage(file=image) as img:
+    def invert__(self, image: bytes) -> BytesIO:
+        with WandImage(blob=image) as img:
             for i, v in enumerate(img.sequence):
                 with v.clone() as frame:
                     siz = 500
