@@ -622,7 +622,7 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_flip.{format_}")
         return result
 
-    async def grayscale_(self, url: str) -> discord.File::
+    async def grayscale_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
@@ -632,7 +632,7 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_grayscale.{format_}")
         return result
 
-    async def posterize_(self, url: str) -> discord.File::
+    async def posterize_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
@@ -642,7 +642,7 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_posterize.{format_}")
         return result
 
-    async def solarize_(self, url: str) -> discord.File::
+    async def solarize_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
@@ -734,7 +734,9 @@ class Images(commands.Cog):
                 return b, img.format
 
     @commands.command(aliases=["converti"])
-    async def convertimage(self, ctx: AnimeContext, thing: Optional[Image_Union], format: lambda x: str(x).upper() = "PNG") -> None:
+    async def convertimage(
+        self, ctx: AnimeContext, thing: Optional[Image_Union], format: lambda x: str(x).upper() = "PNG"
+    ) -> None:
         async with Processing(ctx):
             url = await self.get_url(ctx, thing, checktype=False)
             async with self.bot.session.get(url) as resp:
@@ -903,7 +905,9 @@ class Images(commands.Cog):
             b.seek(0)
             return b
 
-    def rgb_to_hsv(self, r: Union[int, float], g: Union[int, float], b: Union[int, float]) -> Tuple[float, float, float]:
+    def rgb_to_hsv(
+        self, r: Union[int, float], g: Union[int, float], b: Union[int, float]
+    ) -> Tuple[float, float, float]:
         r, g, b = r / 255.0, g / 255.0, b / 255.0
         mx = max(r, g, b)
         mn = min(r, g, b)
@@ -920,7 +924,9 @@ class Images(commands.Cog):
         v = mx * 100
         return h, s, v
 
-    def rgb_to_xy_bri(self, r: Union[int, float], g: Union[int, float], b: Union[int, float]) -> Tuple[float, float, float]:
+    def rgb_to_xy_bri(
+        self, r: Union[int, float], g: Union[int, float], b: Union[int, float]
+    ) -> Tuple[float, float, float]:
         r, g, b = r / 255.0, g / 255.0, b / 255.0
         o = (
             (0.412453 * r + 0.35758 * g + 0.180423 * b),
