@@ -610,7 +610,7 @@ class Images(commands.Cog):
             b = BytesIO()
             img.save(b)
             b.seek(0)
-            return b
+            return b, img.format
 
     async def invert_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
