@@ -3,6 +3,7 @@ from discord.ext import commands, menus
 import sys
 import datetime
 from utils.subclasses import InvalidImage
+from io import BytesIO
 import traceback
 import wavelink
 import prettify_exceptions
@@ -159,7 +160,7 @@ class Error(commands.Cog):
         else:
             error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
             upload = False
-            if len(f"```py\n{error['error']}\n```") <= 2048:
+            if len(f"```py\n{error['error']}\n```") <= 2040:
                 d = f"```py\n{error['error']}\n```"
             else:
                 try:
