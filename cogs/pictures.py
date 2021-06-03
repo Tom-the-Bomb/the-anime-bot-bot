@@ -443,7 +443,7 @@ class Images(commands.Cog):
             except:
                 return Image.open(buffer)
 
-    def run_polaroid(self, image1, method, *args, List[Any], **kwargs: Dict[str, Any]) -> discord.File:
+    def run_polaroid(self, image1: bytes, method: str, *args: List[Any], **kwargs: Dict[str, Any]) -> discord.File:
         # image1 = self.resize(BytesIO(image1))
         img = self.open_pil_image(BytesIO(image1))
         if img.is_animated and img.n_frames < 200:
