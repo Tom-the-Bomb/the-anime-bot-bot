@@ -590,8 +590,8 @@ class Images(commands.Cog):
     #     r2, g2, b2 = inverted_image.split()
     #     return Image.merge("RGBA", (r2, g2, b2, a))
 
-    def invert__(self, image: bytes) -> BytesIO:
-        with WandImage(blob=image) as img:
+    def invert__(self, image: BytesIO) -> BytesIO:
+        with WandImage(file=image) as img:
             for i, v in enumerate(img.sequence):
                 with v.clone() as frame:
                     siz = 500
@@ -615,7 +615,7 @@ class Images(commands.Cog):
     async def invert_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        f = functools.partial(self.process_gif, image1, self.invert__)
+        f = functools.partial(self.invert__, BytesIO(image1))
         result, format_ = await self.bot.loop.run_in_executor(None, f)
         result = discord.File(result, f"The_Anime_Bot_invert.{format_}")
         return result
