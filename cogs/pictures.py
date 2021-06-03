@@ -225,6 +225,7 @@ class Processing:
         self.m = None
 
     async def __aenter__(self, *args: List[Any], **kwargs):
+        print("enter called")
         try:
             self.start = time.perf_counter()
             self.m = await asyncio.wait_for(self.ctx.reply(f" <a:loading:849756871597490196> Image Processing."), timeout=3.0)
@@ -232,6 +233,7 @@ class Processing:
             return self
 
     async def __aexit__(self, *args, **kwargs):
+        print("exit called")
         try:
             await self.m.delete()
             await asyncio.wait_for(self.ctx.reply(
