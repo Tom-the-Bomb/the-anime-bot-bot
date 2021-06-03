@@ -169,7 +169,7 @@ class Error(commands.Cog):
                     upload = True
             embed = discord.Embed(
                 color=self.bot.color,
-                description=
+                description=d
             )
             embed.add_field(name="message", value=error["message"], inline=False)
             embed.add_field(
