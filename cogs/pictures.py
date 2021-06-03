@@ -24,7 +24,7 @@ from copy import copy
 from io import BytesIO
 from itertools import chain
 from random import randrange
-from typing import List, Tuple, Union
+from typing import List, Tuple, Union, Any, Optional, List, Dict
 from urllib.parse import quote
 
 import aiohttp
@@ -62,7 +62,7 @@ Image.MAX_IMAGE_PIXELS = MAX_IMAGE_PIXELS = 1000 * 1000
 ree = re.compile(r"\?.+")
 authorizationthing = config.ksoft
 
-Image_Union = typing.Union[
+Image_Union = Union[
     discord.Member,
     discord.User,
     discord.PartialEmoji,
@@ -219,13 +219,13 @@ class TransparentAnimatedGifConverter(object):
 class Processing(discord.context_managers.Typing):
     __slots__ = ("ctx", "start", "m")
 
-    def __init__(self, ctx):
+    def __init__(self, ctx: AnimeContext):
         self.ctx = ctx
         self.start = None
         self.m = None
         super().__init__(ctx)
 
-    async def __aenter__(self, *args, **kwargs):
+    async def __aenter__(self, *args: List[Any], **kwargs):
         self.start = time.perf_counter()
         self.m = await self.ctx.reply(f" <a:loading:849756871597490196> Image Processing.")
         await super().__aenter__(*args, **kwargs)
@@ -247,7 +247,7 @@ class Images(commands.Cog):
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
 
-    async def get_url(self, ctx: AnimeContext, thing, **kwargs):
+    async def get_url(self, ctx: AnimeContext, thing: Optional[str], **kwargs: Dict[str, Any]) -> str:
         url = None
         avatar = kwargs.get("avatar", True)
         check = kwargs.get("check", True)
@@ -332,10 +332,10 @@ class Images(commands.Cog):
                         raise InvalidImage("Image Larger then 10 MB")
         return url
 
-    def get_gif_url(self, ctx: AnimeContext, thing, **kwargs):
+    def get_gif_url(self, ctx: AnimeContext, thing: Optional[str], **kwargs: Dict[str, Any]) -> str:
         return self.get_url(ctx, thing, gif=True, **kwargs)
 
-    async def bot_cdn(self, url):
+    async def bot_cdn(self, url: str) -> str:
         async with self.bot_cdn_ratelimiter:
             async with self.bot.session.get(url) as resp:
                 content = resp.content_type
@@ -350,7 +350,7 @@ class Images(commands.Cog):
                     js = await resp.json()
                     return f"<{js.get('url')}>"
 
-    async def cdn_(self, url):
+    async def cdn_(self, url) -> str:
         async with self.cdn_ratelimiter:
             async with self.bot.session.get(url) as resp:
                 if "image" not in resp.content_type:
@@ -365,7 +365,7 @@ class Images(commands.Cog):
                 ) as resp:
                     return (await resp.json())["url"]
 
-    async def ocr_(self, url):
+    async def ocr_(self, url: str) -> str:
         async with self.ocr_ratelimiter:
             async with self.bot.session.get(url) as resp:
                 if "image" not in resp.content_type:
@@ -443,7 +443,7 @@ class Images(commands.Cog):
             except:
                 return Image.open(buffer)
 
-    def run_polaroid(self, image1, method, *args, **kwargs):
+    def run_polaroid(self, image1, method, *args, List[Any], **kwargs: Dict[str, Any]) -> discord.File:
         # image1 = self.resize(BytesIO(image1))
         img = self.open_pil_image(BytesIO(image1))
         if img.is_animated and img.n_frames < 200:
@@ -491,7 +491,7 @@ class Images(commands.Cog):
         del image1
         return discord.File(b, filename=f"{method}.png")
 
-    async def polaroid_(self, image, method, *args, **kwargs):
+    async def polaroid_(self, image, method, *args: list[Any], **kwargs: Dict[str, Any]):
         async with self.bot.session.get(image) as resp:
             image1 = await resp.read()
         f = functools.partial(self.run_polaroid, image1, method, *args, **kwargs)
@@ -499,7 +499,7 @@ class Images(commands.Cog):
         return result
 
     @staticmethod
-    def circle__(background_color, circle_color):
+    def circle__(background_color: str, circle_color: str) -> BytesIO:
         frames = []
         mid = 100
         for i in range(500):
@@ -530,7 +530,7 @@ class Images(commands.Cog):
             del i
         return igif
 
-    def process_gif(self, image, function, *args):
+    def process_gif(self, image, function, *args: list[Any]) -> Tuple[BytesIO, str]:
         img = self.open_pil_image(BytesIO(image))
         if img.is_animated and img.n_frames < 200:
             to_make_gif = []
@@ -560,7 +560,7 @@ class Images(commands.Cog):
         img.close()
         return b, "png"
 
-    def spin__(self, image, speed):
+    def spin__(self, image: bytes, speed: int) -> Tuple[BytesIO, str]:
         im_ = self.open_pil_image(BytesIO(image))
         im__ = self.resize(im_)
         im___ = im__.convert("RGBA")
@@ -575,7 +575,7 @@ class Images(commands.Cog):
             i.close()
         return final, "gif"
 
-    async def spin_(self, url, speed):
+    async def spin_(self, url: str, speed: int) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
@@ -585,14 +585,14 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_spin.{format_}")
         return result
 
-    def invert__(self, image):
+    def invert__(self, image: Image) -> discord.File:
         r, g, b, a = image.split()
         rgb_image = Image.merge("RGB", (r, g, b))
         inverted_image = ImageOps.invert(rgb_image)
         r2, g2, b2 = inverted_image.split()
         return Image.merge("RGBA", (r2, g2, b2, a))
 
-    async def invert_(self, url):
+    async def invert_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
@@ -602,7 +602,7 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_invert.{format_}")
         return result
 
-    async def mirror_(self, url):
+    async def mirror_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
@@ -612,7 +612,7 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_mirror.{format_}")
         return result
 
-    async def flip_(self, url):
+    async def flip_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
@@ -622,7 +622,7 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_flip.{format_}")
         return result
 
-    async def grayscale_(self, url):
+    async def grayscale_(self, url: str) -> discord.File::
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
@@ -632,7 +632,7 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_grayscale.{format_}")
         return result
 
-    async def posterize_(self, url):
+    async def posterize_(self, url: str) -> discord.File::
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
@@ -642,7 +642,7 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_posterize.{format_}")
         return result
 
-    async def solarize_(self, url):
+    async def solarize_(self, url: str) -> discord.File::
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
         e = ThreadPoolExecutor(max_workers=5)
@@ -651,14 +651,14 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_solarize.{format_}")
         return result
 
-    async def circle_(self, background_color, circle_color):
+    async def circle_(self, background_color: str, circle_color: str):
         e = ThreadPoolExecutor(max_workers=5)
         result = await self.bot.loop.run_in_executor(e, self.circle__, background_color, circle_color)
         e.shutdown()
         return result
 
     @asyncexe()
-    def floor_(self, b):
+    def floor_(self, b: BytesIO) -> BytesIO:
         with WandImage(file=b) as img_:
             with WandImage(img_.sequence[0]) as img:
                 # I robbed resize from preselany I can't do math ok
@@ -699,7 +699,7 @@ class Images(commands.Cog):
                 return final
 
     @asyncexe()
-    def qr_enc(self, thing):
+    def qr_enc(self, thing: str) -> BytesIO:
         q = qrcode.make(thing, image_factory=PymagingImage)
         pic = BytesIO()
         q.save(pic)
@@ -707,12 +707,12 @@ class Images(commands.Cog):
         return pic
 
     @asyncexe()
-    def qr_dec(self, bytes_):
+    def qr_dec(self, bytes_: BytesIO) -> str:
         with Image.open(bytes_) as img:
             return decode(img)[0].data.decode("utf-8")
 
     @asyncexe()
-    def convertimage_(self, image, format, f):
+    def convertimage_(self, image: BytesIO, format: str, f: Optional[str]) -> Tuple[BytesIO, str]:
         with WandImage(file=image, format=f) as img:
             if img.height > 500 or img.width > 500:
                 # I robbed resize from preselany I can't do math ok
@@ -734,7 +734,7 @@ class Images(commands.Cog):
                 return b, img.format
 
     @commands.command(aliases=["converti"])
-    async def convertimage(self, ctx, thing: typing.Optional[Image_Union], format: lambda x: str(x).upper() = "PNG"):
+    async def convertimage(self, ctx: AnimeContext, thing: Optional[Image_Union], format: lambda x: str(x).upper() = "PNG") -> None:
         async with Processing(ctx):
             url = await self.get_url(ctx, thing, checktype=False)
             async with self.bot.session.get(url) as resp:
@@ -748,7 +748,7 @@ class Images(commands.Cog):
                 await ctx.reply(file=discord.File(b, f"The_Anime_Bot_image_format_convert.{f.lower()}"))
 
     @commands.command()
-    async def code(self, ctx, *, code):
+    async def code(self, ctx: AnimeContext, *, code: str) -> None:
         if not code.startswith("`"):
             code = code
         else:
@@ -814,7 +814,7 @@ class Images(commands.Cog):
                 await ctx.reply(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_code.png"))
 
     @asyncexe()
-    def shape_detection(self, image):
+    def shape_detection(self, image: BytesIO) -> discord.File:
         with Image.open(image) as img:
             buffer = BytesIO()
             img_ = img.convert("RGB")
@@ -846,7 +846,7 @@ class Images(commands.Cog):
         return discord.File(b, "The_Anime_Bot_shape_detection.png")
 
     @commands.command()
-    async def shapedetection(self, ctx, thing: Image_Union = None):
+    async def shapedetection(self, ctx: AnimeContext, thing: Image_Union = None) -> None:
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
@@ -854,7 +854,7 @@ class Images(commands.Cog):
             await ctx.reply(file=await self.shape_detection(b))
 
     @asyncexe()
-    def facereg_(self, image):
+    def facereg_(self, image: BytesIO) -> discord.File:
         with Image.open(image) as img:
             buffer = BytesIO()
             img_ = img.convert("RGB")
@@ -896,14 +896,14 @@ class Images(commands.Cog):
         return discord.File(b, "The_Anime_Bot_Face_Reg.png")
 
     @asyncexe()
-    def make_color_image(self, color):
+    def make_color_image(self, color: str) -> BytesIO:
         with Image.new("RGB", (200, 200), color) as img:
             b = BytesIO()
             img.save(b, "PNG")
             b.seek(0)
             return b
 
-    def rgb_to_hsv(self, r, g, b):
+    def rgb_to_hsv(self, r: Union[int, float], g: Union[int, float], b: Union[int, float]) -> Tuple[float, float, float]:
         r, g, b = r / 255.0, g / 255.0, b / 255.0
         mx = max(r, g, b)
         mn = min(r, g, b)
@@ -920,7 +920,7 @@ class Images(commands.Cog):
         v = mx * 100
         return h, s, v
 
-    def rgb_to_xy_bri(self, r, g, b):
+    def rgb_to_xy_bri(self, r: Union[int, float], g: Union[int, float], b: Union[int, float]) -> Tuple[float, float, float]:
         r, g, b = r / 255.0, g / 255.0, b / 255.0
         o = (
             (0.412453 * r + 0.35758 * g + 0.180423 * b),
@@ -929,7 +929,7 @@ class Images(commands.Cog):
         )
         return tuple((round(i * 100) for i in o))
 
-    def rgb_to_hsl(self, r, g, b):
+    def rgb_to_hsl(self, r: Union[int, float], g: Union[int, float], b: Union[int, float]) -> str:
         r, g, b = r / 255.0, g / 255.0, b / 255.0
         mx = max(r, g, b)
         mn = min(r, g, b)
@@ -946,7 +946,7 @@ class Images(commands.Cog):
         l = ((mx + mn) / 2) * 100
         return f"({round(h)}, {round(s)}%, {round(l)}%)"
 
-    def rgb_to_cmyk(self, rgb_tuple):
+    def rgb_to_cmyk(self, rgb_tuple: Tuple[int, int, int]) -> Tuple[float, float, float]:
         r, g, b = rgb_tuple[0], rgb_tuple[1], rgb_tuple[2]
         if (r, g, b) == (0, 0, 0):
 
@@ -965,7 +965,7 @@ class Images(commands.Cog):
         return c * CMYK_SCALE, m * CMYK_SCALE, y * CMYK_SCALE, k * CMYK_SCALE
 
     @asyncexe()
-    def convert_rgb_to_names(self, rgb_tuple):
+    def convert_rgb_to_names(self, rgb_tuple: Tuple[int, int, int]) -> str:
         css3_db = CSS3_HEX_TO_NAMES
         names = []
         rgb_values = []
@@ -978,7 +978,7 @@ class Images(commands.Cog):
         return names[index]
 
     @commands.command()
-    async def colorinfo(self, ctx, *, color: ColorConverter):
+    async def colorinfo(self, ctx: AnimeContext, *, color: ColorConverter) -> None:
         async with Processing(ctx):
             img = await self.make_color_image(color)
             name = await self.convert_rgb_to_names(color)
@@ -996,7 +996,7 @@ class Images(commands.Cog):
             await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}.png"))
 
     @commands.command()
-    async def floor(self, ctx, thing: Image_Union = None):
+    async def floor(self, ctx: AnimeContext, thing: Image_Union = None) -> None:
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
@@ -1004,7 +1004,7 @@ class Images(commands.Cog):
             await ctx.reply(file=discord.File(await self.floor_(b), "The_Anime_Bot_floor.png"))
 
     @commands.command()
-    async def facereg(self, ctx, thing: Image_Union = None):
+    async def facereg(self, ctx: AnimeContext, thing: Image_Union = None) -> None:
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
@@ -1012,7 +1012,7 @@ class Images(commands.Cog):
             await ctx.reply(file=await self.facereg_(b))
 
     @commands.command()
-    async def latex(self, ctx, *, text):
+    async def latex(self, ctx: AnimeContext, *, text: str) -> None:
         async with self.bot.session.get(
             f"https://latex.codecogs.com/png.latex?%5Cdpi%7B300%7D%20%5Cbg_black%20%5Chuge%20{quote(text)}"
         ) as resp:
