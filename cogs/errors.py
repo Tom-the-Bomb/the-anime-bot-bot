@@ -158,11 +158,18 @@ class Error(commands.Cog):
             await pages.start(ctx)
         else:
             error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
+            upload = False
+            if len(f"```py\n{error['error']}\n```") <= 2048:
+                d = f"```py\n{error['error']}\n```"
+            else:
+                try:
+                    d = await ctx.paste(error["error"])
+                except:
+                    d = "\u200b"
+                    upload = True
             embed = discord.Embed(
                 color=self.bot.color,
-                description=f"```py\n{error['error']}\n```"
-                if len(f"```py\n{error['error']}\n```") <= 2048
-                else await ctx.paste(error["error"]),
+                description=
             )
             embed.add_field(name="message", value=error["message"], inline=False)
             embed.add_field(
@@ -172,8 +179,10 @@ class Error(commands.Cog):
             )
             embed.add_field(name="Author name", value=error["author_name"], inline=False)
             embed.add_field(name="command", value=error["command"], inline=False)
-
-            return await ctx.send(embed=embed)
+            if not upload:
+                return await ctx.send(embed=embed)
+            else:
+                return await ctx.send(embed=embed, file=discord.File(BytesIO(error["error"].encode("utf-8")), "error.txt"))
 
     @errors.command()
     @commands.is_owner()
