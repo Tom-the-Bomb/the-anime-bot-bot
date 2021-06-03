@@ -53,7 +53,6 @@ CMYK_SCALE = 100
 
 limits["width"] = 1000
 limits["height"] = 1000
-limits["time"] = 60
 limits["thread"] = 10
 
 warnings.simplefilter("error", Image.DecompressionBombWarning)
