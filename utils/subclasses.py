@@ -378,7 +378,7 @@ class AnimeBot(commands.Bot):
 
     async def close(self):
         try:
-            asyncio.wait_for(10, self.db.close())
+            asyncio.wait_for(self.db.close(), timeout=10)
         except (asyncio.TimeoutError, Exception):
             self.db.terminate()
         await self.session.close()
