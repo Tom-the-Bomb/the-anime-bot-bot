@@ -189,6 +189,8 @@ class Error(commands.Cog):
     @commands.is_owner()
     async def fix(self, ctx, id: int):
         error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
+        if not error:
+            return await ctx.send("Error not found.")
         if error["trackers"]:
             for i in error["trackers"]:
                 await (await self.bot.getch(i)).send(
@@ -202,7 +204,10 @@ class Error(commands.Cog):
         """
         Track a error
         """
-        await self.bot.db.execute("UPDATE errors SET trackers = array_append(trackers, $1)", ctx.author.id)
+        try:
+            await self.bot.db.execute("UPDATE errors SET trackers = array_append(trackers, $1)", ctx.author.id)
+        except:
+            return await ctx.send("Error not found.")
         await ctx.send(f"Ok, you are now tracking error {id} I will dm you if it get fixed")
 
     @errors.command()
@@ -210,7 +215,10 @@ class Error(commands.Cog):
         """
         untrack a error
         """
-        await self.bot.db.execute("UPDATE errors SET trackers = array_remove(trackers, $1)", ctx.author.id)
+        try:
+            await self.bot.db.execute("UPDATE errors SET trackers = array_remove(trackers, $1)", ctx.author.id)
+        except:
+            return await ctx.send("Error not found.")
         await ctx.send(f"Ok, you are no longer tracking error {id}")
 
 

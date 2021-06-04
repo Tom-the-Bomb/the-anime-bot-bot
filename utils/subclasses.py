@@ -96,13 +96,19 @@ class AnimeContext(commands.Context):
                 if kwargs.get("file"):
                     m = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
                     self.bot._message_cache[self.message.id] = m.id
-                    self.bot.to_delete_message_cache[self.message.id].append(m.id)
+                    try:
+                        self.bot.to_delete_message_cache[self.message.id].append(m.id)
+                    except:
+                        pass
                     return m
                 await msg.edit(content=content, **kwargs)
                 return msg
             else:
                 message = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
-                self.bot.to_delete_message_cache[self.message.id].append(message.id)
+                try:
+                    self.bot.to_delete_message_cache[self.message.id].append(message.id)
+                except:
+                    pass
                 return message
         else:
             message = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
@@ -119,7 +125,10 @@ class AnimeContext(commands.Context):
                 if kwargs.get("file"):
                     m = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
                     self.bot._message_cache[self.message.id] = m.id
-                    self.bot.to_delete_message_cache[self.message.id].append(m.id)
+                    try:
+                        self.bot.to_delete_message_cache[self.message.id].append(m.id)
+                    except:
+                        pass
                     return m
                 if not kwargs.get("allowed_mentions"):
                     msg = await msg.edit(
@@ -132,7 +141,10 @@ class AnimeContext(commands.Context):
                 return msg
             else:
                 message = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
-                self.bot.to_delete_message_cache[self.message.id].append(message.id)
+                try:
+                    self.bot.to_delete_message_cache[self.message.id].append(message.id)
+                except:
+                    pass
                 return message
         else:
             message = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
