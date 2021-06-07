@@ -221,7 +221,7 @@ class Moderations(commands.Cog):
         await ctx.trigger_typing()
         member = discord.Object(id=member)
         await ctx.guild.unban(member, reason=f"{ctx.author} ({ctx.author.id}) unbanned")
-        await ctx.send(f"Unbanned {member}")
+        await ctx.send(f"Unbanned {member.id}")
 
 
 def setup(bot):
