@@ -25,18 +25,19 @@ class BannedMember(commands.Converter):
             try:
                 member_id = int(argument)
                 try:
-                    return await ctx.guild.fetch_ban(member_id)
+                    entity = await ctx.guild.fetch_ban(member_id)
                 except discord.NotFound:
                     raise commands.BadArgument("That member was not banned before.")
             except ValueError:
                 pass
         ban_list = await ctx.guild.bans()
-        entity = discord.utils.find(lambda u: str(u.user) == argument, ban_list)
+        if not entity:
+            entity = discord.utils.find(lambda u: str(u.user) == argument, ban_list)
         if not entity:
             entity = discord.utils.find(lambda u: str(u.user.name) == argument, ban_list)
         if not entity:
             raise commands.BadArgument("That member was not banned before.")
-        return entity
+        return entity.id
 
 class Moderations(commands.Cog):
     def __init__(self, bot):
@@ -217,9 +218,9 @@ class Moderations(commands.Cog):
     @commands.bot_has_permissions(ban_members=True)
     async def unban(self, ctx: AnimeContext, *, member: BannedMember):
         await ctx.trigger_typing()
-        member = discord.Object(id=member.id)
+        member = discord.Object(id=member)
         await guild.unban(member, reason=f"{ctx.author} ({ctx.author.id}) unbanned")
-        await ctx.send(f"Unbanned {member.id}")
+        await ctx.send(f"Unbanned {member}")
 
 
 def setup(bot):
