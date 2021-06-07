@@ -21,6 +21,7 @@ class RecentBansSource(menus.AsyncIteratorPageSource):
 
 class BannedMember(commands.Converter):
     async def convert(self, ctx, argument):
+        entity = None
         if argument.isdigit():
             try:
                 member_id = int(argument)
