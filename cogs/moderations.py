@@ -1,7 +1,41 @@
 import discord
-from discord.ext import commands
+from discord.ext import commands, menus
 from utils.subclasses import AnimeContext
 from utils.fuzzy import finder
+
+class RecentBansSource(menus.AsyncIteratorPageSource):
+    def __init__(self, entity):
+        super().__init__(entity, per_page=1)
+    
+    async def format_page(self, menu, entries):
+        embed = discord.Embed(color=menu.bot.color, timestamp=entries.created_at)
+        embed.set_author(name=str(entries.user), icon_url=str(entries.user.avatar_url_as(static_format="png")))
+        embed.set_image(url=str(entries.target.avatar_url_as(static_format="png")))
+        embed.add_field(name="Target banned", value=f"{str(entries.target)} ({entries.target.id})", inline=False)
+        embed.add_field(name="Banned by", value=f"{str(entries.user)} ({entries.user.id})", inline=False)
+        embed.add_field(name="Reason", value=entries.reason, inline=False)
+        return {"embed": embed}
+
+
+
+
+class BannedMember(commands.Converter):
+    async def convert(self, ctx, argument):
+        if argument.isdigit():
+            try:
+                member_id = int(argument)
+                try:
+                    return await ctx.guild.fetch_ban(member_id)
+                except discord.NotFound:
+                    return commands.BadArgument("That member was not banned before.")
+            except ValueError:
+                try:
+                   ban_list = await ctx.guild.bans()
+                   entity = discord.utils.find(lambda u: str(u.user) == argument, ban_list)
+                   if not entity:
+                       return commands.BadArgument("That member was not banned before.")
+                    return entity
+
 
 
 class Moderations(commands.Cog):
@@ -88,8 +122,16 @@ class Moderations(commands.Cog):
                     )
                 except:
                     pass
+    
+    @commands.command()
+    @commands.guild_only()
+    @commands.bot_has_permissions(view_audit_log=True)
+    async def recentbans(self, ctx, limit: int=100):
+        pages = menus.MenuPages(source=RecentBansSource(ctx.guild.audit_logs(limit=limit, action=discord.AuditLogAction.ban)), delete_message_after=True)
+        await pages.start(ctx)
 
     @commands.group(invoke_without_command=True)
+    @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def badword(self, ctx):
         if ctx.guild.id not in self.bot.bad_word_cache.keys():
@@ -98,6 +140,7 @@ class Moderations(commands.Cog):
         await ctx.send("I have dmed you the list of bad words of this server")
 
     @badword.command()
+    @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def add(self, ctx: AnimeContext, *, word):
         if ctx.guild.id not in self.bot.bad_word_cache.keys():
@@ -121,6 +164,7 @@ class Moderations(commands.Cog):
         await ctx.send("Success", delete_after=5)
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     async def warn(self, ctx: AnimeContext, user: discord.Member, *, reason):
         if user.id == 590323594744168494:
@@ -133,14 +177,16 @@ class Moderations(commands.Cog):
         await user.send(embed=embed)
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(manage_messages=True)
     @commands.bot_has_permissions(manage_messages=True)
     async def purge(self, ctx: AnimeContext, limit: int):
         await ctx.trigger_typing()
         counts = await ctx.channel.purge(limit=limit)
-        await ctx.send(content=f" purged {len(counts)} messages", delete_after=10)
+        await ctx.send(content=f"Purged {len(counts)} messages", delete_after=10)
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
     async def kick(self, ctx: AnimeContext, member: discord.Member, *, reason=None):
@@ -153,6 +199,7 @@ class Moderations(commands.Cog):
         await ctx.reply(f"Kicked {member}")
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
     async def ban(self, ctx: AnimeContext, member: discord.Member, *, reason=None):
@@ -162,18 +209,17 @@ class Moderations(commands.Cog):
             return await ctx.reply(f"Your role is lower then {member}")
         await ctx.trigger_typing()
         await member.ban(reason=reason)
-        await ctx.reply(f"banned {member}")
+        await ctx.reply(f"Banned {member}")
 
     @commands.command()
+    @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def unban(self, ctx: AnimeContext, *, member):
+    async def unban(self, ctx: AnimeContext, *, member: BannedMember):
         await ctx.trigger_typing()
         member = discord.Object(id=member.id)
-        try:
-            await member.unban(reason=f"{ctx.author.id}: unbanned")
-        except:
-            await ctx.send("can not unban")
+        await guild.unban(member, reason=f"{ctx.author} ({ctx.author.id}) unbanned")
+        await ctx.send(f"Unbanned {member.id}")
 
 
 def setup(bot):
