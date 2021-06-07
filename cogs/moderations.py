@@ -10,7 +10,7 @@ class RecentBansSource(menus.AsyncIteratorPageSource):
     async def format_page(self, menu, entries):
         embed = discord.Embed(color=menu.bot.color, timestamp=entries.created_at)
         embed.set_author(name=str(entries.user), icon_url=str(entries.user.avatar_url_as(static_format="png")))
-        embed.set_image(url=str(entries.target.avatar_url_as(static_format="png")))
+        embed.set_thumbnail(url=str(entries.target.avatar_url_as(static_format="png")))
         embed.add_field(name="Target banned", value=f"{str(entries.target)} ({entries.target.id})", inline=False)
         embed.add_field(name="Banned by", value=f"{str(entries.user)} ({entries.user.id})", inline=False)
         embed.add_field(name="Reason", value=entries.reason, inline=False)
