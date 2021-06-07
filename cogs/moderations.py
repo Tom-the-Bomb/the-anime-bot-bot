@@ -38,7 +38,7 @@ class BannedMember(commands.Converter):
             entity = discord.utils.find(lambda u: str(u.user.name) == argument, ban_list)
         if not entity:
             raise commands.BadArgument("That member was not banned before.")
-        return entity.id
+        return entity.user.id
 
 class Moderations(commands.Cog):
     def __init__(self, bot):
