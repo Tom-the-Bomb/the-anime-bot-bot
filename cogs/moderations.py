@@ -34,6 +34,11 @@ class BannedMember(commands.Converter):
                 if not entity:
                     return commands.BadArgument("That member was not banned before.")
                 return entity
+        ban_list = await ctx.guild.bans()
+        entity = discord.utils.find(lambda u: str(u.user) == argument, ban_list)
+        if not entity:
+            return commands.BadArgument("That member was not banned before.")
+        return entity
 
 class Moderations(commands.Cog):
     def __init__(self, bot):
