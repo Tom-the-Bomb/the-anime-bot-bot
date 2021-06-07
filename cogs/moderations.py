@@ -27,19 +27,19 @@ class BannedMember(commands.Converter):
                 try:
                     return await ctx.guild.fetch_ban(member_id)
                 except discord.NotFound:
-                    return commands.BadArgument("That member was not banned before.")
+                    raise commands.BadArgument("That member was not banned before.")
             except ValueError:
                 ban_list = await ctx.guild.bans()
                 entity = discord.utils.find(lambda u: str(u.user) == argument, ban_list)
                 if not entity:
                     entity = discord.utils.find(lambda u: str(u.user.name) == argument, ban_list)
                 if not entity:
-                    return commands.BadArgument("That member was not banned before.")
+                    raise commands.BadArgument("That member was not banned before.")
                 return entity
         ban_list = await ctx.guild.bans()
         entity = discord.utils.find(lambda u: str(u.user) == argument, ban_list)
         if not entity:
-            return commands.BadArgument("That member was not banned before.")
+            raise commands.BadArgument("That member was not banned before.")
         return entity
 
 class Moderations(commands.Cog):
