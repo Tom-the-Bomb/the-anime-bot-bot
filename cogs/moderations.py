@@ -220,7 +220,7 @@ class Moderations(commands.Cog):
     async def unban(self, ctx: AnimeContext, *, member: BannedMember):
         await ctx.trigger_typing()
         member = discord.Object(id=member)
-        await guild.unban(member, reason=f"{ctx.author} ({ctx.author.id}) unbanned")
+        await ctx.guild.unban(member, reason=f"{ctx.author} ({ctx.author.id}) unbanned")
         await ctx.send(f"Unbanned {member}")
 
 
