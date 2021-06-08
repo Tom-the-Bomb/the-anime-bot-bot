@@ -611,7 +611,6 @@ class Images(commands.Cog):
             image1 = await resp.read()
         f = functools.partial(self.process_gif, image1, ImageOps.flip)
         result, format_ = await self.bot.loop.run_in_executor(None, f)
-        e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_flip.{format_}")
         return result
 
@@ -628,7 +627,6 @@ class Images(commands.Cog):
             image1 = await resp.read()
         f = functools.partial(self.process_gif, image1, ImageOps.posterize, 3)
         result, format_ = await self.bot.loop.run_in_executor(None, f)
-        e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_posterize.{format_}")
         return result
 
