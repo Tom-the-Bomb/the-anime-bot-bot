@@ -81,7 +81,7 @@ class UserHistory(commands.Cog):
         avatars = await self.bot.db.fetchval("SELECT avatar_url FROM user_history WHERE user_id = $1", member.id)
         if not avatars:
             return await ctx.send(f"We can't find any past avatars for {str(member)} in our database, try again later.")
-        pages = menus.MenuPages(source=AvatarMenuSource([f"{USER_AVATAR_IMAGE_URL}i" for i in avatars], user=member), delete_message_after=True)
+        pages = menus.MenuPages(source=AvatarMenuSource([f"{USER_AVATAR_IMAGE_URL}{i}" for i in avatars], user=member), delete_message_after=True)
         await pages.start(ctx)
 
     @commands.command()
