@@ -969,21 +969,20 @@ class Images(commands.Cog):
 
     @commands.command()
     async def colorinfo(self, ctx: AnimeContext, *, color: ColorConverter) -> None:
-        async with Processing(ctx):
-            img = await self.make_color_image(color)
-            name = await self.convert_rgb_to_names(color)
-            embed = discord.Embed(color=discord.Color.from_rgb(*color), title=name)
-            embed.add_field(name="RGB", value=color)
-            embed.add_field(name="CMYK", value=tuple((round(i) for i in self.rgb_to_cmyk(color))))
-            embed.add_field(
-                name="HSV",
-                value=f"({round(self.rgb_to_hsv(*color)[0])}, {round(self.rgb_to_hsv(*color)[1])}%, {round(self.rgb_to_hsv(*color)[2])}%)",
-            )
-            embed.add_field(name="HEX", value=f"#{'%02x%02x%02x' % color} | 0x{'%02x%02x%02x' % color}")
-            embed.add_field(name="HSL", value=self.rgb_to_hsl(*color))
-            embed.add_field(name="XYZ", value=tuple((round(i) for i in self.rgb_to_xy_bri(*color))))
-            embed.set_thumbnail(url=f"attachment://The_Anime_Bot_color_{name}.png")
-            await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}.png"))
+        img = await self.make_color_image(color)
+        name = await self.convert_rgb_to_names(color)
+        embed = discord.Embed(color=discord.Color.from_rgb(*color), title=name)
+        embed.add_field(name="RGB", value=color)
+        embed.add_field(name="CMYK", value=tuple((round(i) for i in self.rgb_to_cmyk(color))))
+        embed.add_field(
+            name="HSV",
+            value=f"({round(self.rgb_to_hsv(*color)[0])}, {round(self.rgb_to_hsv(*color)[1])}%, {round(self.rgb_to_hsv(*color)[2])}%)",
+        )
+        embed.add_field(name="HEX", value=f"#{'%02x%02x%02x' % color} | 0x{'%02x%02x%02x' % color}")
+        embed.add_field(name="HSL", value=self.rgb_to_hsl(*color))
+        embed.add_field(name="XYZ", value=tuple((round(i) for i in self.rgb_to_xy_bri(*color))))
+        embed.set_thumbnail(url=f"attachment://The_Anime_Bot_color_{name}.png")
+        await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}.png"))
 
     @commands.command()
     async def floor(self, ctx: AnimeContext, thing: Image_Union = None) -> None:
