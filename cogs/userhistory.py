@@ -66,7 +66,7 @@ class UserHistory(commands.Cog):
             await self.bot.db.execute(
                 "INSERT INTO user_history (user_id, avatar_url) VALUES ($1, ARRAY [$2]) ON CONFLICT (user_id) DO UPDATE SET avatar_url = array_append (user_history.avatar_url, $2)",
                 after.id,
-                f"{m.id}/{filename}",
+                f"{m.attachments[0].id}/{filename}",
             )
         elif str(before) != str(after):
             await self.bot.db.execute(
