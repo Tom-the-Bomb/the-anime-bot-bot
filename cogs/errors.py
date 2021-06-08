@@ -109,7 +109,7 @@ class Error(commands.Cog):
             embed = self.embed(error)
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MissingRequiredArgument):
-            embed = self.embed(f"{error.param} is a required argument")
+            embed = self.embed(f"{error.param.name} is a required argument")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MaxConcurrencyReached):
             return
