@@ -90,7 +90,7 @@ class Error(commands.Cog):
             return await ctx.send(embed=embed)
         elif isinstance(error, commands.NoPrivateMessage):
             try:
-                embed = self.embed("{ctx.command} can not be used in Private Messages.")
+                embed = self.embed(f"{ctx.command} can not be used in Private Messages.")
                 await ctx.author.send(embed=embed)
             except discord.HTTPException:
                 pass
@@ -103,7 +103,10 @@ class Error(commands.Cog):
             embed = self.embed(f"Unable to convert {error.converter}")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.BadArgument):
-            embed = self.embed(f"Unable to convert")
+            embed = self.embed(error)
+            await ctx.send(embed=embed)
+        elif isinstance(error, commands.BadUnionArgument):
+            embed = self.embed(f"Unable to convert `{error.param}` to {' or '.join(error.converters)}")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MissingRequiredArgument):
             embed = self.embed(f"You are missing `{error.param.name}` argument")
