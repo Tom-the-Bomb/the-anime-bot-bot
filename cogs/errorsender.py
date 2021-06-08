@@ -37,7 +37,10 @@ class ErrorSender(commands.Cog):
         )
         [embed.add_field(name=f"**{n}**", value=f"```py\n{v}```", inline=False) for n, v in fields]
         webhook = Webhook.from_url(webhook_url, adapter=AsyncWebhookAdapter(self.bot.session))
-        return await webhook.send(embed=embed)
+        try:
+            return await webhook.send(embed=embed)
+        except:
+            return
 
 
 def setup(bot):
