@@ -106,7 +106,7 @@ class Error(commands.Cog):
             embed = self.embed(error)
             await ctx.send(embed=embed)
         elif isinstance(error, commands.BadUnionArgument):
-            embed = self.embed(f"Unable to convert `{error.param}` to {' or '.join(error.converters)}")
+            embed = self.embed(error)
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MissingRequiredArgument):
             embed = self.embed(f"You are missing `{error.param.name}` argument")
