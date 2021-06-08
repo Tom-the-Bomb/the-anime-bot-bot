@@ -10,8 +10,7 @@ import random
 from io import BytesIO
 from PIL import Image
 
-USER_AVATAR_IMAGE_DB_GUILD_ID = 836471259344142367
-USER_AVATAR_IMAGE_DB_CHANNEL_ID = 842629929039953920
+USER_AVATAR_IMAGE_URL = "https://cdn.discordapp.com/attachments/842629929039953920/"
 
 
 class AvatarMenuSource(menus.ListPageSource):
@@ -50,6 +49,7 @@ class UserHistory(commands.Cog):
     @commands.Cog.listener()
     async def on_user_update(self, before, after):
         if before.avatar_url_as(static_format="png") != after.avatar_url_as(static_format="png"):
+            filename = f"{after.id}_avatar.{'png' if not after.is_avatar_animated() else 'gif'}"
             try:
                 m = await next(self.UPLOADERS).send(
                     after.id,
@@ -57,7 +57,7 @@ class UserHistory(commands.Cog):
                     avatar_url=self.bot.user.avatar_url_as(format="png"),
                     file=discord.File(
                         BytesIO(await after.avatar_url_as(static_format="png").read()),
-                        f"{after.id}_avatar.{'png' if not after.is_avatar_animated() else 'gif'}",
+                        filename,
                     ),
                     wait=True,
                 )
@@ -66,7 +66,7 @@ class UserHistory(commands.Cog):
             await self.bot.db.execute(
                 "INSERT INTO user_history (user_id, avatar_url) VALUES ($1, ARRAY [$2]) ON CONFLICT (user_id) DO UPDATE SET avatar_url = array_append (user_history.avatar_url, $2)",
                 after.id,
-                m.attachments[0].url,
+                f"{m.id}/{filename}",
             )
         elif str(before) != str(after):
             await self.bot.db.execute(
@@ -81,7 +81,7 @@ class UserHistory(commands.Cog):
         avatars = await self.bot.db.fetchval("SELECT avatar_url FROM user_history WHERE user_id = $1", member.id)
         if not avatars:
             return await ctx.send(f"We can't find any past avatars for {str(member)} in our database, try again later.")
-        pages = menus.MenuPages(source=AvatarMenuSource(avatars, user=member), delete_message_after=True)
+        pages = menus.MenuPages(source=AvatarMenuSource([f"{USER_AVATAR_IMAGE_URL}i" for i in avatars], user=member), delete_message_after=True)
         await pages.start(ctx)
 
     @commands.command()
