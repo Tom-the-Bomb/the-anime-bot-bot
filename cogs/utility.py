@@ -405,11 +405,17 @@ class Utility(commands.Cog):
             url = query_or_link
         
         yt = YouTube(url)
-        comfrimed = await ctx.comfrim(embed=discord.Embed(title=f"Do you want to download {yt.title}?").set_thumbnail(url=yt.thumbnail_url))
+        comfrimed = await ctx.comfrim(embed=discord.Embed(color=self.bot.color, title=f"Do you want to download {yt.title}?").set_thumbnail(url=yt.thumbnail_url))
         if not comfrimed:
             return await ctx.send("Aborting")
+        limit = ctx.guild.filesize_limit if ctx.guild else 8388608
+        limit = limit - 1000
+        if yt.filesize > limit:
+            return await ctx.send("Video too large to upload.")
+        m = await ctx.send(" <a:loading:849756871597490196> Downloading")
         file = await asyncio.to_thread(self.download_youtube_video, yt)
         await ctx.send(file=file)
+        await m.delete()
 
 
 
