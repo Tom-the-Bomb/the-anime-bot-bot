@@ -394,13 +394,17 @@ class Utility(commands.Cog):
         b.seek(0)
         return discord.File(b, "The_Anime_bot_youtube_download.mp4")
     
+    def parse_youtube_data(self, data):
+        results = re.findall(r'/watch\?v=(.{11})', data.decode())
+        return "https://youtube.com/watch?v=" + results[0]
+
     @commands.command()
     async def youtube(self, ctx, *, query_or_link: str):
         if not self.yt_regex.fullmatch(query_or_link):
             async with self.bot.session.get("https://www.youtube.com/results", params={"search_query": query_or_link}) as r:
                 data = await r.read()
-                results = re.findall(r'/watch\?v=(.{11})', data.decode())
-                url = "https://youtube.com/watch?v=" + results[0]
+                url = await asyncio.to_thread(self.parse_youtube_data, data)
+                
         else:
             url = query_or_link
         
