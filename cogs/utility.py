@@ -409,7 +409,7 @@ class Utility(commands.Cog):
             url = query_or_link
         
         yt = YouTube(url)
-        comfrimed = await ctx.comfrim(embed=discord.Embed(color=self.bot.color, title=f"Do you want to download {yt.title}?").set_thumbnail(url=yt.thumbnail_url))
+        comfrimed = await ctx.comfrim(embed=discord.Embed(color=self.bot.color, title=f"Do you want to download:\n{yt.title}?").set_thumbnail(url=yt.thumbnail_url))
         if not comfrimed:
             return await ctx.send("Aborting")
         stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
