@@ -420,7 +420,7 @@ class Utility(commands.Cog):
             stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
             format = "mp4"
         else:
-            stream = yt.streams.filter(file_extension='mp3').desc().first()
+            stream = yt.streams.filter(mime_type="audio/mp4").order_by("abr").desc().first()
             format = "mp3"
         limit = ctx.guild.filesize_limit if ctx.guild else 8388608
         limit = limit - 1000
