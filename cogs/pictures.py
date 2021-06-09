@@ -611,7 +611,6 @@ class Images(commands.Cog):
             image1 = await resp.read()
         f = functools.partial(self.process_gif, image1, ImageOps.flip)
         result, format_ = await self.bot.loop.run_in_executor(None, f)
-        e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_flip.{format_}")
         return result
 
@@ -628,7 +627,6 @@ class Images(commands.Cog):
             image1 = await resp.read()
         f = functools.partial(self.process_gif, image1, ImageOps.posterize, 3)
         result, format_ = await self.bot.loop.run_in_executor(None, f)
-        e.shutdown()
         result = discord.File(result, f"The_Anime_Bot_posterize.{format_}")
         return result
 
@@ -723,6 +721,13 @@ class Images(commands.Cog):
     async def convertimage(
         self, ctx: AnimeContext, thing: Optional[Image_Union], format: lambda x: str(x).upper() = "PNG"
     ) -> None:
+        """
+        Convert image type.
+        Note:
+        You can't convert image to svg as that is a vector image.
+        """
+        if format == "SVG":
+            return await ctx.send("You can't convert image to svg as that is a vector image.")
         async with Processing(ctx):
             url = await self.get_url(ctx, thing, checktype=False)
             async with self.bot.session.get(url) as resp:
@@ -737,6 +742,9 @@ class Images(commands.Cog):
 
     @commands.command()
     async def code(self, ctx: AnimeContext, *, code: str) -> None:
+        """
+        Generate a cool image to display code.
+        """
         if not code.startswith("`"):
             code = code
         else:
@@ -835,6 +843,9 @@ class Images(commands.Cog):
 
     @commands.command()
     async def shapedetection(self, ctx: AnimeContext, thing: Image_Union = None) -> None:
+        """
+        Detect shapes in a image and label them.
+        """
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
@@ -971,24 +982,29 @@ class Images(commands.Cog):
 
     @commands.command()
     async def colorinfo(self, ctx: AnimeContext, *, color: ColorConverter) -> None:
-        async with Processing(ctx):
-            img = await self.make_color_image(color)
-            name = await self.convert_rgb_to_names(color)
-            embed = discord.Embed(color=discord.Color.from_rgb(*color), title=name)
-            embed.add_field(name="RGB", value=color)
-            embed.add_field(name="CMYK", value=tuple((round(i) for i in self.rgb_to_cmyk(color))))
-            embed.add_field(
-                name="HSV",
-                value=f"({round(self.rgb_to_hsv(*color)[0])}, {round(self.rgb_to_hsv(*color)[1])}%, {round(self.rgb_to_hsv(*color)[2])}%)",
-            )
-            embed.add_field(name="HEX", value=f"#{'%02x%02x%02x' % color} | 0x{'%02x%02x%02x' % color}")
-            embed.add_field(name="HSL", value=self.rgb_to_hsl(*color))
-            embed.add_field(name="XYZ", value=tuple((round(i) for i in self.rgb_to_xy_bri(*color))))
-            embed.set_thumbnail(url=f"attachment://The_Anime_Bot_color_{name}.png")
-            await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}.png"))
+        """
+        Returns a color's info. It accepts a lot different input. Like rgb(255, 255, 255) white #ffffff 0xffffff etc
+        """
+        img = await self.make_color_image(color)
+        name = await self.convert_rgb_to_names(color)
+        embed = discord.Embed(color=discord.Color.from_rgb(*color), title=name)
+        embed.add_field(name="RGB", value=color)
+        embed.add_field(name="CMYK", value=tuple((round(i) for i in self.rgb_to_cmyk(color))))
+        embed.add_field(
+            name="HSV",
+            value=f"({round(self.rgb_to_hsv(*color)[0])}, {round(self.rgb_to_hsv(*color)[1])}%, {round(self.rgb_to_hsv(*color)[2])}%)",
+        )
+        embed.add_field(name="HEX", value=f"#{'%02x%02x%02x' % color} | 0x{'%02x%02x%02x' % color}")
+        embed.add_field(name="HSL", value=self.rgb_to_hsl(*color))
+        embed.add_field(name="XYZ", value=tuple((round(i) for i in self.rgb_to_xy_bri(*color))))
+        embed.set_thumbnail(url=f"attachment://The_Anime_Bot_color_{name}.png")
+        await ctx.send(embed=embed, file=discord.File(img, f"The_Anime_Bot_color_{name}.png"))
 
     @commands.command()
     async def floor(self, ctx: AnimeContext, thing: Image_Union = None) -> None:
+        """
+        Returns floor effect of a image.
+        """
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
@@ -996,7 +1012,10 @@ class Images(commands.Cog):
             await ctx.reply(file=discord.File(await self.floor_(b), "The_Anime_Bot_floor.png"))
 
     @commands.command()
-    async def facereg(self, ctx: AnimeContext, thing: Image_Union = None) -> None:
+    async def facerec(self, ctx: AnimeContext, thing: Image_Union = None) -> None:
+        """
+        Recognize faces, eyes, and smiles/mouths in a image and label them.
+        """
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
@@ -1005,6 +1024,9 @@ class Images(commands.Cog):
 
     @commands.command()
     async def latex(self, ctx: AnimeContext, *, text: str) -> None:
+        """
+        Returns a LaTeX image of your text. 
+        """
         async with self.bot.session.get(
             f"https://latex.codecogs.com/png.latex?%5Cdpi%7B300%7D%20%5Cbg_black%20%5Chuge%20{quote(text)}"
         ) as resp:
@@ -1016,13 +1038,19 @@ class Images(commands.Cog):
             )
 
     @commands.command()
-    async def spin(self, ctx, thing: Image_Union = None):
+    async def spin(self, ctx, thing: Image_Union = None) -> None:
+        """
+        Spin a image.
+        """
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             await ctx.reply(file=await self.spin_(url, 64))
 
     @commands.group(invoke_without_command=True)
     async def qr(self, ctx, *, thing):
+        """
+        Produce a qr code.
+        """
         async with Processing(ctx):
             try:
                 pic = await self.qr_enc(thing)
@@ -1036,6 +1064,9 @@ class Images(commands.Cog):
         ctx,
         thing: Image_Union = None,
     ):
+        """
+        Decode a qr code.
+        """
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
@@ -1053,6 +1084,9 @@ class Images(commands.Cog):
         ctx: AnimeContext,
         thing: Image_Union = None,
     ):
+        """
+        Caption a image.
+        """
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             data = {"Content": url, "Type": "CaptionRequest"}
@@ -1074,6 +1108,9 @@ class Images(commands.Cog):
         ctx: AnimeContext,
         thing: Image_Union = None,
     ):
+        """
+        Upload a image to the bot's cdn.
+        """
         async with Processing(ctx):
             url = await self.get_gif_url(ctx, thing)
             await ctx.reply(f"{await self.bot_cdn(url)}")
@@ -1084,6 +1121,9 @@ class Images(commands.Cog):
         ctx: AnimeContext,
         thing: Image_Union = None,
     ):
+        """
+        Upload a image to idevision cdn.
+        """
         async with Processing(ctx):
             url = await self.get_gif_url(ctx, thing)
             await ctx.reply(f"<{await self.cdn_(url)}>")
@@ -1115,6 +1155,11 @@ class Images(commands.Cog):
         ctx: AnimeContext,
         thing: Image_Union = None,
     ):
+        """
+        Recognize text in a image.
+        Note:
+        It works better with white background.
+        """
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
@@ -1125,6 +1170,9 @@ class Images(commands.Cog):
 
     @commands.command()
     async def aww(self, ctx):
+        """
+        Return a cute image.
+        """
         async with Processing(ctx):
             async with self.bot.session.get(
                 "https://api.ksoft.si/images/random-aww",
@@ -1143,6 +1191,9 @@ class Images(commands.Cog):
         woman: typing.Optional[Image_Union],
         cat: typing.Optional[Image_Union],
     ):
+        """
+        The woman point at cat meme.
+        """
         async with Processing(ctx):
             url = await self.get_url(ctx, woman)
             url1 = await self.get_url(ctx, cat)
@@ -1151,6 +1202,9 @@ class Images(commands.Cog):
 
     @commands.command()
     async def circle(self, ctx: AnimeContext, background_color="white", circle_color="blue"):
+        """
+        Make a circle.
+        """
         async with Processing(ctx):
             igif = await self.circle_(background_color, circle_color)
             await ctx.reply(file=discord.File(igif, "circle.gif"))
@@ -1162,12 +1216,18 @@ class Images(commands.Cog):
         text1: str = "You gotta enter something",
         text2: str = "yeye",
     ):
+        """
+        Return the npc meme.
+        """
         async with Processing(ctx):
             pic = await self.bot.vacefron_api.npc(text1, text2)
             await ctx.reply(file=discord.File(await pic.read(), filename=f"npc_{text1}_{text2}.png"))
 
     @commands.command()
     async def amongus(self, ctx, name: str = "you", color: str = "red", imposter: bool = True):
+        """
+        Return the sussy imposter got ejected amongus image.
+        """
         async with Processing(ctx):
             pic = await self.bot.vacefron_api.ejected(name, color, imposter)
             await ctx.reply(

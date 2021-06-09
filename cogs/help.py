@@ -119,9 +119,9 @@ class HelpCommand(commands.HelpCommand):
         Hi Welcome to The Anime bot's help command
         You can use the following commands
 
-        `{self.context.prefix}help [command]`
+        **{self.context.prefix}help [command]**
 
-        `{self.context.prefix}help [module]`
+        **{self.context.prefix}help [module]**
 
         **Available Modules are:**
 
