@@ -415,8 +415,8 @@ class Utility(commands.Cog):
         m = await ctx.send("Video: \U0001f39e\nAudio: \U0001f50a")
         await m.add_reaction("\U0001f39e")
         await m.add_reaction("\U0001f50a")
-        await self.bot.wait_for("raw_reaction_add", check=lambda x: x.user_id == ctx.author.id and x.message_id == m.id and x.emoji.name in ("\U0001f50a", "\U0001f39e"), timeout=60)
-        if x.emoji.name == "\U0001f39e":
+        r = await self.bot.wait_for("raw_reaction_add", check=lambda x: x.user_id == ctx.author.id and x.message_id == m.id and x.emoji.name in ("\U0001f50a", "\U0001f39e"), timeout=60)
+        if r.emoji.name == "\U0001f39e":
             stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
             format = "mp4"
         else:
