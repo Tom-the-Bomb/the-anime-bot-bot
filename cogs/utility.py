@@ -397,7 +397,7 @@ class Utility(commands.Cog):
     @commands.command()
     async def youtube(self, ctx, *, query_or_link: str):
         if not self.yt_regex.fullmatch(query_or_link):
-            async with self.bot.session.get("https://www.youtube.com/results", params={"search_query": query}) as r:
+            async with self.bot.session.get("https://www.youtube.com/results", params={"search_query": query_or_link}) as r:
                 data = await r.read()
                 results = re.findall(r'/watch\?v=(.{11})', data.decode())
                 url = "https://youtube.com/watch?v=" + results[0]
