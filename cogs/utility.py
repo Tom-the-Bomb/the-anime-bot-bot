@@ -11,6 +11,7 @@ import numpy as np
 import humanize
 import aiohttp
 from typing import Optional
+from pytube import YouTube
 from io import BytesIO
 from datetime import datetime
 from contextlib import suppress
@@ -198,6 +199,7 @@ class Utility(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         self.ratelimiter = ratelimiter.RateLimiter(max_calls=5, period=1)
+        self.yt_regex = re.compile(r"(?:v=|\/)([0-9A-Za-z_-]{11}).*")
         page_types = {
             "latest": "https://discordpy.readthedocs.io/en/latest",
             "python": "https://docs.python.org/3",
@@ -385,6 +387,34 @@ class Utility(commands.Cog):
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
         return discord.File(file_, "emojis.zip")
+    
+    def download_youtube_video(self, yt):
+        b = BytesIO()
+        yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().stream_to_buffer(b)
+        b.seek(0)
+        return discord.File(b, "The_Anime_bot_youtube_download.mp4")
+    
+    @commands.command()
+    async def youtube(self, ctx, query_or_link: str):
+        if not self.yt_regex.fullmatch(query_or_link):
+            async with self.bot.session.get("https://www.youtube.com/results", params={"search_query": query}) as r:
+                data = await r.read()
+                results = re.findall(r'/watch\?v=(.{11})', data.decode())
+                url = "https://youtube.com/watch?v=" + results[0]
+        else:
+            url = query_or_link
+        
+        yt = YouTube(url)
+        comfrimed = await ctx.comfrim(embed=discord.Embed(title=f"Do you want to download {yt.title}?").set_thumbnail(url=yt.thumbnail_url))
+        if not comfrimed:
+            return await ctx.send("Aborting")
+        file = await asyncio.to_thread(self.download_youtube_video, yt)
+        await ctx.send(file=file)
+
+
+
+
+
 
     @commands.command()
     @commands.is_nsfw()
