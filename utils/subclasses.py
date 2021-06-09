@@ -47,7 +47,7 @@ class AnimeContext(commands.Context):
         self.utils = utils
         super().__init__(*args, **kwargs)
     
-    async def comfrim(self, content, timeout=60, **kwargs):
+    async def comfrim(self, content=None, timeout=60, **kwargs):
         m = await self.send(content=content, **kwargs)
         await m.add_reaction(self.bot.get_emoji(852031038024056833))
         await m.add_reaction(self.bot.get_emoji(852031063140073502))
