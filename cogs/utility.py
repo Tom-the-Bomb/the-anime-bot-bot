@@ -412,7 +412,7 @@ class Utility(commands.Cog):
         comfrimed = await ctx.comfrim(embed=discord.Embed(color=self.bot.color, title=f"Do you want to download {yt.title}?").set_thumbnail(url=yt.thumbnail_url))
         if not comfrimed:
             return await ctx.send("Aborting")
-        stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first().
+        stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
         limit = ctx.guild.filesize_limit if ctx.guild else 8388608
         limit = limit - 1000
         if stream.filesize > limit:
