@@ -395,7 +395,7 @@ class Utility(commands.Cog):
         return discord.File(b, "The_Anime_bot_youtube_download.mp4")
     
     @commands.command()
-    async def youtube(self, ctx, query_or_link: str):
+    async def youtube(self, ctx, *, query_or_link: str):
         if not self.yt_regex.fullmatch(query_or_link):
             async with self.bot.session.get("https://www.youtube.com/results", params={"search_query": query}) as r:
                 data = await r.read()
