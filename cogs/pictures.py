@@ -735,6 +735,9 @@ class Images(commands.Cog):
 
     @commands.command()
     async def code(self, ctx: AnimeContext, *, code: str) -> None:
+        """
+        Generate a cool image to display code.
+        """
         if not code.startswith("`"):
             code = code
         else:
