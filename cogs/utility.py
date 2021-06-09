@@ -388,11 +388,11 @@ class Utility(commands.Cog):
         file_.seek(0)
         return discord.File(file_, "emojis.zip")
     
-    def download_youtube_video(self, stream):
+    def download_youtube_video(self, stream, format):
         b = BytesIO()
         stream.stream_to_buffer(b)
         b.seek(0)
-        return discord.File(b, "The_Anime_bot_youtube_download.mp4")
+        return discord.File(b, f"The_Anime_bot_youtube_download.{format}")
     
     def parse_youtube_data(self, data):
         results = re.findall(r'/watch\?v=(.{11})', data.decode())
@@ -412,13 +412,22 @@ class Utility(commands.Cog):
         comfrimed = await ctx.comfrim(embed=discord.Embed(color=self.bot.color, title=f"Do you want to download:\n{yt.title}?").set_thumbnail(url=yt.thumbnail_url))
         if not comfrimed:
             return await ctx.send("Aborting")
-        stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+        m = await ctx.send("Video: \U0001f39e\nAudio: \U0001f50a")
+        await m.add_reaction("\U0001f39e")
+        await m.add_reaction("\U0001f50a")
+        await self.bot.wait_for("raw_reaction_add", check=lambda x: x.user_id == ctx.author.id and x.message_id == m.id and x.emoji.name in ("\U0001f50a", "\U0001f39e"), timeout=60)
+        if x.emoji.name == "\U0001f39e":
+            stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+            format = "mp4"
+        else:
+            stream = yt.streams.filter(progressive=True, file_extension='mp3').order_by('resolution').desc().first()
+            format = "mp3"
         limit = ctx.guild.filesize_limit if ctx.guild else 8388608
         limit = limit - 1000
         if stream.filesize > limit:
             return await ctx.send("Video too large to upload.")
         m = await ctx.send(" <a:loading:849756871597490196> Downloading")
-        file = await asyncio.to_thread(self.download_youtube_video, stream)
+        file = await asyncio.to_thread(self.download_youtube_video, stream, format)
         await ctx.send(file=file)
         await m.delete()
 
