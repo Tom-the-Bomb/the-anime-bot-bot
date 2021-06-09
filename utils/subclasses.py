@@ -52,7 +52,7 @@ class AnimeContext(commands.Context):
         await m.add_reaction(self.bot.get_emoji(852031038024056833))
         await m.add_reaction(self.bot.get_emoji(852031063140073502))
         try:
-            r = await self.bot.wait_for("raw_reaction_add", check = lambda x: x.message_id == m.id and x.emoji.is_custom_emoji() and x.emoji.id in (852031038024056833, 852031063140073502))
+            r = await self.bot.wait_for("raw_reaction_add", check = lambda x: x.message_id == m.id and x.user_id == self.author.id and x.emoji.is_custom_emoji() and x.emoji.id in (852031038024056833, 852031063140073502))
         except asyncio.TimeoutError:
             return False
         return r.emoji.id == 852031038024056833
