@@ -43,7 +43,7 @@ class Logging(commands.Cog):
     
     @commands.command()
     @commands.has_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True, manage_channels=True)
     async def mutesetup(self, ctx):
         r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
         if not r:
