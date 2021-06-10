@@ -4,7 +4,8 @@ import random
 from utils.subclasses import AnimeContext
 import humanize
 import ratelimiter
-import datetime
+from datetime import datetime
+utcnow = datetime.utcnow
 
 
 class Logging(commands.Cog):
@@ -261,7 +262,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Role Updated",
                 description=f"**Role name:** {after.name}\n**Old Color:** {str(before.color)}\n**New Color:** {str(after.color)}",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=utcnow(),
             )
             await self.send_webhook(after.guild.id, embed, "role_update")
         if before.name != after.name:
@@ -269,7 +270,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Role Updated",
                 description=f"**Old Role Name:** {before.name}\n**New Role Name:** {after.name}",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=utcnow(),
             )
             await self.send_webhook(after.guild.id, embed, "role_update")
         if before.permissions != after.permissions:
@@ -284,7 +285,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Role Updated",
                 description=f"**New Permissions:** {to_display}",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=utcnow(),
             )
             await self.send_webhook(after.guild.id, embed, "role_update")
 
@@ -308,7 +309,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Guild Updated",
                 description=f"**Old Afk channel:** {before.afk_channel.mention}*\n*New Afk channel:** {after.afk_channel.mention}",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=utcnow(),
             )
             return await self.send_webhook(after.id, embed, "guild_update")
         if before.afk_timeout != after.afk_timeout:
@@ -316,7 +317,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Guild Updated",
                 description=f"**Old Afk timeout:** {before.afk_timeout}*\n*New Afk timeout:** {after.afk_timeout}",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=utcnow(),
             )
             return await self.send_webhook(after.id, embed, "guild_update")
         if before.name != after.name:
@@ -324,14 +325,14 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Guild Updated",
                 description=f"**Old Name:** {before.name}*\n*New name:** {after.name}",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=utcnow(),
             )
             return await self.send_webhook(after.id, embed, "guild_update")
         embed = discord.Embed(
             color=self.bot.color,
             title="Guild Updated",
             description=f"Something updated but I can't trace what updated",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=utcnow(),
         )
         await self.send_webhook(after.id, embed, "guild_update")
 
@@ -343,7 +344,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="New Emojis Added",
                 description=f"{', '.join(new_emojis)}",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=utcnow(),
             )
         else:
             removed_emojis = [str(i) for i in before if i not in after]
@@ -351,7 +352,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Emojis Removed",
                 description=f"{', '.join(removed_emojis)}",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=utcnow(),
             )
 
         await self.send_webhook(guild.id, embed, "emojis_update")
@@ -363,7 +364,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Nickname Changed",
                 description=f"Before Nickname: {before.nick}\nAfter Nickname: {after.nick}",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=utcnow(),
             )
             embed.set_footer(text=f"User ID: {after.id}")
             await self.send_webhook(after.guild.id, embed, "member_update")
@@ -375,7 +376,7 @@ class Logging(commands.Cog):
                     color=self.bot.color,
                     title="Role Added",
                     description=f"Member: {after.mention}\nRoles: {', '.join(new_roles)}",
-                    timestamp=datetime.datetime.utcnow(),
+                    timestamp=utcnow(),
                 )
             else:
                 roles = set(after.roles)
@@ -384,7 +385,7 @@ class Logging(commands.Cog):
                     color=self.bot.color,
                     title="Role Removed",
                     description=f"Member: {after.mention}\nRoles: {', '.join(removed_roles)}",
-                    timestamp=datetime.datetime.utcnow(),
+                    timestamp=utcnow(),
                 )
 
             embed.set_footer(text=f"User ID: {after.id}")
@@ -396,7 +397,7 @@ class Logging(commands.Cog):
             color=self.bot.color,
             title="Member Banned",
             description=f"User: {str(user)} {user.mention} ({user.id})",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=utcnow(),
         )
         embed.set_footer(text=f"User ID: {user.id}")
         await self.send_webhook(guild.id, embed, "member_ban")
@@ -407,7 +408,7 @@ class Logging(commands.Cog):
             color=self.bot.color,
             title="Member Unbanned",
             description=f"User: {str(user)} {user.mention} ({user.id})",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=utcnow(),
         )
         embed.set_footer(text=f"User ID: {user.id}")
         await self.send_webhook(guild.id, embed, "member_unban")
@@ -429,7 +430,7 @@ class Logging(commands.Cog):
             color=self.bot.color,
             title="Invite Deleted",
             description=f"Invite ID: {invite.id}\nInvite URL: {invite.url}",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=utcnow(),
         )
         await self.send_webhook(invite.guild.id, embed, "invite_change")
 
@@ -439,7 +440,7 @@ class Logging(commands.Cog):
             color=self.bot.color,
             title="Member joined",
             description=f"{member.mention} just joined. We now have {member.guild.member_count} members. Account Created at: {humanize.precisedelta(member.created_at)} ago",
-            timestamp=datetime.datetime.now(),
+            timestamp=utcnow(),
         )
         embed.set_footer(text=f"ID: {member.id}")
         await self.send_webhook(member.guild.id, embed, "member_join")
@@ -450,7 +451,7 @@ class Logging(commands.Cog):
             color=self.bot.color,
             title="Member left",
             description=f"{member.mention} just left. We now have {member.guild.member_count} members. Account Created at: {humanize.precisedelta(member.created_at)} ago",
-            timestamp=datetime.datetime.now(),
+            timestamp=utcnow(),
         )
         embed.set_footer(text=f"ID: {member.id}")
         await self.send_webhook(member.guild.id, embed, "member_leave")
@@ -462,6 +463,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Joined voice channel",
                 description=f"{member.display_name} joined voice channel {after.channel.mention}",
+                timestamp=utcnow(),
             )
             embed.set_footer(text=f"User ID: {member.id}")
             return await self.send_webhook(member.guild.id, embed, "voice_channel_change")
@@ -470,6 +472,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Left voice channel",
                 description=f"{member.display_name} left voice channel {before.channel.mention}",
+                timestamp=utcnow(),
             )
             embed.set_footer(text=f"User ID: {member.id}")
             return await self.send_webhook(member.guild.id, embed, "voice_channel_change")
@@ -478,6 +481,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Changed voice channel",
                 description=f"{member.display_name} changed voice channel from {before.channel.mention} to {after.channel.mention}",
+                timestamp=utcnow(),
             )
             embed.set_footer(text=f"User ID: {member.id}")
             return await self.send_webhook(member.guild.id, embed, "voice_channel_change")
@@ -502,7 +506,7 @@ class Logging(commands.Cog):
         embed = discord.Embed(
             color=self.bot.color,
             title="Message Edited",
-            timestamp=datetime.datetime.utcnow(),
+            timestamp=utcnow(),
         )
         embed.add_field(name="Before", value=f"**Content:** {before_content}")
         embed.add_field(name="After", value=f"**Content:** {after_content}")
@@ -520,6 +524,7 @@ class Logging(commands.Cog):
             color=self.bot.color,
             title="Bulk messages deleted",
             description=f"Message Ids: \n{ids}",
+            timestamp=utcnow(),
         )
         await self.send_webhook(payload.guild_id, embed, "message_delete")
 
@@ -538,7 +543,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Message Deleted",
                 description=f"**Content:** {content}",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=utcnow(),
             )
             embed.set_author(
                 name=str(message.author),
@@ -551,7 +556,7 @@ class Logging(commands.Cog):
                 color=self.bot.color,
                 title="Message Deleted",
                 description=f"The message is too old I can't find the content",
-                timestamp=datetime.datetime.utcnow(),
+                timestamp=utcnow(),
             )
             await self.send_webhook(payload.guild_id, embed, "message_delete")
 
