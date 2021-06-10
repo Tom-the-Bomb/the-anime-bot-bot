@@ -115,7 +115,7 @@ class Owner(commands.Cog):
         await ctx.send(f"Blacklisted {user} for {reason}")
     
     def generate_random_filebytes(self, bytes_: int):
-        return BytesIO(os.urandom(bytes_))
+        return os.urandom(bytes_)
 
     @commands.command()
     async def hahafile(self, ctx, files: int = 1):
@@ -124,11 +124,11 @@ class Owner(commands.Cog):
             *[
                 ctx.send(
                     file=discord.File(
-                        b,
+                        BytesIO(b),
                         f"thing{i}.somethingy",
                     )
                 )
-                for i in range(1, files)
+                for i in range(1, files + 1)
             ]
         )
 
