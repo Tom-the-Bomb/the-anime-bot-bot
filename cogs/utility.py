@@ -802,9 +802,9 @@ class Utility(commands.Cog):
         thing = thing.replace(" ", "").replace("^", "**").replace("pi", str(math.pi)).replace("tau", str(math.tau))
         lists = ['"', "'", "()", ".."]
         if any(i in thing for i in lists):
-            return await ctx.send("nope don't even think about it")
+            return await ctx.send(math.nan)
         if "*" in thing and "/" in thing:
-            return await ctx.send("nope don't even think about it")
+            return await ctx.send(math.nan)
         if "**" in thing:
             return await ctx.send("Power not supported")
         try:
