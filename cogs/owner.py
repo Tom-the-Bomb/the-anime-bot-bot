@@ -119,11 +119,12 @@ class Owner(commands.Cog):
 
     @commands.command()
     async def hahafile(self, ctx, files: int = 1):
+        b = await asyncio.to_thread(self.generate_random_filebytes, ctx.guild.filesize_limit - 1000)
         await asyncio.gather(
             *[
                 ctx.send(
                     file=discord.File(
-                        await asyncio.to_thread(self.generate_random_filebytes, ctx.guild.filesize_limit - 1000),
+                        b,
                         f"thing{i}.somethingy",
                     )
                 )
