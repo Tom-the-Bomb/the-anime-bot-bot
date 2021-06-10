@@ -64,7 +64,7 @@ class Others(commands.Cog):
                 description=f"""
 ```prolog
 CPU:
-    CPU Usage: {psutil.cpu_percent()}
+    CPU Usage: {await asyncio.to_thread(psutil.cpu_percent, interval=3)}
 
 Process:
     Threads: {proc.num_threads()}
@@ -89,7 +89,7 @@ System:
 ```
             """,
             )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     @is_in_server()
@@ -111,7 +111,7 @@ System:
       <:rooSellout:739614245343199234> Rich Co-owner: {str(await self.bot.getch(711057339360477184))}
 """,
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def emojioptions(self, ctx: AnimeContext, enabled: bool):
@@ -121,7 +121,7 @@ System:
             enabled,
         )
         self.bot.emojioptions[ctx.author.id] = enabled
-        await ctx.send(
+        await ctx.reply(
             embed=discord.Embed(
                 color=self.bot.color,
                 description=f"you have set emoji auto response to {enabled}",
@@ -132,8 +132,8 @@ System:
     async def votes(self, ctx):
         count = await self.bot.db.fetchval("SELECT count FROM votes WHERE user_id = $1", ctx.author.id)
         if not count:
-            return await ctx.send("you never voted for The Anime Bot before.")
-        await ctx.send(f"You have voted {count} times for The Anime Bot.")
+            return await ctx.reply("you never voted for The Anime Bot before.")
+        await ctx.reply(f"You have voted {count} times for The Anime Bot.")
 
     @votes.command()
     async def lb(self, ctx):
@@ -144,20 +144,20 @@ System:
             description="\n".join(f"{str(await self.bot.getch(i['user_id']))} - {i['count']}" for i in count),
         )
 
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def snipe(self, ctx):
         """
         no this is never happening, people delete message for a reason and you just snipe that just not right.
         """
-        await ctx.send(
+        await ctx.reply(
             "no this is never happening, people delete message for a reason and you just snipe that just not right."
         )
 
     @commands.command()
     async def support(self, ctx):
-        await ctx.send("https://discord.gg/bUpF6d6bP9")
+        await ctx.reply("https://discord.gg/bUpF6d6bP9")
 
     @commands.command(aliases=["randomtoken"])
     async def randombottoken(self, ctx: AnimeContext, user: discord.User = None):
@@ -189,7 +189,7 @@ System:
             title=f"{member.display_name}'s token",
             description=final,
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def emoji(self, ctx: AnimeContext, *, search: str = None):
@@ -198,7 +198,7 @@ System:
         if search != None:
             emojis = finder(search, self.bot.emojis, key=lambda i: i.name, lazy=False)
             if emojis == []:
-                return await ctx.send("no emoji found")
+                return await ctx.reply("no emoji found")
             for i in emojis:
                 if i.animated == True:
                     lists.append(f"{str(i)} `<a:{i.name}:{i.id}>`")
@@ -227,7 +227,7 @@ System:
             text="Thank you so much <3",
             icon_url="https://media.tenor.com/images/c5caf59fd029c206db34cbb14956b8e2/tenor.gif",
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def source(self, ctx: AnimeContext, *, command: str = None):
@@ -236,10 +236,10 @@ System:
             name="source of the bot",
             value=f"oh hi another source rob rob human\nMy sources are on github find it yourself\n[if you really want it](https://github.com/Cryptex-github/the-anime-bot-bot)\n\n[Licensed under GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.txt)",
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
         # branch = 'main'
         # if command is None:
-        #     return await ctx.send(source_url)
+        #     return await ctx.reply(source_url)
 
         # if command == 'help':
         #     src = type(self.bot.help_command)
@@ -248,7 +248,7 @@ System:
         # else:
         #     obj = self.bot.get_command(command.replace('.', ' '))
         #     if obj is None:
-        #         return await ctx.send('Could not find command.')
+        #         return await ctx.reply('Could not find command.')
 
         #     src = obj.callback.__code__
         #     module = obj.callback.__module__
@@ -263,7 +263,7 @@ System:
         #     branch = 'master'
 
         # final_url = f'<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>'
-        # await ctx.send(final_url)
+        # await ctx.reply(final_url)
 
     @commands.command()
     async def charles(self, ctx: AnimeContext, *, text):
@@ -272,7 +272,7 @@ System:
         if res.status != 200:
             raise commands.CommandError(f"charles bin down with status code {res.status}")
         data = await res.json()
-        await ctx.send(f"https://bin.charles-bot.com/{data['key']}")
+        await ctx.reply(f"https://bin.charles-bot.com/{data['key']}")
 
     @commands.command()
     async def type(self, ctx: AnimeContext, seconds: int):
@@ -283,7 +283,7 @@ System:
 
         async with ctx.channel.typing():
             await asyncio.sleep(seconds)
-            await ctx.send(f"typed for {seconds} seconds")
+            await ctx.reply(f"typed for {seconds} seconds")
 
     @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
@@ -308,7 +308,7 @@ System:
             interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
             return await interface.send_to(ctx)
         embed = discord.Embed(color=AnimeColor.lighter_green(), description=f"```json\n{raw}```")
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def invite(self, ctx):
@@ -373,7 +373,7 @@ System:
             lists.append(str(round(final_latency * 1000)))
         lists = " ms \n".join(lists)
         embed = discord.Embed(color=0x00FF6A, description=f"```py\n{lists} ms```")
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def systeminfo(self, ctx):
@@ -409,7 +409,7 @@ System:
             title="Change prefix",
             description=f"Current guild prefixes are: `{', '.join(self.bot.prefixes[ctx.guild.id])}`\n\nTo add a prefix run: {ctx.prefix}prefix add `prefix`\n\nTo remove a prefix run: {ctx.prefix}prefix remove `prefix`",
         )
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @prefix.command(name="remove")
     @commands.guild_only()
@@ -423,7 +423,7 @@ System:
         ovo prefix remove "prefixname "
         """
         if prefix_to_remove not in self.bot.prefixes[ctx.guild.id]:
-            return await ctx.send("This prefix don't exist maybe you made a typo? Case and space Sensitive")
+            return await ctx.reply("This prefix don't exist maybe you made a typo? Case and space Sensitive")
         old_prefixes = await self.bot.db.fetchrow("SELECT * FROM prefix WHERE guild_id=$1", ctx.guild.id)
         old_prefixes = old_prefixes["prefix"]
         new_prefixes = old_prefixes
@@ -439,7 +439,7 @@ System:
             title="Change prefix",
             description=f"Succefully appended new prefix New prefixes are: {', '.join(new_prefixes)}",
         )
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @prefix.command(name="add")
     @commands.guild_only()
@@ -467,7 +467,7 @@ System:
             title="Change prefix",
             description=f"Succefully appended new prefix New prefixes are: {', '.join(new_prefixes)}",
         )
-        return await ctx.send(embed=embed)
+        return await ctx.reply(embed=embed)
 
     @commands.command()
     @commands.cooldown(1, 60, commands.BucketType.user)
@@ -497,7 +497,7 @@ System:
     #   embed.add_field(name="fun <a:milkandmochadance:788470536455585802>", value="`meme`, `scared`", inline=False)
     #   embed.add_field(name="others <a:milkguitar:788469773599113247>", value="`usage`, `ping`, `dm`, `guilds`", inline=False)
     #   embed.set_footer(text=f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms", icon_url=ctx.author.avatar_url)
-    #   await ctx.send(embed=embed)
+    #   await ctx.reply(embed=embed)
 
     # @staticmethod
     # @asyncexe()
@@ -517,7 +517,7 @@ System:
     @commands.command()
     @commands.max_concurrency(1, commands.BucketType.user)
     async def commits(self, ctx):
-        await ctx.send("Getting commits")
+        await ctx.reply("Getting commits")
         async with self.bot.session.get(
             "https://api.github.com/repos/Cryptex-github/the-anime-bot-bot/commits",
             headers={"Authorization": "token " + gittoken},
@@ -607,7 +607,7 @@ System:
             text=f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms",
             icon_url=ctx.author.avatar_url,
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
 
     @commands.command()
     async def uptime(self, ctx):
@@ -622,7 +622,7 @@ System:
     @commands.command()
     async def countdown(self, ctx: AnimeContext, count_to: int):
         if str(ctx.channel.id) in self.countdownused:
-            await ctx.send("this channel already have a countdown started")
+            await ctx.reply("this channel already have a countdown started")
             return
         else:
             self.countdownused.append(str(ctx.channel.id))
