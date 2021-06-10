@@ -11,6 +11,7 @@ utcnow = datetime.utcnow
 class Logging(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.bot.logging_name = "Bobo Logging"
         self.ratelimiter = ratelimiter.RateLimiter(max_calls=5, period=20)
         self.events = [
             "channel_create",
@@ -86,14 +87,14 @@ class Logging(commands.Cog):
             webhook = None
             webhooks = await channel.webhooks()
             for i in webhooks:
-                if i.name == "The Anime Bot logging":
+                if i.user.id == self.bot.user.id:
                     webhook = i
                     break
             if not webhook:
                 webhook = await channel.create_webhook(
-                    name="The Anime Bot logging",
+                    name=self.bot.logging_name,
                     avatar=await self.bot.user.avatar_url_as(format="png").read(),
-                    reason="The Anime Bot logging",
+                    reason=self.bot.logging_name,
                 )
         except discord.HTTPException:
             if await channel.webhooks():
@@ -175,7 +176,7 @@ class Logging(commands.Cog):
             try:
                 message = await webhook.send(
                     embed=embed,
-                    username="The Anime Bot logging",
+                    username=self.bot.logging_name,
                     avatar_url=str(self.bot.user.avatar_url_as(format="png")),
                 )
             except discord.NotFound:
@@ -183,13 +184,13 @@ class Logging(commands.Cog):
                 webhooks = await channel.webhooks()
                 if not webhooks:
                     webhook = await channel.create_webhook(
-                        name="The Anime Bot logging",
+                        name=self.bot.logging_name,
                         avatar=await self.bot.user.avatar_url_as(format="png").read(),
-                        reason="The Anime Bot logging",
+                        reason=self.bot.logging_name,
                     )
                     message = await webhook.send(
                         embed=embed,
-                        username="The Anime Bot logging",
+                        username=self.bot.logging_name,
                         avatar_url=str(self.bot.user.avatar_url_as(format="png")),
                     )
                     await self.bot.db.execute(
@@ -200,7 +201,7 @@ class Logging(commands.Cog):
                 webhook = random.choice(webhooks)
                 message = await webhook.send(
                     embed=embed,
-                    username="The Anime Bot logging",
+                    username=self.bot.logging_name,
                     avatar_url=str(self.bot.user.avatar_url_as(format="png")),
                 )
 
@@ -249,8 +250,8 @@ class Logging(commands.Cog):
         embed = discord.Embed(
             color=self.bot.color,
             title="Role Created",
-            description=f"**Role name:** {role.name}\n**Color:** {str(channel.color)}",
-            timestamp=channel.created_at,
+            description=f"**Role name:** {role.name}\n**Color:** {str(role.color)}",
+            timestamp=role.created_at,
         )
         embed.set_footer(text=f"Role ID: {role.id}")
         await self.send_webhook(role.guild.id, embed, "role_delete")
@@ -296,10 +297,10 @@ class Logging(commands.Cog):
         embed = discord.Embed(
             color=self.bot.color,
             title="Role Deleted",
-            description=f"**Role name:** {role.name}\n**Color:** {str(channel.color)}",
-            timestamp=channel.created_at,
+            description=f"**Role name:** {role.name}\n**Color:** {str(role.color)}",
+            timestamp=role.created_at,
         )
-        embed.set_footer(text=f"Channel ID: {channel.id}")
+        embed.set_footer(text=f"Channel ID: {role.id}")
         await self.send_webhook(role.guild.id, embed, "role_delete")
 
     @commands.Cog.listener()
