@@ -50,7 +50,7 @@ class Logging(commands.Cog):
             return await ctx.send("Please create a role named: `Muted` case sensitive, and make sure to drag it above the member's role.")
         for c in ctx.guild.channels:
             o = c.overwrites
-            o[r] = discord.PermissionOverwrite(send_messages=False, connect=False)
+            o[r] = discord.PermissionOverwrite(send_messages=False, connect=False, add_reactions=False)
             await c.edit(overwrites=o, reason="Muted role")
         await ctx.send("Done.")
 
