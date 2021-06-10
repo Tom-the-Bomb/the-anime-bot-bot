@@ -431,7 +431,6 @@ class Logging(commands.Cog):
             description=f"Invite ID: {invite.id}\nInvite URL: {invite.url}",
             timestamp=datetime.datetime.utcnow(),
         )
-        embed.set_footer(text=f"User ID: {invite.inviter.id}")
         await self.send_webhook(invite.guild.id, embed, "invite_change")
 
     @commands.Cog.listener()
