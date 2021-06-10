@@ -126,6 +126,43 @@ class Moderations(commands.Cog):
                     pass
     
     @commands.command()
+    @commands.has_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True, manage_channels=True)
+    async def mutesetup(self, ctx):
+        r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
+        if not r:
+            return await ctx.send("Please create a role named: `Muted` case sensitive, and make sure to drag it above the member's role.")
+        for c in ctx.guild.channels:
+            o = c.overwrites
+            o[r] = discord.PermissionOverwrite(send_messages=False, connect=False, add_reactions=False)
+            await c.edit(overwrites=o, reason="Muted role")
+        await ctx.send("Done.")
+
+    @commands.command()
+    @commands.has_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
+    async def mute(self, ctx, member: discord.Member):
+        if member.top_role >= ctx.author.top_role:
+            return await ctx.send(f"{member.mention} have a higher role then you, you can not do that.")
+        r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
+        if not r:
+            return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
+        await member.add_roles(r, reason=f"Muted by: {ctx.author}({ctx.author.id})")
+        await ctx.reply(f"Muted {member.mention}")
+    
+    @commands.command()
+    @commands.has_permissions(manage_roles=True)
+    @commands.bot_has_permissions(manage_roles=True)
+    async def unmute(self, ctx, member: discord.Member):
+        if member.top_role >= ctx.author.top_role:
+            return await ctx.send(f"{member.mention} have a higher role then you, you can not do that.")
+        r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
+        if not r:
+            return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
+        await member.remove_roles(r, reason=f"Unmuted by: {ctx.author}({ctx.author.id})")
+        await ctx.reply(f"Unmuted {member.mention}")
+    
+    @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(view_audit_log=True)
     async def recentbans(self, ctx, limit: int=100):
@@ -171,6 +208,8 @@ class Moderations(commands.Cog):
     async def warn(self, ctx: AnimeContext, user: discord.Member, *, reason):
         if user.id == 590323594744168494:
             return await ctx.send("nope")
+        if user.top_role >= ctx.author.top_role:
+            return await ctx.send(f"{user.mention} have a higher role then you, you can not do that.")
         embed = discord.Embed(color=self.bot.color)
         embed.add_field(name=f"`{user}` have been warned", value=f"with reason: `{reason}`")
         await ctx.send(embed=embed)

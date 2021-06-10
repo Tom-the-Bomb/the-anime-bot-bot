@@ -40,39 +40,6 @@ class Logging(commands.Cog):
         if logs:
             for i in logs:
                 self.bot.logging_cache[i["guild_id"]] = dict(i.items())
-    
-    @commands.command()
-    @commands.has_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True, manage_channels=True)
-    async def mutesetup(self, ctx):
-        r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
-        if not r:
-            return await ctx.send("Please create a role named: `Muted` case sensitive, and make sure to drag it above the member's role.")
-        for c in ctx.guild.channels:
-            o = c.overwrites
-            o[r] = discord.PermissionOverwrite(send_messages=False, connect=False, add_reactions=False)
-            await c.edit(overwrites=o, reason="Muted role")
-        await ctx.send("Done.")
-
-    @commands.command()
-    @commands.has_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
-    async def mute(self, ctx, member: discord.Member):
-        r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
-        if not r:
-            return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
-        await member.add_roles(r, reason=f"Muted by: {ctx.author}({ctx.author.id})")
-        await ctx.reply(f"Muted {member.mention}")
-    
-    @commands.command()
-    @commands.has_permissions(manage_roles=True)
-    @commands.bot_has_permissions(manage_roles=True)
-    async def unmute(self, ctx, member: discord.Member):
-        r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
-        if not r:
-            return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
-        await member.remove_roles(r, reason=f"Unmuted by: {ctx.author}({ctx.author.id})")
-        await ctx.reply(f"Unmuted {member.mention}")
 
     @commands.group(invoke_without_command=True)
     @commands.has_permissions(manage_guild=True)
