@@ -114,7 +114,7 @@ class Owner(commands.Cog):
         )
         await ctx.send(f"Blacklisted {user} for {reason}")
     
-    def generate_random_filebytes(bytes_: int):
+    def generate_random_filebytes(self, bytes_: int):
         return BytesIO(os.urandom(bytes_))
 
     @commands.command()
