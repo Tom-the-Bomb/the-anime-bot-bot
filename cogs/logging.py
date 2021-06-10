@@ -45,7 +45,7 @@ class Logging(commands.Cog):
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     async def mutesetup(self, ctx):
-        r = discord.utils.find(lambda x: x.name == "Muted", guild.roles)
+        r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
         if not r:
             return await ctx.send("Please create a role named: `Muted` case sensitive, and make sure to drag it above the member's role.")
         for c in ctx.guild.channels:
