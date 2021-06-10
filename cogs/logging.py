@@ -71,7 +71,7 @@ class Logging(commands.Cog):
         r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
         if not r:
             return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
-        await member.add_roles(r, reason=f"Unmuted by: {ctx.author}({ctx.author.id})")
+        await member.remove_roles(r, reason=f"Unmuted by: {ctx.author}({ctx.author.id})")
         await ctx.reply(f"Unmuted {member.mention}")
 
     @commands.group(invoke_without_command=True)
