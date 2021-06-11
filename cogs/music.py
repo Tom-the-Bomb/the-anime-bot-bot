@@ -324,7 +324,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         else:
             return await ctx.send("you are not connected to any voice channel")
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
-        await player.connect(channel.id)
+        await channel.connect()
         if isinstance(channel, discord.StageChannel):
             await ctx.me.request_to_speak()
         await ctx.send(f"Connected to {channel.name}")
