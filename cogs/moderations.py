@@ -278,7 +278,7 @@ class Moderations(commands.Cog):
                 and ctx.author.top_role < member.top_role
             ):
                 return await ctx.reply(f"Your role is lower then {member}")
-            await member.ban(reason=f"Banned by {ctx.author}({ctx.author.id}) Reason: {reason}", delete_message_days=7)
+            await ctx.guild.ban(member, reason=f"Banned by {ctx.author}({ctx.author.id}) Reason: {reason}", delete_message_days=7)
         await ctx.reply(f"Banned {', '.join((i.mention for i in members))}")
 
     @commands.command()
