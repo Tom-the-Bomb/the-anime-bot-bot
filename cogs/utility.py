@@ -949,8 +949,8 @@ class Utility(commands.Cog):
         bytes_int = base64.standard_b64decode(TOKEN[1] + "==")
         unix = int.from_bytes(bytes_int, "big")
         timestamp = datetime.utcfromtimestamp(unix + 1293840000)
-        name = await self.bot.get_user(id_)
-        await ctx.reply(f"Bot: {name}\nToken created at: {timestamp}")
+        name = await self.bot.getch(id_)
+        await ctx.reply(f"User: {name}\nToken created at: {timestamp}")
 
     # @commands.command()
     # async def wordcloud(self, ctx):
