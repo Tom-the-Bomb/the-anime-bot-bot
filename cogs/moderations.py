@@ -282,7 +282,7 @@ class Moderations(commands.Cog):
         for member in members:
             member = discord.Object(id=member)
             await ctx.guild.unban(member, reason=f"{ctx.author} ({ctx.author.id}) unbanned")
-            await ctx.send(f"Unbanned {', '.join(members)}")
+        await ctx.send(f"Unbanned {', '.join(members)}")
 
     @commands.command()
     @commands.guild_only()
