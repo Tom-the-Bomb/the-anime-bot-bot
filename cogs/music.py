@@ -59,11 +59,16 @@ class Player(wavelink.Player):
             description=f"Now playing: **{track.title}**\nVolume: {self.volume}",
         )
         try:
-            duration = humanize.precisedelta(datetime.timedelta(milliseconds=track.length))
+            hours, remainder = divmod(track.length / 1000, 3600)
+            minutes, seconds = divmod(remainder, 60)
+
+            duration = "%02d:%02d:%02d" % (hours, minutes, seconds)
         except:
             duration = "Duration too long"
         try:
-            position = humanize.precisedelta(datetime.timedelta(milliseconds=self.position))
+            hours, remainder = divmod(self.position / 1000, 3600)
+            minutes, seconds = divmod(remainder, 60)
+            position = "%02d:%02d:%02d" % (hours, minutes, seconds)
         except:
             position = "Position too long"
         try:
@@ -78,13 +83,10 @@ class Player(wavelink.Player):
         if track.is_stream:
             embed.add_field(name="Duration", value="Live Stream")
         else:
-            try:
-                embed.add_field(
-                    name="Duration",
-                    value=humanize.precisedelta(datetime.timedelta(milliseconds=track.length)),
-                )
-            except:
-                embed.add_field(name="Duration", value="Duration too long to display.")
+            embed.add_field(
+                name="Duration",
+                value=duration
+            )
         embed.add_field(name="URL", value=track.uri) if track.uri else "None"
         embed.add_field(name="Author", value=track.author) if track.author else ...
         footer = f"Youtube ID: {track.ytid or 'None'} Identifier: {track.identifier or 'None'}"
@@ -139,16 +141,14 @@ class Player(wavelink.Player):
             if self.loop:
                 self.queue_position = 0
                 song = self.queue[self.queue_position]
-            else:
-                if not self.is_playing:
-                    return await self.destroy()
+            elif not self.is_playing:
+                return await self.destroy()
 
         if song is None:
             return await self.destroy()
         self.queue_position += 1
         self.now_playing = song
         await self.play(song)
-        await self.ctx.send(embed=self.make_embed(song), delete_after=10)
 
 
 class Music(commands.Cog, wavelink.WavelinkMixin):
