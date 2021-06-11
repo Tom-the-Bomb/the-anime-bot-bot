@@ -142,6 +142,8 @@ class Moderations(commands.Cog):
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     async def mute(self, ctx, members: commands.Greedy[discord.Member]):
+        if not members:
+            return await ctx.send("User not found.")
         for member in members:
             if member.top_role >= ctx.author.top_role:
                 return await ctx.send(f"{member.mention} have a higher role then you, you can not do that.")
@@ -155,6 +157,8 @@ class Moderations(commands.Cog):
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
     async def unmute(self, ctx, members: commands.Greedy[discord.Member]):
+        if not members:
+            return await ctx.send("User not found.")
         for member in members:
             if member.top_role >= ctx.author.top_role:
                 return await ctx.send(f"{member.mention} have a higher role then you, you can not do that.")
@@ -233,6 +237,8 @@ class Moderations(commands.Cog):
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
     async def kick(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason="None"):
+        if not members:
+            return await ctx.send("User not found.")
         for member in members:
             if member.id == 590323594744168494:
                 return await ctx.reply("hmm nope not gonna do that")
@@ -247,6 +253,8 @@ class Moderations(commands.Cog):
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
     async def softban(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason="None"):
+        if not members:
+            return await ctx.send("User not found.")
         for member in members:
             if member.id == 590323594744168494:
                 return await ctx.reply("hmm nope not gonna do that")
@@ -261,7 +269,9 @@ class Moderations(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def ban(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason="None"):
+    async def ban(self, ctx: AnimeContext, members: commands.Greedy[discord.Member, discord.User], *, reason="None"):
+        if not members:
+            return await ctx.send("User not found.")
         for member in members:
             if member.id == 590323594744168494:
                 return await ctx.reply("hmm nope not gonna do that")
@@ -279,6 +289,8 @@ class Moderations(commands.Cog):
         """
         Useful when you have a bunch of user ids to unban
         """
+        if not members:
+            return await ctx.send("User not found.")
         for member in members:
             member = discord.Object(id=member)
             await ctx.guild.unban(member, reason=f"{ctx.author} ({ctx.author.id}) unbanned")
