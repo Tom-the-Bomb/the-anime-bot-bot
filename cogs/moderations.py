@@ -288,7 +288,7 @@ class Moderations(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def unban(self, ctx: AnimeContext, *, members: BannedMember):
+    async def unban(self, ctx: AnimeContext, *, member: BannedMember):
         member = discord.Object(id=member)
         await ctx.guild.unban(member, reason=f"{ctx.author} ({ctx.author.id}) unbanned")
         await ctx.send(f"Unbanned {member.id}")
