@@ -324,9 +324,13 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         else:
             return await ctx.send("you are not connected to any voice channel")
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
-        await channel.connect()
+        await player.connect(channel.id)
         if isinstance(channel, discord.StageChannel):
-            await ctx.me.request_to_speak()
+            payload = {
+            'channel_id': channel.id,
+            'request_to_speak_timestamp': datetime.datetime.utcnow().isoformat(),
+            }
+            await self.bot.http.edit_my_voice_state(ctx.guild.id, payload)
         await ctx.send(f"Connected to {channel.name}")
 
     @commands.command()
