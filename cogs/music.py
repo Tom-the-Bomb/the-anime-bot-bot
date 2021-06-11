@@ -326,11 +326,18 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         await player.connect(channel.id)
         if isinstance(channel, discord.StageChannel):
-            payload = {
-            'channel_id': channel.id,
-            'request_to_speak_timestamp': datetime.datetime.utcnow().isoformat(),
-            }
-            await self.bot.http.edit_my_voice_state(ctx.guild.id, payload)
+            try:
+                payload = {
+                    "channel_id": channel.id,
+                    "suppress": False
+                }
+                await self.bot.http.edit_my_voice_state(ctx.guild.id, payload)
+            except:
+                payload = {
+                    'channel_id': channel.id,
+                    'request_to_speak_timestamp': datetime.datetime.utcnow().isoformat(),
+                    }
+                await self.bot.http.edit_my_voice_state(ctx.guild.id, payload)
         await ctx.send(f"Connected to {channel.name}")
 
     @commands.command()
