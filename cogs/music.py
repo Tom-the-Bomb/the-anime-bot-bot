@@ -317,13 +317,12 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
     @commands.command()
     async def join(self, ctx: AnimeContext, vc: discord.VoiceChannel = None):
-        if not vc:
-            if ctx.author.voice:
-                channel = ctx.author.voice.channel
-            else:
-                return await ctx.send("you are not connected to any voice channel")
-        else:
+        if vc:
             channel = vc
+        elif ctx.author.voice:
+            channel = ctx.author.voice.channel
+        else:
+            return await ctx.send("you are not connected to any voice channel")
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         await player.connect(channel.id)
         if isinstance(vc, discord.StageChannel):
