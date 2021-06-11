@@ -275,8 +275,20 @@ class Moderations(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def unban(self, ctx: AnimeContext, *, member: BannedMember):
-        await ctx.trigger_typing()
+    async def rawunban(self, ctx: AnimeContext, members: commands.Greedy[int]):
+        """
+        Useful when you have a bunch of user ids to unban
+        """
+        for member in members:
+            member = discord.Object(id=member)
+            await ctx.guild.unban(member, reason=f"{ctx.author} ({ctx.author.id}) unbanned")
+            await ctx.send(f"Unbanned {', '.join(members)}")
+
+    @commands.command()
+    @commands.guild_only()
+    @commands.has_permissions(ban_members=True)
+    @commands.bot_has_permissions(ban_members=True)
+    async def unban(self, ctx: AnimeContext, *, members: BannedMember):
         member = discord.Object(id=member)
         await ctx.guild.unban(member, reason=f"{ctx.author} ({ctx.author.id}) unbanned")
         await ctx.send(f"Unbanned {member.id}")
