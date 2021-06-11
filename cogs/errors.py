@@ -175,7 +175,7 @@ class Error(commands.Cog):
                 color=self.bot.color,
                 description=d
             )
-            embed.add_field(name="message", value=error["message"], inline=False)
+            embed.add_field(name="message", value=await ctx.paste(error["message"]) if len(error["message"]) > 1000 else error["message"], inline=False)
             embed.add_field(
                 name="created_at",
                 value=humanize.naturaldelta(error["created_at"] - datetime.timedelta(hours=8)),
