@@ -141,26 +141,28 @@ class Moderations(commands.Cog):
     @commands.command()
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
-    async def mute(self, ctx, member: discord.Member):
-        if member.top_role >= ctx.author.top_role:
-            return await ctx.send(f"{member.mention} have a higher role then you, you can not do that.")
-        r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
-        if not r:
-            return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
-        await member.add_roles(r, reason=f"Muted by: {ctx.author}({ctx.author.id})")
-        await ctx.reply(f"Muted {member.mention}")
+    async def mute(self, ctx, members: commands.Greedy[discord.Member]):
+        for member in members:
+            if member.top_role >= ctx.author.top_role:
+                return await ctx.send(f"{member.mention} have a higher role then you, you can not do that.")
+            r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
+            if not r:
+                return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
+            await member.add_roles(r, reason=f"Muted by: {ctx.author}({ctx.author.id})")
+        await ctx.reply(f"Muted {', '.join((i.mention for i in members))}")
     
     @commands.command()
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
-    async def unmute(self, ctx, member: discord.Member):
-        if member.top_role >= ctx.author.top_role:
-            return await ctx.send(f"{member.mention} have a higher role then you, you can not do that.")
-        r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
-        if not r:
-            return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
-        await member.remove_roles(r, reason=f"Unmuted by: {ctx.author}({ctx.author.id})")
-        await ctx.reply(f"Unmuted {member.mention}")
+    async def unmute(self, ctx, members: commands.Greedy[discord.Member]):
+        for member in members:
+            if member.top_role >= ctx.author.top_role:
+                return await ctx.send(f"{member.mention} have a higher role then you, you can not do that.")
+            r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
+            if not r:
+                return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
+            await member.remove_roles(r, reason=f"Unmuted by: {ctx.author}({ctx.author.id})")
+        await ctx.reply(f"Unmuted {', '.join((i.mention for i in members))}")
     
     @commands.command()
     @commands.guild_only()
@@ -230,27 +232,29 @@ class Moderations(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
-    async def kick(self, ctx: AnimeContext, member: discord.Member, *, reason=None):
-        if member.id == 590323594744168494:
-            return await ctx.reply("hmm nope not gonna do that")
-        if ctx.author.top_role < member.top_role:
-            return await ctx.reply(f"Your role is lower then {member}")
-        await ctx.trigger_typing()
-        await member.kick(reason=reason)
-        await ctx.reply(f"Kicked {member}")
+    async def kick(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason=None):
+        for member in members:
+            if member.id == 590323594744168494:
+                return await ctx.reply("hmm nope not gonna do that")
+            if ctx.author.top_role < member.top_role:
+                return await ctx.reply(f"Your role is lower then {member}")
+            await ctx.trigger_typing()
+            await member.kick(reason=reason)
+        await ctx.reply(f"Kicked {', '.join((i.mention for i in members))}")
 
     @commands.command()
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def ban(self, ctx: AnimeContext, member: discord.Member, *, reason=None):
-        if member.id == 590323594744168494:
-            return await ctx.reply("hmm nope not gonna do that")
-        if ctx.author.top_role < member.top_role:
-            return await ctx.reply(f"Your role is lower then {member}")
-        await ctx.trigger_typing()
-        await member.ban(reason=reason)
-        await ctx.reply(f"Banned {member}")
+    async def ban(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason=None):
+        for member in members:
+            if member.id == 590323594744168494:
+                return await ctx.reply("hmm nope not gonna do that")
+            if ctx.author.top_role < member.top_role:
+                return await ctx.reply(f"Your role is lower then {member}")
+            await ctx.trigger_typing()
+            await member.ban(reason=reason)
+        await ctx.reply(f"Banned {', '.join((i.mention for i in members))}")
 
     @commands.command()
     @commands.guild_only()
