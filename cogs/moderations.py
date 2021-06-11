@@ -232,28 +232,28 @@ class Moderations(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
-    async def kick(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason=None):
+    async def kick(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason="None"):
         for member in members:
             if member.id == 590323594744168494:
                 return await ctx.reply("hmm nope not gonna do that")
             if ctx.author.top_role < member.top_role:
                 return await ctx.reply(f"Your role is lower then {member}")
             await ctx.trigger_typing()
-            await member.kick(reason=reason)
+            await member.kick(reason=f"Kicked by {ctx.author}({ctx.author.id}) Reason: {reason}")
         await ctx.reply(f"Kicked {', '.join((i.mention for i in members))}")
 
     @commands.command()
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def ban(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason=None):
+    async def ban(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason="None"):
         for member in members:
             if member.id == 590323594744168494:
                 return await ctx.reply("hmm nope not gonna do that")
             if ctx.author.top_role < member.top_role:
                 return await ctx.reply(f"Your role is lower then {member}")
             await ctx.trigger_typing()
-            await member.ban(reason=reason, delete_message_days=7)
+            await member.ban(reason=f"Banned by {ctx.author}({ctx.author.id}) Reason: {reason}", delete_message_days=7)
         await ctx.reply(f"Banned {', '.join((i.mention for i in members))}")
 
     @commands.command()
