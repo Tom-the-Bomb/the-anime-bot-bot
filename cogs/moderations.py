@@ -253,7 +253,7 @@ class Moderations(commands.Cog):
             if ctx.author.top_role < member.top_role:
                 return await ctx.reply(f"Your role is lower then {member}")
             await ctx.trigger_typing()
-            await member.ban(reason=reason)
+            await member.ban(reason=reason, delete_message_days=7)
         await ctx.reply(f"Banned {', '.join((i.mention for i in members))}")
 
     @commands.command()
