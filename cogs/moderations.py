@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands, menus
+from typing import Union
 from utils.subclasses import AnimeContext
 from utils.fuzzy import finder
 
@@ -269,7 +270,7 @@ class Moderations(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def ban(self, ctx: AnimeContext, members: commands.Greedy[discord.Member, discord.User], *, reason="None"):
+    async def ban(self, ctx: AnimeContext, members: commands.Greedy[Union[discord.Member, discord.User]], *, reason="None"):
         if not members:
             return await ctx.send("User not found.")
         for member in members:
