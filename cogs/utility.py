@@ -1129,7 +1129,7 @@ class Utility(commands.Cog):
             embed.set_thumbnail(url=member1.avatar_url_as(static_format="png"))
             embed.add_field(
                 name="User",
-                value=f"**Bot:** {bot}\n**Account Created at:** {created_at}\n**Nickname:** {nickname}\n**UserId:** {id}\n**Joined Server at:** {joined_at}\n**Boosted Server since since:** {premium_since}\n**Discord Staff:** {staff}\n**Discord Partner:** {partner}\n**Hypesquad:** {hypesquad}\n**Bug Hunter:** {bug_hunter}\n**Early Supporter:** {early_supporter}\n**Verified Bot:** {verified_bot}\n**Early Verified Bot Developer:** {verified_bot_developer}\n**Avatar Animated:** {avatar_animated}\n**Top Role:** {toprole}",
+                value=f"**Bot:** {bot}\n**Account Created at:** {created_at}\n**Nickname:** {nickname}\n**UserId:** {id}\n**Joined Server at:** {joined_at}\n**Boosted Server since:** {premium_since}\n**Discord Staff:** {staff}\n**Discord Partner:** {partner}\n**Hypesquad:** {hypesquad}\n**Bug Hunter:** {bug_hunter}\n**Early Supporter:** {early_supporter}\n**Verified Bot:** {verified_bot}\n**Early Verified Bot Developer:** {verified_bot_developer}\n**Avatar Animated:** {avatar_animated}\n**Top Role:** {toprole}",
             )
         else:
             embed = discord.Embed(color=self.bot.color)
