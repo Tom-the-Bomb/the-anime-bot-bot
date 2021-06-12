@@ -36,8 +36,6 @@ import re
 
 from discord.ext import commands
 
-from utils.HelpPaginator import CannotPaginate, HelpPaginator
-
 token = re.compile(r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-zA-Z0-9_\-]{84})")
 
 
