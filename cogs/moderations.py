@@ -125,6 +125,27 @@ class Moderations(commands.Cog):
                     )
                 except:
                     pass
+    
+    @commands.command()
+    @commands.has_permissions(manage_channels=True)
+    @commands.bot_has_permissions(manage_channels=True)
+    async def nuke(self, ctx, reason: str = None):
+        c = await ctx.channel.clone(reason=f"Channel nuked by {ctx.author}({ctx.author.id}) Reason: {reason}")
+        await ctx.channel.delete(reason=f"Channel nuked by {ctx.author}({ctx.author.id}) Reason: {reason}")
+        await c.send(f"Channel nuked by {ctx.author}({ctx.author.id}) Reason: {reason}")
+
+
+    
+    @commands.command()
+    @commands.has_permissions(manage_channels=True)
+    @commands.bot_has_permissions(manage_channels=True)
+    async def slowmode(self, ctx, seconds:int = 0):
+        if seconds > 21600:
+            return await ctx.send("Seconds could not be greater then 21600")
+        elif seconds < 0:
+            return await ctx.send("Seconds could not be less then 0")
+        await ctx.channel.edit(slowmode_delay=seconds)
+
 
     @commands.command()
     @commands.has_permissions(manage_roles=True)
