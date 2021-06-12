@@ -129,7 +129,7 @@ class AnimeContext(commands.Context):
         else:
             message = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
             self.bot._message_cache[self.message.id] = message.id
-            self.bot.to_delete_message_cache[self.message.id] = [message.id]
+            self.bot.to_delete_message_cache[self.message.id] = discord.utils.SnowflakeList((message.id, ))
             return message
 
     async def reply(self, content=None, *, codeblock=False, lang="py", **kwargs):

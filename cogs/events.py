@@ -387,8 +387,8 @@ class Events(commands.Cog):
             return
         if payload.guild_id:
             try:
-                await self.bot.get_channel(payload.channel_id).delete_messages(
-                    self.bot.to_delete_message_cache.get(payload.message_id)
+                await self.bot.http.delete_messages(
+                    payload.channel_id, self.bot.to_delete_message_cache.get(payload.message_id)
                 )
             except (discord.Forbidden, discord.NotFound):
                 for i in self.bot.to_delete_message_cache.get(payload.message_id):
