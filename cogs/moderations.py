@@ -57,7 +57,7 @@ class Moderations(commands.Cog):
     # @commands.command()
     # @commands.has_permissions(manage_messages=True)
     # @commands.bot_has_permissions(manage_roles=True)
-    # async def unmute(self, ctx: AnimeContext, user: discord.Member, *, reason="None"):# noqa: E501
+    # async def unmute(self, ctx: AnimeContext, user: discord.Member, *, reason=None):# noqa: E501
     #   if finder("Muted", user.roles, key=lambda t: t.name, lazy=False)[:3] == []:# noqa: E501
     #     return await ctx.send("user not muted")
     #   role = finder("Muted", user.roles, key=lambda t: t.name, lazy=False)[0]
@@ -68,7 +68,7 @@ class Moderations(commands.Cog):
     # @commands.command()
     # @commands.has_permissions(manage_messages=True)
     # @commands.bot_has_permissions(manage_roles=True)
-    # async def mute(self, ctx: AnimeContext, user: discord.Member, *, reason="None"):# noqa: E501
+    # async def mute(self, ctx: AnimeContext, user: discord.Member, *, reason=None):# noqa: E501
     #   permissions=discord.Permissions.text()
     #   permissions.send_messages=False
     #   if finder("Muted", user.roles, key=lambda t: t.name, lazy=False)[:3] != []:# noqa: E501
@@ -265,7 +265,7 @@ class Moderations(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(kick_members=True)
     @commands.bot_has_permissions(kick_members=True)
-    async def kick(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason="None"):
+    async def kick(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason=None):
         if not members:
             return await ctx.send("User not found.")
         for member in members:
@@ -280,7 +280,7 @@ class Moderations(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def softban(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason="None"):
+    async def softban(self, ctx: AnimeContext, members: commands.Greedy[discord.Member], *, reason=None):
         if not members:
             return await ctx.send("User not found.")
         for member in members:
@@ -299,7 +299,7 @@ class Moderations(commands.Cog):
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
     async def ban(
-        self, ctx: AnimeContext, members: commands.Greedy[Union[discord.Member, discord.User]], *, reason="None"
+        self, ctx: AnimeContext, members: commands.Greedy[Union[discord.Member, discord.User]], *, reason=None
     ):
         if not members:
             return await ctx.send("User not found.")
