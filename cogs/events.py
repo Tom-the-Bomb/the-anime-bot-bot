@@ -1,4 +1,5 @@
 from utils.asyncstuff import asyncexe
+from contextlib import suppress
 import wavelink
 import config
 import ratelimiter
@@ -49,26 +50,28 @@ class Events(commands.Cog):
         self.ratelimiter = ratelimiter.RateLimiter(max_calls=1, period=3)
 
         self.bot.send = 0
-        self.send_files.start()
-        self.clean_up.start()
-        self.gists.start()
-        self.status.start(bot)
-        self.graph.start()
-        self.post.start(bot)
-        self.update.start(bot)
-        self.post.start()
+        with suppress(RuntimeError):
+            self.send_files.start()
+            self.clean_up.start()
+            self.gists.start()
+            self.status.start(bot)
+            self.graph.start()
+            self.post.start(bot)
+            self.update.start(bot)
+            self.post.start()
         self.errors_list = []
         self.bot.counter = 0
 
     def cog_unload(self):
-        self.send_files.cancel()
-        self.clean_up.cancel()
-        self.gists.cancel()
-        self.status.cancel()
-        self.graph.cancel()
-        self.post.cancel()
-        self.update.cancel()
-        self.post.cancel()
+        with suppress(RuntimeError):
+            self.send_files.cancel()
+            self.clean_up.cancel()
+            self.gists.cancel()
+            self.status.cancel()
+            self.graph.cancel()
+            self.post.cancel()
+            self.update.cancel()
+            self.post.cancel()
     
     @staticmethod
     def files_zip():
