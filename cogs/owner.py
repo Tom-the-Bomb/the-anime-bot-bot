@@ -402,7 +402,7 @@ class Owner(commands.Cog, command_attrs={"hidden": True}):
     @commands.command()
     # @commands.is_owner()
     async def say(self, ctx: AnimeContext, *, text: str):
-        if ctx.channel.nsfw == False:
+        if not ctx.channel.nsfw:
             lists = [
                 "dick",
                 "pussy",

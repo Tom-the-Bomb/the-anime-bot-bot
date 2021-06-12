@@ -496,19 +496,19 @@ class Events(commands.Cog):
         if (
             message.content.startswith(";;")
             and not message.author.bot
-            and self.bot.emojioptions.get(message.author.id) == True
+            and self.bot.emojioptions.get(message.author.id)
         ):
             lists = []
             msg = message.content.replace(" ", "")
             emojis = msg.split(";;")
             for i in emojis:
-                if i == "":
+                if not i:
                     continue
                 e = finder(i, self.bot.emojis, key=lambda i: i.name, lazy=False)
-                if e == []:
+                if not e:
                     continue
                 e = e[0]
-                if e is None or emojis == []:
+                if not e or not emojis:
                     continue
                 if e.is_usable() != False:
                     lists.append(str(e))

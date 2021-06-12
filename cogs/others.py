@@ -192,10 +192,10 @@ System:
         paginator = WrappedPaginator(max_size=500, prefix="", suffix="")
         if search != None:
             emojis = finder(search, self.bot.emojis, key=lambda i: i.name, lazy=False)
-            if emojis == []:
+            if not emojis:
                 return await ctx.reply("no emoji found")
             for i in emojis:
-                if i.animated == True:
+                if i.animated:
                     lists.append(f"{str(i)} `<a:{i.name}:{i.id}>`")
                 else:
                     lists.append(f"{str(i)} `<:{i.name}:{i.id}>`")
@@ -203,7 +203,7 @@ System:
             interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
             return await interface.send_to(ctx)
         for i in self.bot.emojis:
-            if i.animated == True:
+            if i.animated:
                 lists.append(f"{str(i)} `<a:{i.name}:{i.id}>`")
             else:
                 lists.append(f"{str(i)} `<:{i.name}:{i.id}>`")

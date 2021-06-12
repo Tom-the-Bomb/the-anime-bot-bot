@@ -1,48 +1,48 @@
-import ast
-import asyncio
-import base64
-import collections
-import decimal
-import io
-import json
-import math
-import os
-import random
-import random as rng
-import re
-import typing
-import unicodedata
-import zipfile
-import zlib
-from collections import Counter
-from contextlib import suppress
-from datetime import datetime
-from io import BytesIO
-from itertools import cycle
-from typing import Optional
-from urllib.parse import urlparse
-
-import aiohttp
-import bs4
-import config
-import discord
-import humanize
-import numpy as np
-import ratelimiter
-from bs4 import BeautifulSoup
-from discord.ext import commands, menus
-from fake_useragent import UserAgent
-from PIL import Image, ImageFont
-from pyfiglet import Figlet
-from pytube import YouTube
-from translate import Translator
-from twemoji_parser import emoji_to_url
-from utils import fuzzy
-from utils.asyncstuff import asyncexe
-from utils.format import plural
-from utils.subclasses import AnimeContext
-
 from jishaku.paginators import PaginatorEmbedInterface, PaginatorInterface
+import math
+from utils.format import plural
+from utils.asyncstuff import asyncexe
+from utils import fuzzy
+from twemoji_parser import emoji_to_url
+from pyfiglet import Figlet
+from PIL import Image, ImageFont
+import numpy as np
+import humanize
+import aiohttp
+from typing import Optional
+from pytube import YouTube
+from io import BytesIO
+from datetime import datetime
+from contextlib import suppress
+from collections import Counter
+import zlib
+import unicodedata
+import typing
+import random as rng
+import random
+import json
+import io
+import decimal
+import base64
+import ast
+from translate import Translator
+from utils.subclasses import AnimeContext
+from discord.ext import commands, menus
+from bs4 import BeautifulSoup
+import discord
+import bs4
+import ratelimiter
+from urllib.parse import urlparse
+from itertools import cycle
+import asyncio
+import config
+import os
+import re
+import zipfile
+
+import collections
+
+from fake_useragent import UserAgent
 
 ua = UserAgent()
 
@@ -104,9 +104,8 @@ class GoogleMenuSource(menus.ListPageSource):
 
 
 class Transformer(ast.NodeTransformer):
-    ALLOWED_NAMES = set(["Decimal", "None", "False", "True"])
-    ALLOWED_NODE_TYPES = set(
-        [
+    ALLOWED_NAMES = {"Decimal", "None", "False", "True"}
+    ALLOWED_NODE_TYPES = {
             "Expression",
             "Int",
             "Float",
@@ -130,8 +129,7 @@ class Transformer(ast.NodeTransformer):
             "op",
             "Pow",
             "Mod",
-        ]
-    )
+            }
 
     def visit_Name(self, node):
         if node.id not in self.ALLOWED_NAMES:
@@ -903,7 +901,7 @@ class Utility(commands.Cog):
         # await ctx.send(file=file)
         try:
             partialemoji = await commands.PartialEmojiConverter().convert(ctx, emoji)
-            if partialemoji.is_custom_emoji() == True:
+            if partialemoji.is_custom_emoji():
                 asset = partialemoji.url
                 link = str(asset)
                 embed = discord.Embed(
@@ -1134,7 +1132,7 @@ class Utility(commands.Cog):
         else:
             embed = discord.Embed(color=self.bot.color)
             embed.set_author(name=member1)
-            if member1.bot == True:
+            if member1.bot:
                 bot = "<:greenTick:596576670815879169>"
             else:
                 bot = "<:redTick:596576672149667840>"

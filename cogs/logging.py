@@ -167,7 +167,7 @@ class Logging(commands.Cog):
     async def send_webhook(self, guild_id, embed, event):
         if guild_id not in self.bot.logging_cache.keys():
             return
-        if self.bot.logging_cache[guild_id][event] == False:
+        if not self.bot.logging_cache[guild_id][event]:
             return
         webhook_url = self.bot.logging_cache[guild_id]["webhook"]
         channel_id = self.bot.logging_cache[guild_id]["channel_id"]

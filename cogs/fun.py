@@ -88,7 +88,7 @@ class Fun(commands.Cog):
     async def getmeme(self):
         async with self.bot.session.get("https://meme-api.herokuapp.com/gimme") as resp:
             meme = await resp.json()
-            if meme["nsfw"] == True:
+            if meme["nsfw"]:
                 return True
             link = meme["postLink"]
             title = meme["title"]
@@ -121,7 +121,7 @@ class Fun(commands.Cog):
     async def reddit_(self, text):
         async with self.bot.session.get(f"https://meme-api.herokuapp.com/gimme/{text}") as resp:
             meme = await resp.json()
-            if meme["nsfw"] == True:
+            if meme["nsfw"]:
                 return True
             link = meme["postLink"]
             title = meme["title"]
@@ -344,7 +344,7 @@ class Fun(commands.Cog):
     async def reddit(self, ctx: AnimeContext, *, text):
         await ctx.trigger_typing()
         link, title, nsfw, image = await self.reddit_(text)
-        if nsfw == True:
+        if nsfw:
             return
         embed = discord.Embed(color=self.bot.color)
         embed.set_author(name=title, url=link)
@@ -391,7 +391,7 @@ class Fun(commands.Cog):
 
     @commands.command()
     async def urban(self, ctx: AnimeContext, *, search: str):
-        if ctx.channel.nsfw == False:
+        if not ctx.channel.nsfw:
             lists = [
                 "dick",
                 "pussy",
@@ -621,7 +621,7 @@ class Fun(commands.Cog):
         end = time.perf_counter()
         users = await reaction.users().flatten()
         for i in users:
-            if i.bot == True:
+            if i.bot:
                 users.remove(i)
         lists = []
         for i in users:
@@ -661,7 +661,7 @@ class Fun(commands.Cog):
             users = await reactions.users().flatten()
             print(users)
             for i in users:
-                if i.bot == True:
+                if i.bot:
                     users.remove(i)
             lists = []
             for i in users:
@@ -679,7 +679,7 @@ class Fun(commands.Cog):
     async def meme(self, ctx):
         await ctx.trigger_typing()
         link, title, nsfw, image = await self.getmeme()
-        if nsfw == True:
+        if nsfw:
             return
         embed = discord.Embed(color=self.bot.color)
         embed.set_author(name=title, url=link)

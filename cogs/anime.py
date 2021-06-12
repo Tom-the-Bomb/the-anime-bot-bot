@@ -27,7 +27,7 @@ class Anime(commands.Cog):
         self,
         ctx: AnimeContext,
         *,
-        search: lambda x: urllib.parse.quote_plus(x),
+        search: urllib.parse.quote_plus,
     ):
         async with self.bot.session.get(f"https://crunchy-bot.live/api/anime/details?terms={search}") as resp:
             animes = await resp.json()
