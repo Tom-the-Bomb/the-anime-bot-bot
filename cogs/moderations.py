@@ -130,9 +130,9 @@ class Moderations(commands.Cog):
     @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
     async def nuke(self, ctx, reason: str = None):
-        c = await ctx.channel.clone(reason=f"Channel nuked by {ctx.author}({ctx.author.id}) Reason: {reason}")
-        await ctx.channel.delete(reason=f"Channel nuked by {ctx.author}({ctx.author.id}) Reason: {reason}")
-        await c.send(f"Channel nuked by {ctx.author}({ctx.author.id}) Reason: {reason}")
+        c = await ctx.channel.clone(reason=f"Channel nuked by {ctx.author} ({ctx.author.id}) Reason: {reason}")
+        await ctx.channel.delete(reason=f"Channel nuked by {ctx.author} ({ctx.author.id}) Reason: {reason}")
+        await c.send(f"Channel nuked by {ctx.author} ({ctx.author.id}) Reason: {reason}")
 
 
     
@@ -144,7 +144,7 @@ class Moderations(commands.Cog):
             return await ctx.send("Seconds could not be greater then 21600")
         elif seconds < 0:
             return await ctx.send("Seconds could not be less then 0")
-        await ctx.channel.edit(slowmode_delay=seconds, reason=f"Slowmode edited to {seconds}, edited by {ctx.author}({ctx.author.id}")
+        await ctx.channel.edit(slowmode_delay=seconds, reason=f"Slowmode edited by {ctx.author} ({ctx.author.id})")
         await ctx.send(f"Edited slowmode to {seconds}")
 
 
@@ -178,7 +178,7 @@ class Moderations(commands.Cog):
             r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
             if not r:
                 return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
-            await member.add_roles(r, reason=f"Muted by: {ctx.author}({ctx.author.id})")
+            await member.add_roles(r, reason=f"Muted by: {ctx.author} ({ctx.author.id})")
         await ctx.reply(f"Muted {', '.join((i.mention for i in members))}")
 
     @commands.command()
@@ -193,7 +193,7 @@ class Moderations(commands.Cog):
             r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
             if not r:
                 return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
-            await member.remove_roles(r, reason=f"Unmuted by: {ctx.author}({ctx.author.id})")
+            await member.remove_roles(r, reason=f"Unmuted by: {ctx.author} ({ctx.author.id})")
         await ctx.reply(f"Unmuted {', '.join((i.mention for i in members))}")
 
     @commands.command()
@@ -274,7 +274,7 @@ class Moderations(commands.Cog):
                 return await ctx.reply("hmm nope not gonna do that")
             if ctx.author.top_role < member.top_role:
                 return await ctx.reply(f"Your role is lower then {member}")
-            await member.kick(reason=f"Kicked by {ctx.author}({ctx.author.id}) Reason: {reason}")
+            await member.kick(reason=f"Kicked by {ctx.author} ({ctx.author.id}) Reason: {reason}")
         await ctx.reply(f"Kicked {', '.join((i.mention for i in members))}")
 
     @commands.command()
@@ -290,9 +290,9 @@ class Moderations(commands.Cog):
             if ctx.author.top_role < member.top_role:
                 return await ctx.reply(f"Your role is lower then {member}")
             await member.ban(
-                reason=f"Soft banned by {ctx.author}({ctx.author.id}) Reason: {reason}", delete_message_days=7
+                reason=f"Soft banned by {ctx.author} ({ctx.author.id}) Reason: {reason}", delete_message_days=7
             )
-            await member.unban(reason=f"Soft banned by {ctx.author}({ctx.author.id}) Reason: {reason}")
+            await member.unban(reason=f"Soft banned by {ctx.author} ({ctx.author.id}) Reason: {reason}")
         await ctx.reply(f"Soft banned {', '.join((i.mention for i in members))}")
 
     @commands.command()
@@ -310,7 +310,7 @@ class Moderations(commands.Cog):
             if isinstance(member, discord.Member) and ctx.author.top_role < member.top_role:
                 return await ctx.reply(f"Your role is lower then {member}")
             await ctx.guild.ban(
-                member, reason=f"Banned by {ctx.author}({ctx.author.id}) Reason: {reason}", delete_message_days=7
+                member, reason=f"Banned by {ctx.author} ({ctx.author.id}) Reason: {reason}", delete_message_days=7
             )
         await ctx.reply(f"Banned {', '.join((i.mention for i in members))}")
 
