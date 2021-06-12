@@ -321,7 +321,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await player.set_volume(volume)
         await ctx.send(f"Volume is now {volume}")
 
-    @commands.command()
+    @commands.command(aliases=["connect"])
     async def join(self, ctx: AnimeContext, vc: discord.VoiceChannel = None):
         if vc:
             channel = vc
