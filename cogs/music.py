@@ -166,8 +166,33 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await self.bot.wait_until_ready()
         await asyncio.sleep(5)
         while True:
+            if not self.bot.wavelink.nodes.get("MAIN")
+                await asyncio.sleep(5)
+                continue
             if not self.bot.wavelink.nodes["MAIN"].is_available:
                 await self.bot.wavelink.nodes["MAIN"].destroy()
+                try:
+                    await self.bot.wavelink.initiate_node(
+                        host="127.0.0.1",
+                        port=2333,
+                        rest_uri="http://127.0.0.1:2333",
+                        password="youshallnotpass",
+                        identifier="MAIN",
+                        region="us_central",
+                        heartbeat=60,
+                    )
+                except:
+                    pass
+            await asyncio.sleep(5)
+
+    async def destroy_players(self):
+        for i in self.bot.wavelink.players.values():
+            await i.destroy()
+
+    async def start_nodes(self):
+        await self.bot.wait_until_ready()
+        for tries in range(10):
+            try:
                 await self.bot.wavelink.initiate_node(
                     host="127.0.0.1",
                     port=2333,
@@ -177,26 +202,10 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                     region="us_central",
                     heartbeat=60,
                 )
-            await asyncio.sleep(5)
-
-    async def destroy_players(self):
-        for i in self.bot.wavelink.players.values():
-            await i.destroy()
-
-    async def start_nodes(self):
-        await self.bot.wait_until_ready()
-        try:
-            node = await self.bot.wavelink.initiate_node(
-                host="127.0.0.1",
-                port=2333,
-                rest_uri="http://127.0.0.1:2333",
-                password="youshallnotpass",
-                identifier="MAIN",
-                region="us_central",
-                heartbeat=60,
-            )
-        except:
-            raise NoNodesAvaiable
+                return
+            except:
+                await asyncio.sleep(tries * 2)
+                continue
 
     @wavelink.WavelinkMixin.listener("on_track_exception")
     async def on_node_event_(self, node, event):
