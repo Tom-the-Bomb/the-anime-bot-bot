@@ -54,7 +54,7 @@ class Player(wavelink.Player):
     def make_embed(self, track):
 
         embed = discord.Embed(
-            color=0x00FF6A,
+            color=self.bot.color,
             title="Now playing",
             description=f"Now playing: **{track.title}**\nVolume: {self.volume}",
         )
