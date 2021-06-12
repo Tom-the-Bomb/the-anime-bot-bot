@@ -47,7 +47,7 @@ class MyMenu(menus.Menu, timeout=9223372036854775807):
         await self.message.edit(content=f"{self.counter}")
 
 
-class Owner(commands.Cog):
+class Owner(commands.Cog, command_attrs={"hidden": True}):
     def __init__(self, bot):
         self.bot = bot
         self.cog_regex = re.compile(r"cogs/[a-zA-Z]+\.py")
