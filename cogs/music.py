@@ -166,7 +166,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await self.bot.wait_until_ready()
         await asyncio.sleep(5)
         while True:
-            if not self.bot.wavelink.nodes.get("MAIN")
+            if not self.bot.wavelink.nodes.get("MAIN"):
                 await asyncio.sleep(5)
                 continue
             if not self.bot.wavelink.nodes["MAIN"].is_available:
