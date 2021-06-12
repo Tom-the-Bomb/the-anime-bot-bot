@@ -96,7 +96,7 @@ class Anime(commands.Cog):
             image = meme["preview"][-1]
         if nsfw:
             return
-        embed = discord.Embed(color=0x2ECC71)
+        embed = discord.Embed(color=self.bot.color)
         embed.set_author(name=title, url=link)
         embed.set_image(url=image)
         embed.set_footer(

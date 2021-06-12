@@ -1260,7 +1260,7 @@ class Images(commands.Cog):
         Usage: ovo dym \"anime bot is bad bot\" \"anime bot is good bot\"
         """
         async with Processing(ctx):
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://alex.png")
             image = discord.File(
                 await (await self.bot.alex.didyoumean(up, bottom)).read(),
                 "alex.png",
@@ -1270,7 +1270,7 @@ class Images(commands.Cog):
     @commands.command()
     async def gradiant(self, ctx):
         async with Processing(ctx):
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://alex.png")
             image = discord.File(
                 await (await self.bot.alex.colour_image_gradient()).read(),
                 "alex.png",
@@ -1287,21 +1287,21 @@ class Images(commands.Cog):
         async with Processing(ctx):
             level = min(level, 1)
             url = await self.get_url(ctx, thing)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://alex.png")
             image = discord.File(await (await self.bot.alex.amiajoke(url)).read(), "alex.png")
             await ctx.reply(embed=embed, file=image)
 
     @commands.group(invoke_without_command=True)
     async def supreme(self, ctx: AnimeContext, *, text: str = "enter something here"):
         async with Processing(ctx):
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://alex.png")
             image = discord.File(await (await self.bot.alex.supreme(text=text)).read(), "alex.png")
             await ctx.reply(embed=embed, file=image)
 
     @supreme.command(name="dark")
     async def supreme_dark(self, ctx: AnimeContext, *, text: str = "enter something here"):
         async with Processing(ctx):
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://alex.png")
             image = discord.File(
                 await (await self.bot.alex.supreme(text=text, dark=True)).read(),
                 "alex.png",
@@ -1311,7 +1311,7 @@ class Images(commands.Cog):
     @commands.command()
     async def archive(self, ctx: AnimeContext, *, text):
         async with Processing(ctx):
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://alex.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://alex.png")
             image = discord.File(
                 await (await self.bot.alex.achievement(text=text)).read(),
                 "alex.png",
@@ -1332,7 +1332,7 @@ class Images(commands.Cog):
                 image = await self.bot.zaneapi.pixelate(url, level)
             except asyncio.TimeoutError:
                 raise commands.CommandError("Zaneapi timeout")
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://pixelate.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://pixelate.png")
             await ctx.reply(
                 file=discord.File(fp=image, filename="pixelate.png"),
                 embed=embed,
@@ -1350,7 +1350,7 @@ class Images(commands.Cog):
                 image = await self.bot.zaneapi.swirl(url)
             except asyncio.TimeoutError:
                 raise commands.CommandError("Zaneapi timeout")
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://swirl.gif")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://swirl.gif")
             await ctx.reply(file=discord.File(fp=image, filename="swirl.gif"), embed=embed)
 
     @commands.command()
@@ -1362,7 +1362,7 @@ class Images(commands.Cog):
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.sobel(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://sobel.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://sobel.png")
             await ctx.reply(file=discord.File(fp=image, filename="sobel.png"), embed=embed)
 
     @commands.command()
@@ -1374,7 +1374,7 @@ class Images(commands.Cog):
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.palette(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://palette.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://palette.png")
             await ctx.reply(
                 file=discord.File(fp=image, filename="palette.png"),
                 embed=embed,
@@ -1389,7 +1389,7 @@ class Images(commands.Cog):
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.sort(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://sort.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://sort.png")
             await ctx.reply(file=discord.File(fp=image, filename="sort.png"), embed=embed)
 
     @commands.command()
@@ -1404,7 +1404,7 @@ class Images(commands.Cog):
                 image = await self.bot.zaneapi.cube(url)
             except asyncio.TimeoutError:
                 raise commands.CommandError("Zaneapi timeout")
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://cube.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://cube.png")
             await ctx.reply(file=discord.File(fp=image, filename="cube.png"), embed=embed)
 
     @commands.command()
@@ -1427,7 +1427,7 @@ class Images(commands.Cog):
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.dots(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://dots.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://dots.png")
             await ctx.reply(file=discord.File(fp=image, filename="dots.png"), embed=embed)
 
     @commands.command()
@@ -1439,7 +1439,7 @@ class Images(commands.Cog):
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.threshold(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://threshold.png")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://threshold.png")
             await ctx.reply(
                 file=discord.File(fp=image, filename="threshold.png"),
                 embed=embed,
@@ -1454,7 +1454,7 @@ class Images(commands.Cog):
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.spread(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://spread.gif")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://spread.gif")
             await ctx.reply(file=discord.File(fp=image, filename="spread.gif"), embed=embed)
 
     @commands.command()
@@ -1466,7 +1466,7 @@ class Images(commands.Cog):
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             image = await self.bot.zaneapi.jpeg(url)
-            embed = discord.Embed(color=0x00FF6A).set_image(url="attachment://jpeg.gif")
+            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://jpeg.gif")
             await ctx.reply(file=discord.File(fp=image, filename="jpeg.gif"), embed=embed)
 
     @asyncexe()
@@ -1526,7 +1526,7 @@ class Images(commands.Cog):
     #         if not thing:
     #             url = await self.get_url(ctx, thing)
     #             image = await self.bot.zaneapi.floor(url)
-    #             embed = discord.Embed(color=0x00FF6A).set_image(
+    #             embed = discord.Embed(color=self.bot.color).set_image(
     #                 url="attachment://floor.gif"
     #             )
     #             return await ctx.reply(
@@ -1539,7 +1539,7 @@ class Images(commands.Cog):
     #         for i in thing:
     #             url = await self.get_url(ctx, i)
     #             image = await self.bot.zaneapi.floor(url)
-    #             embed = discord.Embed(color=0x00FF6A).set_image(
+    #             embed = discord.Embed(color=self.bot.color).set_image(
     #                 url="attachment://floor.gif"
     #             )
     #             await ctx.reply(

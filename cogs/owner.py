@@ -332,7 +332,7 @@ class Owner(commands.Cog, command_attrs={"hidden": True}):
     async def reload(self, ctx: AnimeContext, text_):
         text_ = text_.lower()
         await ctx.message.add_reaction("<:greenTick:596576670815879169>")
-        embed = discord.Embed(color=0x00FF6A, description=f"<a:loading:747680523459231834>")
+        embed = discord.Embed(color=self.bot.color, description=f"<a:loading:747680523459231834>")
         message = await ctx.reply(embed=embed)
         self.list = []
         if text_ == "all":
@@ -349,7 +349,7 @@ class Owner(commands.Cog, command_attrs={"hidden": True}):
                         return await message.edit(embed=embed)
             text = "\n <:greenTick:596576670815879169>".join(self.list)
             embed = discord.Embed(
-                color=0x00FF6A,
+                color=self.bot.color,
                 description=f"Reloaded All Cogs \n <:greenTick:596576670815879169> {text}",
             )
             await message.edit(embed=embed)
@@ -358,7 +358,7 @@ class Owner(commands.Cog, command_attrs={"hidden": True}):
                 if file.startswith(f"{text_}.py"):
                     self.bot.reload_extension(f"cogs.{file[:-3]}")
                     embed = discord.Embed(
-                        color=0x00FF6A,
+                        color=self.bot.color,
                         description=f" <:greenTick:596576670815879169> Reloaded {file[:-3]}",
                     )
                     await message.edit(embed=embed)

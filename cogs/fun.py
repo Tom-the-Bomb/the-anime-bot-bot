@@ -47,7 +47,7 @@ class UrbanDictionaryPageSource(menus.ListPageSource):
     def format_page(self, menu, entry):
         maximum = self.get_max_pages()
         title = f'{entry["word"]}: {menu.current_page + 1} / {maximum}' if maximum else entry["word"]
-        embed = discord.Embed(title=title, colour=0x00FF6A, url=entry["permalink"])
+        embed = discord.Embed(title=title, color=menu.bot.color, url=entry["permalink"])
         embed.set_footer(text=f'By {entry["author"]}')
         embed.description = self.cleanup_definition(
             f"**Definition:**\n {entry['definition']}\n**Example:**\n{entry['example']}"
@@ -201,7 +201,7 @@ class Fun(commands.Cog):
     async def robtea(self, ctx):
         embed = discord.Embed(
             description="Click it in 10 seconds to get your tea in perfect tempature",
-            color=0x00FF6A,
+            color=self.bot.color,
         )
         message = await ctx.reply(embed=embed)
         await message.add_reaction("\U0001f375")
@@ -218,7 +218,7 @@ class Fun(commands.Cog):
         end = time.time()
         embed = discord.Embed(
             description=f"You robbed the tea in {round(end-start, 3)} seconds",
-            color=0x00FF6A,
+            color=self.bot.color,
         )
         await message.edit(embed=embed)
 
@@ -230,21 +230,21 @@ class Fun(commands.Cog):
     async def spamclick(self, ctx):
         counter = 0
         embed = discord.Embed(
-            color=0x00FF6A,
+            color=self.bot.color,
             description="Rules:\nafter the countdown end you will spam click the reaction as fast as you can",
         )
         message = await ctx.reply(embed=embed)
         await asyncio.sleep(5)
-        embed = discord.Embed(color=0x00FF6A, description="3")
+        embed = discord.Embed(color=self.bot.color, description="3")
         await message.edit(embed=embed)
         await asyncio.sleep(1)
-        embed = discord.Embed(color=0x00FF6A, description="2")
+        embed = discord.Embed(color=self.bot.color, description="2")
         await message.edit(embed=embed)
         await asyncio.sleep(1)
-        embed = discord.Embed(color=0x00FF6A, description="1")
+        embed = discord.Embed(color=self.bot.color, description="1")
         await message.edit(embed=embed)
         await asyncio.sleep(1)
-        embed = discord.Embed(color=0x00FF6A, description="NOW")
+        embed = discord.Embed(color=self.bot.color, description="NOW")
         await message.edit(embed=embed)
         await message.add_reaction("<:stab:744345955637395586>")
 
@@ -274,7 +274,7 @@ class Fun(commands.Cog):
                 if message.author.id == user1.id:
                     msg = message
                     break
-            embed = discord.Embed(color=0x00FF6A, timestamp=msg.created_at)
+            embed = discord.Embed(color=self.bot.color, timestamp=msg.created_at)
             embed.set_author(name=msg.author, icon_url=str(msg.author.avatar_url))
             embed.set_footer(text=f"id: {msg.id} Created at: ")
             if msg.embeds != []:
@@ -322,7 +322,7 @@ class Fun(commands.Cog):
             # if lists == []:
             #   return await ctx.reply(f"Can not find message that is send by {user}")
             # msg = random.choice(lists)
-            embed = discord.Embed(color=0x00FF6A, timestamp=msg.created_at)
+            embed = discord.Embed(color=self.bot.color, timestamp=msg.created_at)
             embed.set_author(name=msg.author, icon_url=str(msg.author.avatar_url))
             embed.set_footer(text=f"id: {msg.id} Created at: ")
             if msg.embeds != []:
@@ -345,7 +345,7 @@ class Fun(commands.Cog):
         link, title, nsfw, image = await self.reddit_(text)
         if nsfw == True:
             return
-        embed = discord.Embed(color=0x00FF6A)
+        embed = discord.Embed(color=self.bot.color)
         embed.set_author(name=title, url=link)
         embed.set_image(url=image)
         embed.set_footer(
@@ -429,10 +429,10 @@ class Fun(commands.Cog):
         """
         # for i in self.talk_channels:
         #   if i == ctx.message.channel.id:
-        #     embed = discord.Embed(color=0x00ff6a, description="A chat session has already been established in this channel")
+        #     embed = discord.Embed(color=self.bot.color, description="A chat session has already been established in this channel")
         #     return await ctx.reply(embed=embed)
         self.talk_channels.append(ctx.message.channel.id)
-        embed = discord.Embed(color=0x00FF6A, description="A chat session has been established")
+        embed = discord.Embed(color=self.bot.color, description="A chat session has been established")
         await ctx.reply(embed=embed)
 
         def check(m):
@@ -446,7 +446,7 @@ class Fun(commands.Cog):
                 chats.append(message.content)
                 if message.content == "end":
                     self.talk_channels.remove(ctx.message.channel.id)
-                    embed = discord.Embed(color=0x00FF6A, description="Ended")
+                    embed = discord.Embed(color=self.bot.color, description="Ended")
                     await ctx.reply(embed=embed)
                     talking = False
                     return False
@@ -462,7 +462,7 @@ class Fun(commands.Cog):
                     await message.reply((await res.json())["response"])
             except asyncio.TimeoutError:
                 self.talk_channels.remove(ctx.message.channel.id)
-                embed = discord.Embed(color=0x00FF6A, description="Ended")
+                embed = discord.Embed(color=self.bot.color, description="Ended")
                 await message.reply(embed=embed)
                 talking = False
                 return False
@@ -471,7 +471,7 @@ class Fun(commands.Cog):
     async def talk_error(self, ctx: AnimeContext, error):
         if isinstance(error, commands.errors.MaxConcurrencyReached):
             embed = discord.Embed(
-                color=0x00FF6A,
+                color=self.bot.color,
                 description="A chat session has already been established in this channel",
             )
             return await ctx.reply(embed=embed)
@@ -480,13 +480,13 @@ class Fun(commands.Cog):
     async def sob(self, ctx: AnimeContext, level: int = 1):
         if level > 70:
             embed = discord.Embed(
-                color=0x00FF6A,
+                color=self.bot.color,
                 description=f"The level must be 70 or lower then 70",
             )
             return await ctx.reply(embed=embed)
         emojis2 = ["<:rooSob:744345453923139714>" for _ in range(level)]
         emojis = " ".join(emojis2)
-        embed = discord.Embed(color=0x00FF6A, description=f"{emojis}")
+        embed = discord.Embed(color=self.bot.color, description=f"{emojis}")
         await ctx.reply(embed=embed)
 
     # @commands.command(aliases=["tr", "typerace"])
@@ -683,7 +683,7 @@ class Fun(commands.Cog):
         link, title, nsfw, image = await self.getmeme()
         if nsfw == True:
             return
-        embed = discord.Embed(color=0x00FF6A)
+        embed = discord.Embed(color=self.bot.color)
         embed.set_author(name=title, url=link)
         embed.set_image(url=image)
         embed.set_footer(

@@ -372,7 +372,7 @@ System:
             final_latency = end - start
             lists.append(str(round(final_latency * 1000)))
         lists = " ms \n".join(lists)
-        embed = discord.Embed(color=0x00FF6A, description=f"```py\n{lists} ms```")
+        embed = discord.Embed(color=self.bot.color, description=f"```py\n{lists} ms```")
         await ctx.reply(embed=embed)
 
     @commands.command()
