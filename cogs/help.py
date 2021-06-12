@@ -21,7 +21,7 @@ class HelpMenuSource(menus.ListPageSource):
                 title="Help command",
                 description="\n".join(entries),
             ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")\
-                .set_author(name={menu.ctx.author.name}, icon_url=str(menu.ctx.author.avatar_url_as(static_format="png")))
+                .set_author(name=menu.ctx.author.name, icon_url=str(menu.ctx.author.avatar_url_as(static_format="png")))
         }
 
 
