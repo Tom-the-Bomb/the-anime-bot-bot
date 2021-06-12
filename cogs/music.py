@@ -365,7 +365,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send("looped")
 
     @commands.command()
-    async def fastforward(self, ctx: AnimeContext, seconnds: int):
+    async def fastforward(self, ctx: AnimeContext, seconds: int):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         seek_position = player.position + (seconds * 1000)
         await player.seek(seek_position)
