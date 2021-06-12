@@ -98,7 +98,7 @@ class HelpCommand(commands.HelpCommand):
             description=command.help or random.choice(no_help_responses),
         )
         embed.add_field(name="Category", value=command.cog_name)
-        embed.add_field(name="Runnable by you", value=await command.can_run(self.context)
+        embed.add_field(name="Runnable by you", value=await command.can_run(self.context))
         usage = await self.context.bot.db.fetchval("SELECT usages FROM commandsusage WHERE command = $1", command.qualified_name)
         embed.add_field(name="Usage", value=usage if usage else "0")
 
