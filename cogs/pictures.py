@@ -106,13 +106,11 @@ class Processing:
         self.m = None
 
     async def __aenter__(self, *args: List[Any], **kwargs):
-        try:
-            self.start = time.perf_counter()
-            self.m = await asyncio.wait_for(
-                self.ctx.reply(f" <a:loading:849756871597490196> Image Processing."), timeout=3.0
-            )
-        finally:
-            return self
+        self.start = time.perf_counter()
+        self.m = await asyncio.wait_for(
+            self.ctx.reply(f" <a:loading:849756871597490196> Image Processing."), timeout=3.0
+        )
+        return self
 
     async def __aexit__(self, *args, **kwargs):
         try:
@@ -192,7 +190,7 @@ class Images(commands.Cog):
         if not avatar:
             return None
         if not url:
-            raise commands.MissingRequiredArgument()
+            raise commands.BadArgument(message="Unable to retrieve any information, this is extremely rare.")
         if check:
             async with self.bot.session.get(url) as resp:
                 if resp.status != 200:
@@ -252,7 +250,7 @@ class Images(commands.Cog):
                 ) as resp:
                     return (await resp.json())["url"]
 
-    async def ocr_(self, url: str) -> str:
+    async def ocr__(self, url: str) -> str:
         async with self.ocr_ratelimiter:
             async with self.bot.session.get(url) as resp:
                 if "image" not in resp.content_type:

@@ -652,11 +652,8 @@ class Fun(commands.Cog):
         embed.add_field(name="participant", value="\n".join(lists), inline=False)
         await message.edit(embed=embed)
 
-        def check(payload):
-            return payload.message_id == message.id
-
         while True:
-            payload = await self.bot.wait_for("raw_reaction_add", check=check)
+            payload = await self.bot.wait_for("raw_reaction_add", check=lambda x: x.message_id == message.id)
             msg = await self.bot.get_message(payload.message_id)
             if not msg:
                 break
