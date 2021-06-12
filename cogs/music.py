@@ -336,11 +336,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 payload = {"channel_id": channel.id, "suppress": False}
                 await self.bot.http.edit_my_voice_state(ctx.guild.id, payload)
             except:
-                payload = {
-                    "channel_id": channel.id,
-                    "request_to_speak_timestamp": datetime.datetime.utcnow().isoformat(),
-                }
-                await self.bot.http.edit_my_voice_state(ctx.guild.id, payload)
+                try:
+                    payload = {
+                        "channel_id": channel.id,
+                        "request_to_speak_timestamp": datetime.datetime.utcnow().isoformat(),
+                    }
+                    await self.bot.http.edit_my_voice_state(ctx.guild.id, payload)
+                except:
+                    return await ctx.send("I need permission to request to speak in stage channel.")
         await ctx.send(f"Connected to {channel.name}")
 
     @commands.command()
