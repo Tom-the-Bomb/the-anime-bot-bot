@@ -183,10 +183,6 @@ class Owner(commands.Cog, command_attrs={"hidden": True}):
             ),
         )
 
-    @classmethod
-    def check(self, payload):
-        return payload.user_id == 590323594744168494 and payload.emoji.name == "\{NBLACK UNIVERSAL RECYCLING SYMBOL}"
-
     @commands.command(aliases=["exe"])
     @commands.is_owner()
     async def execute(self, ctx, *, code):
