@@ -165,7 +165,7 @@ class AnimeContext(commands.Context):
         else:
             message = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
             self.bot._message_cache[self.message.id] = message.id
-            self.bot.to_delete_message_cache[self.message.id] = [message.id]
+            self.bot.to_delete_message_cache[self.message.id] = discord.utils.SnowflakeList((message.id, ))
             return message
 
 
