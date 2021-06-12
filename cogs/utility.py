@@ -205,7 +205,8 @@ class Utility(commands.Cog):
         bot.loop.create_task(self.build_rtfm_lookup_table(page_types=page_types))
         bot.cse_lists = cycle([google_api_1, google_api_2, google_api_3])
 
-    def parse_object_inv(self, stream, url):
+    @staticmethod
+    def parse_object_inv(stream, url):
         # key: URL
         # n.b.: key doesn't have `discord` or `discord.ext.commands` namespaces
         result = {}
@@ -373,13 +374,15 @@ class Utility(commands.Cog):
         file_.seek(0)
         return discord.File(file_, "emojis.zip")
 
-    def download_youtube_video(self, stream, format):
+    @staticmethod
+    def download_youtube_video(stream, format):
         b = BytesIO()
         stream.stream_to_buffer(b)
         b.seek(0)
         return discord.File(b, f"The_Anime_bot_youtube_download.{format}")
-
-    def parse_youtube_data(self, data):
+    
+    @staticmethod
+    def parse_youtube_data(data):
         results = re.findall(r"/watch\?v=(.{11})", data.decode())
         return "https://youtube.com/watch?v=" + results[0]
 

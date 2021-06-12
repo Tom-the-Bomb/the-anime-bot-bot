@@ -78,7 +78,8 @@ class AnimeContext(commands.Context):
             return ref.resolved.to_reference()
         return None
 
-    def big_embed(self):
+    @staticmethod
+    def big_embed():
         embed = discord.Embed(color=0x00FF6A, title="a" * 256, description="a" * 2048)
         embed.add_field(name="a" * 256, value="a" * 112)
         embed.add_field(name="a" * 256, value="a" * 1024)

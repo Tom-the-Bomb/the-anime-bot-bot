@@ -75,8 +75,9 @@ class Events(commands.Cog):
             self.post.cancel()
         except:
             pass
-
-    def files_zip(self):
+    
+    @staticmethod
+    def files_zip():
         file_1 = BytesIO()
         with zipfile.ZipFile(file_1, mode="w") as zipfile_:
             p = Path(".")

@@ -33,8 +33,9 @@ class UrbanDictionaryPageSource(menus.ListPageSource):
 
     def __init__(self, data):
         super().__init__(entries=data, per_page=1)
-
-    def cleanup_definition(self, definition, *, regex=BRACKETED):
+    
+    @staticmethod
+    def cleanup_definition(definition, *, regex=BRACKETED):
         def repl(m):
             word = m.group(2)
             return f'[{word}](http://{word.replace(" ", "-")}.urbanup.com)'

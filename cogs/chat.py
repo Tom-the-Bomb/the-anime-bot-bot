@@ -15,9 +15,10 @@ from collections import Counter
 class Chat(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
+    
+    @staticmethod
     @asyncexe()
-    def wordcloud_(self, text, icon):
+    def wordcloud_(text, icon):
         m = None
         #         if icon:
         #             mask = np.array(Image.open(icon))

@@ -33,8 +33,9 @@ class ErrorsMenuSource(menus.ListPageSource):
 class Error(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-
-    def embed(self, text):
+    
+    @staticmethod
+    def embed(text):
         return discord.Embed(color=0xFF0000, title="An error occured", description=text)
 
     @commands.Cog.listener()
@@ -62,9 +63,6 @@ class Error(commands.Cog):
             return await ctx.send("hmm our music system is having some problem right now")
         elif isinstance(error, asyncio.TimeoutError):
             embed = self.embed("timeout")
-            return await ctx.send(embed=embed)
-        elif isinstance(error, discord.errors.Forbidden):
-            embed = self.embed(error.text)
             return await ctx.send(embed=embed)
         elif isinstance(error, discord.errors.HTTPException):
             embed = self.embed(f"HTTPException {error.text}")

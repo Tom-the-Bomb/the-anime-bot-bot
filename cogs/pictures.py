@@ -69,21 +69,7 @@ Image_Union = Union[
 ]
 
 
-class ShapeDetector:
-    def detect(self, c):
-        shape = "unidentified"
-        peri = cv2.arcLength(c, True)
-        approx = cv2.approxPolyDP(c, 0.04 * peri, True)
-        if len(approx) == 3:
-            return "triangle"
-        elif len(approx) == 4:
-            (x, y, w, h) = cv2.boundingRect(approx)
-            ar = w / float(h)
-            return "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
-        elif len(approx) == 5:
-            return "pentagon"
-        else:
-            return "circle"
+
 
 
 class ColorConverter(commands.Converter):
@@ -278,10 +264,24 @@ class Images(commands.Cog):
                 ) as resp:
                     return (await resp.json())["data"]
 
-    def wand_decompression_bomb_check(self):
-        ...
-
-    def resize(self, image: Image) -> Image:
+    @staticmethod
+    def detect(c):
+        shape = "unidentified"
+        peri = cv2.arcLength(c, True)
+        approx = cv2.approxPolyDP(c, 0.04 * peri, True)
+        if len(approx) == 3:
+            return "triangle"
+        elif len(approx) == 4:
+            (x, y, w, h) = cv2.boundingRect(approx)
+            ar = w / float(h)
+            return "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
+        elif len(approx) == 5:
+            return "pentagon"
+        else:
+            return "circle"
+    
+    @staticmethod
+    def resize(image: Image) -> Image:
         if image.height <= 500 and image.width <= 500:
             return image
         # I robbed from preselany I can't do math ok
@@ -297,8 +297,9 @@ class Images(commands.Cog):
             size = (siz, siz)
             # image.close()
         return image.resize(size, resample=Image.NEAREST, reducing_gap=1)
-
-    def open_pil_image(self, buffer: BytesIO) -> Image:
+    
+    @staticmethod
+    def open_pil_image(buffer: BytesIO) -> Image:
         try:
             return Image.open(buffer, "RGBA")
         except:
@@ -447,7 +448,8 @@ class Images(commands.Cog):
         result = discord.File(result, f"The_Anime_Bot_spin.{format_}")
         return result
 
-    def invert__(self, image: Image) -> Image:
+    @staticmethod
+    def invert__(image: Image) -> Image:
         r, g, b, a = image.split()
         rgb_image = Image.merge("RGB", (r, g, b))
         inverted_image = ImageOps.invert(rgb_image)
@@ -505,8 +507,9 @@ class Images(commands.Cog):
         result = await self.bot.loop.run_in_executor(None, self.circle__, background_color, circle_color)
         return result
 
+    @staticmethod
     @asyncexe()
-    def floor_(self, b: BytesIO) -> BytesIO:
+    def floor_(b: BytesIO) -> BytesIO:
         with WandImage(file=b) as img_:
             with WandImage(img_.sequence[0]) as img:
                 # I robbed resize from preselany I can't do math ok
@@ -545,22 +548,25 @@ class Images(commands.Cog):
                 img.save(file=final)
                 final.seek(0)
                 return final
-
+    
+    @staticmethod
     @asyncexe()
-    def qr_enc(self, thing: str) -> BytesIO:
+    def qr_enc(thing: str) -> BytesIO:
         q = qrcode.make(thing, image_factory=PymagingImage)
         pic = BytesIO()
         q.save(pic)
         pic.seek(0)
         return pic
 
+    @staticmethod
     @asyncexe()
-    def qr_dec(self, bytes_: BytesIO) -> str:
+    def qr_dec(bytes_: BytesIO) -> str:
         with Image.open(bytes_) as img:
             return decode(img)[0].data.decode("utf-8")
-
+    
+    @staticmethod
     @asyncexe()
-    def convertimage_(self, image: BytesIO, format: str, f: Optional[str]) -> Tuple[BytesIO, str]:
+    def convertimage_(image: BytesIO, format: str, f: Optional[str]) -> Tuple[BytesIO, str]:
         with WandImage(file=image, format=f) as img:
             if img.height > 500 or img.width > 500:
                 # I robbed resize from preselany I can't do math ok
@@ -673,8 +679,9 @@ class Images(commands.Cog):
             async with self.bot.session.post(url, json=bobo) as resp:
                 await ctx.reply(file=discord.File(BytesIO(await resp.read()), "The_Anime_Bot_code.png"))
 
+    @staticmethod
     @asyncexe()
-    def shape_detection(self, image: BytesIO) -> discord.File:
+    def shape_detection(image: BytesIO) -> discord.File:
         with Image.open(image) as img:
             buffer = BytesIO()
             img_ = img.convert("RGB")
@@ -690,12 +697,11 @@ class Images(commands.Cog):
         thresh = cv2.threshold(blurred, 60, 255, cv2.THRESH_BINARY)[1]
         cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
         cnts = imutils.grab_contours(cnts)
-        sd = ShapeDetector()
         for c in cnts:
             M = cv2.moments(c)
             cX = int((M["m10"] / (M["m00"] + 1e-7)) * ratio)
             cY = int((M["m01"] / (M["m00"] + 1e-7)) * ratio)
-            shape = sd.detect(c)
+            shape = self.detect(c)
             c = c.astype("float")
             c *= ratio
             c = c.astype("int")
@@ -715,9 +721,10 @@ class Images(commands.Cog):
             async with self.bot.session.get(url) as resp:
                 b = BytesIO(await resp.read())
             await ctx.reply(file=await self.shape_detection(b))
-
+    
+    @staticmethod
     @asyncexe()
-    def facereg_(self, image: BytesIO) -> discord.File:
+    def facereg_(image: BytesIO) -> discord.File:
         with Image.open(image) as img:
             buffer = BytesIO()
             img_ = img.convert("RGB")
@@ -757,17 +764,19 @@ class Images(commands.Cog):
         b = BytesIO(im_buf_arr)
         del im_buf_arr
         return discord.File(b, "The_Anime_Bot_Face_Reg.png")
-
+    
+    @staticmethod
     @asyncexe()
-    def make_color_image(self, color: str) -> BytesIO:
+    def make_color_image(color: str) -> BytesIO:
         with Image.new("RGB", (200, 200), color) as img:
             b = BytesIO()
             img.save(b, "PNG")
             b.seek(0)
             return b
 
+    @staticmethod
     def rgb_to_hsv(
-        self, r: Union[int, float], g: Union[int, float], b: Union[int, float]
+        r: Union[int, float], g: Union[int, float], b: Union[int, float]
     ) -> Tuple[float, float, float]:
         r, g, b = r / 255.0, g / 255.0, b / 255.0
         mx = max(r, g, b)
@@ -784,9 +793,10 @@ class Images(commands.Cog):
         s = 0 if mx == 0 else (df / mx) * 100
         v = mx * 100
         return h, s, v
-
+    
+    @staticmethod
     def rgb_to_xy_bri(
-        self, r: Union[int, float], g: Union[int, float], b: Union[int, float]
+        r: Union[int, float], g: Union[int, float], b: Union[int, float]
     ) -> Tuple[float, float, float]:
         r, g, b = r / 255.0, g / 255.0, b / 255.0
         o = (
@@ -796,7 +806,8 @@ class Images(commands.Cog):
         )
         return tuple((round(i * 100) for i in o))
 
-    def rgb_to_hsl(self, r: Union[int, float], g: Union[int, float], b: Union[int, float]) -> str:
+    @staticmethod
+    def rgb_to_hsl(r: Union[int, float], g: Union[int, float], b: Union[int, float]) -> str:
         r, g, b = r / 255.0, g / 255.0, b / 255.0
         mx = max(r, g, b)
         mn = min(r, g, b)
@@ -813,7 +824,8 @@ class Images(commands.Cog):
         l = ((mx + mn) / 2) * 100
         return f"({round(h)}, {round(s)}%, {round(l)}%)"
 
-    def rgb_to_cmyk(self, rgb_tuple: Tuple[int, int, int]) -> Tuple[float, float, float]:
+    @staticmethod
+    def rgb_to_cmyk(rgb_tuple: Tuple[int, int, int]) -> Tuple[float, float, float]:
         r, g, b = rgb_tuple[0], rgb_tuple[1], rgb_tuple[2]
         if (r, g, b) == (0, 0, 0):
 
@@ -831,8 +843,9 @@ class Images(commands.Cog):
 
         return c * CMYK_SCALE, m * CMYK_SCALE, y * CMYK_SCALE, k * CMYK_SCALE
 
+    @staticmethod
     @asyncexe()
-    def convert_rgb_to_names(self, rgb_tuple: Tuple[int, int, int]) -> str:
+    def convert_rgb_to_names(rgb_tuple: Tuple[int, int, int]) -> str:
         css3_db = CSS3_HEX_TO_NAMES
         names = []
         rgb_values = []
@@ -992,8 +1005,9 @@ class Images(commands.Cog):
             url = await self.get_gif_url(ctx, thing)
             await ctx.reply(f"<{await self.cdn_(url)}>")
 
+    @staticmethod
     @asyncexe()
-    def ocr_(self, image):
+    def ocr_(image):
         with Image.open(image) as img:
             buffer = BytesIO()
             if "A" in img.getbands():
@@ -1327,9 +1341,10 @@ class Images(commands.Cog):
             image = await self.bot.zaneapi.jpeg(url)
             embed = discord.Embed(color=self.bot.color).set_image(url="attachment://jpeg.gif")
             await ctx.reply(file=discord.File(fp=image, filename="jpeg.gif"), embed=embed)
-
+    
+    @staticmethod
     @asyncexe()
-    def magic_(self, image: BytesIO, intensity: float):
+    def magic_(image: BytesIO, intensity: float):
         with WandImage(file=image) as img:
             with WandImage(img.sequence[0]) as img:
                 if img.height > 500 or img.width > 500:
