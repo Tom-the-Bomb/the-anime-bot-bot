@@ -32,7 +32,6 @@ from discord.ext import commands, menus
 from bs4 import BeautifulSoup
 import flags
 import discord
-import cse
 import bs4
 import ratelimiter
 from urllib.parse import urlparse
@@ -206,9 +205,6 @@ class Utility(commands.Cog):
             "asyncpg": "https://magicstack.github.io/asyncpg/current/",
         }
         bot.loop.create_task(self.build_rtfm_lookup_table(page_types=page_types))
-        bot.cse1 = cse.Search(api_key=google_api_1)
-        bot.cse2 = cse.Search(api_key=google_api_2)
-        bot.cse3 = cse.Search(api_key=google_api_3)
         bot.cse_lists = cycle([google_api_1, google_api_2, google_api_3])
 
     def parse_object_inv(self, stream, url):
