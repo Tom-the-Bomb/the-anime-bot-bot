@@ -20,8 +20,9 @@ class HelpMenuSource(menus.ListPageSource):
                 color=menu.ctx.bot.color,
                 title="Help command",
                 description="\n".join(entries),
-            ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")\
-                .set_author(name=menu.ctx.author.name, icon_url=str(menu.ctx.author.avatar_url_as(static_format="png")))
+            )
+            .set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
+            .set_author(name=menu.ctx.author.name, icon_url=str(menu.ctx.author.avatar_url_as(static_format="png")))
         }
 
 
@@ -99,9 +100,7 @@ class HelpCommand(commands.HelpCommand):
             "ok blame on dyno",
             "ok blame on MEE6",
             "ok idk what to blame",
-            "oh",
-            "oh wow",
-            "uhh",
+            "hmm idk",
         ]
         embed = discord.Embed(
             color=self.context.bot.color,
@@ -114,7 +113,9 @@ class HelpCommand(commands.HelpCommand):
         except commands.CommandError:
             can_run = False
         embed.add_field(name="Runnable by you", value=can_run)
-        usage = await self.context.bot.db.fetchval("SELECT usages FROM commandsusage WHERE command = $1", command.qualified_name)
+        usage = await self.context.bot.db.fetchval(
+            "SELECT usages FROM commandsusage WHERE command = $1", command.qualified_name
+        )
         embed.add_field(name="Usage", value=usage or "0")
 
         await self.context.send(embed=embed)

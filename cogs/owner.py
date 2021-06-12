@@ -113,7 +113,7 @@ class Owner(commands.Cog, command_attrs={"hidden": True}):
             "INSERT INTO blacklist VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET reason = $2", user.id, reason
         )
         await ctx.send(f"Blacklisted {user} for {reason}")
-    
+
     def generate_random_filebytes(self, bytes_: int):
         return os.urandom(bytes_)
 

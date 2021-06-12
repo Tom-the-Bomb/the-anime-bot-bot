@@ -226,16 +226,21 @@ class Processing:
     async def __aenter__(self, *args: List[Any], **kwargs):
         try:
             self.start = time.perf_counter()
-            self.m = await asyncio.wait_for(self.ctx.reply(f" <a:loading:849756871597490196> Image Processing."), timeout=3.0)
+            self.m = await asyncio.wait_for(
+                self.ctx.reply(f" <a:loading:849756871597490196> Image Processing."), timeout=3.0
+            )
         finally:
             return self
 
     async def __aexit__(self, *args, **kwargs):
         try:
             await self.m.delete()
-            await asyncio.wait_for(self.ctx.reply(
-                f" <:check_mark:849758044833447949> Image Process complete, took {round(time.perf_counter() - self.start, 3)} seconds"
-            ), timeout=3.0)
+            await asyncio.wait_for(
+                self.ctx.reply(
+                    f" <:check_mark:849758044833447949> Image Process complete, took {round(time.perf_counter() - self.start, 3)} seconds"
+                ),
+                timeout=3.0,
+            )
         except:
             return
 
@@ -1025,7 +1030,7 @@ class Images(commands.Cog):
     @commands.command()
     async def latex(self, ctx: AnimeContext, *, text: str) -> None:
         """
-        Returns a LaTeX image of your text. 
+        Returns a LaTeX image of your text.
         """
         async with self.bot.session.get(
             f"https://latex.codecogs.com/png.latex?%5Cdpi%7B300%7D%20%5Cbg_black%20%5Chuge%20{quote(text)}"

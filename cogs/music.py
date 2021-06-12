@@ -83,10 +83,7 @@ class Player(wavelink.Player):
         if track.is_stream:
             embed.add_field(name="Duration", value="Live Stream")
         else:
-            embed.add_field(
-                name="Duration",
-                value=duration
-            )
+            embed.add_field(name="Duration", value=duration)
         embed.add_field(name="URL", value=track.uri) if track.uri else "None"
         embed.add_field(name="Author", value=track.author) if track.author else ...
         footer = f"Youtube ID: {track.ytid or 'None'} Identifier: {track.identifier or 'None'}"
@@ -327,16 +324,13 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await player.connect(channel.id)
         if isinstance(channel, discord.StageChannel):
             try:
-                payload = {
-                    "channel_id": channel.id,
-                    "suppress": False
-                }
+                payload = {"channel_id": channel.id, "suppress": False}
                 await self.bot.http.edit_my_voice_state(ctx.guild.id, payload)
             except:
                 payload = {
-                    'channel_id': channel.id,
-                    'request_to_speak_timestamp': datetime.datetime.utcnow().isoformat(),
-                    }
+                    "channel_id": channel.id,
+                    "request_to_speak_timestamp": datetime.datetime.utcnow().isoformat(),
+                }
                 await self.bot.http.edit_my_voice_state(ctx.guild.id, payload)
         await ctx.send(f"Connected to {channel.name}")
 

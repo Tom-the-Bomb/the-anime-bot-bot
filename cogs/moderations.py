@@ -4,10 +4,11 @@ from typing import Union
 from utils.subclasses import AnimeContext
 from utils.fuzzy import finder
 
+
 class RecentBansSource(menus.AsyncIteratorPageSource):
     def __init__(self, entity):
         super().__init__(entity, per_page=1)
-    
+
     async def format_page(self, menu, entries):
         embed = discord.Embed(color=menu.bot.color, timestamp=entries.created_at)
         embed.set_author(name=str(entries.user), icon_url=str(entries.user.avatar_url_as(static_format="png")))
@@ -16,8 +17,6 @@ class RecentBansSource(menus.AsyncIteratorPageSource):
         embed.add_field(name="Banned by", value=f"{str(entries.user)} ({entries.user.id})", inline=False)
         embed.add_field(name="Reason", value=entries.reason, inline=False)
         return {"embed": embed}
-
-
 
 
 class BannedMember(commands.Converter):
@@ -40,6 +39,7 @@ class BannedMember(commands.Converter):
         if not entity:
             raise commands.BadArgument("That member was not banned before.")
         return entity.user.id
+
 
 class Moderations(commands.Cog):
     def __init__(self, bot):
@@ -125,14 +125,16 @@ class Moderations(commands.Cog):
                     )
                 except:
                     pass
-    
+
     @commands.command()
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True, manage_channels=True)
     async def mutesetup(self, ctx):
         r = discord.utils.find(lambda x: x.name == "Muted", ctx.guild.roles)
         if not r:
-            return await ctx.send("Please create a role named: `Muted` case sensitive, and make sure to drag it above the member's role.")
+            return await ctx.send(
+                "Please create a role named: `Muted` case sensitive, and make sure to drag it above the member's role."
+            )
         for c in ctx.guild.channels:
             o = c.overwrites
             o[r] = discord.PermissionOverwrite(send_messages=False, connect=False, add_reactions=False)
@@ -153,7 +155,7 @@ class Moderations(commands.Cog):
                 return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
             await member.add_roles(r, reason=f"Muted by: {ctx.author}({ctx.author.id})")
         await ctx.reply(f"Muted {', '.join((i.mention for i in members))}")
-    
+
     @commands.command()
     @commands.has_permissions(manage_roles=True)
     @commands.bot_has_permissions(manage_roles=True)
@@ -168,12 +170,15 @@ class Moderations(commands.Cog):
                 return await ctx.send(f"Muted role is not found, run {ctx.prefix}mutesetup to setup mute.")
             await member.remove_roles(r, reason=f"Unmuted by: {ctx.author}({ctx.author.id})")
         await ctx.reply(f"Unmuted {', '.join((i.mention for i in members))}")
-    
+
     @commands.command()
     @commands.guild_only()
     @commands.bot_has_permissions(view_audit_log=True)
-    async def recentbans(self, ctx, limit: int=100):
-        pages = menus.MenuPages(source=RecentBansSource(ctx.guild.audit_logs(limit=limit, action=discord.AuditLogAction.ban)), delete_message_after=True)
+    async def recentbans(self, ctx, limit: int = 100):
+        pages = menus.MenuPages(
+            source=RecentBansSource(ctx.guild.audit_logs(limit=limit, action=discord.AuditLogAction.ban)),
+            delete_message_after=True,
+        )
         await pages.start(ctx)
 
     @commands.group(invoke_without_command=True)
@@ -259,7 +264,9 @@ class Moderations(commands.Cog):
                 return await ctx.reply("hmm nope not gonna do that")
             if ctx.author.top_role < member.top_role:
                 return await ctx.reply(f"Your role is lower then {member}")
-            await member.ban(reason=f"Soft banned by {ctx.author}({ctx.author.id}) Reason: {reason}", delete_message_days=7)
+            await member.ban(
+                reason=f"Soft banned by {ctx.author}({ctx.author.id}) Reason: {reason}", delete_message_days=7
+            )
             await member.unban(reason=f"Soft banned by {ctx.author}({ctx.author.id}) Reason: {reason}")
         await ctx.reply(f"Soft banned {', '.join((i.mention for i in members))}")
 
@@ -267,18 +274,19 @@ class Moderations(commands.Cog):
     @commands.guild_only()
     @commands.has_permissions(ban_members=True)
     @commands.bot_has_permissions(ban_members=True)
-    async def ban(self, ctx: AnimeContext, members: commands.Greedy[Union[discord.Member, discord.User]], *, reason="None"):
+    async def ban(
+        self, ctx: AnimeContext, members: commands.Greedy[Union[discord.Member, discord.User]], *, reason="None"
+    ):
         if not members:
             return await ctx.send("User not found.")
         for member in members:
             if member.id == 590323594744168494:
                 return await ctx.reply("hmm nope not gonna do that")
-            if (
-                isinstance(member, discord.Member)
-                and ctx.author.top_role < member.top_role
-            ):
+            if isinstance(member, discord.Member) and ctx.author.top_role < member.top_role:
                 return await ctx.reply(f"Your role is lower then {member}")
-            await ctx.guild.ban(member, reason=f"Banned by {ctx.author}({ctx.author.id}) Reason: {reason}", delete_message_days=7)
+            await ctx.guild.ban(
+                member, reason=f"Banned by {ctx.author}({ctx.author.id}) Reason: {reason}", delete_message_days=7
+            )
         await ctx.reply(f"Banned {', '.join((i.mention for i in members))}")
 
     @commands.command()

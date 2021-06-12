@@ -171,11 +171,12 @@ class Error(commands.Cog):
                 except:
                     d = "\u200b"
                     upload = True
-            embed = discord.Embed(
-                color=self.bot.color,
-                description=d
+            embed = discord.Embed(color=self.bot.color, description=d)
+            embed.add_field(
+                name="message",
+                value=await ctx.paste(error["message"]) if len(error["message"]) > 1000 else error["message"],
+                inline=False,
             )
-            embed.add_field(name="message", value=await ctx.paste(error["message"]) if len(error["message"]) > 1000 else error["message"], inline=False)
             embed.add_field(
                 name="created_at",
                 value=humanize.naturaldelta(error["created_at"] - datetime.timedelta(hours=8)),
@@ -186,7 +187,9 @@ class Error(commands.Cog):
             if not upload:
                 return await ctx.send(embed=embed)
             else:
-                return await ctx.send(embed=embed, file=discord.File(BytesIO(error["error"].encode("utf-8")), "error.txt"))
+                return await ctx.send(
+                    embed=embed, file=discord.File(BytesIO(error["error"].encode("utf-8")), "error.txt")
+                )
 
     @errors.command()
     @commands.is_owner()

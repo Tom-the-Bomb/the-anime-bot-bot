@@ -387,37 +387,49 @@ class Utility(commands.Cog):
                 zipfile_.writestr(n, v.getvalue())
         file_.seek(0)
         return discord.File(file_, "emojis.zip")
-    
+
     def download_youtube_video(self, stream, format):
         b = BytesIO()
         stream.stream_to_buffer(b)
         b.seek(0)
         return discord.File(b, f"The_Anime_bot_youtube_download.{format}")
-    
+
     def parse_youtube_data(self, data):
-        results = re.findall(r'/watch\?v=(.{11})', data.decode())
+        results = re.findall(r"/watch\?v=(.{11})", data.decode())
         return "https://youtube.com/watch?v=" + results[0]
 
     @commands.command()
     async def youtube(self, ctx, *, query_or_link: str):
         if not self.yt_regex.fullmatch(query_or_link):
-            async with self.bot.session.get("https://www.youtube.com/results", params={"search_query": query_or_link}) as r:
+            async with self.bot.session.get(
+                "https://www.youtube.com/results", params={"search_query": query_or_link}
+            ) as r:
                 data = await r.read()
                 url = await asyncio.to_thread(self.parse_youtube_data, data)
-                
+
         else:
             url = query_or_link
-        
+
         yt = YouTube(url)
-        comfrimed = await ctx.comfrim(embed=discord.Embed(color=self.bot.color, title=f"Do you want to download:\n{yt.title}?").set_thumbnail(url=yt.thumbnail_url))
+        comfrimed = await ctx.comfrim(
+            embed=discord.Embed(color=self.bot.color, title=f"Do you want to download:\n{yt.title}?").set_thumbnail(
+                url=yt.thumbnail_url
+            )
+        )
         if not comfrimed:
             return await ctx.send("Aborting")
         m = await ctx.send("Video: \U0001f39e\nAudio: \U0001f50a")
         await m.add_reaction("\U0001f39e")
         await m.add_reaction("\U0001f50a")
-        r = await self.bot.wait_for("raw_reaction_add", check=lambda x: x.user_id == ctx.author.id and x.message_id == m.id and x.emoji.name in ("\U0001f50a", "\U0001f39e"), timeout=60)
+        r = await self.bot.wait_for(
+            "raw_reaction_add",
+            check=lambda x: x.user_id == ctx.author.id
+            and x.message_id == m.id
+            and x.emoji.name in ("\U0001f50a", "\U0001f39e"),
+            timeout=60,
+        )
         if r.emoji.name == "\U0001f39e":
-            stream = yt.streams.filter(progressive=True, file_extension='mp4').order_by('resolution').desc().first()
+            stream = yt.streams.filter(progressive=True, file_extension="mp4").order_by("resolution").desc().first()
             format = "mp4"
         else:
             stream = yt.streams.filter(mime_type="audio/mp4").order_by("abr").desc().first()
@@ -430,11 +442,6 @@ class Utility(commands.Cog):
         file = await asyncio.to_thread(self.download_youtube_video, stream, format)
         await ctx.send(file=file)
         await m.delete()
-
-
-
-
-
 
     @commands.command()
     @commands.is_nsfw()
