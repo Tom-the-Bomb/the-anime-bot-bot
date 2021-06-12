@@ -30,7 +30,6 @@ from urllib.parse import quote
 import aiohttp
 import config
 import cv2
-import flags
 import imutils
 import numpy as np
 import polaroid

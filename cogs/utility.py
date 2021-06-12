@@ -6,7 +6,6 @@ from utils import fuzzy
 from twemoji_parser import emoji_to_url
 from pyfiglet import Figlet
 from PIL import Image, ImageFont
-from currency_converter import CurrencyConverter
 import numpy as np
 import humanize
 import aiohttp
@@ -30,7 +29,6 @@ from translate import Translator
 from utils.subclasses import AnimeContext
 from discord.ext import commands, menus
 from bs4 import BeautifulSoup
-import flags
 import discord
 import bs4
 import ratelimiter
@@ -312,15 +310,6 @@ class Utility(commands.Cog):
         for index, (elem, count) in enumerate(results.most_common(30), start=1):
             builder.append(f"**{index}. {elem} ** `({plural(count):time}, {count/times:.2%})`")
         return builder
-
-    @staticmethod
-    def convertcal(amount, from_, to):
-        c = CurrencyConverter(decimal=True)
-        try:
-            final = c.convert(amount, from_.upper(), to.upper())
-            return True, final
-        except Exception as e:
-            return False, e
 
     @staticmethod
     @asyncexe()
