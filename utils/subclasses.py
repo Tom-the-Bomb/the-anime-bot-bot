@@ -239,7 +239,7 @@ class AnimeBot(commands.Bot):
             max_messages=1000,
             connector=self.connector,
             intents=intents,
-            description="""
+            description=r"""
 |_   _| |__   ___     / \   _ __ (_)_ __ ___   ___  | __ )  ___ | |_ 
   | | | '_ \ / _ \   / _ \ | '_ \| | '_ ` _ \ / _ \ |  _ \ / _ \| __|
   | | | | | |  __/  / ___ \| | | | | | | | | |  __/ | |_) | (_) | |_ 
