@@ -606,7 +606,7 @@ class Utility(commands.Cog):
                     try:
                         message = message.decode("utf-8")
                         return await ctx.send(str(await self.bot.mystbin.post(message, syntax="html")))
-                    except:
+                    except UnicodeDecodeError:
 
                         message = f"Unable to decode so here is the byte {message}"
                         return await ctx.send(str(await self.bot.mystbin.post(message, syntax="python")))
@@ -668,7 +668,7 @@ class Utility(commands.Cog):
                         continue
                     else:
                         results.append(rul)
-                except:
+                except KeyError:
                     continue
                 counter = 0
                 real_results = []
@@ -676,7 +676,7 @@ class Utility(commands.Cog):
                 try:
                     real_results.append(f"{titles[counter]}\n{results[counter]}\n")
                     counter += 1
-                except:
+                except KeyError:
                     return real_results
             return real_results
 
@@ -804,7 +804,7 @@ class Utility(commands.Cog):
             return await ctx.send("Power not supported")
         try:
             result = str(await self.bot.loop.run_in_executor(None, self.calc, thing))
-        except:
+        except RuntimeError:
             return await ctx.send(math.nan)
         if "None" in result:
             return await ctx.send(math.nan)
@@ -921,7 +921,7 @@ class Utility(commands.Cog):
                 )
                 embed.set_image(url=emoji_link)
             await ctx.send(embed=embed)
-        except:
+        except Exception:
             emoji_link = await emoji_to_url(emoji)
             embed = discord.Embed(
                 color=self.bot.color,

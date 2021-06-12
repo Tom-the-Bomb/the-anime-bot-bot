@@ -93,7 +93,7 @@ class AnimeContext(commands.Context):
     async def get_paste(self, link):
         try:
             return str(await self.bot.mystbin.get(link))
-        except:
+        except mystbin.BadPasteID:
             return None
 
     async def paste(self, content):
@@ -114,7 +114,7 @@ class AnimeContext(commands.Context):
                     self.bot._message_cache[self.message.id] = m.id
                     try:
                         self.bot.to_delete_message_cache[self.message.id].append(m.id)
-                    except:
+                    except KeyError:
                         pass
                     return m
                 await msg.edit(content=content, **kwargs)
@@ -123,7 +123,7 @@ class AnimeContext(commands.Context):
                 message = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
                 try:
                     self.bot.to_delete_message_cache[self.message.id].append(message.id)
-                except:
+                except KeyError:
                     pass
                 return message
         else:
@@ -143,7 +143,7 @@ class AnimeContext(commands.Context):
                     self.bot._message_cache[self.message.id] = m.id
                     try:
                         self.bot.to_delete_message_cache[self.message.id].append(m.id)
-                    except:
+                    except KeyError:
                         pass
                     return m
                 if not kwargs.get("allowed_mentions"):
@@ -159,7 +159,7 @@ class AnimeContext(commands.Context):
                 message = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
                 try:
                     self.bot.to_delete_message_cache[self.message.id].append(message.id)
-                except:
+                except KeyError:
                     pass
                 return message
         else:

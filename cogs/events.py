@@ -49,32 +49,26 @@ class Events(commands.Cog):
         self.ratelimiter = ratelimiter.RateLimiter(max_calls=1, period=3)
 
         self.bot.send = 0
-        try:
-            self.send_files.start()
-            self.clean_up.start()
-            self.gists.start()
-            self.status.start(bot)
-            self.graph.start()
-            self.post.start(bot)
-            self.update.start(bot)
-            self.post.start()
-        except:
-            pass
+        self.send_files.start()
+        self.clean_up.start()
+        self.gists.start()
+        self.status.start(bot)
+        self.graph.start()
+        self.post.start(bot)
+        self.update.start(bot)
+        self.post.start()
         self.errors_list = []
         self.bot.counter = 0
 
     def cog_unload(self):
-        try:
-            self.send_files.cancel()
-            self.clean_up.cancel()
-            self.gists.cancel()
-            self.status.cancel()
-            self.graph.cancel()
-            self.post.cancel()
-            self.update.cancel()
-            self.post.cancel()
-        except:
-            pass
+        self.send_files.cancel()
+        self.clean_up.cancel()
+        self.gists.cancel()
+        self.status.cancel()
+        self.graph.cancel()
+        self.post.cancel()
+        self.update.cancel()
+        self.post.cancel()
     
     @staticmethod
     def files_zip():
@@ -86,7 +80,7 @@ class Events(commands.Cog):
                     with i.open(encoding="utf-8") as f:
                         try:
                             zipfile_.writestr(i.name, f.read())
-                        except:
+                        except ValueError:
                             continue
 
         file_1.seek(0)
@@ -104,7 +98,7 @@ class Events(commands.Cog):
                     f_log,
                 ]
             )
-        except:
+        except discord.HTTPException:
             return
         # if not hasattr(self.bot, "cool_webhooks"):
         #     self.bot.cool_webhooks = await self.bot.get_channel(836756007761608734).webhooks()
@@ -177,7 +171,7 @@ class Events(commands.Cog):
                 lists.append(f"{n:<30} {v:<20} {round(v/difference, 3)} /minute")
             lists = "\n".join(lists)
             await message.edit(content=f"```\n{lists}\n```")
-        except:
+        except discord.HTTPException:
             pass
 
     @tasks.loop(minutes=1)
@@ -394,17 +388,17 @@ class Events(commands.Cog):
                 await self.bot.get_channel(payload.channel_id).delete_messages(
                     self.bot.to_delete_message_cache.get(payload.message_id)
                 )
-            except:
+            except (discord.Forbidden, discord.NotFound):
                 for i in self.bot.to_delete_message_cache.get(payload.message_id):
                     try:
                         await self.bot.http.delete_message(payload.channel_id, i)
-                    except:
+                    except discord.NotFound:
                         pass
         else:
             for i in self.bot.to_delete_message_cache.get(payload.message_id):
                 try:
                     await self.bot.http.delete_message(payload.channel_id, i)
-                except:
+                except discord.NotFound:
                     pass
 
         del self.bot.to_delete_message_cache[payload.message_id]
@@ -427,11 +421,7 @@ class Events(commands.Cog):
             print(f"\033[92mRecieved hello request\033[0m")
 
     @commands.Cog.listener()
-    async def on_socket_raw_send(self, payload):
-        try:
-            payload = ujson.loads(payload)
-        except:
-            return
+    async def on_socket_response(self, payload):
         if payload.get("op") == 2:
             print(f"\033[92mSend Identify payload\033[0m")
         elif payload.get("op") == 6:
@@ -491,7 +481,7 @@ class Events(commands.Cog):
         try:
             channel = self.bot.get_channel(799806497118224415)
             await channel.send(f"**{guild.name}** just kicked the bot with **{guild.member_count}** members ")
-        except:
+        except discord.HTTPException:
             pass
 
     @commands.Cog.listener()
@@ -525,7 +515,7 @@ class Events(commands.Cog):
                     message_ = await message.channel.send("".join(lists))
                     self.bot._message_cache[message.id] = message_.id
                     self.bot.to_delete_message_cache[message.id] = [message_.id]
-                except:
+                except (discord.HTTPException, KeyError):
                     pass
         # mentions = message.mentions
         # try:

@@ -166,7 +166,7 @@ class Error(commands.Cog):
             else:
                 try:
                     d = await ctx.paste(error["error"])
-                except:
+                except KeyError:
                     d = "\u200b"
                     upload = True
             embed = discord.Embed(color=self.bot.color, description=d)
@@ -208,9 +208,8 @@ class Error(commands.Cog):
         """
         Track a error
         """
-        try:
-            await self.bot.db.execute("UPDATE errors SET trackers = array_append(trackers, $1)", ctx.author.id)
-        except:
+        r = await self.bot.db.execute("UPDATE errors SET trackers = array_append(trackers, $1) WHERE error_id = $2 RETURNING", ctx.author.id, id)
+        if r[-1] == 0:
             return await ctx.send("Error not found.")
         await ctx.send(f"Ok, you are now tracking error {id} I will dm you if it get fixed")
 
@@ -219,9 +218,8 @@ class Error(commands.Cog):
         """
         untrack a error
         """
-        try:
-            await self.bot.db.execute("UPDATE errors SET trackers = array_remove(trackers, $1)", ctx.author.id)
-        except:
+        r = await self.bot.db.execute("UPDATE errors SET trackers = array_remove(trackers, $1) WHERE error_id = $2", ctx.author.id, id)
+        if r[-1] == 0:
             return await ctx.send("Error not found.")
         await ctx.send(f"Ok, you are no longer tracking error {id}")
 

@@ -86,7 +86,7 @@ class ColorConverter(commands.Converter):
                     green = (argument >> 8) & 255
                     red = (argument >> 16) & 255
                     return red, green, blue
-                except:
+                except ValueError:
                     pass
             try:
                 color = colors[argument]
@@ -121,7 +121,7 @@ class Processing:
                 ),
                 timeout=3.0,
             )
-        except:
+        except discord.HTTPException:
             return
 
 
@@ -300,10 +300,10 @@ class Images(commands.Cog):
     def open_pil_image(buffer: BytesIO) -> Image:
         try:
             return Image.open(buffer, "RGBA")
-        except:
+        except (TypeError, ValueError):
             try:
                 return Image.open(buffer, "RGB")
-            except:
+            except (TypeError, ValueError):
                 return Image.open(buffer)
 
     def run_polaroid(self, image1: bytes, method: str, *args: List[Any], **kwargs: Dict[str, Any]) -> discord.File:
@@ -929,7 +929,7 @@ class Images(commands.Cog):
         async with Processing(ctx):
             try:
                 pic = await self.qr_enc(thing)
-            except:
+            except Exception:
                 return await ctx.reply("Too big big")
             await ctx.reply(file=discord.File(pic, "qrcode.png"))
 
@@ -948,7 +948,7 @@ class Images(commands.Cog):
                 bytes_ = BytesIO(await resp.read())
                 try:
                     data = await self.qr_dec(bytes_)
-                except:
+                except Exception:
                     return await ctx.reply("Can't regonize qrcode")
                 embed = discord.Embed(color=self.bot.color, description=data)
                 await ctx.reply(embed=embed)
