@@ -1,48 +1,48 @@
-from jishaku.paginators import PaginatorEmbedInterface, PaginatorInterface
-import math
-from utils.format import plural
-from utils.asyncstuff import asyncexe
-from utils import fuzzy
-from twemoji_parser import emoji_to_url
-from pyfiglet import Figlet
-from PIL import Image, ImageFont
-import numpy as np
-import humanize
-import aiohttp
-from typing import Optional
-from pytube import YouTube
-from io import BytesIO
-from datetime import datetime
-from contextlib import suppress
-from collections import Counter
-import zlib
-import unicodedata
-import typing
-import random as rng
-import random
-import json
-import io
-import decimal
-import base64
 import ast
-from translate import Translator
-from utils.subclasses import AnimeContext
-from discord.ext import commands, menus
-from bs4 import BeautifulSoup
-import discord
-import bs4
-import ratelimiter
-from urllib.parse import urlparse
-from itertools import cycle
 import asyncio
-import config
-import os
-import re
-import zipfile
-
+import base64
 import collections
+import decimal
+import io
+import json
+import math
+import os
+import random
+import random as rng
+import re
+import typing
+import unicodedata
+import zipfile
+import zlib
+from collections import Counter
+from contextlib import suppress
+from datetime import datetime
+from io import BytesIO
+from itertools import cycle
+from typing import Optional
+from urllib.parse import urlparse
 
+import aiohttp
+import bs4
+import config
+import discord
+import humanize
+import numpy as np
+import ratelimiter
+from bs4 import BeautifulSoup
+from discord.ext import commands, menus
 from fake_useragent import UserAgent
+from PIL import Image, ImageFont
+from pyfiglet import Figlet
+from pytube import YouTube
+from translate import Translator
+from twemoji_parser import emoji_to_url
+from utils import fuzzy
+from utils.asyncstuff import asyncexe
+from utils.format import plural
+from utils.subclasses import AnimeContext
+
+from jishaku.paginators import PaginatorEmbedInterface, PaginatorInterface
 
 ua = UserAgent()
 
@@ -380,7 +380,7 @@ class Utility(commands.Cog):
         stream.stream_to_buffer(b)
         b.seek(0)
         return discord.File(b, f"The_Anime_bot_youtube_download.{format}")
-    
+
     @staticmethod
     def parse_youtube_data(data):
         results = re.findall(r"/watch\?v=(.{11})", data.decode())
@@ -658,9 +658,9 @@ class Utility(commands.Cog):
             titles = [i.getText() for i in soup.find_all("h3")]
             a = soup.find_all("a")
             for i in a:
-                l = i.get("href")
+                href = i.get("href")
                 try:
-                    m = re.search("(?P<url>https?://[^\s]+)", l)
+                    m = re.search("(?P<url>https?://[^\s]+)", href)
                     n = m.group(0)
                     rul = n.split("&")[0]
                     domain = urlparse(rul)

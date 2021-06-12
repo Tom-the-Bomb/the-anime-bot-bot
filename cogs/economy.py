@@ -1,8 +1,7 @@
-from datetime import timedelta
-from datetime import datetime
-import asyncpg
 import random
+from datetime import datetime, timedelta
 
+import asyncpg
 import discord
 from discord.ext import commands
 

@@ -1,7 +1,4 @@
 import asyncio
-import ujson
-import typing
-import config
 import base64
 import datetime
 import inspect
@@ -11,26 +8,24 @@ import os
 import pathlib
 import random
 import time
+import typing
 from collections import namedtuple
 
 import aiohttp
+import config
 import discord
 import humanize
 import psutil
+import ujson
 from discord.ext import commands
-from utils.subclasses import AnimeContext
-
 # from github import Github
 from utils.asyncstuff import asyncexe
 from utils.embed import embedbase
 from utils.fuzzy import finder
-from utils.subclasses import AnimeColor
+from utils.subclasses import AnimeColor, AnimeContext
 
-from jishaku.paginators import (
-    PaginatorEmbedInterface,
-    PaginatorInterface,
-    WrappedPaginator,
-)
+from jishaku.paginators import (PaginatorEmbedInterface, PaginatorInterface,
+                                WrappedPaginator)
 
 gittoken = config.gittoken
 # g = Github(gittoken)
@@ -540,14 +535,14 @@ System:
                 continue
             fc += 1
             with f.open() as of:
-                for l in of.readlines():
-                    l = l.strip()
+                for line in of.readlines():
+                    line = line.strip()
                     cc += len(l)
-                    if l.startswith("class"):
+                    if line.startswith("class"):
                         cl += 1
-                    if l.startswith("def"):
+                    if line.startswith("def"):
                         fn += 1
-                    if l.startswith("async def"):
+                    if line.startswith("async def"):
                         cr += 1
                     if "#" in l:
                         cm += 1

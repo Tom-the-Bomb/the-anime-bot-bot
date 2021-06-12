@@ -24,7 +24,7 @@ from copy import copy
 from io import BytesIO
 from itertools import chain
 from random import randrange
-from typing import List, Tuple, Union, Any, Optional, List, Dict
+from typing import Any, Dict, List, Optional, Tuple, Union
 from urllib.parse import quote
 
 import aiohttp
@@ -38,7 +38,8 @@ import qrcode
 import ratelimiter
 import ujson
 from asyncdagpi import ImageFeatures
-from PIL import Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter, ImageOps, ImageSequence
+from PIL import (Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter,
+                 ImageOps, ImageSequence)
 from pyzbar.pyzbar import decode
 from qrcode.image.pure import PymagingImage
 from twemoji_parser import emoji_to_url
@@ -69,9 +70,6 @@ Image_Union = Union[
 ]
 
 
-
-
-
 class ColorConverter(commands.Converter):
     async def convert(self, ctx, argument):
         converter = commands.ColourConverter()
@@ -96,6 +94,7 @@ class ColorConverter(commands.Converter):
                 except ValueError:
                     raise commands.BadArgument
         return tuple((int(i) for i in color))
+
 
 class Processing:
     __slots__ = ("ctx", "start", "m")
@@ -277,7 +276,7 @@ class Images(commands.Cog):
             return "pentagon"
         else:
             return "circle"
-    
+
     @staticmethod
     def resize(image: Image) -> Image:
         if image.height <= 500 and image.width <= 500:
@@ -295,7 +294,7 @@ class Images(commands.Cog):
             size = (siz, siz)
             # image.close()
         return image.resize(size, resample=Image.NEAREST, reducing_gap=1)
-    
+
     @staticmethod
     def open_pil_image(buffer: BytesIO) -> Image:
         try:
@@ -546,7 +545,7 @@ class Images(commands.Cog):
                 img.save(file=final)
                 final.seek(0)
                 return final
-    
+
     @staticmethod
     @asyncexe()
     def qr_enc(thing: str) -> BytesIO:
@@ -561,7 +560,7 @@ class Images(commands.Cog):
     def qr_dec(bytes_: BytesIO) -> str:
         with Image.open(bytes_) as img:
             return decode(img)[0].data.decode("utf-8")
-    
+
     @staticmethod
     @asyncexe()
     def convertimage_(image: BytesIO, format: str, f: Optional[str]) -> Tuple[BytesIO, str]:
@@ -719,7 +718,7 @@ class Images(commands.Cog):
             async with self.bot.session.get(url) as resp:
                 b = BytesIO(await resp.read())
             await ctx.reply(file=await self.shape_detection(b))
-    
+
     @staticmethod
     @asyncexe()
     def facereg_(image: BytesIO) -> discord.File:
@@ -762,7 +761,7 @@ class Images(commands.Cog):
         b = BytesIO(im_buf_arr)
         del im_buf_arr
         return discord.File(b, "The_Anime_Bot_Face_Reg.png")
-    
+
     @staticmethod
     @asyncexe()
     def make_color_image(color: str) -> BytesIO:
@@ -791,7 +790,7 @@ class Images(commands.Cog):
         s = 0 if mx == 0 else (df / mx) * 100
         v = mx * 100
         return h, s, v
-    
+
     @staticmethod
     def rgb_to_xy_bri(
         r: Union[int, float], g: Union[int, float], b: Union[int, float]
@@ -819,8 +818,8 @@ class Images(commands.Cog):
         elif mx == b:
             h = (60 * ((r - g) / df) + 240) % 360
         s = 0 if mx == 0 else (df / mx) * 100
-        l = ((mx + mn) / 2) * 100
-        return f"({round(h)}, {round(s)}%, {round(l)}%)"
+        lightness = ((mx + mn) / 2) * 100
+        return f"({round(h)}, {round(s)}%, {round(lightness)}%)"
 
     @staticmethod
     def rgb_to_cmyk(rgb_tuple: Tuple[int, int, int]) -> Tuple[float, float, float]:
@@ -1339,7 +1338,7 @@ class Images(commands.Cog):
             image = await self.bot.zaneapi.jpeg(url)
             embed = discord.Embed(color=self.bot.color).set_image(url="attachment://jpeg.gif")
             await ctx.reply(file=discord.File(fp=image, filename="jpeg.gif"), embed=embed)
-    
+
     @staticmethod
     @asyncexe()
     def magic_(image: BytesIO, intensity: float):

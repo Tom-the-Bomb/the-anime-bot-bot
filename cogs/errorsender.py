@@ -1,9 +1,9 @@
-from discord.ext import commands
-from discord import AsyncWebhookAdapter, Webhook
-from utils.subclasses import AnimeContext
 import config
-import prettify_exceptions
 import discord
+import prettify_exceptions
+from discord import AsyncWebhookAdapter, Webhook
+from discord.ext import commands
+from utils.subclasses import AnimeContext
 
 webhook_url = config.webhookurl
 

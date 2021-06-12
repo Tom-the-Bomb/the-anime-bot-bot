@@ -1,21 +1,22 @@
-import discord
-from discord.ext import commands
-from utils.subclasses import AnimeContext
 import random
-from io import BytesIO
-from scipy.ndimage import gaussian_gradient_magnitude
-import numpy as np
-from PIL import Image
-from wordcloud import WordCloud
-from matplotlib import pyplot as plt
-from utils.asyncstuff import asyncexe
 from collections import Counter
+from io import BytesIO
+
+import discord
+import numpy as np
+from discord.ext import commands
+from matplotlib import pyplot as plt
+from PIL import Image
+from scipy.ndimage import gaussian_gradient_magnitude
+from utils.asyncstuff import asyncexe
+from utils.subclasses import AnimeContext
+from wordcloud import WordCloud
 
 
 class Chat(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
+
     @staticmethod
     @asyncexe()
     def wordcloud_(text, icon):

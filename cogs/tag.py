@@ -1,11 +1,12 @@
-import discord
-from discord.ext import commands, menus
 import asyncio
-from io import BytesIO
-import ujson
 import re
-import asyncpg
+from io import BytesIO
 from typing import Union
+
+import asyncpg
+import discord
+import ujson
+from discord.ext import commands, menus
 from utils.subclasses import AnimeContext
 
 

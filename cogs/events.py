@@ -1,34 +1,33 @@
-from utils.asyncstuff import asyncexe
+import asyncio
+import datetime
+import gc
+import json
+import logging
+import os
+import time
+import tracemalloc
+import zipfile
 from contextlib import suppress
-import wavelink
-import config
-import ratelimiter
-import ujson
-from utils.subclasses import AnimeContext
+from csv import writer
 from io import BytesIO
 from pathlib import Path
-import zipfile
-import PIL
-from PIL import Image
-import tracemalloc
-import gc
-import prettify_exceptions
-import humanize
-import datetime
-import aiofile
-import asyncdagpi
-import aiozaneapi
-from utils.subclasses import GlobalCooldown
-from utils.fuzzy import finder
-import time
-import os
-import json
-import asyncio
-import logging
-from csv import writer
 
+import aiofile
+import aiozaneapi
+import asyncdagpi
+import config
 import discord
+import humanize
+import PIL
+import prettify_exceptions
+import ratelimiter
+import ujson
+import wavelink
 from discord.ext import commands, tasks
+from PIL import Image
+from utils.asyncstuff import asyncexe
+from utils.fuzzy import finder
+from utils.subclasses import AnimeContext, GlobalCooldown
 
 logging.getLogger("asyncio").setLevel(logging.CRITICAL)
 
@@ -72,7 +71,7 @@ class Events(commands.Cog):
             self.post.cancel()
             self.update.cancel()
             self.post.cancel()
-    
+
     @staticmethod
     def files_zip():
         file_1 = BytesIO()

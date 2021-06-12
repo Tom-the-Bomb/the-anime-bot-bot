@@ -1,13 +1,13 @@
 import json
-from io import BytesIO
-from utils.subclasses import AnimeContext
-import urllib
-import bs4
 import random
-from utils.asyncstuff import asyncexe
+import urllib
+from io import BytesIO
 
+import bs4
 import discord
 from discord.ext import commands, menus
+from utils.asyncstuff import asyncexe
+from utils.subclasses import AnimeContext
 
 
 class AnimeMenuSource(menus.ListPageSource):

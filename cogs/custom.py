@@ -1,11 +1,12 @@
-import discord
-from discord.ext import commands
-import re
-import aiohttp
-from aiohttp import web
-from utils.subclasses import AnimeContext
 import copy
 import datetime
+import re
+
+import aiohttp
+import discord
+from aiohttp import web
+from discord.ext import commands
+from utils.subclasses import AnimeContext
 
 
 class Custom(commands.Cog):

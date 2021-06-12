@@ -1,20 +1,19 @@
-import discord
-from discord.ext import commands, menus
-import sys
-import datetime
-from utils.subclasses import InvalidImage
-from io import BytesIO
-import traceback
-import wavelink
-import prettify_exceptions
-import humanize
-from utils.subclasses import GlobalCooldown
-from utils.subclasses import AnimeContext
-import PIL
-from PIL import Image
 import asyncio
+import datetime
+import sys
+import traceback
+from io import BytesIO
+
 import aiozaneapi
 import asyncdagpi
+import discord
+import humanize
+import PIL
+import prettify_exceptions
+import wavelink
+from discord.ext import commands, menus
+from PIL import Image
+from utils.subclasses import AnimeContext, GlobalCooldown, InvalidImage
 
 
 class ErrorsMenuSource(menus.ListPageSource):
@@ -33,7 +32,7 @@ class ErrorsMenuSource(menus.ListPageSource):
 class Error(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
+
     @staticmethod
     def embed(text):
         return discord.Embed(color=0xFF0000, title="An error occured", description=text)

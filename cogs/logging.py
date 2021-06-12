@@ -1,10 +1,11 @@
-import discord
-from discord.ext import commands
 import random
-from utils.subclasses import AnimeContext
+from datetime import datetime
+
+import discord
 import humanize
 import ratelimiter
-from datetime import datetime
+from discord.ext import commands
+from utils.subclasses import AnimeContext
 
 utcnow = datetime.utcnow
 

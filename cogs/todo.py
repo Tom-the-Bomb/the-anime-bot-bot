@@ -1,7 +1,9 @@
+import datetime
+
 import discord
 from discord.ext import commands, menus
 from utils.subclasses import AnimeContext
-import datetime
+
 from jishaku.paginators import PaginatorEmbedInterface, PaginatorInterface
 
 

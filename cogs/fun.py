@@ -1,6 +1,4 @@
 import asyncio
-from utils.subclasses import AnimeContext
-import config
 import json
 import os
 import random
@@ -12,6 +10,7 @@ from io import BytesIO
 
 import aiohttp
 import async_timeout
+import config
 import discord
 import gtts
 from asyncdagpi import Client
@@ -22,6 +21,7 @@ from PIL import Image, ImageDraw, ImageFont
 from utils.asyncstuff import asyncexe
 from utils.embed import embedbase
 from utils.paginator import AnimePages
+from utils.subclasses import AnimeContext
 
 talk_token = config.talk_token
 rapid_api_key = config.rapid_api_key
@@ -33,7 +33,7 @@ class UrbanDictionaryPageSource(menus.ListPageSource):
 
     def __init__(self, data):
         super().__init__(entries=data, per_page=1)
-    
+
     @staticmethod
     def cleanup_definition(definition, *, regex=BRACKETED):
         def repl(m):

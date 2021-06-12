@@ -1,9 +1,10 @@
+import typing
+
 import discord
+import ratelimiter
 import ujson
 from discord.ext import commands
 from utils.subclasses import AnimeContext
-import typing
-import ratelimiter
 
 
 class ReactionRole(commands.Cog):

@@ -1,12 +1,13 @@
-import discord
-from discord.ext import commands, tasks
-import config
-from utils.subclasses import AnimeContext
-import os
 import asyncio
+import os
 import time
 from contextlib import suppress
+
 import aiohttp
+import config
+import discord
+from discord.ext import commands, tasks
+from utils.subclasses import AnimeContext
 
 
 class Web(commands.Cog):

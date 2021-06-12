@@ -1,14 +1,15 @@
-import discord
-import config
-import typing
-from discord import Webhook, AsyncWebhookAdapter
-from discord.ext import commands, menus
-from utils.subclasses import AnimeContext
-from math import ceil, floor
-from itertools import cycle
 import random
+import typing
 from io import BytesIO
+from itertools import cycle
+from math import ceil, floor
+
+import config
+import discord
+from discord import AsyncWebhookAdapter, Webhook
+from discord.ext import commands, menus
 from PIL import Image
+from utils.subclasses import AnimeContext
 
 USER_AVATAR_IMAGE_URL = "https://cdn.discordapp.com/attachments/842629929039953920/"
 

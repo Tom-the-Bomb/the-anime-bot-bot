@@ -1,8 +1,9 @@
+from typing import Union
+
 import discord
 from discord.ext import commands, menus
-from typing import Union
-from utils.subclasses import AnimeContext
 from utils.fuzzy import finder
+from utils.subclasses import AnimeContext
 
 
 class RecentBansSource(menus.AsyncIteratorPageSource):
@@ -125,7 +126,7 @@ class Moderations(commands.Cog):
                     )
                 except:
                     pass
-    
+
     @commands.command()
     @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
@@ -134,19 +135,16 @@ class Moderations(commands.Cog):
         await ctx.channel.delete(reason=f"Channel nuked by {ctx.author} ({ctx.author.id}) Reason: {reason}")
         await c.send(f"Channel nuked by {ctx.author} ({ctx.author.id}) Reason: {reason}")
 
-
-    
     @commands.command()
     @commands.has_permissions(manage_channels=True)
     @commands.bot_has_permissions(manage_channels=True)
-    async def slowmode(self, ctx, seconds:int = 0):
+    async def slowmode(self, ctx, seconds: int = 0):
         if seconds > 21600:
             return await ctx.send("Seconds could not be greater then 21600")
         elif seconds < 0:
             return await ctx.send("Seconds could not be less then 0")
         await ctx.channel.edit(slowmode_delay=seconds, reason=f"Slowmode edited by {ctx.author} ({ctx.author.id})")
         await ctx.send(f"Edited slowmode to {seconds}")
-
 
     @commands.command()
     @commands.has_permissions(manage_roles=True)

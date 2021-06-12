@@ -1,35 +1,32 @@
 import asyncio
-import re
-import typing
+import collections
+import contextlib
+import inspect
 import io
 import os
 import random
-import asyncpg
+import re
 import subprocess
 import textwrap
 import traceback
-from utils.subclasses import AnimeContext
+import typing
 import zipfile
 from contextlib import redirect_stdout
 from io import BytesIO
 
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-
-import collections
-import contextlib
-import import_expression
-import inspect
-import asyncio
 import aiohttp
+import asyncpg
 import discord
+import import_expression
 from bs4 import BeautifulSoup
-from discord.ext import commands, tasks, menus
+from discord.ext import commands, menus, tasks
 from PIL import Image
 from selenium import webdriver
-from utils.fuzzy import finder
+from selenium.webdriver.firefox.options import Options
 from utils.asyncstuff import asyncexe
 from utils.embed import embedbase
+from utils.fuzzy import finder
+from utils.subclasses import AnimeContext
 
 from jishaku.exception_handling import ReactionProcedureTimer
 from jishaku.paginators import PaginatorInterface, WrappedPaginator
@@ -451,8 +448,9 @@ class Owner(commands.Cog, command_attrs={"hidden": True}):
         # this cog as a base for their other cog, and since this one is kinda
         # odd and unnecessary for most people, I will make it easy to remove
         # for those people.
-        from utils.format import TabularData, plural
         import time
+
+        from utils.format import TabularData, plural
 
         query = self.cleanup_code(query)
 
