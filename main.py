@@ -24,7 +24,6 @@ import aioredis
 import discord
 from discord.ext import commands
 from discord_slash import SlashCommand
-from utils.HelpPaginator import CannotPaginate, HelpPaginator
 from utils.subclasses import AnimeBot
 
 sys.stdout = journal.stream()
