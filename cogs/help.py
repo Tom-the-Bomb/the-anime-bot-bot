@@ -25,6 +25,9 @@ class HelpMenuSource(menus.ListPageSource):
 
 
 class HelpCommand(commands.HelpCommand):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
     async def command_callback(self, ctx, *, command=None):
         await self.prepare_help_command(ctx, command)
         bot = ctx.bot
@@ -71,7 +74,7 @@ class HelpCommand(commands.HelpCommand):
         return f"{self.clean_prefix}{command.qualified_name} {command.signature}"
 
     async def send_group_help(self, group):
-        lists = [self.get_command_signature(i) for i in group.walk_commands()]
+        lists = [self.get_command_signature(i) for i in await self.filter_commands(group.walk_commands())]
         pages = menus.MenuPages(source=HelpMenuSource(lists), delete_message_after=True)
         await pages.start(self.context)
 
@@ -97,11 +100,11 @@ class HelpCommand(commands.HelpCommand):
         await self.context.send(embed=embed)
 
     async def send_cog_help(self, cog):
-        commands_ = cog.get_commands()
+        commands_ = await self.filter_commands(cog.get_commands())
         lists_ = []
         for i in commands_:
             if isinstance(i, commands.Group):
-                for v in i.walk_commands():
+                for v in await self.filter_commands(i.walk_commands()):
                     lists_.append(self.get_command_signature(v))
                 lists_.insert(0, self.get_command_signature(i))
             else:
@@ -171,15 +174,15 @@ class HelpCommand(commands.HelpCommand):
     async def command_not_found(self, string: str):
         matches = difflib.get_close_matches(string, self.context.bot.command_list)
         if not matches:
-            return f"Command '{string}' is not found."
+            return f"Command {string!r} is not found."
         commands_found = "\n".join(matches[:3])
-        return f"Command '{string}' is not found. Did you mean:\n{commands_found}"
+        return f"command {string!r} is not found. Did you mean:\n{commands_found}"
 
 
 class help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-        bot.help_command = HelpCommand()
+        bot.help_command = HelpCommand(show_hidden=False, verify_checks=False)
 
 
 def setup(bot):
