@@ -360,30 +360,7 @@ class AnimeBot(commands.Bot):
         self.ball = eight_ball.ball()
         self.loop.run_until_complete(self.create_cache())
         self.zaneapi = aiozaneapi.Client(zane_api)
-        for command in self.commands:
-            self.command_list.append(str(command))
-            self.command_list.extend([alias for alias in command.aliases])
-            if isinstance(command, commands.Group):
-                for subcommand in command.commands:
-                    self.command_list.append(str(subcommand))
-                    self.command_list.extend(
-                        [f"{command} {subcommand_alias}" for subcommand_alias in subcommand.aliases]
-                    )
-                    if isinstance(subcommand, commands.Group):
-                        for subcommand2 in subcommand.commands:
-                            self.command_list.append(str(subcommand2))
-                            self.command_list.extend(
-                                [f"{subcommand} {subcommand2_alias}" for subcommand2_alias in subcommand2.aliases]
-                            )
-                            if isinstance(subcommand2, commands.Group):
-                                for subcommand3 in subcommand2.commands:
-                                    self.command_list.append(str(subcommand3))
-                                    self.command_list.extend(
-                                        [
-                                            f"{subcommand2} {subcommand3_alias}"
-                                            for subcommand3_alias in subcommand3.aliases
-                                        ]
-                                    )
+
         for file in os.listdir("./cogs"):
             if file.endswith(".py"):
                 try:

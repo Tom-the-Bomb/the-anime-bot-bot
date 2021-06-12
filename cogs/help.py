@@ -193,14 +193,14 @@ class HelpCommand(commands.HelpCommand):
         # await message.delete()
 
     async def command_not_found(self, string: str):
-        matches = difflib.get_close_matches(string, self.context.bot.command_list)
+        matches = difflib.get_close_matches(string, self.context.bot.all_commands.keys())
         if not matches:
             return f"Command {string!r} is not found."
         commands_found = "\n".join(matches[:3])
         return f"command {string!r} is not found. Did you mean:\n{commands_found}"
 
 
-class help(commands.Cog):
+class Help(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         bot.help_command = HelpCommand(show_hidden=False, verify_checks=False)
