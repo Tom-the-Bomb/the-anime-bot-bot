@@ -71,7 +71,7 @@ class HelpCommand(commands.HelpCommand):
             return await self.send_command_help(cmd)
 
     def get_command_signature(self, command):
-        return f"{self.clean_prefix}{command.qualified_name} {command.signature}"
+        return f"{self.clean_prefix}{command.qualified_name}{'|' if command.aliases else ''}{'|'.join(command.aliases)} {command.signature}"
 
     async def send_group_help(self, group):
         lists = [self.get_command_signature(i) for i in await self.filter_commands(group.walk_commands())]
@@ -97,6 +97,11 @@ class HelpCommand(commands.HelpCommand):
             title=self.get_command_signature(command),
             description=command.help or random.choice(no_help_responses),
         )
+        embed.add_field(name="Category", value=command.cog_name)
+        embed.add_field(name="Runnable by you", value=await command.can_run(self.context)
+        usage = await self.context.bot.db.fetchval("SELECT usages FROM commandsusage WHERE command = $1", command.qualified_name)
+        embed.add_field(name="Usage", value=usage if usage else "0")
+
         await self.context.send(embed=embed)
 
     async def send_cog_help(self, cog):
