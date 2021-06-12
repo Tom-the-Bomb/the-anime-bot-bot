@@ -16,7 +16,6 @@ import asyncpg
 import config
 import discord
 import eight_ball
-import ipc
 import mystbin
 import psutil
 import ujson
