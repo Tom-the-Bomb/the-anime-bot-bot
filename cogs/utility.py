@@ -1013,11 +1013,11 @@ class Utility(commands.Cog):
         channels = len(guild1.channels)
         created_at = humanize.naturaldate(guild1.created_at)
         default_role = guild1.default_role.name
-        features = "\n".join(
+        features = ", ".join(
             list(
                 map(
                     lambda f: f.title(),
-                    [feature.replace("_", " ") for feature in guild1.features],
+                    [feature.replace("_", " ") for feature in ctx.guild.features],
                 )
             )
         )
