@@ -144,10 +144,16 @@ System:
     @commands.command()
     async def snipe(self, ctx):
         """
-        no this is never happening, people delete message for a reason and you just snipe that just not right.
+        no this is never happening, 
+        people delete message for a reason 
+        and you just snipe that just not right.
         """
         await ctx.reply(
-            "no this is never happening, people delete message for a reason and you just snipe that just not right."
+            (
+            "no this is never happening,", 
+            "people delete message for a reason", 
+            "and you just snipe that just not right.",
+            )
         )
 
     @commands.command()
@@ -157,7 +163,8 @@ System:
     @commands.command(aliases=["randomtoken"])
     async def randombottoken(self, ctx: AnimeContext, user: discord.User = None):
         """
-        Generate a completely random token from a server member THE TOKEN IS NOT VALID so don't be scared
+        Generate a completely random token from a server member 
+        THE TOKEN IS NOT VALID so don't be scared
         """
         member = random.choice(ctx.guild.members) if not user else user
         byte_first = str(member.id).encode("ascii")
@@ -232,33 +239,6 @@ System:
             value=f"oh hi another source rob rob human\nMy sources are on github find it yourself\n[if you really want it](https://github.com/Cryptex-github/the-anime-bot-bot)\n\n[Licensed under GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.txt)",
         )
         await ctx.reply(embed=embed)
-        # branch = 'main'
-        # if command is None:
-        #     return await ctx.reply(source_url)
-
-        # if command == 'help':
-        #     src = type(self.bot.help_command)
-        #     module = src.__module__
-        #     filename = inspect.getsourcefile(src)
-        # else:
-        #     obj = self.bot.get_command(command.replace('.', ' '))
-        #     if obj is None:
-        #         return await ctx.reply('Could not find command.')
-
-        #     src = obj.callback.__code__
-        #     module = obj.callback.__module__
-        #     filename = src.co_filename
-
-        # lines, firstlineno = inspect.getsourcelines(src)
-        # if not module.startswith('discord'):
-        #     location = os.path.relpath(filename).replace('\\', '/')
-        # else:
-        #     location = module.replace('.', '/') + '.py'
-        #     source_url = 'https://github.com/Rapptz/discord.py'
-        #     branch = 'master'
-
-        # final_url = f'<{source_url}/blob/{branch}/{location}#L{firstlineno}-L{firstlineno + len(lines) - 1}>'
-        # await ctx.reply(final_url)
 
     @commands.command()
     async def charles(self, ctx: AnimeContext, *, text):
@@ -270,24 +250,10 @@ System:
         await ctx.reply(f"https://bin.charles-bot.com/{data['key']}")
 
     @commands.command()
-    async def type(self, ctx: AnimeContext, seconds: int):
-        """
-        the bot will type for the time u provide yes idk what i made the max is 5 minute :O
-        """
-        seconds = min(seconds, 300)
-
-        async with ctx.channel.typing():
-            await asyncio.sleep(seconds)
-            await ctx.reply(f"typed for {seconds} seconds")
-
-    @commands.command()
     @commands.cooldown(1, 10, commands.BucketType.user)
     async def raw(self, ctx: AnimeContext, message_id: int, channel_id: int = None):
         await ctx.trigger_typing()
         raw = await self.bot.http.get_message(channel_id or ctx.channel.id, message_id)
-        # raw = str(resp).replace("|", "\u200b|").replace("*", "\u200b*").replace("`", "\u200b`").replace("~", "\u200b~").replace(">", "\u200b>").replace('"', "'")
-        # raw = json.loads(raw)
-        # raw = json.dumps(raw, indent=4)
         raw = ujson.dumps(raw, indent=4, ensure_ascii=True, escape_forward_slashes=False)
         raw = (
             raw.replace("|", "\u200b|")
@@ -478,36 +444,6 @@ System:
         )
         await channel.send(embed=embed, allowed_mentions=discord.AllowedMentions.none())
         await ctx.reply(embed=embed, allowed_mentions=discord.AllowedMentions.none())
-
-    # @commands.command()
-    # async def help(self, ctx):
-    #   await ctx.message.add_reaction("<:mochaok:788473006606254080>")
-    #   await ctx.trigger_typing()
-    #   embed = discord.Embed(color=0x2ecc71)
-    #   embed.set_author(name=ctx.author, icon_url=ctx.author.avatar_url)
-    #   embed.add_field(name="music \U0001f3b5", value="`join`, `leave`, `lyrics`, `now`, `pause`, `play`, `queue`, `remove`, `resume`, `shuffle`, `skip`, `stop`, `summon`, `volume`", inline=False)
-    #   embed.add_field(name="anime <:ZeroTwoUWU:708570252350455848>", value="`addnewpicture`, `animequote`, `randomquote`", inline=False)
-    #   # embed.add_field(name="currency 🍓 ", value="`balance`, `withdraw`, `deposit`, `shop`, `beg`, `slot`, `buy`, `sell`, `send`, `steal`, `bag`", inline=False)
-    #   embed.add_field(name="moderation \U0001f6e1", value="`kick`, `ban`, `unban`", inline=False)
-    #   embed.add_field(name="fun <a:milkandmochadance:788470536455585802>", value="`meme`, `scared`", inline=False)
-    #   embed.add_field(name="others <a:milkguitar:788469773599113247>", value="`usage`, `ping`, `dm`, `guilds`", inline=False)
-    #   embed.set_footer(text=f"requested by {ctx.author} response time : {round(self.bot.latency * 1000)} ms", icon_url=ctx.author.avatar_url)
-    #   await ctx.reply(embed=embed)
-
-    # @staticmethod
-    # @asyncexe()
-    # def commits_():
-    #     repo = g.get_repo(
-    #         "Cryptex-github/the-anime-bot-bot").get_commits()
-    #     lists = [
-    #         f"[`{i.commit.sha[:7]}`]({i.commit.html_url}) {i.commit.message}"
-    #         for i in repo
-    #     ]
-
-    #     paginator = commands.Paginator(prefix="", suffix="", max_size=1000)
-    #     for i in lists:
-    #         paginator.add_line(i)
-    #     return paginator
 
     @commands.command()
     @commands.max_concurrency(1, commands.BucketType.user)
