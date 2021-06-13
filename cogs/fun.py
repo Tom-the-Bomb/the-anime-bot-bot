@@ -601,7 +601,7 @@ class Fun(commands.Cog):
             return await ctx.send("You are not connected to any voice channel.")
         c = await ctx.author.voice.channel.connect()
         buffer = await self.tts_(text, lang)
-        await c.play(discord.FFmpegPCMAudio(buffer))
+        c.play(discord.FFmpegPCMAudio(buffer, pipe=True))
         while True:
             await asyncio.sleep(10)
             if not c.is_playing:
