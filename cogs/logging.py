@@ -282,7 +282,10 @@ class Logging(commands.Cog):
             ]
             to_display = []
             for i, v in changed_permission:
-                to_display.append(f"Added permission {i}") if v else to_display.append(f"Removed permission {i}")
+                if v:
+                    to_display.append(f"Added permission {i}")
+                else:
+                    to_display.append(f"Removed permission {i}")
             to_display = "\n".join(to_display)
             embed = discord.Embed(
                 color=self.bot.color,

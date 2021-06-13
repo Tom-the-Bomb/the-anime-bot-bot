@@ -241,7 +241,8 @@ class Owner(commands.Cog, command_attrs={"hidden": True}):
                     if inspect.isasyncgenfunction(to_execute):
                         async for i in to_execute():
                             await ctx.send(i)
-                        await ctx.send(f.getvalue()) if f.getvalue() else ...
+                        if output := f.getvalue():
+                            await ctx.send(f.getvalue())
                         return
                     result = await to_execute()
             except Exception as e:

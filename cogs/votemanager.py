@@ -36,7 +36,8 @@ class VoteManager(commands.Cog):
         await self.bot.wait_until_ready()
         votes = await self.bot.db.fetch("SELECT user_id FROM votes")
         guild = self.bot.get_guild(786359602241470464)
-        await guild.chunk() if not guild.chunked else ...
+        if not guild.chunked:
+            await guild.chunk()
         for i in votes:
             user_id = i["user_id"]
             if user_id in guild._members.keys():
@@ -46,7 +47,8 @@ class VoteManager(commands.Cog):
 
     async def give_role(self, user_id):
         guild = self.bot.get_guild(786359602241470464)
-        await guild.chunk() if not guild.chunked else ...
+        if not guild.chunked:
+            await guild.chunk()
         if user_id in guild._members.keys():
             member = guild.get_member(user_id)
             if not member._roles.has(842564732078522418):
