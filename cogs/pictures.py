@@ -323,16 +323,13 @@ class Images(commands.Cog):
                 method1(*args, **kwargs)
                 b = BytesIO(p_image.save_bytes("png"))
                 to_make_gif.append(Image.open(b).convert("RGBA"))
-                b.flush()
-                del p_image
+                b.close()
             final = BytesIO()
             self.save_transparent_gif(to_make_gif, img.info["duration"], final)
             for i in to_process:
-                i.flush()
-                del i
+                i.close()
             for i in to_make_gif:
                 i.close()
-                del i
             final.seek(0)
             img.close()
             return discord.File(final, filename=f"{method}.gif")
@@ -346,11 +343,8 @@ class Images(commands.Cog):
         method1 = getattr(im, method)
         method1(*args, **kwargs)
         b = BytesIO(im.save_bytes("png"))
-        del im
         i.close()
-        del i
-        image1.flush()
-        del image1
+        image1.close()
         return discord.File(b, filename=f"{method}.png")
 
     async def polaroid_(self, image, method, *args: list[Any], **kwargs: Dict[str, Any]):
@@ -375,8 +369,7 @@ class Images(commands.Cog):
                 img.save(fobj, "GIF")
                 img = Image.open(fobj)
                 frames.append(img)
-                fobj.flush()
-                del fobj
+                fobj.close()
         igif = BytesIO()
         frames[0].save(
             igif,
@@ -389,7 +382,6 @@ class Images(commands.Cog):
         igif.seek(0)
         for i in frames:
             i.close()
-            del i
         return igif
 
     def process_gif(self, image, function, *args: list[Any]) -> Tuple[BytesIO, str]:
@@ -406,7 +398,6 @@ class Images(commands.Cog):
             to_make_gif[0].save(final, format="GIF", append_images=to_make_gif[1:], disposal=2, loop=0, save_all=True)
             for i in to_make_gif:
                 i.close()
-                del i
             final.seek(0)
             img.close()
             return final, "gif"
@@ -751,15 +742,7 @@ class Images(commands.Cog):
                 cv2.rectangle(roi_color, (ex, ey), (ex + ew, ey + eh), (0, 0, 255), 2)
                 break
         is_success, im_buf_arr = cv2.imencode(".png", img)
-        del np_array
-        del img
-        del gray_img
-        del haar_face_cascade
-        del eye_cascade
-        del smile_cascade
-        del faces
         b = BytesIO(im_buf_arr)
-        del im_buf_arr
         return discord.File(b, "The_Anime_Bot_Face_Reg.png")
 
     @staticmethod
