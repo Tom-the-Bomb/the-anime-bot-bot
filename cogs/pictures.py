@@ -1523,7 +1523,7 @@ class Images(commands.Cog):
 
     @commands.command()
     async def glitch(self, ctx, thing: typing.Optional[Image_Union] = None, intensity: float = 5.0):
-        if not intensity <= 10:
+        if intensity > 10:
             return await ctx.send("Intensity must be under 10")
         async with Processing(ctx):
             url = await self.get_gif_url(ctx, thing)
