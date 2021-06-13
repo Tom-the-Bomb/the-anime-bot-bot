@@ -735,13 +735,7 @@ class Fun(commands.Cog):
         async with self.bot.session.get("https://insult.mattbas.org/api/insult") as resp:
             response3 = await resp.text()
         response2 = await self.bot.dag.roast()
-        choice = random.randint(1, 3)
-        if choice == 1:
-            response = response
-        elif choice == 2:
-            response == response2
-        else:
-            response == response3
+        response = random.choice([response, response2, response3])
         text = f"{member.mention}, {response}"
         await ctx.reply(text)
 

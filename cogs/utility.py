@@ -449,9 +449,7 @@ class Utility(commands.Cog):
         supprted language:
         wk, bash, brainfuck, c, cpp, clojure, crystal, csharp, d, dash, deno, elixir, emacs, elisp, go, haskell, java, jelly, julia, kotlin, lisp, lolcode, lua, nasm, nasm64, nim, node, osabie, paradoc, perl, php, python2, python3, ruby, rust, scala, swift, typescript, zig
         """
-        if not code.startswith("`"):
-            code = code
-        else:
+        if code.startswith("`"):
             last = collections.deque(maxlen=3)
             backticks = 0
             in_language = False

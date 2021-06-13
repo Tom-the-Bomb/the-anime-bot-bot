@@ -603,9 +603,7 @@ class Images(commands.Cog):
         """
         Generate a cool image to display code.
         """
-        if not code.startswith("`"):
-            code = code
-        else:
+        if code.startswith("`"):
             last = collections.deque(maxlen=3)
             backticks = 0
             in_language = False

@@ -183,9 +183,7 @@ class Owner(commands.Cog, command_attrs={"hidden": True}):
     @commands.command(aliases=["exe"])
     @commands.is_owner()
     async def execute(self, ctx, *, code):
-        if not code.startswith("`"):
-            code = code
-        else:
+        if code.startswith("`"):
             last = collections.deque(maxlen=3)
             backticks = 0
             in_language = False
