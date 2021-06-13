@@ -600,7 +600,7 @@ class Fun(commands.Cog):
         if not ctx.author.voice:
             return await ctx.send("You are not connected to any voice channel.")
         if p := self.bot.wavelink.players.get(ctx.guild.id):
-            await p.destory()
+            await p.destroy()
         c = await ctx.author.voice.channel.connect()
         buffer = await self.tts_(text, lang)
         c.play(discord.FFmpegPCMAudio(buffer, pipe=True))
