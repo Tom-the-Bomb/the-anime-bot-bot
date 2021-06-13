@@ -586,13 +586,28 @@ class Fun(commands.Cog):
         buffer = BytesIO()
         t.write_to_fp(buffer)
         buffer.seek(0)
-        return discord.File(buffer, filename="audio.mp3")
-
-    @commands.command()
-    async def tts(self, ctx: AnimeContext, lang="en", *, text="enter something "):
+        return buffer
+    
+    @commands.group(invoke_without_command=True)
+    async def tts(self, ctx: AnimeContext, ):
         async with ctx.typing():
-            file = await self.tts_(text, lang)
-            await ctx.reply(file=file)
+            buffer = await self.tts_(text, lang)
+            await ctx.reply(file=discord.File(buffer, filename="audio.mp3"))
+
+    @tts.command()
+    @commands.guild_only()
+    async def vc(self, ctx, lang="en", *, text="enter something "):
+        if not ctx.author.voice:
+            return await ctx.send("You are not connected to any voice channel.")
+        c = await ctx.author.voice.channel.connect()
+        buffer = await self.tts_(text, lang)
+        await c.play(discord.FFmpegPCMAudio(buffer))
+        while True:
+            await asyncio.sleep(10)
+            if not c.is_playing:
+                return await c.disconnect()
+        
+
 
     @commands.command()
     async def sushi(self, ctx):
