@@ -463,6 +463,28 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             return await ctx.send("player not paused")
         await player.set_pause(False)
         await ctx.send("unpaused player")
+    
+    @commands.group()
+    async def filter(self, ctx):
+        await ctx.send_help("filter")
+
+    @filter.command()
+    async def pitch(self, ctx, pitch: float = 1.05):
+        """
+        Let you control the pitch of the music.
+        Change it to 1.0 if you want normal pitch.
+        """
+        player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
+        payload = {
+            "op": "filters",
+            "guildId": str(ctx.guild.id),
+            "timescale": { "pitch": pitch },
+            
+        }
+        await player.node._send(**payload)
+        await player.seek(player.position)
+
+
 
     @commands.command()
     async def skip(self, ctx):
