@@ -599,6 +599,8 @@ class Fun(commands.Cog):
     async def vc(self, ctx, lang="en", *, text="enter something "):
         if not ctx.author.voice:
             return await ctx.send("You are not connected to any voice channel.")
+        if p := self.bot.wavelink.players.get(ctx.guild.id):
+            await p.destory()
         c = await ctx.author.voice.channel.connect()
         buffer = await self.tts_(text, lang)
         c.play(discord.FFmpegPCMAudio(buffer, pipe=True))
