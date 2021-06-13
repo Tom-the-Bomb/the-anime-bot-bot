@@ -168,8 +168,7 @@ class AnimeContext(commands.Context):
 
 
 class InvalidImage(Exception):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    pass
 
 
 class AnimeMessage(discord.Message):
@@ -178,15 +177,6 @@ class AnimeMessage(discord.Message):
 
 class GlobalCooldown(commands.CommandOnCooldown):
     pass
-
-
-class AnimeColor(discord.Color):
-    def init(self, args, **kwargs):
-        super().init(args, **kwargs)
-
-    @classmethod
-    def lighter_green(cls):
-        return cls(0x00FF6A)
 
 
 async def prefix_get(bot, message):
@@ -210,9 +200,6 @@ class LimitedSizeDict(OrderedDict):
         self.size_limit = 1000
         OrderedDict.__init__(self, *args, **kwds)
         self._check_size_limit()
-
-    def __getitem__(self, key):
-        return super().__getitem__(key)
 
     def __setitem__(self, key, value):
         OrderedDict.__setitem__(self, key, value)

@@ -27,9 +27,6 @@ class HelpMenuSource(menus.ListPageSource):
 
 
 class HelpCommand(commands.HelpCommand):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
     async def command_callback(self, ctx, *, command=None):
         await self.prepare_help_command(ctx, command)
         bot = ctx.bot
