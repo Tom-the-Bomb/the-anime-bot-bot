@@ -643,13 +643,14 @@ class Fun(commands.Cog):
             return await ctx.send("You are not connected to any voice channel.")
         if p := self.bot.wavelink.players.get(ctx.guild.id):
             await p.destroy()
-        c = await ctx.author.voice.channel.connect()
+        c = discord.utils.find(lambda x: x.channel.id == ctx.author.voice.channel.id, self.bot.voice_clients)
+        if not c:
+            c = await ctx.author.voice.channel.connect()
         buffer = await self.tts_(text, lang)
         c.play(FFmpegPCMAudio(buffer.read(), pipe=True))
-        while True:
-            await asyncio.sleep(10)
-            if not c.is_playing:
-                return await c.disconnect()
+        await asyncio.sleep(10)
+        if not c.is_playing():
+            await c.disconnect()
         
 
 
