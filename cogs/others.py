@@ -22,7 +22,7 @@ from discord.ext import commands
 from utils.asyncstuff import asyncexe
 from utils.embed import embedbase
 from utils.fuzzy import finder
-from utils.subclasses import AnimeColor, AnimeContext
+from utils.subclasses import AnimeContext
 
 from jishaku.paginators import (PaginatorEmbedInterface, PaginatorInterface,
                                 WrappedPaginator)
@@ -302,7 +302,7 @@ System:
             paginator.add_line(raw)
             interface = PaginatorInterface(ctx.bot, paginator, owner=ctx.author)
             return await interface.send_to(ctx)
-        embed = discord.Embed(color=AnimeColor.lighter_green(), description=f"```json\n{raw}```")
+        embed = discord.Embed(color=self.bot.color, description=f"```json\n{raw}```")
         await ctx.reply(embed=embed)
 
     @commands.command()
