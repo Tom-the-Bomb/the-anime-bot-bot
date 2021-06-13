@@ -236,7 +236,7 @@ System:
         embed = discord.Embed(color=self.bot.color)
         embed.add_field(
             name="source of the bot",
-            value=f"oh hi another source rob rob human\nMy sources are on github find it yourself\n[if you really want it](https://github.com/Cryptex-github/the-anime-bot-bot)\n\n[Licensed under GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.txt)",
+            value="oh hi another source rob rob human\nMy sources are on github find it yourself\n[if you really want it](https://github.com/Cryptex-github/the-anime-bot-bot)\n\n[Licensed under GPL-3.0](https://www.gnu.org/licenses/gpl-3.0.txt)",
         )
         await ctx.reply(embed=embed)
 

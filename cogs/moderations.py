@@ -249,7 +249,7 @@ class Moderations(commands.Cog):
         embed.add_field(name=f"`{user}` have been warned", value=f"with reason: `{reason}`")
         await ctx.send(embed=embed)
         embed = discord.Embed(color=self.bot.color)
-        embed.add_field(name=f"You have been warned", value=f"with reason: `{reason}`")
+        embed.add_field(name="You have been warned", value=f"with reason: `{reason}`")
         await user.send(embed=embed)
 
     @commands.command()

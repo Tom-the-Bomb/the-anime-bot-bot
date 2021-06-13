@@ -324,7 +324,7 @@ class Owner(commands.Cog, command_attrs={"hidden": True}):
     async def reload(self, ctx: AnimeContext, text_):
         text_ = text_.lower()
         await ctx.message.add_reaction("<:greenTick:596576670815879169>")
-        embed = discord.Embed(color=self.bot.color, description=f"<a:loading:747680523459231834>")
+        embed = discord.Embed(color=self.bot.color, description="<a:loading:747680523459231834>")
         message = await ctx.reply(embed=embed)
         self.list = []
         if text_ == "all":

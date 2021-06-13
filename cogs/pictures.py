@@ -107,7 +107,7 @@ class Processing:
     async def __aenter__(self, *args: List[Any], **kwargs):
         self.start = time.perf_counter()
         self.m = await asyncio.wait_for(
-            self.ctx.reply(f" <a:loading:849756871597490196> Image Processing."), timeout=3.0
+            self.ctx.reply("<a:loading:849756871597490196> Image Processing."), timeout=3.0
         )
         return self
 
@@ -1054,7 +1054,7 @@ class Images(commands.Cog):
             url = await self.get_url(ctx, woman)
             url1 = await self.get_url(ctx, cat)
             pic = await self.bot.vacefron_api.woman_yelling_at_cat(woman=url, cat=url1)
-            await ctx.reply(file=discord.File(await pic.read(), filename=f"woman_yelling_at_cat.png"))
+            await ctx.reply(file=discord.File(await pic.read(), filename="woman_yelling_at_cat.png"))
 
     @commands.command()
     async def circle(self, ctx: AnimeContext, background_color="white", circle_color="blue"):

@@ -62,7 +62,7 @@ class GoogleMenuSource(menus.ListPageSource):
         return {
             "embed": discord.Embed(
                 color=menu.ctx.bot.color,
-                title=f"Google Search Result",
+                title="Google Search Result",
                 description=entries,
             ).set_footer(
                 text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)} Safe Search: {self.safesearch}"
@@ -535,7 +535,7 @@ class Utility(commands.Cog):
     async def pypi(self, ctx, name):
         async with self.bot.session.get(f"https://pypi.org/pypi/{name}/json") as resp:
             if resp.status == 404:
-                return await ctx.send(f"We are unable to find that package")
+                return await ctx.send("We are unable to find that package")
             package = await resp.json()
             package = package["info"]
             Author = f"""
