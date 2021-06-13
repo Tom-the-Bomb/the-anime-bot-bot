@@ -337,7 +337,7 @@ class Logging(commands.Cog):
         embed = discord.Embed(
             color=self.bot.color,
             title="Guild Updated",
-            description=f"Something updated but I can't trace what updated",
+            description="Something updated but I can't trace what updated",
             timestamp=utcnow(),
         )
         await self.send_webhook(after.id, embed, "guild_update")
@@ -561,7 +561,7 @@ class Logging(commands.Cog):
             embed = discord.Embed(
                 color=self.bot.color,
                 title="Message Deleted",
-                description=f"The message is too old I can't find the content",
+                description="The message is too old I can't find the content",
                 timestamp=utcnow(),
             )
             await self.send_webhook(payload.guild_id, embed, "message_delete")

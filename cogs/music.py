@@ -22,7 +22,7 @@ class QueueMenuSource(menus.ListPageSource):
         return {
             "embed": discord.Embed(
                 color=menu.ctx.bot.color,
-                title=f"Music queue",
+                title="Music queue",
                 description="\n".join(f"[**{i.title}**]({i.uri})\n{i.author or 'no author'}" for i in entries),
             )
         }

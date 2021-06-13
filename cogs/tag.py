@@ -234,7 +234,7 @@ class Tag(commands.Cog):
             if tags:
                 tags = "\n".join(i["tag_name"] for i in tags)
                 return await ctx.send(f"Tag not found\nDid you mean:\n{tags}")
-            return await ctx.send(f"Tag not found")
+            return await ctx.send("Tag not found")
 
         await ctx.send(tags["tag_content"])
         await self.bot.db.execute("UPDATE tags SET uses = uses + 1 WHERE tag_name = $1", name)
