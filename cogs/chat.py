@@ -85,7 +85,6 @@ class Chat(commands.Cog):
         plt.axis("equal")
         plt.tight_layout()
         plt.savefig("chatgraph.png")
-        return
 
     @commands.command()
     @commands.max_concurrency(1, commands.BucketType.channel)
