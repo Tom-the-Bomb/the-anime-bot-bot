@@ -385,11 +385,11 @@ class Events(commands.Cog):
     async def on_raw_message_delete(self, payload):
         if s := self.bot.to_delete_message_cache.get(payload.message_id):
             if payload.guild_id:
-                if m := len([i for i in s]) >= 2:
+                if len([i for i in s]) >= 2:
                     try:
                         await self.bot.http.delete_messages(
                             payload.channel_id,
-                            m
+                            [i for i in s]
                         )
                     except (discord.Forbidden, discord.NotFound):
                         pass
@@ -405,7 +405,7 @@ class Events(commands.Cog):
                     except discord.NotFound:
                         pass
 
-        del self.bot.to_delete_message_cache[payload.message_id]
+            del self.bot.to_delete_message_cache[payload.message_id]
 
     @commands.Cog.listener()
     async def on_bulk_message_delete(self, messages):
