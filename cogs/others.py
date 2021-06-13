@@ -550,24 +550,6 @@ System:
         embed.add_field(name="uptime ", value=text)
         await ctx.reply(embed=embed)
 
-    @commands.command()
-    async def countdown(self, ctx: AnimeContext, count_to: int):
-        if str(ctx.channel.id) in self.countdownused:
-            await ctx.reply("this channel already have a countdown started")
-            return
-        else:
-            self.countdownused.append(str(ctx.channel.id))
-            counter = count_to
-            message = await ctx.reply(f"start counting down to {counter} will dm you when is done")
-            for _ in range(counter):
-                counter -= 1
-                await asyncio.sleep(1)
-                if counter == 0:
-                    await message.edit(content=str(counter))
-                    await ctx.author.send("Countdown finshed")
-                    self.countdownused.remove(str(ctx.channel.id))
-                    return
-
 
 def setup(bot):
     bot.add_cog(Others(bot))
