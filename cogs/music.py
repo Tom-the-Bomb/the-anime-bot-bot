@@ -464,7 +464,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await player.set_pause(False)
         await ctx.send("unpaused player")
     
-    @commands.group()
+    @commands.group(invoke_without_command=True)
     async def filter(self, ctx):
         await ctx.send_help("filter")
 
