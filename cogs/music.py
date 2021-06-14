@@ -1,5 +1,6 @@
 import asyncio
 import datetime
+import random
 
 import discord
 import humanize
@@ -41,6 +42,7 @@ class Player(wavelink.Player):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.now_playing = None
+        self.dj = None
         self.deafen = False
         self.no_leave = False
         self.query = None
@@ -51,6 +53,9 @@ class Player(wavelink.Player):
         self.loop = False
         self.queue = []
         self.queue_position = 0
+    
+    def is_dj(self, ctx):
+        return ctx.author.id == self.dj.id or ctx.author.permissions_in(ctx.bot.get_channel(self.channel_id)).manage_guild
 
     def make_embed(self, track):
 
@@ -92,8 +97,7 @@ class Player(wavelink.Player):
         return embed
 
     async def start(self, ctx: AnimeContext, song, music):
-        player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
-        if not player.is_connected:
+        if not self.is_connected:
             await ctx.invoke(self.connect_)
         if isinstance(song, wavelink.TrackPlaylist):
             for track in song.tracks:
@@ -108,6 +112,8 @@ class Player(wavelink.Player):
             self.queue.append(track)
             self.now_playing = track
             await ctx.send(f"Added `{track}` to the queue.")
+        
+        self.dj = ctx.author
 
         await ctx.send(
             embed=self.make_embed(
@@ -147,6 +153,12 @@ class Player(wavelink.Player):
         self.queue_position += 1
         self.now_playing = song
         await self.play(song)
+
+def is_dj():
+    async def __is_dj__(ctx):
+        player = ctx.bot.wavelink.get_player(ctx.guild.id, cls=Player)
+        return player.is_dj(ctx)
+    return commands.check(__is_dj__)
 
 
 class Music(commands.Cog, wavelink.WavelinkMixin):
@@ -207,6 +219,29 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             except:
                 await asyncio.sleep(tries * 2)
                 continue
+
+    @staticmethod
+    def is_stage_mod(members, channel):
+        mods = []
+        for member in members:
+            p = member.permissions_in(channel)
+            if p.mute_members and p.move_members and p.request_to_speak:
+                mods.append(member)
+        return mods
+
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member, before, after):
+        player = self.bot.get_player(member.guild.id, cls=Player)
+        if not player.started:
+            return
+        if not after or after.channel_id != player.channel_id:
+            c = self.bot.get_channel(player.channel_id)
+            if isinstance(c, discord.StageChannel):
+                mods = self.is_stage_mod(c.members, c)
+                if mods:
+                    player.dj = random.choice(mods)
+                    return
+            player.dj = random.choice(c.members)
 
     @wavelink.WavelinkMixin.listener("on_track_exception")
     async def on_node_event_(self, node, event):
@@ -295,6 +330,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await pages.start(ctx)
 
     @commands.command()
+    @is_dj()
     async def selfdeafen(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         await self.bot.ws.voice_state(player.guild_id, player.channel_id, self_deaf=not player.deafen)
@@ -315,6 +351,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send(embed=player.make_embed(player.now_playing))
 
     @commands.command(aliases=["vol"])
+    @is_dj()
     async def volume(self, ctx: AnimeContext, volume: int = 100):
         if volume < 0 or volume > 100:
             return await ctx.send("volume must be between 0 to 100")
@@ -348,6 +385,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send(f"Connected to {channel.name}")
 
     @commands.command()
+    @is_dj()
     async def repeat(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if player.repeat:
@@ -357,6 +395,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send("Repeating the current song")
 
     @commands.command()
+    @is_dj()
     async def loop(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if player.loop:
@@ -366,6 +405,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send("looped")
 
     @commands.command()
+    @is_dj()
     async def fastforward(self, ctx: AnimeContext, seconds: int):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         seek_position = player.position + (seconds * 1000)
@@ -375,12 +415,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         )
 
     @commands.command(aliases=["dc", "disconnect", "stop"])
+    @is_dj()
     async def leave(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         await player.destroy()
         await ctx.send("disconnected")
 
     @commands.command()
+    @is_dj()
     async def equalizer(self, ctx: AnimeContext, name: lambda x: x.lower()):
         equalizers = {
             "none": wavelink.Equalizer.flat(),
@@ -457,6 +499,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             await ctx.send(f"Added `{track}` to the queue.")
 
     @commands.command(aliases=["resume"])
+    @is_dj()
     async def unpause(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if not player.is_paused:
@@ -469,6 +512,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send_help("filter")
 
     @filter.command()
+    @is_dj()
     async def pitch(self, ctx, pitch: float = 1.05):
         """
         Let you control the pitch of the music.
@@ -487,11 +531,13 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
 
     @commands.command()
+    @is_dj()
     async def skip(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         await player.stop()
 
     @commands.command()
+    @is_dj()
     async def pause(self, ctx):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         if player.is_paused:
