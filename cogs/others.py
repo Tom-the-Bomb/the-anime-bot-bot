@@ -136,8 +136,12 @@ System:
         embed = discord.Embed(
             color=self.bot.color,
             title="Vote Leaderboard",
-            description="\n".join((f"{str(await self.bot.getch(i['user_id']))} - {i['count']}" for i in count)),
+            description="\n".join(
+                f"{str(await self.bot.getch(i['user_id']))} - {i['count']}"
+                for i in count
+            ),
         )
+
 
         await ctx.reply(embed=embed)
 
