@@ -645,9 +645,12 @@ class Fun(commands.Cog):
             return await ctx.send("You are not connected to any voice channel.")
         if p := self.bot.wavelink.players.get(ctx.guild.id):
             await p.destroy()
-        c = discord.utils.find(lambda x: x.channel.id == ctx.author.voice.channel.id, self.bot.voice_clients)
+        c = discord.utils.find(lambda x: x.guild.id == ctx.guild.id, self.bot.voice_clients)
         if not c:
             c = await ctx.author.voice.channel.connect()
+        if c.channel.id != ctx.author.voice.channel.id:
+            await c.move_to(ctx.author.voice.channel)
+
         buffer = await self.tts_(text, lang)
         if c.is_playing():
             c.stop()
