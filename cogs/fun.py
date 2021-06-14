@@ -647,6 +647,8 @@ class Fun(commands.Cog):
         if not c:
             c = await ctx.author.voice.channel.connect()
         buffer = await self.tts_(text, lang)
+        if c.is_playing():
+            c.stop()
         c.play(FFmpegPCMAudio(buffer.read(), pipe=True))
         await asyncio.sleep(10)
         if not c.is_playing():
