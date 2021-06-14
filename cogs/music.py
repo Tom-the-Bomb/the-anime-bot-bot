@@ -242,7 +242,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         player = self.bot.wavelink.get_player(member.guild.id, cls=Player)
         if not player.started:
             return
-        if not after or after.channel_id != player.channel_id:
+        if not after or after.channel.id != player.channel_id:
             c = self.bot.get_channel(player.channel_id)
             if isinstance(c, discord.StageChannel):
                 mods = self.is_stage_mod(c.members, c)
