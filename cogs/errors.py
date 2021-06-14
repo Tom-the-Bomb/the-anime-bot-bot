@@ -209,7 +209,7 @@ class Error(commands.Cog):
         """
         Track a error
         """
-        r = await self.bot.db.execute("UPDATE errors SET trackers = array_append(trackers, $1) WHERE error_id = $2 RETURNING", ctx.author.id, id)
+        r = await self.bot.db.execute("UPDATE errors SET trackers = array_append(trackers, $1) WHERE error_id = $2", ctx.author.id, id)
         if r[-1] == 0:
             return await ctx.send("Error not found.")
         await ctx.send(f"Ok, you are now tracking error {id} I will dm you if it get fixed")
