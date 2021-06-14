@@ -27,7 +27,7 @@ class Todo(commands.Cog):
 
     @commands.group(invoke_without_command=True)
     async def todo(self, ctx):
-        pass
+        await ctx.send_help("todo")
 
     @todo.command()
     async def swap(self, ctx: AnimeContext, task1: int, task2: int):
