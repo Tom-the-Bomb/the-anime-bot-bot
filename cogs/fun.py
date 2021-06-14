@@ -652,7 +652,6 @@ class Fun(commands.Cog):
         if c.is_playing():
             c.stop()
         c.play(FFmpegPCMAudio(buffer.read(), pipe=True))
-        await asyncio.sleep(10)
         if not c.is_playing():
             await c.disconnect()
             del c
