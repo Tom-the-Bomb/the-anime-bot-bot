@@ -109,9 +109,11 @@ class Error(commands.Cog):
             embed = self.embed(f"{error.param.name} is a required argument")
             await ctx.send(embed=embed)
         elif isinstance(error, commands.MaxConcurrencyReached):
-            return
+            embed = self.embed(error)
+            await ctx.send(embed=embed)
         elif isinstance(error, commands.CommandOnCooldown):
-            return
+            embed = self.embed(error)
+            await ctx.send(embed=embed)
         elif isinstance(error, commands.BotMissingPermissions):
             embed = self.embed(f"Bot is missing {', '.join(error.missing_perms)} to do that")
             await ctx.reply(embed=embed)
