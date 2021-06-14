@@ -166,7 +166,6 @@ class AnimeContext(commands.Context):
             self.bot.to_delete_message_cache[self.message.id] = discord.utils.SnowflakeList((message.id, ))
             return message
 
-
 class InvalidImage(Exception):
     pass
 

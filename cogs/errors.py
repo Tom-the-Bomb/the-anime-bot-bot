@@ -124,10 +124,13 @@ class Error(commands.Cog):
             embed = self.embed("You did not pass in the right arguments")
             await ctx.reply(embed=embed)
         elif isinstance(error, asyncdagpi.errors.ApiError):
-            embed = self.embed("The image API have a error")
+            embed = self.embed("Cannot process image now, try again later.")
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.CheckFailure):
-            return
+            if str(error).startswith("The check functions for command"):
+                return
+            embed = self.embed(error)
+            await ctx.reply(embed=embed)
         else:
             error_id = await self.bot.db.fetchval(
                 "INSERT INTO errors (error, message, created_at, author_name, command) VALUES ($1, $2, $3, $4, $5) RETURNING error_id",

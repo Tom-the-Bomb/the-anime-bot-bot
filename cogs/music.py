@@ -55,7 +55,14 @@ class Player(wavelink.Player):
         self.queue_position = 0
     
     def is_dj(self, ctx):
-        return ctx.author.id == self.dj.id or ctx.author.permissions_in(ctx.bot.get_channel(self.channel_id)).manage_guild
+        if (
+            ctx.author.id != self.dj.id
+            or not ctx.author.permissions_in(
+                ctx.bot.get_channel(self.channel_id)
+            ).manage_guild
+        ):
+            raise commands.CheckFailure(message="Only DJ can do this.")
+        return True
 
     def make_embed(self, track):
 
@@ -85,14 +92,15 @@ class Player(wavelink.Player):
         embed.description += f"\nCurrent Position: {position} / {duration}" if not track.is_stream else "Live Stream"
         embed.description += f"\n{bar}" if not track.is_stream else "Live Stream"
         embed.set_thumbnail(url=track.thumb) if track.thumb else ...
-        embed.add_field(name="Requester", value=track.requester)
+        embed.add_field(name="Requester", value=track.requester.mention)
+        embed.add_field(name="DJ", value=self.dj.mention)
         if track.is_stream:
             embed.add_field(name="Duration", value="Live Stream")
         else:
             embed.add_field(name="Duration", value=duration)
-        embed.add_field(name="URL", value=track.uri) if track.uri else "None"
+        embed.add_field(name="URL", value=f"[Click here]({track.uri})") if track.url else ...
         embed.add_field(name="Author", value=track.author) if track.author else ...
-        footer = f"Youtube ID: {track.ytid or 'None'} Identifier: {track.identifier or 'None'}"
+        footer = f"Identifier: {track.identifier or 'None'}"
         embed.set_footer(text=footer)
         return embed
 
