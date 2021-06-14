@@ -656,6 +656,7 @@ class Fun(commands.Cog):
             if not c.is_playing():
                 await c.disconnect()
                 del c
+                return
             else:
                 await asyncio.sleep(0)
                 continue
