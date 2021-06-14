@@ -239,7 +239,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
-        player = self.bot.get_player(member.guild.id, cls=Player)
+        player = self.bot.wavelink.get_player(member.guild.id, cls=Player)
         if not player.started:
             return
         if not after or after.channel_id != player.channel_id:
