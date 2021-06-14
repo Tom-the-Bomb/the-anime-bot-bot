@@ -19,7 +19,7 @@ import discord
 import gtts
 from asyncdagpi import Client
 from bottom import from_bottom, to_bottom
-from cryptography.fernet import Fernet
+from cryptography.fernet import Fernet, InvalidToken
 from discord.ext import commands, menus
 from PIL import Image, ImageDraw, ImageFont
 from utils.asyncstuff import asyncexe
@@ -771,7 +771,7 @@ class Fun(commands.Cog):
             decrypted = f.decrypt(new)
             decrypted = str(decrypted, "utf-8")
             await ctx.reply(decrypted, allowed_mentions=discord.AllowedMentions.none())
-        except ValueError:
+        except (ValueError, InvalidToken):
             await ctx.reply("something went wrong")
 
     @commands.command()
