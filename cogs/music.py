@@ -248,8 +248,9 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
                 mods = self.is_stage_mod(c.members, c)
                 if mods:
                     player.dj = random.choice(mods)
-                    return
+                    return await player.send(f"Dj is now {player.dj.mention} because the old dj left.")
             player.dj = random.choice(c.members)
+            await player.send(f"Dj is now {player.dj.mention} because the old dj left.")
 
     @wavelink.WavelinkMixin.listener("on_track_exception")
     async def on_node_event_(self, node, event):
