@@ -638,6 +638,8 @@ class Fun(commands.Cog):
 
     @tts.command()
     @commands.guild_only()
+    @commands.cooldown(1, 5, commands.BucketType.guild)
+    @commands.max_concurrency(1, commands.BucketType.guild)
     async def vc(self, ctx, lang="en", *, text="enter something "):
         if not ctx.author.voice:
             return await ctx.send("You are not connected to any voice channel.")
