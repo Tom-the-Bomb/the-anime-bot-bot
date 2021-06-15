@@ -292,6 +292,7 @@ class AnimeBot(commands.Bot):
     
     async def initialize_constants(self):
         self.default_prefix = ["ovo "]
+        self.context = AnimeContext
         self.prefixes = {}
         self.emojioptions = {}
         self.blacklist = {}
