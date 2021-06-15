@@ -289,31 +289,16 @@ class AnimeBot(commands.Bot):
         if not ctx.command.qualified_name.startswith("jishaku"):
             await ctx.trigger_typing()
         ctx.bot.loop.create_task(self.chunk_(ctx))
-
-    def run(self, *args, **kwargs):
-        # self.ipc.start()
+    
+    async def initialize_constants(self):
         self.default_prefix = ["ovo "]
-        self.add_check(self.is_blacklisted)
         self.prefixes = {}
-        db = self.loop.run_until_complete(
-            asyncpg.create_pool(
-                host="localhost",
-                port="5432",
-                user="postgres1",
-                password="postgres",
-                database="cryptex",
-                min_size=10,
-                max_size=20,
-            )
-        )
-        self.db = db
         self.emojioptions = {}
         self.blacklist = {}
         self.url_regex = re.compile(
             r"http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*(),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+",
             re.IGNORECASE,
         )
-        self.before_invoke(self.before_invoke_)
         self.bad_word_cache = {}
         self.logging_cache = {}
         self.logging_webhook_cache = []
@@ -338,20 +323,43 @@ class AnimeBot(commands.Bot):
             json_serialize=ujson.dumps,
             timeout=aiohttp.ClientTimeout(total=10),
         )
+    
+    def initialize_libaries(self):
         self.mystbin = mystbin.Client(session=self.session)
         self.vacefron_api = vacefron.Client(session=self.session, loop=self.loop)
         self.dag = Client(api_token, session=self.session, loop=self.loop)
         self.alex = alexflipnote.Client(alexflipnote_, session=self.session, loop=self.loop)
         self.ball = eight_ball.ball()
-        self.loop.run_until_complete(self.create_cache())
         self.zaneapi = aiozaneapi.Client(zane_api)
-
+    
+    def load_all_extensions(self):
         for file in os.listdir("./cogs"):
             if file.endswith(".py"):
                 try:
                     self.load_extension(f"cogs.{file[:-3]}")
                 except Exception as e:
                     self.logger.critical(f"Unable to load cog: {file}, ignoring. Exception: {e}")
+
+
+    def run(self, *args, **kwargs):
+        # self.ipc.start()
+        self.loop.run_until_complete(self.initialize_constants()) # I know there are no reason for this to be async but I want it to stop spamming that not created in loop error
+        self.initialize_libaries()
+        self.loop.run_until_complete(self.create_cache())
+        self.add_check(self.is_blacklisted)
+        db = self.loop.run_until_complete(
+            asyncpg.create_pool(
+                host="localhost",
+                port="5432",
+                user="postgres1",
+                password="postgres",
+                database="cryptex",
+                min_size=10,
+                max_size=20,
+            )
+        )
+        self.db = db
+        self.before_invoke(self.before_invoke_)
         super().run(*args, **kwargs)
 
     async def close(self):
