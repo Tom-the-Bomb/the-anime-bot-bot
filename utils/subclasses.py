@@ -353,7 +353,6 @@ class AnimeBot(commands.Bot):
 
     def run(self, *args, **kwargs):
         # self.ipc.start()
-        self.logger.info(self.description)
         self.logger.info("Initizlizing db")
         db = self.loop.run_until_complete(
             asyncpg.create_pool(
