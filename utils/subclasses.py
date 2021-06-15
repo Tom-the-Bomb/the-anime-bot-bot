@@ -214,6 +214,7 @@ class AnimeBot(commands.Bot):
     def __init__(self):
         self.connector = aiohttp.TCPConnector(limit=200)
         self.logger = logging.getLogger("TheAnimeBot")
+        self.logger.setLevel(logging.INFO)
         self.logger.addHandler(JournalHandler())
         intents = discord.Intents.default()
         intents.members = True
