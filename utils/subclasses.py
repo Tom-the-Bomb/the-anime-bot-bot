@@ -343,10 +343,6 @@ class AnimeBot(commands.Bot):
 
     def run(self, *args, **kwargs):
         # self.ipc.start()
-        self.loop.run_until_complete(self.initialize_constants()) # I know there are no reason for this to be async but I want it to stop spamming that not created in loop error
-        self.initialize_libaries()
-        self.loop.run_until_complete(self.create_cache())
-        self.add_check(self.is_blacklisted)
         db = self.loop.run_until_complete(
             asyncpg.create_pool(
                 host="localhost",
@@ -359,6 +355,10 @@ class AnimeBot(commands.Bot):
             )
         )
         self.db = db
+        self.loop.run_until_complete(self.initialize_constants()) # I know there are no reason for this to be async but I want it to stop spamming that not created in loop error
+        self.initialize_libaries()
+        self.loop.run_until_complete(self.create_cache())
+        self.add_check(self.is_blacklisted)
         self.before_invoke(self.before_invoke_)
         super().run(*args, **kwargs)
 
