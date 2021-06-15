@@ -1,4 +1,5 @@
 import asyncio
+import signal
 import itertools
 import os
 import subprocess
@@ -34,9 +35,43 @@ TOKEN_ACCESS = str(config.TOKEN_ACCESS)
 api_token = str(config.api_token)
 import re
 
+log = logging.getLogger("TheAnimeBot")
 from discord.ext import commands
 
 token = re.compile(r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-zA-Z0-9_\-]{84})")
+
+def _cancel_tasks(loop):
+        tasks = {t for t in asyncio.all_tasks(loop=loop) if not t.done()}
+
+        if not tasks:
+            return
+
+        self.logger.info('Cleaning up after %d tasks.', len(tasks))
+        for task in tasks:
+            task.cancel()
+        try:
+            loop.run_until_complete(asyncio.wait_for(asyncio.gather(*tasks, return_exceptions=True), timeout=10))
+        except asyncio.TimeoutError:
+            self.logger.error("Timeouted while cancelling tasks, Ignoring.")
+        self.logger.info('All tasks finished cancelling.')
+
+        for task in tasks:
+            if task.cancelled():
+                continue
+            if task.exception() is not None:
+                loop.call_exception_handler({
+                    'message': 'Unhandled exception during Client.run shutdown.',
+                    'exception': task.exception(),
+                    'task': task
+                })
+
+def _cleanup_loop(loop):
+    try:
+        _cancel_tasks(loop)
+        loop.run_until_complete(loop.shutdown_asyncgens())
+    finally:
+        log.info('Closing the event loop.')
+        loop.close()
 
 
 class AnimeContext(commands.Context):
@@ -382,7 +417,45 @@ class AnimeBot(commands.Bot):
         self.add_check(self.is_blacklisted)
         self.before_invoke(self.before_invoke_)
         self.logger.info("Bot initialized, connecting to Discord.")
-        super().run(*args, **kwargs)
+        loop = self.loop
+        log = self.logger
+
+        try:
+            loop.add_signal_handler(signal.SIGINT, lambda: loop.stop())
+            loop.add_signal_handler(signal.SIGTERM, lambda: loop.stop())
+        except NotImplementedError:
+            pass
+
+        async def runner():
+            try:
+                await self.start(*args, **kwargs)
+            finally:
+                if not self.is_closed():
+                    await self.close()
+
+        def stop_loop_on_completion(f):
+            loop.stop()
+
+        future = asyncio.ensure_future(runner(), loop=loop)
+        future.add_done_callback(stop_loop_on_completion)
+        try:
+            loop.run_forever()
+        except KeyboardInterrupt:
+            log.info('Received signal to terminate bot and event loop.')
+        finally:
+            future.remove_done_callback(stop_loop_on_completion)
+            log.info('Cleaning up tasks.')
+            _cleanup_loop(loop)
+
+        if not future.cancelled():
+            try:
+                return future.result()
+            except KeyboardInterrupt:
+                # I am unsure why this gets raised here but suppress it anyway
+                return None
+
+    
+    def _cancel_tasks()
 
     async def close(self):
         self.logger.info("Unloading all extensions.")
