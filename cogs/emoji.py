@@ -1,6 +1,5 @@
 import asyncio
 import re
-import copy
 
 import discord
 from discord.ext import commands, tasks
@@ -43,14 +42,15 @@ class Emoji(commands.Cog):
             sql = "INSERT INTO emoji_stats VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET emojis = $2"
             async with self.bot.db.acquire() as con:
                 for i, v in self.to_save.items():
-                    c = copy.copy(v)
                     o = await con.fetchval("SELECT emojis FROM emoji_stats WHERE guild_id = $1", i)
                     if not o:
-                        j = ujson.dumps(c, ensure_ascii=True, escape_forward_slashes=False)
+                        j = ujson.dumps(v, ensure_ascii=True, escape_forward_slashes=False)
                         await con.execute(sql, i, j)
                         continue
-                    c.update(ujson.loads(o))
-                    j = ujson.dumps(c, ensure_ascii=True, escape_forward_slashes=False)
+                    for _i, c in ujson.loads(o).items():
+                        _c = v.get(_i, 0)
+                        v[_i] = _c + c  
+                    j = ujson.dumps(v, ensure_ascii=True, escape_forward_slashes=False)
                     await con.execute(sql, i, j)
             self.to_save = {}
     
