@@ -454,9 +454,6 @@ class AnimeBot(commands.Bot):
                 # I am unsure why this gets raised here but suppress it anyway
                 return None
 
-    
-    def _cancel_tasks()
-
     async def close(self):
         self.logger.info("Unloading all extensions.")
         self.unload_all_extensions()
