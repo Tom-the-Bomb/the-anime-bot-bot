@@ -23,7 +23,7 @@ class Emoji(commands.Cog):
             if not self.to_save.get(message.guild.id):
                 self.to_save[message.guild.id] = {}
             for a, name, i in matches:
-                c = self.to_save[message.guild.id].get(name, 0)
+                c = self.to_save[message.guild.id].get(i, 0)
                 self.to_save[message.guild.id][i] = c + 1
     
     @tasks.loop(seconds=10)
