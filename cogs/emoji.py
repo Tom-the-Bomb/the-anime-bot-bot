@@ -46,6 +46,9 @@ class Emoji(commands.Cog):
         embed = discord.Embed(color=self.bot.color, title="Emoji Stats", description="\n".join(to_format))
         await ctx.send(embed=embed)
 
+def setup(bot):
+    bot.add_cog(Emoji(bot))
+
 
 
 
