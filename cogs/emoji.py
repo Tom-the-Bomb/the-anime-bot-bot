@@ -36,7 +36,7 @@ class Emoji(commands.Cog):
     
     @commands.command()
     async def emojistats(self, ctx):
-        stats = await self.bot.db.fetch("SELECT * FROM emojistats")
+        stats = await self.bot.db.fetch("SELECT * FROM emoji_stats")
         merged = []
         for i in stats:
             s = ujson.loads(i)
