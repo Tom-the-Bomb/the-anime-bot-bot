@@ -353,7 +353,7 @@ class AnimeBot(commands.Bot):
     def run(self, *args, **kwargs):
         # self.ipc.start()
         self.logger.info(self.description)
-        print("Initizlizing db")
+        self.logger.info("Initizlizing db")
         db = self.loop.run_until_complete(
             asyncpg.create_pool(
                 host="localhost",
@@ -366,7 +366,7 @@ class AnimeBot(commands.Bot):
             )
         )
         self.db = db
-        self.logger.info("Db initialized successfully.")
+        self.logger.info("Db initialized successfully")
         self.logger.info("Initizlizing Constants")
         self.loop.run_until_complete(self.initialize_constants()) # I know there are no reason for this to be async but I want it to stop spamming that not created in loop error
         self.logger.info("Constants initialized successfully.")
