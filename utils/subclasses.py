@@ -359,6 +359,7 @@ class AnimeBot(commands.Bot):
         self.loop.run_until_complete(self.initialize_constants()) # I know there are no reason for this to be async but I want it to stop spamming that not created in loop error
         self.initialize_libaries()
         self.loop.run_until_complete(self.create_cache())
+        self.load_all_extensions()
         self.add_check(self.is_blacklisted)
         self.before_invoke(self.before_invoke_)
         super().run(*args, **kwargs)
