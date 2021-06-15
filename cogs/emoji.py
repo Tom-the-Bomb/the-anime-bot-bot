@@ -44,6 +44,8 @@ class Emoji(commands.Cog):
                 for i, v in self.to_save.items():
                     o = await con.fetchval("SELECT emojis FROM emoji_stats WHERE guild_id = $1", i)
                     if not o:
+                        j = ujson.dumps(v, ensure_ascii=True, escape_forward_slashes=False)
+                        await con.execute(sql, i, j)
                         continue
                     v.update(ujson.loads(o))
                     j = ujson.dumps(v, ensure_ascii=True, escape_forward_slashes=False)
