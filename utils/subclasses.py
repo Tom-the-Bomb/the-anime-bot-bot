@@ -352,6 +352,8 @@ class AnimeBot(commands.Bot):
 
     def run(self, *args, **kwargs):
         # self.ipc.start()
+        self.logger.info(self.description)
+        print("Initizlizing db")
         db = self.loop.run_until_complete(
             asyncpg.create_pool(
                 host="localhost",
@@ -364,22 +366,43 @@ class AnimeBot(commands.Bot):
             )
         )
         self.db = db
+        self.logger.info("Db initialized successfully.")
+        self.logger.info("Initizlizing Constants")
         self.loop.run_until_complete(self.initialize_constants()) # I know there are no reason for this to be async but I want it to stop spamming that not created in loop error
+        self.logger.info("Constants initialized successfully.")
+        self.logger.info("Initizlizing Libaries")
         self.initialize_libaries()
+        self.logger.info("Libaries initialized successfully.")
+        self.logger.info("Initizlizing cache")
         self.loop.run_until_complete(self.create_cache())
+        self.logger.info("Cache initialized successfully.")
+        self.logger.info("Loading all extensions")
         self.load_all_extensions()
+        self.logger.info("All extensions loaded successfully.")
         self.add_check(self.is_blacklisted)
         self.before_invoke(self.before_invoke_)
+        self.logger.info("Bot initialized, connecting to Discord.")
         super().run(*args, **kwargs)
 
     async def close(self):
+        self.logger.info("Unloading all extensions.")
         self.unload_all_extensions()
+        self.logger.info("Unloaded all extensions.")
+        self.logger.info("Closing db.")
         try:
             await asyncio.wait_for(self.db.close(), timeout=10)
-        except (asyncio.TimeoutError, Exception):
+            self.logger.info("Db closed successfully.")
+        except (asyncio.TimeoutError, Exception) as e:
+            self.logger.error(f"Db failed to close, terminating db. Exception: {e}")
             self.db.terminate()
+            self.logger.error("Db terminated.")
+        self.logger.info("Shutting down default executor.")
         await self.loop.shutdown_default_executor()
+        self.logger.info("Successfully Shutting down default executor.")
+        self.logger.info("Closing bot's session.")
         await self.session.close()
+        self.logger.info("Closed bot's session.")
+        self.logger.info("Shutting down bot.")
         await super().close()
 
     def get_message(self, message_id):
