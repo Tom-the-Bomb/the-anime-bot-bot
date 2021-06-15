@@ -42,7 +42,7 @@ class Emoji(commands.Cog):
             sql = "INSERT INTO emoji_stats VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET emojis = $2"
             async with self.bot.db.acquire() as con:
                 for i, v in self.to_save.items():
-                    v.update(ujson.loads(await con.fetchval("SELECT emojis FROM emoji_stats WHERE guild_id = $1", i)))
+                    v.update(await con.fetchval("SELECT emojis FROM emoji_stats WHERE guild_id = $1", i))
                     j = ujson.dumps(v, ensure_ascii=True, escape_forward_slashes=False)
                     await con.execute(sql, i, j)
             self.to_save = {}
