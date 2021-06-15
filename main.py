@@ -36,8 +36,6 @@ logger.addHandler(handler)
 logger.addHandler(JournalHandler())
 
 
-warnings.filterwarnings("ignore", category=DeprecationWarning)
-
 
 bot = AnimeBot()
 slash = SlashCommand(bot, sync_commands=True, sync_on_cog_reload=True, override_type=True)
