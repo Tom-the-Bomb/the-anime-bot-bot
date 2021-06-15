@@ -39,7 +39,7 @@ class Emoji(commands.Cog):
     async def save_stats(self):
         await self.bot.wait_until_ready()
         async with self.save_lock:
-            sql = "INSERT INTO emoji_stats VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET emojis = merge_json(emojis, $2)"
+            sql = "INSERT INTO emoji_stats VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET emojis = merge_json(emoji_stats.emojis, $2)"
             for i, v in self.to_save.items():
                 j = ujson.dumps(v, ensure_ascii=True, escape_forward_slashes=False)
                 await self.bot.db.execute(sql, i, j)
