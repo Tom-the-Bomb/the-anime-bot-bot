@@ -1,6 +1,7 @@
 import asyncio
 import datetime
 import random
+from typing import Union
 
 import discord
 import humanize
@@ -374,7 +375,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         await ctx.send(f"Volume is now {volume}")
 
     @commands.command(aliases=["connect"])
-    async def join(self, ctx: AnimeContext, vc: discord.VoiceChannel = None):
+    async def join(self, ctx: AnimeContext, vc: Union[discord.VoiceChannel, discord.StageChannel] = None):
         if vc:
             channel = vc
         elif ctx.author.voice:
