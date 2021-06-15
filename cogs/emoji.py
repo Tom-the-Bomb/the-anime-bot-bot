@@ -35,10 +35,12 @@ class Emoji(commands.Cog):
     @tasks.loop(seconds=10)
     async def save_stats(self):
         await self.bot.wait_until_ready()
-        sql = "INSERT INTO emoji_stats VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET emojis = $2"
-        for i, v in self.to_save.items():
-            j = ujson.dumps(v, ensure_ascii=True, escape_forward_slashes=False)
-            await self.bot.db.execute(sql, i, j)
+        async with self.save_lock:
+            sql = "INSERT INTO emoji_stats VALUES ($1, $2) ON CONFLICT (guild_id) DO UPDATE SET emojis = $2"
+            for i, v in self.to_save.items():
+                j = ujson.dumps(v, ensure_ascii=True, escape_forward_slashes=False)
+                await self.bot.db.execute(sql, i, j)
+            self.to_save = {}
     
     @commands.command()
     async def emojistats(self, ctx):
