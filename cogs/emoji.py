@@ -5,7 +5,7 @@ import discord
 from discord.ext import commands, tasks
 import ujson
 
-EMOJI_REGEX = re.compile(r"<(?P<animated>a?):(?P<name>[a-zA-Z0-9_]{2,32}):(?P<id>[0-9]{18,22})>")
+EMOJI_REGEX = re.compile(r'<a?:.+?:([0-9]{15,21})>')
 
 class Emoji(commands.Cog):
     def __init__(self, bot):
@@ -26,7 +26,7 @@ class Emoji(commands.Cog):
         async with self.save_lock:
             if not self.to_save.get(message.guild.id):
                 self.to_save[message.guild.id] = {}
-            for a, name, i in matches:
+            for i in matches:
                 if not self.bot.get_emoji(int(i)):
                     continue
                 c = self.to_save[message.guild.id].get(i, 0)
