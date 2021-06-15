@@ -46,14 +46,14 @@ def _cancel_tasks(loop):
         if not tasks:
             return
 
-        self.logger.info('Cleaning up after %d tasks.', len(tasks))
+        log.info('Cleaning up after %d tasks.', len(tasks))
         for task in tasks:
             task.cancel()
         try:
             loop.run_until_complete(asyncio.wait_for(asyncio.gather(*tasks, return_exceptions=True), timeout=10))
         except asyncio.TimeoutError:
-            self.logger.error("Timeouted while cancelling tasks, Ignoring.")
-        self.logger.info('All tasks finished cancelling.')
+            log.error("Timeouted while cancelling tasks, Ignoring.")
+        log.info('All tasks finished cancelling.')
 
         for task in tasks:
             if task.cancelled():
