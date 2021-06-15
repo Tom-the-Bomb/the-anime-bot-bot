@@ -276,6 +276,17 @@ class Images(commands.Cog):
             return "pentagon"
         else:
             return "circle"
+    
+    @staticmethod
+    def save_transparent_gif(images: List[Image.Image], durations: Union[int, List[int]], save_file):
+        # root_frame, save_args = self._create_animated_gif(images, durations)
+        # root_frame.save(save_file, **save_args)
+        # root_frame.close()
+        # for i in images:
+        #     i.close()
+        images[0].save(
+            save_file, format="GIF", append_images=images[1:], durations=durations, disposal=2, loop=0, save_all=True
+        )
 
     @staticmethod
     def resize(image: Image) -> Image:
