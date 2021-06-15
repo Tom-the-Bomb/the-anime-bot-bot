@@ -24,7 +24,7 @@ class Emoji(commands.Cog):
                 self.to_save[message.guild.id] = {}
             for a, name, i in matches:
                 if not self.bot.get_emoji(int(i)):
-                    return
+                    continue
                 c = self.to_save[message.guild.id].get(i, 0)
                 self.to_save[message.guild.id][i] = c + 1
     
