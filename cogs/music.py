@@ -244,6 +244,8 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             return
         if not after or not after.channel or after.channel.id != player.channel_id:
             c = self.bot.get_channel(player.channel_id)
+            if not c:
+                return await player.destory()
             if isinstance(c, discord.StageChannel):
                 mods = self.is_stage_mod(c.members, c)
                 if mods:
