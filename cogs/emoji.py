@@ -42,7 +42,7 @@ class Emoji(commands.Cog):
             s = ujson.loads(i["emojis"])
             merged += sorted(list(s.items()), key=lambda x: x[1], reverse=True)
         final = sorted(merged, key=lambda x: x[1], reverse=True)
-        to_format = [f"{str(self.bot.get_emoji(i))} - {v} uses" for i, v in final]
+        to_format = [f"{str(self.bot.get_emoji(int(i)))} - {v} uses" for i, v in final][:10]
         embed = discord.Embed(color=self.bot.color, title="Emoji Stats", description="\n".join(to_format))
         await ctx.send(embed=embed)
 
