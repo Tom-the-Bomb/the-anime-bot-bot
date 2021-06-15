@@ -211,7 +211,6 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             await i.destroy()
 
     async def start_nodes(self):
-        await self.bot.wait_until_ready()
         for tries in range(10):
             try:
                 await self.bot.wavelink.initiate_node(
@@ -239,6 +238,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
 
     @commands.Cog.listener()
     async def on_voice_state_update(self, member, before, after):
+        await self.bot.wait_until_ready()
         player = self.bot.wavelink.get_player(member.guild.id, cls=Player)
         if not player.started:
             return
