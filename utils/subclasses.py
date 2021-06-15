@@ -341,6 +341,14 @@ class AnimeBot(commands.Bot):
                 except Exception as e:
                     self.logger.critical(f"Unable to load cog: {file}, ignoring. Exception: {e}")
 
+    def unload_all_extensions(self):
+        for file in os.listdir("./cogs"):
+            if file.endswith(".py"):
+                try:
+                    self.unload_extension(f"cogs.{file[:-3]}")
+                except Exception as e:
+                    self.logger.critical(f"Unable to unload cog: {file}, ignoring. Exception: {e}")
+
 
     def run(self, *args, **kwargs):
         # self.ipc.start()
@@ -365,10 +373,12 @@ class AnimeBot(commands.Bot):
         super().run(*args, **kwargs)
 
     async def close(self):
+        self.unload_all_extensions()
         try:
             await asyncio.wait_for(self.db.close(), timeout=10)
         except (asyncio.TimeoutError, Exception):
             self.db.terminate()
+        await self.loop.shutdown_default_executor()
         await self.session.close()
         await super().close()
 
