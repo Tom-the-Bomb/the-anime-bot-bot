@@ -127,7 +127,7 @@ class Error(commands.Cog):
             embed = self.embed("Cannot process image now, try again later.")
             await ctx.reply(embed=embed)
         elif isinstance(error, commands.CheckFailure):
-            if str(error).startswith("The check functions for command"):
+            if "check functions for" in str(error):
                 return
             embed = self.embed(error)
             await ctx.reply(embed=embed)
