@@ -710,8 +710,8 @@ class Fun(commands.Cog):
             await c.move_to(ctx.author.voice.channel)
         if not c.is_connected():
             await c.connect(timeout=60, reconnect=True)
-
         buffer = await self.tts_(text, lang)
+        print("done")
         if c.is_playing():
             c.stop()
         c.play(FFmpegPCMAudio(buffer.read(), pipe=True))
