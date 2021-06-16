@@ -583,7 +583,7 @@ class Images(commands.Cog):
                 return b, img.format
     
     @commands.command()
-    async def changemymind(self, ctx, thing: str):
+    async def changemymind(self, ctx, *, thing: str):
         """
         Change my mind
         """
