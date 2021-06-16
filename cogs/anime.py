@@ -66,7 +66,7 @@ class Anime(commands.Cog):
                     characters.append((f"Character: {i['character']} - Actor: " f"{actor}"))
                 embed.add_field(
                     name="Characters and Actor",
-                    value="\n".join(characters).replace("||", "\||"),
+                    value=r"\n".join(characters).replace(r"||", r"\||"),
                     inline=False,
                 )
                 if img := anime.get("img_src"):

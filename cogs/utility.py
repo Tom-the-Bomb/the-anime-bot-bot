@@ -656,7 +656,7 @@ class Utility(commands.Cog):
             for i in a:
                 href = i.get("href")
                 try:
-                    m = re.search("(?P<url>https?://[^\s]+)", href)
+                    m = re.search(r"(?P<url>https?://[^\s]+)", href)
                     n = m.group(0)
                     rul = n.split("&")[0]
                     domain = urlparse(rul)
