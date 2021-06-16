@@ -1007,8 +1007,7 @@ class Utility(commands.Cog):
         else:
             if self.bot.get_guild(guild) is None:
                 return await ctx.send("Bot do not have permission to view that guild")
-            else:
-                guild1 = self.bot.get_guild(guild)
+            guild1 = self.bot.get_guild(guild)
         categories = len(guild1.categories)
         channels = len(guild1.channels)
         created_at = humanize.naturaldate(guild1.created_at)

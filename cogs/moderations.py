@@ -141,7 +141,7 @@ class Moderations(commands.Cog):
     async def slowmode(self, ctx, seconds: int = 0):
         if seconds > 21600:
             return await ctx.send("Seconds could not be greater then 21600")
-        elif seconds < 0:
+        if seconds < 0:
             return await ctx.send("Seconds could not be less then 0")
         await ctx.channel.edit(slowmode_delay=seconds, reason=f"Slowmode edited by {ctx.author} ({ctx.author.id})")
         await ctx.send(f"Edited slowmode to {seconds}")

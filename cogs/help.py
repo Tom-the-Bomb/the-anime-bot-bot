@@ -66,8 +66,7 @@ class HelpCommand(commands.HelpCommand):
 
         if isinstance(cmd, commands.Group):
             return await self.send_group_help(cmd)
-        else:
-            return await self.send_command_help(cmd)
+        return await self.send_command_help(cmd)
 
     def get_command_signature(self, command):
         return f"{self.clean_prefix}{command.qualified_name}{'|' if command.aliases else ''}{'|'.join(command.aliases)} {command.signature}"

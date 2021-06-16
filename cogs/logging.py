@@ -147,14 +147,13 @@ class Logging(commands.Cog):
                 ctx.guild.id,
             )
             return await ctx.send(f"{event} has been turn off")
-        else:
-            self.bot.logging_cache[ctx.guild.id][event] = True
-            await self.bot.db.execute(
-                f"UPDATE logging SET {event} = $1 WHERE guild_id = $2",
-                True,
-                ctx.guild.id,
-            )
-            return await ctx.send(f"{event} has been turn on")
+        self.bot.logging_cache[ctx.guild.id][event] = True
+        await self.bot.db.execute(
+            f"UPDATE logging SET {event} = $1 WHERE guild_id = $2",
+            True,
+            ctx.guild.id,
+        )
+        return await ctx.send(f"{event} has been turn on")
 
     async def send_message(self, channel_id, embed):
         async with self.ratelimiter:

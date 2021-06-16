@@ -49,90 +49,92 @@ class Error(commands.Cog):
         if isinstance(error, commands.DisabledCommand):
             embed = self.embed(f"{ctx.command} has been disabled.")
             return await ctx.send(embed=embed)
-        elif isinstance(error, commands.NSFWChannelRequired):
+        if isinstance(error, commands.NSFWChannelRequired):
             embed = self.embed("this command must be used in NSFW channel")
             return await ctx.send(embed=embed)
-        elif isinstance(error, commands.errors.UserNotFound):
+        if isinstance(error, commands.errors.UserNotFound):
             embed = self.embed("User not found")
             return await ctx.send(embed=embed)
-        elif isinstance(error, commands.errors.MemberNotFound):
+        if isinstance(error, commands.errors.MemberNotFound):
             embed = self.embed("Member not found")
             return await ctx.send(embed=embed)
-        elif isinstance(error, wavelink.errors.ZeroConnectedNodes):
+        if isinstance(error, wavelink.errors.ZeroConnectedNodes):
             return await ctx.send("hmm our music system is having some problem right now")
-        elif isinstance(error, asyncio.TimeoutError):
+        if isinstance(error, asyncio.TimeoutError):
             embed = self.embed("timeout")
             return await ctx.send(embed=embed)
-        elif isinstance(error, discord.errors.HTTPException):
+        if isinstance(error, discord.errors.HTTPException):
             embed = self.embed(f"HTTPException {error.text}")
             return await ctx.send(embed=embed)
-        elif isinstance(error, GlobalCooldown):
+        if isinstance(error, GlobalCooldown):
             embed = self.embed(f"You have hit the global ratelimit try again in {round(error.retry_after)} seconds")
             return await ctx.send(embed=embed)
-        elif isinstance(error, PIL.UnidentifiedImageError):
+        if isinstance(error, PIL.UnidentifiedImageError):
             embed = self.embed("No image found")
-            await ctx.reply(embed=embed)
-        elif isinstance(error, InvalidImage):
+            return await ctx.reply(embed=embed)
+        if isinstance(error, InvalidImage):
             embed = self.embed(error)
             return await ctx.reply(embed=embed)
-        elif isinstance(error, (Image.DecompressionBombError, Image.DecompressionBombWarning)):
+        if isinstance(error, (Image.DecompressionBombError, Image.DecompressionBombWarning)):
             # embed = self.embed("eww decompression bomb eww stop or i use my ban hammer")
             embed = self.embed(error)
             return await ctx.reply(embed=embed)
-        elif isinstance(error, aiozaneapi.GatewayError):
+        if isinstance(error, aiozaneapi.GatewayError):
             embed = self.embed("Zane api error")
-            await ctx.reply(embed=embed)
-        elif isinstance(error, commands.errors.NotOwner):
+            return await ctx.reply(embed=embed)
+        if isinstance(error, commands.errors.NotOwner):
             embed = self.embed("You must be the bot owner to use this command")
             return await ctx.send(embed=embed)
-        elif isinstance(error, commands.NoPrivateMessage):
+        if isinstance(error, commands.NoPrivateMessage):
             try:
                 embed = self.embed(f"{ctx.command} can not be used in Private Messages.")
-                await ctx.author.send(embed=embed)
+                return await ctx.author.send(embed=embed)
             except discord.HTTPException:
-                pass
-        elif isinstance(error, AttributeError):
+                return
+        if isinstance(error, AttributeError):
             return
-        elif isinstance(error, commands.errors.InvalidEndOfQuotedStringError):
+        if isinstance(error, ValueError):
+            embed = self.embed(error)
+            return await ctx.send(embed=embed)
+        if isinstance(error, commands.errors.InvalidEndOfQuotedStringError):
             embed = self.embed("Make sure to put a space between the quotes")
-            await ctx.send(embed=embed)
-        elif isinstance(error, commands.ConversionError):
+            return await ctx.send(embed=embed)
+        if isinstance(error, commands.ConversionError):
             embed = self.embed(f"Unable to convert {error.converter}")
-            await ctx.send(embed=embed)
-        elif isinstance(error, commands.BadArgument):
+            return await ctx.send(embed=embed)
+        if isinstance(error, commands.BadArgument):
             embed = self.embed(error)
-            await ctx.send(embed=embed)
-        elif isinstance(error, commands.BadUnionArgument):
+            return await ctx.send(embed=embed)
+        if isinstance(error, commands.BadUnionArgument):
             embed = self.embed(error)
-            await ctx.send(embed=embed)
-        elif isinstance(error, commands.MissingRequiredArgument):
+            return await ctx.send(embed=embed)
+        if isinstance(error, commands.MissingRequiredArgument):
             embed = self.embed(f"{error.param.name} is a required argument")
-            await ctx.send(embed=embed)
-        elif isinstance(error, commands.MaxConcurrencyReached):
+            return await ctx.send(embed=embed)
+        if isinstance(error, commands.MaxConcurrencyReached):
             embed = self.embed(error)
-            await ctx.send(embed=embed)
-        elif isinstance(error, commands.CommandOnCooldown):
+            return await ctx.send(embed=embed)
+        if isinstance(error, commands.CommandOnCooldown):
             embed = self.embed(error)
-            await ctx.send(embed=embed)
-        elif isinstance(error, commands.BotMissingPermissions):
+            return await ctx.send(embed=embed)
+        if isinstance(error, commands.BotMissingPermissions):
             embed = self.embed(f"Bot is missing {', '.join(error.missing_perms)} to do that")
-            await ctx.reply(embed=embed)
-        elif isinstance(error, commands.MissingPermissions):
+            return await ctx.reply(embed=embed)
+        if isinstance(error, commands.MissingPermissions):
             embed = self.embed("you do not have permission to do that")
-            await ctx.reply(embed=embed)
-        elif isinstance(error, asyncdagpi.errors.BadUrl):
+            return await ctx.reply(embed=embed)
+        if isinstance(error, asyncdagpi.errors.BadUrl):
             embed = self.embed("You did not pass in the right arguments")
-            await ctx.reply(embed=embed)
-        elif isinstance(error, asyncdagpi.errors.ApiError):
+            return await ctx.reply(embed=embed)
+        if isinstance(error, asyncdagpi.errors.ApiError):
             embed = self.embed("Cannot process image now, try again later.")
-            await ctx.reply(embed=embed)
-        elif isinstance(error, commands.CheckFailure):
+            return await ctx.reply(embed=embed)
+        if isinstance(error, commands.CheckFailure):
             if "check functions for" in str(error):
                 return
             embed = self.embed(error)
-            await ctx.reply(embed=embed)
-        else:
-            error_id = await self.bot.db.fetchval(
+            return await ctx.reply(embed=embed)
+        error_id = await self.bot.db.fetchval(
                 "INSERT INTO errors (error, message, created_at, author_name, command) VALUES ($1, $2, $3, $4, $5) RETURNING error_id",
                 "".join(
                     prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)
@@ -142,15 +144,15 @@ class Error(commands.Cog):
                 str(ctx.author),
                 ctx.command.qualified_name,
             )
-            embed = discord.Embed(
+        embed = discord.Embed(
                 color=0xFF0000,
                 description=f"some weird error occured, I have told my developer to fix it, if you wish to track this error you may run `{ctx.prefix}errors track {error_id}`",
             )
-            await ctx.send(embed=embed)
+        await ctx.send(embed=embed)
             # print(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
-            print("Ignoring exception in command {}:".format(ctx.command), file=sys.stderr)
+        print("Ignoring exception in command {}:".format(ctx.command), file=sys.stderr)
             # traceback.print_exception(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
-            traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
+        traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     @commands.group(invoke_without_command=True)
     @commands.is_owner()
@@ -188,10 +190,9 @@ class Error(commands.Cog):
             embed.add_field(name="command", value=error["command"], inline=False)
             if not upload:
                 return await ctx.send(embed=embed)
-            else:
-                return await ctx.send(
-                    embed=embed, file=discord.File(BytesIO(error["error"].encode("utf-8")), "error.txt")
-                )
+            return await ctx.send(
+                embed=embed, file=discord.File(BytesIO(error["error"].encode("utf-8")), "error.txt")
+            )
 
     @errors.command()
     @commands.is_owner()

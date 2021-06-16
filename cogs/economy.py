@@ -52,14 +52,13 @@ class Economy(commands.Cog):
                     int(amount) + int(basket),
                 )
             )
-        else:
-            return int(
-                await self.bot.db.fetchval(
-                    "UPDATE economy SET bank = $2 WHERE user_id = $1 RETURNING bank",
-                    user_id,
-                    int(amount) + int(bank),
-                )
+        return int(
+            await self.bot.db.fetchval(
+                "UPDATE economy SET bank = $2 WHERE user_id = $1 RETURNING bank",
+                user_id,
+                int(amount) + int(bank),
             )
+        )
 
     @commands.command(aliases=["bal"])
     async def balance(self, ctx):

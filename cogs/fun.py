@@ -176,8 +176,7 @@ class Fun(commands.Cog):
     def bottoms(mode, text):
         if mode == "to_bottom":
             return to_bottom(text)
-        else:
-            return from_bottom(text)
+        return from_bottom(text)
 
     @commands.command()
     async def bigtext(self, ctx, *, text: str):
@@ -647,9 +646,8 @@ class Fun(commands.Cog):
         if p := self.bot.wavelink.players.get(ctx.guild.id):
             if p.is_playing:
                 return await ctx.send("There are something else playing in this channel.")
-            else:
-                await p.disconnect()
-                await p.destory()
+            await p.disconnect()
+            await p.destory()
         c = discord.utils.find(lambda x: x.guild.id == ctx.guild.id, self.bot.voice_clients)
         if not c:
             c = await ctx.author.voice.channel.connect()
@@ -665,9 +663,8 @@ class Fun(commands.Cog):
                 await c.disconnect()
                 del c
                 return
-            else:
-                await asyncio.sleep(0)
-                continue
+            await asyncio.sleep(0)
+            continue
 
 
     @commands.command()

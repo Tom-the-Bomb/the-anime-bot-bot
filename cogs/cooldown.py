@@ -41,8 +41,7 @@ class CoolDown(commands.Cog):
         retry_after = bucket.update_rate_limit()
         if ctx.author.id == 590323594744168494 or not retry_after:
             return True
-        else:
-            raise GlobalCooldown(bucket, retry_after)
+        raise GlobalCooldown(bucket, retry_after)
 
 
 def setup(bot):

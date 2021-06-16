@@ -140,25 +140,24 @@ class AnimeContext(commands.Context):
         if codeblock:
             content = f"```{lang}\n" + str(content) + "\n```"
         if self.message.id in self.bot._message_cache:
-            if self.message.edited_at:
-                msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
-                if kwargs.get("file"):
-                    m = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
-                    self.bot._message_cache[self.message.id] = m.id
-                    try:
-                        self.bot.to_delete_message_cache[self.message.id].append(m.id)
-                    except KeyError:
-                        pass
-                    return m
-                await msg.edit(content=content, **kwargs)
-                return msg
-            else:
-                message = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
-                try:
-                    self.bot.to_delete_message_cache[self.message.id].append(message.id)
-                except KeyError:
-                    pass
-                return message
+                        if self.message.edited_at:
+                            msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
+                            if kwargs.get("file"):
+                                m = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
+                                self.bot._message_cache[self.message.id] = m.id
+                                try:
+                                    self.bot.to_delete_message_cache[self.message.id].append(m.id)
+                                except KeyError:
+                                    pass
+                                return m
+                            await msg.edit(content=content, **kwargs)
+                            return msg
+                        message = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
+                        try:
+                            self.bot.to_delete_message_cache[self.message.id].append(message.id)
+                        except KeyError:
+                            pass
+                        return message
         else:
             message = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
             self.bot._message_cache[self.message.id] = message.id
@@ -169,32 +168,31 @@ class AnimeContext(commands.Context):
         if codeblock:
             content = f"```{lang}\n" + str(content) + "\n```"
         if self.message.id in self.bot._message_cache:
-            if self.message.edited_at:
-                msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
-                if kwargs.get("file"):
-                    m = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
-                    self.bot._message_cache[self.message.id] = m.id
-                    try:
-                        self.bot.to_delete_message_cache[self.message.id].append(m.id)
-                    except KeyError:
-                        pass
-                    return m
-                if not kwargs.get("allowed_mentions"):
-                    msg = await msg.edit(
-                        content=content,
-                        allowed_mentions=discord.AllowedMentions.none(),
-                        **kwargs,
-                    )
-                else:
-                    msg = await msg.edit(content=content, **kwargs)
-                return msg
-            else:
-                message = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
-                try:
-                    self.bot.to_delete_message_cache[self.message.id].append(message.id)
-                except KeyError:
-                    pass
-                return message
+                        if self.message.edited_at:
+                            msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
+                            if kwargs.get("file"):
+                                m = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
+                                self.bot._message_cache[self.message.id] = m.id
+                                try:
+                                    self.bot.to_delete_message_cache[self.message.id].append(m.id)
+                                except KeyError:
+                                    pass
+                                return m
+                            if not kwargs.get("allowed_mentions"):
+                                msg = await msg.edit(
+                                    content=content,
+                                    allowed_mentions=discord.AllowedMentions.none(),
+                                    **kwargs,
+                                )
+                            else:
+                                msg = await msg.edit(content=content, **kwargs)
+                            return msg
+                        message = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
+                        try:
+                            self.bot.to_delete_message_cache[self.message.id].append(message.id)
+                        except KeyError:
+                            pass
+                        return message
         else:
             message = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
             self.bot._message_cache[self.message.id] = message.id

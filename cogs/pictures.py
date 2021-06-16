@@ -268,14 +268,13 @@ class Images(commands.Cog):
         approx = cv2.approxPolyDP(c, 0.04 * peri, True)
         if len(approx) == 3:
             return "triangle"
-        elif len(approx) == 4:
+        if len(approx) == 4:
             (x, y, w, h) = cv2.boundingRect(approx)
             ar = w / float(h)
             return "square" if ar >= 0.95 and ar <= 1.05 else "rectangle"
-        elif len(approx) == 5:
+        if len(approx) == 5:
             return "pentagon"
-        else:
-            return "circle"
+        return "circle"
     
     @staticmethod
     def save_transparent_gif(images: List[Image.Image], durations: Union[int, List[int]], save_file):
