@@ -244,6 +244,7 @@ class Fun(commands.Cog):
                 try:
                     q = await aki.back()
                 except akinator.CantGoBackAnyFurther:
+                    pass
             elif r == "stop":
                 return await m.delete()
             else:
