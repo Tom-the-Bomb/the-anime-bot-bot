@@ -172,6 +172,7 @@ class Fun(commands.Cog):
             return link, title, nsfw, image
 
     @staticmethod
+    @asyncexe()
     def bottoms(mode, text):
         if mode == "to_bottom":
             return to_bottom(text)
@@ -399,14 +400,14 @@ class Fun(commands.Cog):
 
     @commands.command()
     async def bottomdecode(self, ctx: AnimeContext, *, text):
-        bottoms = await self.bot.loop.run_in_executor(None, self.bottoms, "from_bottom", text)
+        bottoms = await self.bottoms("from_bottom", text)
         if len(bottoms) > 500:
             return await ctx.reply(str(await self.bot.mystbin.post(bottoms)))
         await ctx.reply(bottoms)
 
     @commands.command()
     async def bottomencode(self, ctx: AnimeContext, *, text):
-        bottoms = await self.bot.loop.run_in_executor(None, self.bottoms, "to_bottom", text)
+        bottoms = await self.bottoms("to_bottom", text)
         if len(bottoms) > 500:
             return await ctx.reply(str(await self.bot.mystbin.post(bottoms)))
         await ctx.reply(bottoms)
@@ -428,7 +429,7 @@ class Fun(commands.Cog):
 
     @commands.command(aliases=["grid", "toemoji"])
     async def renderemoji(self, ctx: AnimeContext, *, codes: int):
-        codes_ = await self.bot.loop.run_in_executor(None, self.render_emoji, str(codes))
+        codes_ = self.render_emoji(str(codes))
         await ctx.reply(codes_)
 
     @commands.command()

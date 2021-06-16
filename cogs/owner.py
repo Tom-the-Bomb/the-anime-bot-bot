@@ -110,13 +110,15 @@ class Owner(commands.Cog, command_attrs={"hidden": True}):
             "INSERT INTO blacklist VALUES ($1, $2) ON CONFLICT (user_id) DO UPDATE SET reason = $2", user.id, reason
         )
         await ctx.send(f"Blacklisted {user} for {reason}")
-
-    def generate_random_filebytes(self, bytes_: int):
+    
+    @staticmethod
+    @asyncexe()
+    def generate_random_filebytes(bytes_: int):
         return os.urandom(bytes_)
 
     @commands.command()
     async def hahafile(self, ctx, files: int = 1):
-        b = await asyncio.to_thread(self.generate_random_filebytes, ctx.guild.filesize_limit - 1000)
+        await self.generate_random_filebytes(ctx.guild.filesize_limit - 1000)
         await asyncio.gather(
             *[
                 ctx.send(

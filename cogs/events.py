@@ -73,6 +73,7 @@ class Events(commands.Cog):
             self.post.cancel()
 
     @staticmethod
+    @asyncexe()
     def files_zip():
         file_1 = BytesIO()
         with zipfile.ZipFile(file_1, mode="w") as zipfile_:
@@ -91,7 +92,7 @@ class Events(commands.Cog):
     @tasks.loop(minutes=2)
     async def send_files(self):
         await self.bot.wait_until_ready()
-        f_1 = await asyncio.to_thread(self.files_zip)
+        f_1 = await self.files_zip()
         f_log = discord.File("discord.log")
         try:
             await self.bot.get_channel(836756007761608734).send(

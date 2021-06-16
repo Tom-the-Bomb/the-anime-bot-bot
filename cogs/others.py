@@ -478,7 +478,7 @@ System:
             with f.open() as of:
                 for line in of.readlines():
                     line = line.strip()
-                    cc += len(l)
+                    cc += len(line)
                     if line.startswith("class"):
                         cl += 1
                     if line.startswith("def"):

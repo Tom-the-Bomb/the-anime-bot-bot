@@ -316,6 +316,7 @@ class Images(commands.Cog):
             except (TypeError, ValueError):
                 return Image.open(buffer)
 
+    @asyncexe()
     def run_polaroid(self, image1: bytes, method: str, *args: List[Any], **kwargs: Dict[str, Any]) -> discord.File:
         # image1 = self.resize(BytesIO(image1))
         img = self.open_pil_image(BytesIO(image1))
@@ -361,8 +362,7 @@ class Images(commands.Cog):
     async def polaroid_(self, image, method, *args: list[Any], **kwargs: Dict[str, Any]):
         async with self.bot.session.get(image) as resp:
             image1 = await resp.read()
-        f = functools.partial(self.run_polaroid, image1, method, *args, **kwargs)
-        result = await self.bot.loop.run_in_executor(None, f)
+        result = await self.run_polaroid(image1, method, *args, **kwargs)
         return result
 
     @staticmethod
@@ -423,7 +423,8 @@ class Images(commands.Cog):
         img_.close()
         img.close()
         return b, "png"
-
+    
+    @asyncexe()
     def spin__(self, image: bytes, speed: int) -> Tuple[BytesIO, str]:
         im_ = self.open_pil_image(BytesIO(image))
         im__ = self.resize(im_)
@@ -442,8 +443,7 @@ class Images(commands.Cog):
     async def spin_(self, url: str, speed: int) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        f = functools.partial(self.spin__, image1, speed)
-        result, format_ = await self.bot.loop.run_in_executor(None, f)
+        result, format = await self.spin__(image1, speed)
         result = discord.File(result, f"The_Anime_Bot_spin.{format_}")
         return result
 
@@ -458,24 +458,21 @@ class Images(commands.Cog):
     async def invert_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        f = functools.partial(self.process_gif, image1, self.invert__)
-        result, format_ = await self.bot.loop.run_in_executor(None, f)
+        result, format_ = await self.process_gif(image1, self.invert__)
         result = discord.File(result, f"The_Anime_Bot_invert.{format_}")
         return result
 
     async def mirror_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        f = functools.partial(self.process_gif, image1, ImageOps.mirror)
-        result, format_ = await self.bot.loop.run_in_executor(None, f)
+        result, format_ = await self.process_gif(image1, ImageOps.mirror)
         result = discord.File(result, f"The_Anime_Bot_mirror.{format_}")
         return result
 
     async def flip_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        f = functools.partial(self.process_gif, image1, ImageOps.flip)
-        result, format_ = await self.bot.loop.run_in_executor(None, f)
+        result, format_ = await self.process_gif(image1, ImageOps.flip)
         result = discord.File(result, f"The_Anime_Bot_flip.{format_}")
         return result
 
