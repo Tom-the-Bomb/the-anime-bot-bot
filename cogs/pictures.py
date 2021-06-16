@@ -1176,156 +1176,156 @@ class Images(commands.Cog):
             )
             await ctx.reply(embed=embed, file=image)
 
-    @commands.command()
-    async def pixelate(
-        self,
-        ctx,
-        thing: typing.Optional[Image_Union],
-        level: float = 0.3,
-    ):
-        async with Processing(ctx):
-            level = min(level, 1)
-            url = await self.get_url(ctx, thing)
-            try:
-                image = await self.bot.zaneapi.pixelate(url, level)
-            except asyncio.TimeoutError:
-                raise commands.CommandError("Zaneapi timeout")
-            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://pixelate.png")
-            await ctx.reply(
-                file=discord.File(fp=image, filename="pixelate.png"),
-                embed=embed,
-            )
+    # @commands.command()
+    # async def pixelate(
+    #     self,
+    #     ctx,
+    #     thing: typing.Optional[Image_Union],
+    #     level: float = 0.3,
+    # ):
+    #     async with Processing(ctx):
+    #         level = min(level, 1)
+    #         url = await self.get_url(ctx, thing)
+    #         try:
+    #             image = await self.bot.zaneapi.pixelate(url, level)
+    #         except asyncio.TimeoutError:
+    #             raise commands.CommandError("Zaneapi timeout")
+    #         embed = discord.Embed(color=self.bot.color).set_image(url="attachment://pixelate.png")
+    #         await ctx.reply(
+    #             file=discord.File(fp=image, filename="pixelate.png"),
+    #             embed=embed,
+    #         )
 
-    @commands.command()
-    async def swirl(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
-            try:
-                image = await self.bot.zaneapi.swirl(url)
-            except asyncio.TimeoutError:
-                raise commands.CommandError("Zaneapi timeout")
-            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://swirl.gif")
-            await ctx.reply(file=discord.File(fp=image, filename="swirl.gif"), embed=embed)
+    # @commands.command()
+    # async def swirl(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_url(ctx, thing)
+    #         try:
+    #             image = await self.bot.zaneapi.swirl(url)
+    #         except asyncio.TimeoutError:
+    #             raise commands.CommandError("Zaneapi timeout")
+    #         embed = discord.Embed(color=self.bot.color).set_image(url="attachment://swirl.gif")
+    #         await ctx.reply(file=discord.File(fp=image, filename="swirl.gif"), embed=embed)
 
-    @commands.command()
-    async def sobel(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.sobel(url)
-            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://sobel.png")
-            await ctx.reply(file=discord.File(fp=image, filename="sobel.png"), embed=embed)
+    # @commands.command()
+    # async def sobel(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_url(ctx, thing)
+    #         image = await self.bot.zaneapi.sobel(url)
+    #         embed = discord.Embed(color=self.bot.color).set_image(url="attachment://sobel.png")
+    #         await ctx.reply(file=discord.File(fp=image, filename="sobel.png"), embed=embed)
 
-    @commands.command()
-    async def palette(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.palette(url)
-            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://palette.png")
-            await ctx.reply(
-                file=discord.File(fp=image, filename="palette.png"),
-                embed=embed,
-            )
+    # @commands.command()
+    # async def palette(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_url(ctx, thing)
+    #         image = await self.bot.zaneapi.palette(url)
+    #         embed = discord.Embed(color=self.bot.color).set_image(url="attachment://palette.png")
+    #         await ctx.reply(
+    #             file=discord.File(fp=image, filename="palette.png"),
+    #             embed=embed,
+    #         )
 
-    @commands.command()
-    async def sort(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.sort(url)
-            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://sort.png")
-            await ctx.reply(file=discord.File(fp=image, filename="sort.png"), embed=embed)
+    # @commands.command()
+    # async def sort(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_url(ctx, thing)
+    #         image = await self.bot.zaneapi.sort(url)
+    #         embed = discord.Embed(color=self.bot.color).set_image(url="attachment://sort.png")
+    #         await ctx.reply(file=discord.File(fp=image, filename="sort.png"), embed=embed)
 
-    @commands.command()
-    async def cube(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
-            try:
-                image = await self.bot.zaneapi.cube(url)
-            except asyncio.TimeoutError:
-                raise commands.CommandError("Zaneapi timeout")
-            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://cube.png")
-            await ctx.reply(file=discord.File(fp=image, filename="cube.png"), embed=embed)
+    # @commands.command()
+    # async def cube(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_url(ctx, thing)
+    #         try:
+    #             image = await self.bot.zaneapi.cube(url)
+    #         except asyncio.TimeoutError:
+    #             raise commands.CommandError("Zaneapi timeout")
+    #         embed = discord.Embed(color=self.bot.color).set_image(url="attachment://cube.png")
+    #         await ctx.reply(file=discord.File(fp=image, filename="cube.png"), embed=embed)
 
-    @commands.command()
-    async def braille(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.braille(url)
-            await ctx.reply(image)
+    # @commands.command()
+    # async def braille(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_url(ctx, thing)
+    #         image = await self.bot.zaneapi.braille(url)
+    #         await ctx.reply(image)
 
-    @commands.command(aliases=["dot"])
-    async def dots(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.dots(url)
-            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://dots.png")
-            await ctx.reply(file=discord.File(fp=image, filename="dots.png"), embed=embed)
+    # @commands.command(aliases=["dot"])
+    # async def dots(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_url(ctx, thing)
+    #         image = await self.bot.zaneapi.dots(url)
+    #         embed = discord.Embed(color=self.bot.color).set_image(url="attachment://dots.png")
+    #         await ctx.reply(file=discord.File(fp=image, filename="dots.png"), embed=embed)
 
-    @commands.command()
-    async def threshold(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.threshold(url)
-            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://threshold.png")
-            await ctx.reply(
-                file=discord.File(fp=image, filename="threshold.png"),
-                embed=embed,
-            )
+    # @commands.command()
+    # async def threshold(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_url(ctx, thing)
+    #         image = await self.bot.zaneapi.threshold(url)
+    #         embed = discord.Embed(color=self.bot.color).set_image(url="attachment://threshold.png")
+    #         await ctx.reply(
+    #             file=discord.File(fp=image, filename="threshold.png"),
+    #             embed=embed,
+    #         )
 
-    @commands.command()
-    async def spread(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.spread(url)
-            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://spread.gif")
-            await ctx.reply(file=discord.File(fp=image, filename="spread.gif"), embed=embed)
+    # @commands.command()
+    # async def spread(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_url(ctx, thing)
+    #         image = await self.bot.zaneapi.spread(url)
+    #         embed = discord.Embed(color=self.bot.color).set_image(url="attachment://spread.gif")
+    #         await ctx.reply(file=discord.File(fp=image, filename="spread.gif"), embed=embed)
 
-    @commands.command()
-    async def jpeg(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
-            image = await self.bot.zaneapi.jpeg(url)
-            embed = discord.Embed(color=self.bot.color).set_image(url="attachment://jpeg.gif")
-            await ctx.reply(file=discord.File(fp=image, filename="jpeg.gif"), embed=embed)
+    # @commands.command()
+    # async def jpeg(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_url(ctx, thing)
+    #         image = await self.bot.zaneapi.jpeg(url)
+    #         embed = discord.Embed(color=self.bot.color).set_image(url="attachment://jpeg.gif")
+    #         await ctx.reply(file=discord.File(fp=image, filename="jpeg.gif"), embed=embed)
 
     @staticmethod
     @asyncexe()
