@@ -485,7 +485,7 @@ System:
                         fn += 1
                     if line.startswith("async def"):
                         cr += 1
-                    if "#" in l:
+                    if "#" in line:
                         cm += 1
                     ls += 1
         m = self.bot.psutil_process.memory_full_info()
