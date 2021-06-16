@@ -706,7 +706,10 @@ class Fun(commands.Cog):
         c = discord.utils.find(lambda x: x.guild.id == ctx.guild.id, self.bot.voice_clients)
         if not c:
             c = await ctx.author.voice.channel.connect()
-        await c.move_to(ctx.author.voice.channel)
+        if c.channel.id != ctx.author.voice.channel.id:
+            await c.move_to(ctx.author.voice.channel)
+        if not c.is_connected():
+            await c.connect()
 
         buffer = await self.tts_(text, lang)
         if c.is_playing():
