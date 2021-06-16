@@ -1,6 +1,7 @@
 # The-anime-bot-bot
 
 [![Discord](https://img.shields.io/discord/786359602241470464?label=Discord%20Server&style=for-the-badge)](https://discord.gg/bUpF6d6bP9)
+![Python](https://img.shields.io/badge/Python-3.9-red?style=for-the-badge)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/w/Cryptex-github/the-anime-bot-bot?style=for-the-badge)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5b3f17ae93e647aaa3ff7ae5a78a8a34)](https://app.codacy.com/gh/Cryptex-github/the-anime-bot-bot?utm_source=github.com&utm_medium=referral&utm_content=Cryptex-github/the-anime-bot-bot&utm_campaign=Badge_Grade_Settings)
 
