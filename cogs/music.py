@@ -56,14 +56,11 @@ class Player(wavelink.Player):
         self.queue_position = 0
     
     def is_dj(self, ctx):
-        if (
-            ctx.author.id != self.dj.id
-            or not ctx.author.permissions_in(
-                ctx.bot.get_channel(self.channel_id)
-            ).manage_guild
-        ):
-            raise commands.CheckFailure(message="Only DJ can do this.")
-        return True
+        if ctx.author.id == self.dj.id:
+            return True
+        if ctx.author.permissions_in(ctx.bot.get_channel(self.channel_id)).manage_guild:
+            return True
+        raise commands.CheckFailure(message="Only DJ can do this.")
 
     def make_embed(self, track):
 
