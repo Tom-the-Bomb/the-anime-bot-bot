@@ -1406,13 +1406,13 @@ class Images(commands.Cog):
     #                 embed=embed,
     #             )
 
-    @commands.command()
-    async def noise(self, ctx):
-        stat_ = await self.image(
-            ctx,
-            await ctx.author.avatar_url_as(format="png").read(),
-            "add_noise_rand",
-        )
+    # @commands.command()
+    # async def noise(self, ctx):
+    #     stat_ = await self.image(
+    #         ctx,
+    #         await ctx.author.avatar_url_as(format="png").read(),
+    #         "add_noise_rand",
+    #     )
 
     @commands.command(aliases=["wtp"])
     async def pokemon(self, ctx):
