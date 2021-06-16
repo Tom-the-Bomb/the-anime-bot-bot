@@ -336,7 +336,7 @@ class Images(commands.Cog):
                 to_make_gif.append(Image.open(b).convert("RGBA"))
                 b.close()
             final = BytesIO()
-            self.save_transparent_gif(to_make_gif, img.info["duration"], final)
+            self.save_transparent_gif(to_make_gif, img.info.get("duration", 10), final)
             for i in to_process:
                 i.close()
             for i in to_make_gif:
@@ -405,7 +405,7 @@ class Images(commands.Cog):
                 im_final = function(im_, *args)
                 to_make_gif.append(im_final)
             final = BytesIO()
-            self.save_transparent_gif(to_make_gif, img.info["duration"], final)
+            self.save_transparent_gif(to_make_gif, img.info.get("duration", 10), final)
             to_make_gif[0].save(final, format="GIF", append_images=to_make_gif[1:], disposal=2, loop=0, save_all=True)
             for i in to_make_gif:
                 i.close()
@@ -1520,7 +1520,7 @@ class Images(commands.Cog):
                     with Image.open(b) as img_:
                         to_make_gif.append(glitcher.glitch_image(img_, intensity, color_offset=True))
                 final = BytesIO()
-                self.save_transparent_gif(to_make_gif, img.info["duration"], final)
+                self.save_transparent_gif(to_make_gif, img.info.get("duration", 10), final)
             else:
                 for _ in range(10):
                     to_make_gif.append(glitcher.glitch_image(img, intensity, color_offset=True))
