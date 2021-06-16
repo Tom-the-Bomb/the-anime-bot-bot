@@ -709,9 +709,10 @@ class Fun(commands.Cog):
         if c.channel.id != ctx.author.voice.channel.id:
             await c.move_to(ctx.author.voice.channel)
         if not c.is_connected():
-            await c.connect(timeout=60, reconnect=True)
+            await c.disconnect()
+            del c
+            c =  await ctx.author.voice.channel.connect()
         buffer = await self.tts_(text, lang)
-        print("done")
         if c.is_playing():
             c.stop()
         c.play(FFmpegPCMAudio(buffer.read(), pipe=True))
