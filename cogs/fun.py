@@ -709,7 +709,7 @@ class Fun(commands.Cog):
         if c.channel.id != ctx.author.voice.channel.id:
             await c.move_to(ctx.author.voice.channel)
         if not c.is_connected():
-            await c.disconnect()
+            await c.disconnect(force=True)
             del c
             c =  await ctx.author.voice.channel.connect()
         buffer = await self.tts_(text, lang)
