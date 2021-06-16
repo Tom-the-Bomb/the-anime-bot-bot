@@ -211,7 +211,8 @@ class Fun(commands.Cog):
             "\U00002753": "idk",
             "\U0001f615": "probably",
             "\U0001f61e": "probably not",
-            "\U000025c0": "back"
+            "\U000025c0": "back",
+            "\U000023f9": "stop"
         }
         def make_bar(progress: float):
             total_value = 100
@@ -243,16 +244,17 @@ class Fun(commands.Cog):
                 try:
                     q = await aki.back()
                 except akinator.CantGoBackAnyFurther:
-                    pass
+            elif r == "stop":
+                return await m.delete()
             else:
                 q = await aki.answer(r)
-            embed = discord.Embed(color=self.bot.color, title="Akinator", description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items()) + f"\n{make_bar{aki.progression}}")
+            embed = discord.Embed(color=self.bot.color, title="Akinator", description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items()) + f"\n{make_bar(aki.progression)}")
             embed.set_thumbnail(url="https://en.akinator.com/bundles/elokencesite/images/akinator.png?v94")
             embed.add_field(name=f"Question {aki.step}", value=q, inline=False)
             await m.edit(embed=embed)
         await aki.win()
         guess = aki.first_guess
-        embed = discord.Embed(color=self.bot.color, title=guess["name"], description=guess["description"] + f"\n{make_bar{aki.progression}}")
+        embed = discord.Embed(color=self.bot.color, title=guess["name"], description=guess["description"] + f"\n{make_bar(aki.progression)}")
         embed.set_thumbnail(url="https://en.akinator.com/bundles/elokencesite/images/akinator.png?v94")
         embed.set_image(url=guess["absolute_picture_path"])
         await m.edit(embed=embed)
