@@ -366,6 +366,7 @@ class Images(commands.Cog):
         return result
 
     @staticmethod
+    @asyncexe()
     def circle__(background_color: str, circle_color: str) -> BytesIO:
         frames = []
         mid = 100
@@ -395,6 +396,7 @@ class Images(commands.Cog):
             i.close()
         return igif
 
+    @asyncexe()
     def process_gif(self, image, function, *args: list[Any]) -> Tuple[BytesIO, str]:
         img = self.open_pil_image(BytesIO(image))
         if img.is_animated and img.n_frames < 200:
@@ -479,28 +481,26 @@ class Images(commands.Cog):
     async def grayscale_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        f = functools.partial(self.process_gif, image1, ImageOps.grayscale)
-        result, format_ = await self.bot.loop.run_in_executor(None, f)
+        result, format_ = await self.process_gif(image1, ImageOps.grayscale)
         result = discord.File(result, f"The_Anime_Bot_grayscale.{format_}")
         return result
 
     async def posterize_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        f = functools.partial(self.process_gif, image1, ImageOps.posterize, 3)
-        result, format_ = await self.bot.loop.run_in_executor(None, f)
+        result, format_ = await self.process_gif(image1, ImageOps.posterize, 3)
         result = discord.File(result, f"The_Anime_Bot_posterize.{format_}")
         return result
 
     async def solarize_(self, url: str) -> discord.File:
         async with self.bot.session.get(url) as resp:
             image1 = await resp.read()
-        result, format_ = await self.bot.loop.run_in_executor(None, self.process_gif, image1, ImageOps.solarize)
+        result, format_ = await self.process_gif(image1, ImageOps.solarize)
         result = discord.File(result, f"The_Anime_Bot_solarize.{format_}")
         return result
 
     async def circle_(self, background_color: str, circle_color: str):
-        result = await self.bot.loop.run_in_executor(None, self.circle__, background_color, circle_color)
+        result = await self.circle__(background_color, circle_color)
         return result
 
     @staticmethod
