@@ -688,7 +688,7 @@ class Fun(commands.Cog):
         return buffer
     
     @commands.group(invoke_without_command=True)
-    async def tts(self, ctx: AnimeContext, ):
+    async def tts(self, ctx: AnimeContext, lang: str, text: str):
         async with ctx.typing():
             buffer = await self.tts_(text, lang)
             await ctx.reply(file=discord.File(buffer, filename="audio.mp3"))
