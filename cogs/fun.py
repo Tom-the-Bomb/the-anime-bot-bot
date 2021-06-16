@@ -644,7 +644,11 @@ class Fun(commands.Cog):
         if not ctx.author.voice:
             return await ctx.send("You are not connected to any voice channel.")
         if p := self.bot.wavelink.players.get(ctx.guild.id):
-            await p.destroy()
+            if p.is_playing:
+                return await ctx.send("There are something else playing in this channel.")
+            else:
+                await p.disconnect()
+                await p.destory()
         c = discord.utils.find(lambda x: x.guild.id == ctx.guild.id, self.bot.voice_clients)
         if not c:
             c = await ctx.author.voice.channel.connect()
