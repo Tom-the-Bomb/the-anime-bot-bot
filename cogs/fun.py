@@ -219,7 +219,7 @@ class Fun(commands.Cog):
             return "▓"*int(progress/value_per_block) + "░"*int((total_value/value_per_block)-(progress/value_per_block))
         aki = Akinator()
         q = await aki.start_game(child_mode=not ctx.channel.is_nsfw())
-        embed = discord.Embed(color=self.bot.color, title="Akinator", description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items()) + f"\n{make_bar{aki.progression}}")
+        embed = discord.Embed(color=self.bot.color, title="Akinator", description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items()) + f"\n{make_bar(aki.progression)}")
         embed.set_thumbnail(url="https://en.akinator.com/bundles/elokencesite/images/akinator.png?v94")
         embed.add_field(name=f"Question {aki.step}", value=q, inline=False)
         m = await ctx.send(embed=embed)
