@@ -583,12 +583,24 @@ class Images(commands.Cog):
                 return b, img.format
     
     @commands.command()
+    async def changemymind(self, ctx, thing: str):
+        """
+        Change my mind
+        """
+        async with Processing(ctx):
+            async with self.bot.session.get("https://nekobot.xyz/api/imagegen", params={"type": "changemymind", "text": thing}, timeout=aiohttp.ClientTimeout()) as resp:
+                j = await resp.json()
+                async with self.bot.session.get(j["message"]) as resp:
+                    b = BytesIO(await resp.read())
+                    await ctx.send(file=discord.File(b, "The_Anime_Bot_Change_My_Mind.png"))
+
+    @commands.command()
     async def stickbug(self, ctx, thing: Optional[Image_Union]):
         """
         Get stickbugged
         """
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing, checktype=False)
+            url = await self.get_url(ctx, thing, checktype=True)
             async with self.bot.session.get("https://nekobot.xyz/api/imagegen", params={"type": "stickbug", "url": url}, timeout=aiohttp.ClientTimeout()) as resp:
                 j = await resp.json()
                 async with self.bot.session.get(j["message"]) as resp:
