@@ -581,6 +581,19 @@ class Images(commands.Cog):
                 img.save(file=b)
                 b.seek(0)
                 return b, img.format
+    
+    @commands.command()
+    async def stickbug(self, ctx, thing: Optional[Image_Union]):
+        """
+        Get stickbugged
+        """
+        url = await self.get_url(ctx, thing, checktype=False)
+        async with self.bot.session.get("https://nekobot.xyz/api/imagegen", params={"type": "stickbug", "url": url}, timeout=aiohttp.ClientTimeout()) as resp:
+            j = await resp.json()
+            async with self.bot.session.get(j["message"]) as resp:
+                b = BytesIO(await resp.read())
+                await ctx.send(file=discord.File(b, "stickbug.mp4"))
+
 
     @commands.command(aliases=["converti"])
     async def convertimage(
