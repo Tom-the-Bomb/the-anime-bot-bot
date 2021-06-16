@@ -283,7 +283,7 @@ System:
         embed.set_author(name="Use this link to invite")
         embed.add_field(
             name="link ",
-            value="[Invite me](https://theanimebot.epizy.com/invite.html)",
+            value="[Invite me](https://discord.com/oauth2/authorize?client_id=787927476177076234&permissions=2486562007&scope=bot%20applications.commands)",
         )
         await ctx.reply(embed=embed)
 
@@ -499,7 +499,7 @@ System:
         embed.set_author(name=self.bot.user, icon_url=self.bot.user.avatar_url)
         embed.add_field(
             name="Info",
-            value=f"Guilds: {len(self.bot.guilds)} \nMembers: {len(self.bot.users)} \nCreator: {owner} \nLibrary: discord.py \nCommands used (since last reboot): {self.bot.counter} \nInvite link: [click here](https://theanimebot.epizy.com/invite.html) \nMessages Cached: {len(self.bot.cached_messages)}",
+            value=f"Guilds: {len(self.bot.guilds)} \nMembers: {len(self.bot.users)} \nCreator: {owner} \nLibrary: discord.py \nCommands used (since last reboot): {self.bot.counter} \nInvite link: [click here](https://discord.com/oauth2/authorize?client_id=787927476177076234&permissions=2486562007&scope=bot%20applications.commands) \nMessages Cached: {len(self.bot.cached_messages)}",
             inline=False,
         )
         embed.add_field(
