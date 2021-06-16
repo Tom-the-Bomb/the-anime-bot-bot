@@ -12,6 +12,8 @@ import io
 from discord.opus import Encoder
 from io import BytesIO
 
+import akinator
+from akinator.async_aki import Akinator
 import aiohttp
 import async_timeout
 import config
@@ -200,6 +202,61 @@ class Fun(commands.Cog):
                 ]
             )
         )
+    
+    @commands.command()
+    async def akinator(self, ctx):
+        reaction_controls = {
+            "\U00002705": "yes",
+            "\U0000274c": "no",
+            "\U00002753": "idk",
+            "\U0001f615": "probably",
+            "\U0001f61e": "probably not",
+            "\U000025c0": "back"
+        }
+        aki = Akinator()
+        q = await aki.start_game(child_mode=not ctx.channel.is_nsfw())
+        embed = discord.Embed(color=self.bot.color, title="Akinator", description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items()))
+        embed.set_thumbnail(url="https://en.akinator.com/bundles/elokencesite/images/akinator.png?v94")
+        embed.add_field(name=f"Question {aki.step}", value=q, inline=False)
+        m = await ctx.send(embed=embed)
+        for r in reaction_controls:
+            await m.add_reaction(r)
+        while aki.progression <= 80:
+            tasks = [
+                    asyncio.ensure_future(self.bot.wait_for('raw_reaction_add', check=lambda x: x.user_id == ctx.author.id and x.message_id == m.id and x.emoji.name in reaction_controls)),
+                    asyncio.ensure_future(self.bot.wait_for('raw_reaction_remove', check=lambda x: x.user_id == ctx.author.id and x.message_id == m.id and x.emoji.name in reaction_controls))
+                ]
+            done, pending = await asyncio.wait(tasks, timeout=60, return_when=asyncio.FIRST_COMPLETED)
+            for task in pending:
+                task.cancel()
+
+            if len(done) == 0:
+                return await ctx.send("Timeouted Terminating.")
+
+            payload = done.pop().result()
+            r = reaction_controls[payload.emoji.name]
+            if r == "back":
+                try:
+                    q = await aki.back()
+                except akinator.CantGoBackAnyFurther:
+                    pass
+            else:
+                q = await aki.answer(r)
+            embed = discord.Embed(color=self.bot.color, title="Akinator", description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items()))
+            embed.set_thumbnail(url="https://en.akinator.com/bundles/elokencesite/images/akinator.png?v94")
+            embed.add_field(name=f"Question {aki.step}", value=q, inline=False)
+            await m.edit(embed=embed)
+        await aki.win()
+        guess = aki.first_guess
+        embed = discord.Embed(color=self.bot.color, title="Akinator", description=guess["description"])
+        embed.set_thumbnail(url="https://en.akinator.com/bundles/elokencesite/images/akinator.png?v94")
+        embed.set_image(url=guess["absolute_picture_path"])
+        await m.edit(embed=embed)
+
+
+
+
+
 
     @commands.command()
     async def ship(
