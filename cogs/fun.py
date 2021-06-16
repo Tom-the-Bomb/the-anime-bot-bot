@@ -248,7 +248,7 @@ class Fun(commands.Cog):
             await m.edit(embed=embed)
         await aki.win()
         guess = aki.first_guess
-        embed = discord.Embed(color=self.bot.color, title="Akinator", description=guess["description"])
+        embed = discord.Embed(color=self.bot.color, title=guess["name"], description=guess["description"])
         embed.set_thumbnail(url="https://en.akinator.com/bundles/elokencesite/images/akinator.png?v94")
         embed.set_image(url=guess["absolute_picture_path"])
         await m.edit(embed=embed)
