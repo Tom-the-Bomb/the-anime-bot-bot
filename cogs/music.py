@@ -56,6 +56,9 @@ class Player(wavelink.Player):
         self.queue_position = 0
     
     def is_dj(self, ctx):
+        if not self.dj:
+            self.dj = ctx.author
+            return True
         if ctx.author.id == self.dj.id:
             return True
         if ctx.author.permissions_in(ctx.bot.get_channel(self.channel_id)).manage_guild:
@@ -244,16 +247,17 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             c = self.bot.get_channel(player.channel_id)
             if not c:
                 return await player.destory()
-            if isinstance(c, discord.StageChannel):
-                mods = self.is_stage_mod(c.members, c)
-                if mods:
-                    player.dj = random.choice([i for i in mods if not i.bot])
-                    return await player.send(f"Dj is now {player.dj.mention} because the old dj left.")
-            new_dj = random.choice([i for i in c.members if not i.bot])
-            if not new_dj:
-                return await player.destory()
-            player.dj = new_dj
-            await player.ctx.send(f"Dj is now {player.dj.mention} because the old dj left.")
+            # if isinstance(c, discord.StageChannel):
+            #     mods = self.is_stage_mod(c.members, c)
+            #     if mods:
+            #         player.dj = random.choice([i for i in mods if not i.bot])
+            #         return await player.send(f"Dj is now {player.dj.mention} because the old dj left.")
+            # new_dj = random.choice([i for i in c.members if not i.bot])
+            # if not new_dj:
+            #     return await player.destory()
+            # player.dj = new_dj
+            # await player.ctx.send(f"Dj is now {player.dj.mention} because the old dj left.")
+            player.dj = None
 
     @wavelink.WavelinkMixin.listener("on_track_exception")
     async def on_node_event_(self, node, event):
@@ -308,6 +312,14 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             await ctx.send("Nothing is being played right now.")
             return False
         return True
+    
+    @commands.command()
+    @is_dj()
+    async def transfer_dj(self, ctx, member: discord.Member):
+        player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
+        player.dj == member
+        return await ctx.send(f"{member.mention} is now the new dj.")
+
 
     @commands.command()
     async def node_info(self, ctx):
