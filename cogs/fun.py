@@ -218,6 +218,19 @@ class Fun(commands.Cog):
             total_value = 100
             value_per_block = 5
             return "▓"*int(progress/value_per_block) + "░"*int((total_value/value_per_block)-(progress/value_per_block))
+        await ctx.send("Are we guessing a character, animal, or an object? Type it in chat.")
+        try:
+            _m = await self.bot.wait_for("message", check=lambda x: x.author.id == ctx.author.id and x.channel.id == ctx.channel.id, timeout=60)
+        except asyncio.TimeoutError:
+            return await ctx.send("Timeouted, aborting.")
+        if _m.content == "animal":
+            l = "en_animals"
+        elif _m.content == "object":
+            l = "en_objects"
+        elif _m.content == "character":
+            l = "en"
+        else:
+            return await ctx.send("Invalid response, must be character, animal, or an object. Case sensitive.")
         aki = Akinator()
         q = await aki.start_game(child_mode=not ctx.channel.is_nsfw())
         embed = discord.Embed(color=self.bot.color, title="Akinator", description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items()) + f"\n{make_bar(aki.progression)}")
