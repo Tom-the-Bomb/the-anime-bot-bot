@@ -232,7 +232,7 @@ class Fun(commands.Cog):
         else:
             return await ctx.send("Invalid response, must be character, animal, or an object. Case sensitive.")
         aki = Akinator()
-        q = await aki.start_game(child_mode=not ctx.channel.is_nsfw())
+        q = await aki.start_game(language=l, child_mode=not ctx.channel.is_nsfw())
         embed = discord.Embed(color=self.bot.color, title="Akinator", description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items()) + f"\n{make_bar(aki.progression)}")
         embed.set_thumbnail(url="https://en.akinator.com/bundles/elokencesite/images/akinator.png?v94")
         embed.add_field(name=f"Question {aki.step}", value=q, inline=False)
