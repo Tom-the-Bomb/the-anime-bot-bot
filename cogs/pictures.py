@@ -582,8 +582,8 @@ class Images(commands.Cog):
                 b.seek(0)
                 return b, img.format_
     
-    @commands.command()
-    async def resize(self, ctx, thing: Optional[Image_Union], width: int, height: int):
+    @commands.command(name="resize")
+    async def resize_(self, ctx, thing: Optional[Image_Union], width: int, height: int):
         """
         Resize an image
         """
