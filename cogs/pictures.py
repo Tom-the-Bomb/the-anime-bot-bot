@@ -589,6 +589,8 @@ class Images(commands.Cog):
         """
         if width > 600 or height > 600:
             return await ctx.send("The size can't be over 600")
+        if width < 0 or height < 0:
+            return await ctx.send("The size can't be under or equal to 0")
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
