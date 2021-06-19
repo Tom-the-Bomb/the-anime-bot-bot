@@ -584,6 +584,11 @@ class Images(commands.Cog):
     
     @commands.command()
     async def resize(self, ctx, thing: Optional[Image_Union], width: int, height: int):
+        """
+        Resize an image
+        """
+        if width > 600 or height > 600:
+            return await ctx.send("The size can't be over 600")
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
