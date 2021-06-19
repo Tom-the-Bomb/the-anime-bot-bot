@@ -1404,6 +1404,8 @@ class Images(commands.Cog):
     ):
         if intensity > 10:
             return await ctx.send("intensity lower then 10")
+        if intensity <= 0:
+            return await ctx.send("It can't be lower or equal to 0")
         async with Processing(ctx):
             url = await self.get_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
