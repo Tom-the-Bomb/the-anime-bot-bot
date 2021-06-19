@@ -580,7 +580,15 @@ class Images(commands.Cog):
                 b = BytesIO()
                 img.save(file=b)
                 b.seek(0)
-                return b, img.format
+                return b, img.format_
+    
+    @commands.command()
+    async def resize(self, ctx, thing: Optional[Image_Union], width: int, height: int):
+        async with Processing(ctx):
+            url = await self.get_url(ctx, thing)
+            async with self.bot.session.get(url) as resp:
+                b, format = await self.process_gif(await resp.read(), lambda x: x.resize(width, height))
+                await ctx.send(file=discord.File(b, f"The_Anime_Bot_resize.{format}"))
     
     @commands.command()
     async def changemymind(self, ctx, *, thing: str):
