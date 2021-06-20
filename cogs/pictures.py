@@ -154,6 +154,7 @@ class Images(commands.Cog):
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
 
+
         excluded = ("glitch", "invert", "magik", "rainbow", "youtube")
 
         e = []
@@ -161,17 +162,17 @@ class Images(commands.Cog):
         for i, _ in inspect.getmembers(self):
             e.append(i)
 
-        for name, _image_func in inspect.getmembers(ImageFeatures):
-            f = _image_func()
+        for name, _func in inspect.getmembers(ImageFeatures):
             if name.startswith("_"):
                 continue
-            elif "Needs:" in inspect.getdoc(_image_func):
+            if "Needs:" in inspect.getdoc(_func):
                 continue
             if name in excluded:
                 continue
             if name in e:
                 continue
-            @commands.command(name=name, help=inspect.getdoc(_image_func))
+            f = _func()
+            @commands.command(name=name, help=inspect.getdoc(_func))
             async def auto_image_handler(self, ctx, thing: Optional[Image_Union]):
                 async with Processing(ctx):
                     url = await self.get_gif_url(ctx, thing)
