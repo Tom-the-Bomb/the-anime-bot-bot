@@ -1,22 +1,22 @@
-name: Lint
+# name: Lint
 
-on: push
+# on: push
 
-jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-        with:
-          python-version: "3.9.x"
-      - name: Install Python dependencies
-        run: |
-          pip install black
-      - uses: wearerequired/lint-action@v1
-        with:
-          git_name: "Auto Format with black bot"
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          black: true
-          black_args: "-l 120"
-          auto_fix: true
+# jobs:
+#   lint:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+#       - uses: actions/setup-python@v2
+#         with:
+#           python-version: "3.9.x"
+#       - name: Install Python dependencies
+#         run: |
+#           pip install black
+#       - uses: wearerequired/lint-action@v1
+#         with:
+#           git_name: "Auto Format with black bot"
+#           github_token: ${{ secrets.GITHUB_TOKEN }}
+#           black: true
+#           black_args: "-l 120"
+#           auto_fix: true
