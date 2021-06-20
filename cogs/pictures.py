@@ -158,10 +158,10 @@ class Images(commands.Cog):
 
         e = []
 
-        for i, v in inspect.getmembers(self):
+        for i, _ in inspect.getmembers(self):
             e.append(i)
 
-        for name, _func in inspect.getmembers(ImageFeatures):
+        for name, __ in inspect.getmembers(ImageFeatures):
             if name.startswith("_"):
                 continue
             if "Needs:" in inspect.getdoc(_func):
@@ -170,6 +170,7 @@ class Images(commands.Cog):
                 continue
             if name in e:
                 continue
+            _func = getattr(ImageFeatures, name)
 
             @commands.command(name=name, help=inspect.getdoc(_func))
             async def func(self, ctx, thing: Optional[Image_Union]):
