@@ -1459,7 +1459,6 @@ class Images(commands.Cog):
 
     @commands.command(aliases=["wtp"])
     async def pokemon(self, ctx):
-        await ctx.trigger_typing()
         wtp = await self.bot.dag.wtp()
         tried = 3
         if ctx.author.id == 590323594744168494:
