@@ -176,7 +176,7 @@ class Images(commands.Cog):
                 async with Processing(ctx):
                     url = await self.get_gif_url(ctx, thing)
                     img = await self.bot.dag.image_process(getattr(ImageFeatures, ctx.command.qualified_name)(), url)
-                    file = discord.File(fp=img.image, filename=f"The_Anime_Bot_{name}.{img.format}")
+                    file = discord.File(fp=img.image, filename=f"The_Anime_Bot_{ctx.command.qualified_name}.{img.format}")
                     await ctx.reply(file=file)
 
             self.__cog_commands__ += (auto_image_handler,)
