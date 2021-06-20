@@ -1504,14 +1504,13 @@ class Images(commands.Cog):
     async def captcha(
         self,
         ctx,
-        thing: Image_Union = None,
+        thing: Optional[Image_Union],
         *,
         text="enter something here",
     ):
         async with Processing(ctx):
             url = await self.get_gif_url(ctx, thing)
-            text1 = text
-            img = await self.bot.dag.image_process(ImageFeatures.captcha(), url, text=text1)
+            img = await self.bot.dag.image_process(ImageFeatures.captcha(), url, text=text)
             file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
             await ctx.reply(file=file)
 
