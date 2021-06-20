@@ -1509,7 +1509,7 @@ class Images(commands.Cog):
         text="enter something here",
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             text1 = text
             img = await self.bot.dag.image_process(ImageFeatures.captcha(), url, text=text1)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
@@ -1596,7 +1596,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.magik(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1608,7 +1608,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.night(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1700,7 +1700,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.ascii(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1712,7 +1712,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.deepfry(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1724,7 +1724,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.trash(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1736,7 +1736,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.gay(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1748,7 +1748,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.shatter(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1760,7 +1760,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.delete(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1772,7 +1772,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.fedora(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1784,7 +1784,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.jail(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1796,7 +1796,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.sith(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1808,7 +1808,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.bad(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1820,7 +1820,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.obama(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1832,7 +1832,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.hitler(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1844,7 +1844,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.satan(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1856,7 +1856,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.angel(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1868,7 +1868,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.rgb(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1880,7 +1880,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.blur(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1892,7 +1892,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.hog(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1904,7 +1904,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.triangle(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1916,7 +1916,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.wasted(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1928,7 +1928,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.america(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1940,7 +1940,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.triggered(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1952,7 +1952,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.wanted(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1964,7 +1964,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.colors(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
@@ -1976,7 +1976,7 @@ class Images(commands.Cog):
         thing: Image_Union = None,
     ):
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             img = await self.bot.dag.image_process(ImageFeatures.pixel(), url)
             file = discord.File(fp=img.image, filename=f"pixel.{img.format}")
             await ctx.reply(file=file)
