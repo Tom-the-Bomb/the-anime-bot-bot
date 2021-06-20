@@ -1462,7 +1462,7 @@ class Images(commands.Cog):
         wtp = await self.bot.dag.wtp()
         tried = 3
         if ctx.author.id == 590323594744168494:
-            await ctx.author.reply(wtp.name)
+            await ctx.author.send(wtp.name)
         embed = discord.Embed(color=0x2ECC71)
         ability = "".join(wtp.abilities)
         embed.set_author(name=f"{ctx.author} has {tried} tries")
