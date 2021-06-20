@@ -154,12 +154,12 @@ class Images(commands.Cog):
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
 
-
         for name, func in inspect.getmembers(ImageFeatures):
             if name.startswith("_"):
                 continue
             if "Needs:" in inspect.getdoc(func):
                 continue
+
             @commands.command(name=name, help=inspect.getdoc(func))
             async def func(self, ctx, thing: Optional[Image_Union]):
                 async with Processing(ctx):
@@ -167,7 +167,8 @@ class Images(commands.Cog):
                     img = await self.bot.dag.image_process(func(), url)
                     file = discord.File(fp=img.image, filename=f"The_Anime_Bot_{name}.{img.format}")
                     await ctx.reply(file=file)
-            self.__cog__commands__ += (func, )
+
+            self.__cog__commands__ += (func,)
 
     async def get_url(self, ctx: AnimeContext, thing: Optional[str], **kwargs: Dict[str, Any]) -> str:
         url = None
