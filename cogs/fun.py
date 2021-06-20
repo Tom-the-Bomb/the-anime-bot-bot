@@ -492,7 +492,7 @@ class Fun(commands.Cog):
     async def xkcd(self, ctx, which: str = "random"):
         if which == "random":
             async with self.bot.session.get("https://c.xkcd.com/random/comic/") as resp:
-                url = resp.url
+                url = str(resp.url)
         elif which.isdigit():
             url = f"https://xkcd.com/{which}/"
         else:
