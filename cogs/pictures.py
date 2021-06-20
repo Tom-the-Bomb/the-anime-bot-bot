@@ -589,7 +589,7 @@ class Images(commands.Cog):
         if width < 0 or height < 0:
             return await ctx.send("The size can't be under or equal to 0")
         async with Processing(ctx):
-            url = await self.get_url(ctx, thing)
+            url = await self.get_gif_url(ctx, thing)
             async with self.bot.session.get(url) as resp:
                 b, format = await self.process_gif((await resp.read()), lambda x: x.resize((width, height)))
                 await ctx.send(file=discord.File(b, f"The_Anime_Bot_resize.{format}"))
