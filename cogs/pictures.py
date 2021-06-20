@@ -16,6 +16,7 @@ import functools
 import os
 import re
 import time
+import inspect
 import typing
 import warnings
 from collections import defaultdict
@@ -38,7 +39,8 @@ import qrcode
 import ratelimiter
 import ujson
 from asyncdagpi import ImageFeatures
-from PIL import Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter, ImageOps, ImageSequence
+from PIL import (Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter,
+                 ImageOps, ImageSequence)
 from pyzbar.pyzbar import decode
 from qrcode.image.pure import PymagingImage
 from twemoji_parser import emoji_to_url
@@ -119,6 +121,32 @@ class Processing:
             )
         except discord.HTTPException:
             return
+
+
+# class DagCommand(commands.command):
+#     def __init__(self, route_name):
+#         self.route_name = route_name
+#         func = getattr(ImageFeatures, route_name)
+#         func = func()
+#         env = {
+#             "f": func
+#         }
+#         env.update(globals())
+#         f = f"""
+#         import discord
+#         from tyoing import Union
+
+#         async def route_name(ctx, thing: Union[discord.Member, discord.User, discord.PartialEmoji, discord.Emoji, str]):
+#             with ctx.bot.Processing(ctx):
+#                 url = await ctx.bot.get_gif_url(ctx, thing)
+#                 img = await ctx.bot.dag.image_process(f, url)
+#                 file = discord.File(fp=img.image, filename="The_Anime_bot_"+str(f)+"."+img.format)
+#                 await ctx.reply(file=file)
+
+
+                
+#         """
+#         super().__init__(name=route_name, description=func.description)
 
 
 class Images(commands.Cog):
@@ -1592,66 +1620,6 @@ class Images(commands.Cog):
             await ctx.reply(file=await self.polaroid_(url, "apply_gradient"))
 
     @commands.command()
-    async def awareness(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.magik(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
-
-    @commands.command()
-    async def night(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.night(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
-
-    @commands.command()
-    async def paint(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-        img = await self.bot.dag.image_process(ImageFeatures.paint(), url)
-        file = discord.File(fp=img.image, filename=f"The_Anime_Bot_paint.{img.format}")
-        await ctx.reply(file=file)
-
-    @commands.command()
-    async def polaroid(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.polaroid(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_Bot_polaroid.{img.format}")
-            await ctx.reply(file=file)
-
-    @commands.command()
-    async def sepia(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.sepia(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_Bot_sepia.{img.format}")
-            await ctx.reply(file=file)
-
-    @commands.command()
     async def posterize(
         self,
         ctx,
@@ -1694,294 +1662,370 @@ class Images(commands.Cog):
             url = await self.get_gif_url(ctx, thing)
             file = await self.grayscale_(url)
             await ctx.reply(file=file)
+    
+    for name, func in inspect.getmembers(ImageFeatures):
+        if name.startswith("_"):
+            continue
+        if "Needs:" in inspect.getdoc(func):
+            continue
+        @commands.command(name=name, help=inspect.getdoc(func))
+        async def func(self, ctx, thing: Optional[Image_Union]):
+            async with Processing(ctx):
+                url = await self.get_gif_url(ctx, thing)
+                img = await self.bot.dag.image_process(func(), url)
+                file = discord.File(fp=img.image, filename=f"The_Anime_Bot_{name}.{img.format}")
+                await ctx.reply(file=file)
+        self.__cog__commands__ += (func, )
+        
 
-    @commands.command()
-    async def ascii(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.ascii(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
 
-    @commands.command()
-    async def deepfry(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.deepfry(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def polaroid(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.polaroid(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_Bot_polaroid.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def trash(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.trash(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def sepia(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.sepia(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_Bot_sepia.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def gay(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.gay(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def awareness(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.magik(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def shatter(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.shatter(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def night(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.night(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def delete(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.delete(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def paint(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #     img = await self.bot.dag.image_process(ImageFeatures.paint(), url)
+    #     file = discord.File(fp=img.image, filename=f"The_Anime_Bot_paint.{img.format}")
+    #     await ctx.reply(file=file)
 
-    @commands.command()
-    async def fedora(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.fedora(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def ascii(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.ascii(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def jail(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.jail(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def deepfry(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.deepfry(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def sith(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.sith(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def trash(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.trash(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def bad(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.bad(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def gay(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.gay(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def obama(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.obama(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def shatter(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.shatter(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def hitler(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.hitler(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def delete(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.delete(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command(aliases=["evil"])
-    async def satan(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.satan(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def fedora(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.fedora(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def angel(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.angel(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def jail(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.jail(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def rgb(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.rgb(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def sith(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.sith(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def blur(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.blur(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def bad(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.bad(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def hog(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.hog(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def obama(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.obama(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def triangle(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.triangle(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def hitler(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.hitler(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def wasted(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.wasted(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command(aliases=["evil"])
+    # async def satan(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.satan(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def america(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.america(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def angel(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.angel(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def triggered(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.triggered(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def rgb(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.rgb(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def wanted(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.wanted(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def blur(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.blur(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def colors(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.colors(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def hog(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.hog(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
-    @commands.command()
-    async def pixel(
-        self,
-        ctx,
-        thing: Image_Union = None,
-    ):
-        async with Processing(ctx):
-            url = await self.get_gif_url(ctx, thing)
-            img = await self.bot.dag.image_process(ImageFeatures.pixel(), url)
-            file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
-            await ctx.reply(file=file)
+    # @commands.command()
+    # async def triangle(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.triangle(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
+
+    # @commands.command()
+    # async def wasted(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.wasted(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
+
+    # @commands.command()
+    # async def america(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.america(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
+
+    # @commands.command()
+    # async def triggered(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.triggered(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
+
+    # @commands.command()
+    # async def wanted(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.wanted(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
+
+    # @commands.command()
+    # async def colors(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.colors(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
+
+    # @commands.command()
+    # async def pixel(
+    #     self,
+    #     ctx,
+    #     thing: Image_Union = None,
+    # ):
+    #     async with Processing(ctx):
+    #         url = await self.get_gif_url(ctx, thing)
+    #         img = await self.bot.dag.image_process(ImageFeatures.pixel(), url)
+    #         file = discord.File(fp=img.image, filename=f"The_Anime_bot_image_manip.{img.format}")
+    #         await ctx.reply(file=file)
 
 
 def setup(bot):
