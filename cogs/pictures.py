@@ -161,8 +161,7 @@ class Images(commands.Cog):
         for i, _ in inspect.getmembers(self):
             e.append(i)
 
-        for name, __ in inspect.getmembers(ImageFeatures):
-            _func = getattr(ImageFeatures, name)
+        for name, _func in inspect.getmembers(ImageFeatures):
             if name.startswith("_"):
                 continue
             if "Needs:" in inspect.getdoc(_func):
@@ -171,16 +170,16 @@ class Images(commands.Cog):
                 continue
             if name in e:
                 continue
-
+            f = _func()
             @commands.command(name=name, help=inspect.getdoc(_func))
-            async def func(self, ctx, thing: Optional[Image_Union]):
+            async def auto_image_handler(self, ctx, thing: Optional[Image_Union]):
                 async with Processing(ctx):
                     url = await self.get_gif_url(ctx, thing)
-                    img = await self.bot.dag.image_process(_func(), url)
+                    img = await self.bot.dag.image_process(f, url)
                     file = discord.File(fp=img.image, filename=f"The_Anime_Bot_{name}.{img.format}")
                     await ctx.reply(file=file)
 
-            self.__cog_commands__ += (func,)
+            self.__cog_commands__ += (auto_image_handler,)
 
     async def get_url(self, ctx: AnimeContext, thing: Optional[str], **kwargs: Dict[str, Any]) -> str:
         url = None
