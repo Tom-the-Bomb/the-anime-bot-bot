@@ -1676,8 +1676,6 @@ class Images(commands.Cog):
             file = await self.grayscale_(url)
             await ctx.reply(file=file)
 
-<<<<<<< HEAD
-=======
     for name, func in inspect.getmembers(ImageFeatures):
         if name.startswith("_"):
             continue
@@ -1691,7 +1689,6 @@ class Images(commands.Cog):
                 img = await self.bot.dag.image_process(func(), url)
                 file = discord.File(fp=img.image, filename=f"The_Anime_Bot_{name}.{img.format}")
                 await ctx.reply(file=file)
->>>>>>> 21aa42d073e5b902c017eba8ce37652ce399baa1
 
         self.__cog__commands__ += (func,)
 
