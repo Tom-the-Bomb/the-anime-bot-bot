@@ -1478,7 +1478,7 @@ class Images(commands.Cog):
             msg = await self.bot.wait_for("message", check=check)
             tried -= 1
             embed = discord.Embed(color=0x2ECC71)
-            ability = "".join(wtp.abilities)
+            ability = ", ".join(wtp.abilities)
             embed.set_author(name=f"{ctx.author} has {tried} tries")
             embed.add_field(name="Pokemon's Ability", value=ability)
             embed.set_image(url=wtp.question)
