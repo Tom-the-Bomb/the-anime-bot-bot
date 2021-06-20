@@ -48,27 +48,27 @@ class Error(commands.Cog):
             return
         if isinstance(error, commands.DisabledCommand):
             embed = self.embed(f"{ctx.command} has been disabled.")
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.NSFWChannelRequired):
             embed = self.embed("this command must be used in NSFW channel")
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.errors.UserNotFound):
             embed = self.embed("User not found")
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.errors.MemberNotFound):
             embed = self.embed("Member not found")
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, wavelink.errors.ZeroConnectedNodes):
-            return await ctx.send("hmm our music system is having some problem right now")
+            return await ctx.reply("hmm our music system is having some problem right now")
         if isinstance(error, asyncio.TimeoutError):
             embed = self.embed("timeout")
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, discord.errors.HTTPException):
             embed = self.embed(f"HTTPException {error.text}")
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, GlobalCooldown):
             embed = self.embed(f"You have hit the global ratelimit try again in {round(error.retry_after)} seconds")
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, PIL.UnidentifiedImageError):
             embed = self.embed("No image found")
             return await ctx.reply(embed=embed)
@@ -84,7 +84,7 @@ class Error(commands.Cog):
             return await ctx.reply(embed=embed)
         if isinstance(error, commands.errors.NotOwner):
             embed = self.embed("You must be the bot owner to use this command")
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.NoPrivateMessage):
             try:
                 embed = self.embed(f"{ctx.command} can not be used in Private Messages.")
@@ -95,28 +95,28 @@ class Error(commands.Cog):
             return
         if isinstance(error, ValueError):
             embed = self.embed(error)
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.errors.InvalidEndOfQuotedStringError):
             embed = self.embed("Make sure to put a space between the quotes")
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.ConversionError):
             embed = self.embed(f"Unable to convert {error.converter}")
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.BadArgument):
             embed = self.embed(error)
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.BadUnionArgument):
             embed = self.embed(error)
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.MissingRequiredArgument):
             embed = self.embed(f"{error.param.name} is a required argument")
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.MaxConcurrencyReached):
             embed = self.embed(error)
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.CommandOnCooldown):
             embed = self.embed(error)
-            return await ctx.send(embed=embed)
+            return await ctx.reply(embed=embed)
         if isinstance(error, commands.BotMissingPermissions):
             embed = self.embed(f"Bot is missing {', '.join(error.missing_perms)} to do that")
             return await ctx.reply(embed=embed)
@@ -146,7 +146,7 @@ class Error(commands.Cog):
             color=0xFF0000,
             description=f"some weird error occured, I have told my developer to fix it, if you wish to track this error you may run `{ctx.prefix}errors track {error_id}`",
         )
-        await ctx.send(embed=embed)
+        await ctx.reply(embed=embed)
         # print(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
         print("Ignoring exception in command {}:".format(ctx.command), file=sys.stderr)
         # traceback.print_exception(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
@@ -158,7 +158,7 @@ class Error(commands.Cog):
         if not id:
             errors = await self.bot.db.fetch("SELECT * FROM errors")
             if not errors:
-                return await ctx.send("There are no error")
+                return await ctx.reply("There are no error")
             lists = [f"{i['error_id']} - {i['command']}" for i in errors]
             pages = menus.MenuPages(source=ErrorsMenuSource(lists), delete_message_after=True)
             await pages.start(ctx)
@@ -187,22 +187,22 @@ class Error(commands.Cog):
             embed.add_field(name="Author name", value=error["author_name"], inline=False)
             embed.add_field(name="command", value=error["command"], inline=False)
             if not upload:
-                return await ctx.send(embed=embed)
-            return await ctx.send(embed=embed, file=discord.File(BytesIO(error["error"].encode("utf-8")), "error.txt"))
+                return await ctx.reply(embed=embed)
+            return await ctx.reply(embed=embed, file=discord.File(BytesIO(error["error"].encode("utf-8")), "error.txt"))
 
     @errors.command()
     @commands.is_owner()
     async def fix(self, ctx, id: int):
         error = await self.bot.db.fetchrow("SELECT * FROM errors WHERE error_id = $1", id)
         if not error:
-            return await ctx.send("Error not found.")
+            return await ctx.reply("Error not found.")
         if error["trackers"]:
             for i in error["trackers"]:
                 await (await self.bot.getch(i)).send(
                     f"One of the error you tracking: {id} has been fixed. Command name: {error['command']}"
                 )
         await self.bot.db.execute("DELETE FROM errors WHERE error_id = $1", id)
-        await ctx.send("Marked as fixed and dmed all trackers")
+        await ctx.reply("Marked as fixed and dmed all trackers")
 
     @errors.command()
     async def track(self, ctx, id: int):
@@ -213,8 +213,8 @@ class Error(commands.Cog):
             "UPDATE errors SET trackers = array_append(trackers, $1) WHERE error_id = $2", ctx.author.id, id
         )
         if r[-1] == 0:
-            return await ctx.send("Error not found.")
-        await ctx.send(f"Ok, you are now tracking error {id} I will dm you if it get fixed")
+            return await ctx.reply("Error not found.")
+        await ctx.reply(f"Ok, you are now tracking error {id} I will dm you if it get fixed")
 
     @errors.command()
     async def untrack(self, ctx, id: int):
@@ -225,8 +225,8 @@ class Error(commands.Cog):
             "UPDATE errors SET trackers = array_remove(trackers, $1) WHERE error_id = $2", ctx.author.id, id
         )
         if r[-1] == 0:
-            return await ctx.send("Error not found.")
-        await ctx.send(f"Ok, you are no longer tracking error {id}")
+            return await ctx.reply("Error not found.")
+        await ctx.reply(f"Ok, you are no longer tracking error {id}")
 
 
 def setup(bot):
