@@ -154,9 +154,7 @@ class Images(commands.Cog):
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
 
-        excluded = (
-            "glitch",
-        )
+        excluded = ("glitch",)
 
         for name, func in inspect.getmembers(ImageFeatures):
             if name.startswith("_"):
