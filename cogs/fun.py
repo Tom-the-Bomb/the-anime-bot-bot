@@ -487,6 +487,25 @@ class Fun(commands.Cog):
                 await ctx.reply(msg.attachments[0].url)
             if msg.embeds != []:
                 await ctx.reply(embed=msg.embeds[0])
+    
+    @commands.command()
+    async def xkcd(self, ctx, which: str = "random"):
+        if which == "random":
+            async with self.bot.session.get("https://c.xkcd.com/random/comic/") as resp:
+                url = resp.url
+        elif which.isdigit():
+            url = f"https://xkcd.com/{which}/"
+        else:
+            return await ctx.send("Invalid xkcd article number")
+        async with self.bot.session.get(url + "info.0.json") as resp:
+            if resp.status == 404:
+                return await ctx.send("Invalid xkcd article number")
+            js = await resp.json()
+            embed = discord.Embed(color=self.bot.color, title=js["safe_title"], url=url)
+            embed.set_image(url=js["img"])
+            embed.set_footer(text=js["alt"])
+            await ctx.send(embed=embed)
+
 
     @commands.command()
     async def reddit(self, ctx: AnimeContext, *, text):
