@@ -118,7 +118,7 @@ class Anime(commands.Cog):
     @commands.command(aliases=["animequotes"], brief=" new new anime quote from the web ")
     async def animequote(self, ctx: AnimeContext):
         await ctx.trigger_typing()
-        num = random.randint(1, 7830)
+        num = random.randint(1, 8690)
         async with self.bot.session.get(f"https://www.less-real.com/quotes/{num}") as resp:
             embed = await self.animequote_(await resp.text())
             await ctx.send(embed=embed)
