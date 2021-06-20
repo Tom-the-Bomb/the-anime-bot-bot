@@ -1677,22 +1677,6 @@ class Images(commands.Cog):
             file = await self.grayscale_(url)
             await ctx.reply(file=file)
 
-    for name, func in inspect.getmembers(ImageFeatures):
-        if name.startswith("_"):
-            continue
-        if "Needs:" in inspect.getdoc(func):
-            continue
-
-        @commands.command(name=name, help=inspect.getdoc(func))
-        async def func(self, ctx, thing: Optional[Image_Union]):
-            async with Processing(ctx):
-                url = await self.get_gif_url(ctx, thing)
-                img = await self.bot.dag.image_process(func(), url)
-                file = discord.File(fp=img.image, filename=f"The_Anime_Bot_{name}.{img.format}")
-                await ctx.reply(file=file)
-
-        self.__cog__commands__ += (func,)
-
     # @commands.command()
     # async def polaroid(
     #     self,i
