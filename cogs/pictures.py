@@ -1463,7 +1463,7 @@ class Images(commands.Cog):
         tried = 3
         if ctx.author.id == 590323594744168494:
             await ctx.author.send(wtp.name)
-        embed = discord.Embed(color=0x2ECC71)
+        embed = discord.Embed(color=self.bot.color)
         ability = "".join(wtp.abilities)
         embed.set_author(name=f"{ctx.author} has {tried} tries")
         embed.add_field(name="pokemon's ability", value=ability)
@@ -1476,25 +1476,29 @@ class Images(commands.Cog):
         for x in range(3):
             msg = await self.bot.wait_for("message", check=check)
             tried -= 1
-            embed = discord.Embed(color=0x2ECC71)
+            embed = discord.Embed(color=self.bot.color)
             ability = ", ".join(wtp.abilities)
             embed.set_author(name=f"{ctx.author} has {tried} tries")
             embed.add_field(name="Pokemon's Ability", value=ability)
+            embed.add_field(name="Pokemon's Height", value=wtp.height)
+            embed.add_field(name="Pokemon's Weight", value=wtp.weight)
             embed.set_image(url=wtp.question)
             await message.edit(embed=embed)
             if msg.content.lower() == wtp.name.lower():
-                embed = discord.Embed(color=0x2ECC71)
+                embed = discord.Embed(color=self.bot.color, description=f"Is a [{wtp.name}]({wto.link})")
                 embed.set_author(name=f"{ctx.author} won")
                 embed.set_image(url=wtp.answer)
+                embed.set_footer(test=f"ID: {wtp.id}")
                 await ctx.reply(embed=embed)
                 await message.delete()
                 tried = 3
                 return
             if tried == 0:
                 await message.delete()
-                embed = discord.Embed(color=0x2ECC71)
+                embed = discord.Embed(color=self.bot.color, description=f"Is a [{wtp.name}]({wto.link})")
                 embed.set_author(name=f"{ctx.author} lost")
                 embed.set_image(url=wtp.answer)
+                embed.set_footer(test=f"ID: {wtp.id}")
                 await ctx.reply(embed=embed)
                 tried = 3
                 return
