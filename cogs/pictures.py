@@ -1467,6 +1467,8 @@ class Images(commands.Cog):
         ability = "".join(wtp.abilities)
         embed.set_author(name=f"{ctx.author} has {tried} tries")
         embed.add_field(name="pokemon's ability", value=ability)
+        embed.add_field(name="Pokemon's Height", value=wtp.height)
+        embed.add_field(name="Pokemon's Weight", value=wtp.weight)
         embed.set_image(url=wtp.question)
         message = await ctx.reply(embed=embed)
 
@@ -1480,15 +1482,13 @@ class Images(commands.Cog):
             ability = ", ".join(wtp.abilities)
             embed.set_author(name=f"{ctx.author} has {tried} tries")
             embed.add_field(name="Pokemon's Ability", value=ability)
-            embed.add_field(name="Pokemon's Height", value=wtp.height)
-            embed.add_field(name="Pokemon's Weight", value=wtp.weight)
             embed.set_image(url=wtp.question)
             await message.edit(embed=embed)
             if msg.content.lower() == wtp.name.lower():
                 embed = discord.Embed(color=self.bot.color, description=f"Is a [{wtp.name}]({wtp.link})")
                 embed.set_author(name=f"{ctx.author} won")
                 embed.set_image(url=wtp.answer)
-                embed.set_footer(test=f"ID: {wtp.id}")
+                embed.set_footer(text=f"ID: {wtp.id}")
                 await ctx.reply(embed=embed)
                 await message.delete()
                 tried = 3
@@ -1498,7 +1498,7 @@ class Images(commands.Cog):
                 embed = discord.Embed(color=self.bot.color, description=f"Is a [{wtp.name}]({wtp.link})")
                 embed.set_author(name=f"{ctx.author} lost")
                 embed.set_image(url=wtp.answer)
-                embed.set_footer(test=f"ID: {wtp.id}")
+                embed.set_footer(text=f"ID: {wtp.id}")
                 await ctx.reply(embed=embed)
                 tried = 3
                 return
