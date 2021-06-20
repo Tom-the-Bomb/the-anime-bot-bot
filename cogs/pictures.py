@@ -154,7 +154,7 @@ class Images(commands.Cog):
         self.cdn_ratelimiter = ratelimiter.RateLimiter(max_calls=3, period=7)
         self.ocr_ratelimiter = ratelimiter.RateLimiter(max_calls=2, period=10)
 
-        excluded = ("glitch", "invert", "magik", "rainbow")
+        excluded = ("glitch", "invert", "magik", "rainbow", "youtube")
 
         e = []
 
