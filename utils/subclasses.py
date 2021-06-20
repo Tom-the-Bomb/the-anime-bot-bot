@@ -361,7 +361,7 @@ class AnimeBot(commands.Bot):
             },
             connector=self.connector,
             json_serialize=ujson.dumps,
-            timeout=aiohttp.ClientTimeout(total=10),
+            timeout=aiohttp.ClientTimeout(total=60),
         )
 
     def initialize_libaries(self):
