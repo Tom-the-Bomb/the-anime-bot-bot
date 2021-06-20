@@ -168,7 +168,7 @@ class Images(commands.Cog):
                     file = discord.File(fp=img.image, filename=f"The_Anime_Bot_{name}.{img.format}")
                     await ctx.reply(file=file)
 
-            self.__cog__commands__ += (func,)
+            self.__cog_commands__ += (func,)
 
     async def get_url(self, ctx: AnimeContext, thing: Optional[str], **kwargs: Dict[str, Any]) -> str:
         url = None
