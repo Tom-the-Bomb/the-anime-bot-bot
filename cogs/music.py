@@ -54,7 +54,7 @@ class Player(wavelink.Player):
         self.loop = False
         self.queue = []
         self.queue_position = 0
-    
+
     def is_dj(self, ctx):
         if not self.dj:
             self.dj = ctx.author
@@ -121,7 +121,7 @@ class Player(wavelink.Player):
             self.queue.append(track)
             self.now_playing = track
             await ctx.send(f"Added `{track}` to the queue.")
-        
+
         self.dj = ctx.author
 
         await ctx.send(
@@ -163,10 +163,12 @@ class Player(wavelink.Player):
         self.now_playing = song
         await self.play(song)
 
+
 def is_dj():
     async def __is_dj__(ctx):
         player = ctx.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         return player.is_dj(ctx)
+
     return commands.check(__is_dj__)
 
 
@@ -312,14 +314,13 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             await ctx.send("Nothing is being played right now.")
             return False
         return True
-    
+
     @commands.command()
     @is_dj()
     async def transfer_dj(self, ctx, member: discord.Member):
         player = self.bot.wavelink.get_player(ctx.guild.id, cls=Player)
         player.dj == member
         return await ctx.send(f"{member.mention} is now the new dj.")
-
 
     @commands.command()
     async def node_info(self, ctx):
@@ -530,7 +531,7 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
             return await ctx.send("player not paused")
         await player.set_pause(False)
         await ctx.send("unpaused player")
-    
+
     @commands.group(invoke_without_command=True)
     async def filter(self, ctx):
         await ctx.send_help("filter")
@@ -546,13 +547,10 @@ class Music(commands.Cog, wavelink.WavelinkMixin):
         payload = {
             "op": "filters",
             "guildId": str(ctx.guild.id),
-            "timescale": { "pitch": pitch },
-            
+            "timescale": {"pitch": pitch},
         }
         await player.node._send(**payload)
         await player.seek(player.position)
-
-
 
     @commands.command()
     @is_dj()

@@ -23,9 +23,9 @@ class ErrorsMenuSource(menus.ListPageSource):
 
     async def format_page(self, menu, entries):
         return {
-            "embed": discord.Embed(
-                color=menu.ctx.bot.color, title="Errors", description="\n".join(entries)
-            ).set_footer(text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}")
+            "embed": discord.Embed(color=menu.ctx.bot.color, title="Errors", description="\n".join(entries)).set_footer(
+                text=f"Page {menu.current_page + 1}/{self.get_max_pages()} Total Entries: {len(self.data)}"
+            )
         }
 
 
@@ -135,23 +135,21 @@ class Error(commands.Cog):
             embed = self.embed(error)
             return await ctx.reply(embed=embed)
         error_id = await self.bot.db.fetchval(
-                "INSERT INTO errors (error, message, created_at, author_name, command) VALUES ($1, $2, $3, $4, $5) RETURNING error_id",
-                "".join(
-                    prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)
-                ),
-                ctx.message.content,
-                ctx.message.created_at,
-                str(ctx.author),
-                ctx.command.qualified_name,
-            )
+            "INSERT INTO errors (error, message, created_at, author_name, command) VALUES ($1, $2, $3, $4, $5) RETURNING error_id",
+            "".join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)),
+            ctx.message.content,
+            ctx.message.created_at,
+            str(ctx.author),
+            ctx.command.qualified_name,
+        )
         embed = discord.Embed(
-                color=0xFF0000,
-                description=f"some weird error occured, I have told my developer to fix it, if you wish to track this error you may run `{ctx.prefix}errors track {error_id}`",
-            )
+            color=0xFF0000,
+            description=f"some weird error occured, I have told my developer to fix it, if you wish to track this error you may run `{ctx.prefix}errors track {error_id}`",
+        )
         await ctx.send(embed=embed)
-            # print(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
+        # print(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
         print("Ignoring exception in command {}:".format(ctx.command), file=sys.stderr)
-            # traceback.print_exception(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
+        # traceback.print_exception(''.join(prettify_exceptions.DefaultFormatter().format_exception(type(error), error, error.__traceback__)))
         traceback.print_exception(type(error), error, error.__traceback__, file=sys.stderr)
 
     @commands.group(invoke_without_command=True)
@@ -190,9 +188,7 @@ class Error(commands.Cog):
             embed.add_field(name="command", value=error["command"], inline=False)
             if not upload:
                 return await ctx.send(embed=embed)
-            return await ctx.send(
-                embed=embed, file=discord.File(BytesIO(error["error"].encode("utf-8")), "error.txt")
-            )
+            return await ctx.send(embed=embed, file=discord.File(BytesIO(error["error"].encode("utf-8")), "error.txt"))
 
     @errors.command()
     @commands.is_owner()
@@ -213,7 +209,9 @@ class Error(commands.Cog):
         """
         Track a error
         """
-        r = await self.bot.db.execute("UPDATE errors SET trackers = array_append(trackers, $1) WHERE error_id = $2", ctx.author.id, id)
+        r = await self.bot.db.execute(
+            "UPDATE errors SET trackers = array_append(trackers, $1) WHERE error_id = $2", ctx.author.id, id
+        )
         if r[-1] == 0:
             return await ctx.send("Error not found.")
         await ctx.send(f"Ok, you are now tracking error {id} I will dm you if it get fixed")
@@ -223,7 +221,9 @@ class Error(commands.Cog):
         """
         untrack a error
         """
-        r = await self.bot.db.execute("UPDATE errors SET trackers = array_remove(trackers, $1) WHERE error_id = $2", ctx.author.id, id)
+        r = await self.bot.db.execute(
+            "UPDATE errors SET trackers = array_remove(trackers, $1) WHERE error_id = $2", ctx.author.id, id
+        )
         if r[-1] == 0:
             return await ctx.send("Error not found.")
         await ctx.send(f"Ok, you are no longer tracking error {id}")

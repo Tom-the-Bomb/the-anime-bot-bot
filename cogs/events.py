@@ -388,10 +388,7 @@ class Events(commands.Cog):
             if payload.guild_id:
                 if len(list(s)) >= 2:
                     try:
-                        await self.bot.http.delete_messages(
-                            payload.channel_id,
-                            list(s)
-                        )
+                        await self.bot.http.delete_messages(payload.channel_id, list(s))
                     except (discord.Forbidden, discord.NotFound):
                         pass
                 for i in s:
@@ -496,11 +493,7 @@ class Events(commands.Cog):
                 f"Hii there why u ping me smh oh i mean hii my prefix is `{', '.join(self.bot.prefixes[message.guild.id])}` "
             )
             self.bot.to_delete_message_cache[message.id] = [message_]
-        if (
-            message.content.startswith(";;")
-            and not message.author.bot
-            and self.bot.emojioptions.get(message.author.id)
-        ):
+        if message.content.startswith(";;") and not message.author.bot and self.bot.emojioptions.get(message.author.id):
             lists = []
             msg = message.content.replace(" ", "")
             emojis = msg.split(";;")

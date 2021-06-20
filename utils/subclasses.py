@@ -40,37 +40,41 @@ from discord.ext import commands
 
 token = re.compile(r"([a-zA-Z0-9]{24}\.[a-zA-Z0-9]{6}\.[a-zA-Z0-9_\-]{27}|mfa\.[a-zA-Z0-9_\-]{84})")
 
+
 def _cancel_tasks(loop):
-        tasks = {t for t in asyncio.all_tasks(loop=loop) if not t.done()}
+    tasks = {t for t in asyncio.all_tasks(loop=loop) if not t.done()}
 
-        if not tasks:
-            return
+    if not tasks:
+        return
 
-        log.info('Cleaning up after %d tasks.', len(tasks))
-        for task in tasks:
-            task.cancel()
-        try:
-            loop.run_until_complete(asyncio.wait_for(asyncio.gather(*tasks, return_exceptions=True), timeout=10))
-        except asyncio.TimeoutError:
-            log.error("Timeouted while cancelling tasks, Ignoring.")
-        log.info('All tasks finished cancelling.')
+    log.info("Cleaning up after %d tasks.", len(tasks))
+    for task in tasks:
+        task.cancel()
+    try:
+        loop.run_until_complete(asyncio.wait_for(asyncio.gather(*tasks, return_exceptions=True), timeout=10))
+    except asyncio.TimeoutError:
+        log.error("Timeouted while cancelling tasks, Ignoring.")
+    log.info("All tasks finished cancelling.")
 
-        for task in tasks:
-            if task.cancelled():
-                continue
-            if task.exception() is not None:
-                loop.call_exception_handler({
-                    'message': 'Unhandled exception during Client.run shutdown.',
-                    'exception': task.exception(),
-                    'task': task
-                })
+    for task in tasks:
+        if task.cancelled():
+            continue
+        if task.exception() is not None:
+            loop.call_exception_handler(
+                {
+                    "message": "Unhandled exception during Client.run shutdown.",
+                    "exception": task.exception(),
+                    "task": task,
+                }
+            )
+
 
 def _cleanup_loop(loop):
     try:
         _cancel_tasks(loop)
         loop.run_until_complete(loop.shutdown_asyncgens())
     finally:
-        log.info('Closing the event loop.')
+        log.info("Closing the event loop.")
         loop.close()
 
 
@@ -140,64 +144,65 @@ class AnimeContext(commands.Context):
         if codeblock:
             content = f"```{lang}\n" + str(content) + "\n```"
         if self.message.id in self.bot._message_cache:
-                        if self.message.edited_at:
-                            msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
-                            if kwargs.get("file"):
-                                m = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
-                                self.bot._message_cache[self.message.id] = m.id
-                                try:
-                                    self.bot.to_delete_message_cache[self.message.id].append(m.id)
-                                except KeyError:
-                                    pass
-                                return m
-                            await msg.edit(content=content, **kwargs)
-                            return msg
-                        message = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
-                        try:
-                            self.bot.to_delete_message_cache[self.message.id].append(message.id)
-                        except KeyError:
-                            pass
-                        return message
+            if self.message.edited_at:
+                msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
+                if kwargs.get("file"):
+                    m = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
+                    self.bot._message_cache[self.message.id] = m.id
+                    try:
+                        self.bot.to_delete_message_cache[self.message.id].append(m.id)
+                    except KeyError:
+                        pass
+                    return m
+                await msg.edit(content=content, **kwargs)
+                return msg
+            message = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
+            try:
+                self.bot.to_delete_message_cache[self.message.id].append(message.id)
+            except KeyError:
+                pass
+            return message
         else:
             message = await super().send(content, nonce=os.urandom(12).hex(), **kwargs)
             self.bot._message_cache[self.message.id] = message.id
-            self.bot.to_delete_message_cache[self.message.id] = discord.utils.SnowflakeList((message.id, ))
+            self.bot.to_delete_message_cache[self.message.id] = discord.utils.SnowflakeList((message.id,))
             return message
 
     async def reply(self, content=None, *, codeblock=False, lang="py", **kwargs):
         if codeblock:
             content = f"```{lang}\n" + str(content) + "\n```"
         if self.message.id in self.bot._message_cache:
-                        if self.message.edited_at:
-                            msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
-                            if kwargs.get("file"):
-                                m = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
-                                self.bot._message_cache[self.message.id] = m.id
-                                try:
-                                    self.bot.to_delete_message_cache[self.message.id].append(m.id)
-                                except KeyError:
-                                    pass
-                                return m
-                            if not kwargs.get("allowed_mentions"):
-                                msg = await msg.edit(
-                                    content=content,
-                                    allowed_mentions=discord.AllowedMentions.none(),
-                                    **kwargs,
-                                )
-                            else:
-                                msg = await msg.edit(content=content, **kwargs)
-                            return msg
-                        message = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
-                        try:
-                            self.bot.to_delete_message_cache[self.message.id].append(message.id)
-                        except KeyError:
-                            pass
-                        return message
+            if self.message.edited_at:
+                msg = self.channel.get_partial_message(self.bot._message_cache[self.message.id])
+                if kwargs.get("file"):
+                    m = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
+                    self.bot._message_cache[self.message.id] = m.id
+                    try:
+                        self.bot.to_delete_message_cache[self.message.id].append(m.id)
+                    except KeyError:
+                        pass
+                    return m
+                if not kwargs.get("allowed_mentions"):
+                    msg = await msg.edit(
+                        content=content,
+                        allowed_mentions=discord.AllowedMentions.none(),
+                        **kwargs,
+                    )
+                else:
+                    msg = await msg.edit(content=content, **kwargs)
+                return msg
+            message = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
+            try:
+                self.bot.to_delete_message_cache[self.message.id].append(message.id)
+            except KeyError:
+                pass
+            return message
         else:
             message = await super().reply(content, nonce=os.urandom(12).hex(), **kwargs)
             self.bot._message_cache[self.message.id] = message.id
-            self.bot.to_delete_message_cache[self.message.id] = discord.utils.SnowflakeList((message.id, ))
+            self.bot.to_delete_message_cache[self.message.id] = discord.utils.SnowflakeList((message.id,))
             return message
+
 
 class InvalidImage(Exception):
     pass
@@ -323,7 +328,7 @@ class AnimeBot(commands.Bot):
         if not ctx.command.qualified_name.startswith("jishaku"):
             await ctx.trigger_typing()
         ctx.bot.loop.create_task(self.chunk_(ctx))
-    
+
     async def initialize_constants(self):
         self.default_prefix = ["ovo "]
         self.context = AnimeContext
@@ -358,7 +363,7 @@ class AnimeBot(commands.Bot):
             json_serialize=ujson.dumps,
             timeout=aiohttp.ClientTimeout(total=10),
         )
-    
+
     def initialize_libaries(self):
         self.mystbin = mystbin.Client(session=self.session)
         self.vacefron_api = vacefron.Client(session=self.session, loop=self.loop)
@@ -366,7 +371,7 @@ class AnimeBot(commands.Bot):
         self.alex = alexflipnote.Client(alexflipnote_, session=self.session, loop=self.loop)
         self.ball = eight_ball.ball()
         self.zaneapi = aiozaneapi.Client(zane_api)
-    
+
     def load_all_extensions(self):
         for file in os.listdir("./cogs"):
             if file.endswith(".py"):
@@ -382,7 +387,6 @@ class AnimeBot(commands.Bot):
                     self.unload_extension(f"cogs.{file[:-3]}")
                 except Exception as e:
                     self.logger.critical(f"Unable to unload cog: {file}, ignoring. Exception: {e}")
-
 
     def run(self, *args, **kwargs):
         # self.ipc.start()
@@ -401,7 +405,9 @@ class AnimeBot(commands.Bot):
         self.db = db
         self.logger.info("Db initialized successfully")
         self.logger.info("Initizlizing Constants")
-        self.loop.run_until_complete(self.initialize_constants()) # I know there are no reason for this to be async but I want it to stop spamming that not created in loop error
+        self.loop.run_until_complete(
+            self.initialize_constants()
+        )  # I know there are no reason for this to be async but I want it to stop spamming that not created in loop error
         self.logger.info("Constants initialized successfully.")
         self.logger.info("Initizlizing Libaries")
         self.initialize_libaries()
@@ -439,10 +445,10 @@ class AnimeBot(commands.Bot):
         try:
             loop.run_forever()
         except KeyboardInterrupt:
-            log.info('Received signal to terminate bot and event loop.')
+            log.info("Received signal to terminate bot and event loop.")
         finally:
             future.remove_done_callback(stop_loop_on_completion)
-            log.info('Cleaning up tasks.')
+            log.info("Cleaning up tasks.")
             _cleanup_loop(loop)
 
         if not future.cancelled():

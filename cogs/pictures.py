@@ -38,8 +38,7 @@ import qrcode
 import ratelimiter
 import ujson
 from asyncdagpi import ImageFeatures
-from PIL import (Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter,
-                 ImageOps, ImageSequence)
+from PIL import Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter, ImageOps, ImageSequence
 from pyzbar.pyzbar import decode
 from qrcode.image.pure import PymagingImage
 from twemoji_parser import emoji_to_url
@@ -106,9 +105,7 @@ class Processing:
 
     async def __aenter__(self, *args: List[Any], **kwargs):
         self.start = time.perf_counter()
-        self.m = await asyncio.wait_for(
-            self.ctx.reply("<a:loading:849756871597490196> Image Processing."), timeout=3.0
-        )
+        self.m = await asyncio.wait_for(self.ctx.reply("<a:loading:849756871597490196> Image Processing."), timeout=3.0)
         return self
 
     async def __aexit__(self, *args, **kwargs):
@@ -275,7 +272,7 @@ class Images(commands.Cog):
         if len(approx) == 5:
             return "pentagon"
         return "circle"
-    
+
     @staticmethod
     def save_transparent_gif(images: List[Image.Image], durations: Union[int, List[int]], save_file):
         # root_frame, save_args = self._create_animated_gif(images, durations)
@@ -424,7 +421,7 @@ class Images(commands.Cog):
         img_.close()
         img.close()
         return b, "png"
-    
+
     @asyncexe()
     def spin__(self, image: bytes, speed: int) -> Tuple[BytesIO, str]:
         im_ = self.open_pil_image(BytesIO(image))
@@ -581,7 +578,7 @@ class Images(commands.Cog):
                 img.save(file=b)
                 b.seek(0)
                 return b, img.format_
-    
+
     @commands.command(name="resize")
     async def resize_(self, ctx, thing: Optional[Image_Union], width: int, height: int):
         """
@@ -596,14 +593,18 @@ class Images(commands.Cog):
             async with self.bot.session.get(url) as resp:
                 b, format = await self.process_gif((await resp.read()), lambda x: x.resize((width, height)))
                 await ctx.send(file=discord.File(b, f"The_Anime_Bot_resize.{format}"))
-    
+
     @commands.command()
     async def changemymind(self, ctx, *, thing: str):
         """
         Change my mind
         """
         async with Processing(ctx):
-            async with self.bot.session.get("https://nekobot.xyz/api/imagegen", params={"type": "changemymind", "text": thing}, timeout=aiohttp.ClientTimeout()) as resp:
+            async with self.bot.session.get(
+                "https://nekobot.xyz/api/imagegen",
+                params={"type": "changemymind", "text": thing},
+                timeout=aiohttp.ClientTimeout(),
+            ) as resp:
                 j = await resp.json()
                 async with self.bot.session.get(j["message"]) as resp:
                     b = BytesIO(await resp.read())
@@ -616,12 +617,15 @@ class Images(commands.Cog):
         """
         async with Processing(ctx):
             url = await self.get_url(ctx, thing, checktype=True)
-            async with self.bot.session.get("https://nekobot.xyz/api/imagegen", params={"type": "stickbug", "url": url}, timeout=aiohttp.ClientTimeout()) as resp:
+            async with self.bot.session.get(
+                "https://nekobot.xyz/api/imagegen",
+                params={"type": "stickbug", "url": url},
+                timeout=aiohttp.ClientTimeout(),
+            ) as resp:
                 j = await resp.json()
                 async with self.bot.session.get(j["message"]) as resp:
                     b = BytesIO(await resp.read())
                     await ctx.send(file=discord.File(b, "stickbug.mp4"))
-
 
     @commands.command(aliases=["converti"])
     async def convertimage(
@@ -801,9 +805,7 @@ class Images(commands.Cog):
             return b
 
     @staticmethod
-    def rgb_to_hsv(
-        r: Union[int, float], g: Union[int, float], b: Union[int, float]
-    ) -> Tuple[float, float, float]:
+    def rgb_to_hsv(r: Union[int, float], g: Union[int, float], b: Union[int, float]) -> Tuple[float, float, float]:
         r, g, b = r / 255.0, g / 255.0, b / 255.0
         mx = max(r, g, b)
         mn = min(r, g, b)
@@ -821,9 +823,7 @@ class Images(commands.Cog):
         return h, s, v
 
     @staticmethod
-    def rgb_to_xy_bri(
-        r: Union[int, float], g: Union[int, float], b: Union[int, float]
-    ) -> Tuple[float, float, float]:
+    def rgb_to_xy_bri(r: Union[int, float], g: Union[int, float], b: Union[int, float]) -> Tuple[float, float, float]:
         r, g, b = r / 255.0, g / 255.0, b / 255.0
         o = (
             (0.412453 * r + 0.35758 * g + 0.180423 * b),

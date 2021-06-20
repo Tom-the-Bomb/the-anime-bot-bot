@@ -5,7 +5,6 @@ from utils.asyncstuff import asyncexe
 
 
 class utils:
-
     @staticmethod
     @asyncexe()
     def all_possible_caps(text):

@@ -35,32 +35,32 @@ tenor_API_key = config.tenor_API_key
 
 
 class FFmpegPCMAudio(discord.AudioSource):
-    def __init__(self, source, *, executable='ffmpeg', pipe=False, stderr=None, before_options=None, options=None):
+    def __init__(self, source, *, executable="ffmpeg", pipe=False, stderr=None, before_options=None, options=None):
         stdin = None if not pipe else source
         args = [executable]
         if isinstance(before_options, str):
             args.extend(shlex.split(before_options))
-        args.append('-i')
-        args.append('-' if pipe else source)
-        args.extend(('-f', 's16le', '-ar', '48000', '-ac', '2', '-loglevel', 'warning'))
+        args.append("-i")
+        args.append("-" if pipe else source)
+        args.extend(("-f", "s16le", "-ar", "48000", "-ac", "2", "-loglevel", "warning"))
         if isinstance(options, str):
             args.extend(shlex.split(options))
-        args.append('pipe:1')
+        args.append("pipe:1")
         self._process = None
         try:
             self._process = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=stderr)
-            self._stdout = io.BytesIO(
-                self._process.communicate(input=stdin)[0]
-            )
+            self._stdout = io.BytesIO(self._process.communicate(input=stdin)[0])
         except FileNotFoundError:
-            raise discord.ClientException(executable + ' was not found.') from None
+            raise discord.ClientException(executable + " was not found.") from None
         except subprocess.SubprocessError as exc:
-            raise discord.ClientException('Popen failed: {0.__class__.__name__}: {0}'.format(exc)) from exc
+            raise discord.ClientException("Popen failed: {0.__class__.__name__}: {0}".format(exc)) from exc
+
     def read(self):
         ret = self._stdout.read(Encoder.FRAME_SIZE)
         if len(ret) != Encoder.FRAME_SIZE:
-            return b''
+            return b""
         return ret
+
     def cleanup(self):
         proc = self._process
         if proc is None:
@@ -202,7 +202,7 @@ class Fun(commands.Cog):
                 ]
             )
         )
-    
+
     @commands.command()
     async def akinator(self, ctx):
         reaction_controls = {
@@ -212,15 +212,21 @@ class Fun(commands.Cog):
             "\U0001f615": "probably",
             "\U0001f61e": "probably not",
             "\U000025c0": "back",
-            "\U000023f9": "stop"
+            "\U000023f9": "stop",
         }
+
         def make_bar(progress: float):
             total_value = 100
             value_per_block = 5
-            return "▓"*int(progress/value_per_block) + "░"*int((total_value/value_per_block)-(progress/value_per_block))
+            return "▓" * int(progress / value_per_block) + "░" * int(
+                (total_value / value_per_block) - (progress / value_per_block)
+            )
+
         await ctx.send("Are we guessing a character, animal, or an object? Type it in chat.")
         try:
-            _m = await self.bot.wait_for("message", check=lambda x: x.author.id == ctx.author.id and x.channel.id == ctx.channel.id, timeout=60)
+            _m = await self.bot.wait_for(
+                "message", check=lambda x: x.author.id == ctx.author.id and x.channel.id == ctx.channel.id, timeout=60
+            )
         except asyncio.TimeoutError:
             return await ctx.send("Timeouted, aborting.")
         if _m.content == "animal":
@@ -233,7 +239,12 @@ class Fun(commands.Cog):
             return await ctx.send("Invalid response, must be character, animal, or an object. Case sensitive.")
         aki = Akinator()
         q = await aki.start_game(language=l, child_mode=not ctx.channel.is_nsfw())
-        embed = discord.Embed(color=self.bot.color, title="Akinator", description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items()) + f"\n{make_bar(aki.progression)}")
+        embed = discord.Embed(
+            color=self.bot.color,
+            title="Akinator",
+            description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items())
+            + f"\n{make_bar(aki.progression)}",
+        )
         embed.set_thumbnail(url="https://en.akinator.com/bundles/elokencesite/images/akinator.png?v94")
         embed.add_field(name=f"Question {aki.step}", value=q, inline=False)
         m = await ctx.send(embed=embed)
@@ -241,9 +252,23 @@ class Fun(commands.Cog):
             await m.add_reaction(r)
         while aki.progression <= 80:
             tasks = [
-                    asyncio.ensure_future(self.bot.wait_for('raw_reaction_add', check=lambda x: x.user_id == ctx.author.id and x.message_id == m.id and x.emoji.name in reaction_controls)),
-                    asyncio.ensure_future(self.bot.wait_for('raw_reaction_remove', check=lambda x: x.user_id == ctx.author.id and x.message_id == m.id and x.emoji.name in reaction_controls))
-                ]
+                asyncio.ensure_future(
+                    self.bot.wait_for(
+                        "raw_reaction_add",
+                        check=lambda x: x.user_id == ctx.author.id
+                        and x.message_id == m.id
+                        and x.emoji.name in reaction_controls,
+                    )
+                ),
+                asyncio.ensure_future(
+                    self.bot.wait_for(
+                        "raw_reaction_remove",
+                        check=lambda x: x.user_id == ctx.author.id
+                        and x.message_id == m.id
+                        and x.emoji.name in reaction_controls,
+                    )
+                ),
+            ]
             done, pending = await asyncio.wait(tasks, timeout=60, return_when=asyncio.FIRST_COMPLETED)
             for task in pending:
                 task.cancel()
@@ -262,21 +287,25 @@ class Fun(commands.Cog):
                 return await m.delete()
             else:
                 q = await aki.answer(r)
-            embed = discord.Embed(color=self.bot.color, title="Akinator", description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items()) + f"\n{make_bar(aki.progression)}")
+            embed = discord.Embed(
+                color=self.bot.color,
+                title="Akinator",
+                description="\n".join(f"{i} -> {v}" for i, v in reaction_controls.items())
+                + f"\n{make_bar(aki.progression)}",
+            )
             embed.set_thumbnail(url="https://en.akinator.com/bundles/elokencesite/images/akinator.png?v94")
             embed.add_field(name=f"Question {aki.step}", value=q, inline=False)
             await m.edit(embed=embed)
         await aki.win()
         guess = aki.first_guess
-        embed = discord.Embed(color=self.bot.color, title=guess["name"], description=guess["description"] + f"\n{make_bar(aki.progression)}")
+        embed = discord.Embed(
+            color=self.bot.color,
+            title=guess["name"],
+            description=guess["description"] + f"\n{make_bar(aki.progression)}",
+        )
         embed.set_thumbnail(url="https://en.akinator.com/bundles/elokencesite/images/akinator.png?v94")
         embed.set_image(url=guess["absolute_picture_path"])
         await m.edit(embed=embed)
-
-
-
-
-
 
     @commands.command()
     async def ship(
@@ -706,7 +735,7 @@ class Fun(commands.Cog):
         t.write_to_fp(buffer)
         buffer.seek(0)
         return buffer
-    
+
     @commands.group(invoke_without_command=True)
     async def tts(self, ctx: AnimeContext, lang: str, text: str):
         async with ctx.typing():
@@ -731,7 +760,7 @@ class Fun(commands.Cog):
         if not c.is_connected():
             await c.disconnect()
             del c
-            c =  await ctx.author.voice.channel.connect()
+            c = await ctx.author.voice.channel.connect()
         buffer = await self.tts_(text, lang)
         if c.is_playing():
             c.stop()
@@ -743,7 +772,6 @@ class Fun(commands.Cog):
                 return
             await asyncio.sleep(0)
             continue
-
 
     @commands.command()
     async def sushi(self, ctx):

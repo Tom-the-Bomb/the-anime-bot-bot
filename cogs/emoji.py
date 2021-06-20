@@ -5,7 +5,8 @@ import discord
 from discord.ext import commands, tasks
 import ujson
 
-EMOJI_REGEX = re.compile(r'<a?:.+?:([0-9]{15,21})>')
+EMOJI_REGEX = re.compile(r"<a?:.+?:([0-9]{15,21})>")
+
 
 class Emoji(commands.Cog):
     def __init__(self, bot):
@@ -13,7 +14,7 @@ class Emoji(commands.Cog):
         self.to_save = {}
         self.save_lock = asyncio.Lock()
         self._task = self.save_stats.start()
-    
+
     @commands.Cog.listener()
     async def on_message(self, message):
         if not message.guild:
@@ -34,7 +35,7 @@ class Emoji(commands.Cog):
 
     def cog_unload(self):
         self._task.cancel()
-    
+
     @tasks.loop(seconds=10)
     async def save_stats(self):
         await self.bot.wait_until_ready()
@@ -49,11 +50,11 @@ class Emoji(commands.Cog):
                         continue
                     for _i, c in ujson.loads(o).items():
                         _c = v.get(_i, 0)
-                        v[_i] = _c + c  
+                        v[_i] = _c + c
                     j = ujson.dumps(v, ensure_ascii=True, escape_forward_slashes=False)
                     await con.execute(sql, i, j)
             self.to_save = {}
-    
+
     @commands.command()
     async def emojistats(self, ctx):
         stats = await self.bot.db.fetch("SELECT * FROM emoji_stats")
@@ -66,13 +67,6 @@ class Emoji(commands.Cog):
         embed = discord.Embed(color=self.bot.color, title="Emoji Stats", description="\n".join(to_format))
         await ctx.send(embed=embed)
 
+
 def setup(bot):
     bot.add_cog(Emoji(bot))
-
-
-
-
-
-        
-
-

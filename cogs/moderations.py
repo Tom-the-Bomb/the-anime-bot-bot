@@ -158,7 +158,11 @@ class Moderations(commands.Cog):
         for c in ctx.guild.channels:
             o = c.overwrites
             if role_overwrite := o.get(r):
-                if role_overwrite.send_messages is False and role_overwrite.connect is False and role_overwrite.add_reactions is False:
+                if (
+                    role_overwrite.send_messages is False
+                    and role_overwrite.connect is False
+                    and role_overwrite.add_reactions is False
+                ):
                     continue
             o[r] = discord.PermissionOverwrite(send_messages=False, connect=False, add_reactions=False)
             await c.edit(overwrites=o, reason="Muted role")

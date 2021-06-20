@@ -18,14 +18,14 @@ import humanize
 import psutil
 import ujson
 from discord.ext import commands
+
 # from github import Github
 from utils.asyncstuff import asyncexe
 from utils.embed import embedbase
 from utils.fuzzy import finder
 from utils.subclasses import AnimeContext
 
-from jishaku.paginators import (PaginatorEmbedInterface, PaginatorInterface,
-                                WrappedPaginator)
+from jishaku.paginators import PaginatorEmbedInterface, PaginatorInterface, WrappedPaginator
 
 gittoken = config.gittoken
 # g = Github(gittoken)
@@ -136,28 +136,23 @@ System:
         embed = discord.Embed(
             color=self.bot.color,
             title="Vote Leaderboard",
-            description="\n".join([
-                f"{str(await self.bot.getch(i['user_id']))} - {i['count']}"
-                for i in count
-                ]
-            ),
+            description="\n".join([f"{str(await self.bot.getch(i['user_id']))} - {i['count']}" for i in count]),
         )
-
 
         await ctx.reply(embed=embed)
 
     @commands.command()
     async def snipe(self, ctx):
         """
-        no this is never happening, 
-        people delete message for a reason 
+        no this is never happening,
+        people delete message for a reason
         and you just snipe that just not right.
         """
         await ctx.reply(
             (
-            "no this is never happening,", 
-            "people delete message for a reason", 
-            "and you just snipe that just not right.",
+                "no this is never happening,",
+                "people delete message for a reason",
+                "and you just snipe that just not right.",
             )
         )
 
@@ -168,7 +163,7 @@ System:
     @commands.command(aliases=["randomtoken"])
     async def randombottoken(self, ctx: AnimeContext, user: discord.User = None):
         """
-        Generate a completely random token from a server member 
+        Generate a completely random token from a server member
         THE TOKEN IS NOT VALID so don't be scared
         """
         member = random.choice(ctx.guild.members) if not user else user
