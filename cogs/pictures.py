@@ -162,15 +162,15 @@ class Images(commands.Cog):
             e.append(i)
 
         for name, _func in inspect.getmembers(ImageFeatures):
+            f = _func()
             if name.startswith("_"):
                 continue
-            if "Needs:" in inspect.getdoc(_func):
+            elif "Needs:" in inspect.getdoc(_func):
                 continue
             if name in excluded:
                 continue
             if name in e:
                 continue
-            f = _func()
             @commands.command(name=name, help=inspect.getdoc(_func))
             async def auto_image_handler(self, ctx, thing: Optional[Image_Union]):
                 async with Processing(ctx):
