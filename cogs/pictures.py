@@ -164,7 +164,7 @@ class Images(commands.Cog):
         for name, _func in inspect.getmembers(ImageFeatures):
             if name.startswith("_"):
                 continue
-            if "Needs:" in inspect.getdoc(func):
+            if "Needs:" in inspect.getdoc(_func):
                 continue
             if name in excluded:
                 continue
