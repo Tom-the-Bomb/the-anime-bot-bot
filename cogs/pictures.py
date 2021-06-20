@@ -39,8 +39,7 @@ import qrcode
 import ratelimiter
 import ujson
 from asyncdagpi import ImageFeatures
-from PIL import (Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter,
-                 ImageOps, ImageSequence)
+from PIL import Image, ImageColor, ImageDraw, ImageEnhance, ImageFilter, ImageOps, ImageSequence
 from pyzbar.pyzbar import decode
 from qrcode.image.pure import PymagingImage
 from twemoji_parser import emoji_to_url
@@ -144,7 +143,6 @@ class Processing:
 #                 await ctx.reply(file=file)
 
 
-                
 #         """
 #         super().__init__(name=route_name, description=func.description)
 
@@ -1678,7 +1676,24 @@ class Images(commands.Cog):
             file = await self.grayscale_(url)
             await ctx.reply(file=file)
 
+<<<<<<< HEAD
+=======
+    for name, func in inspect.getmembers(ImageFeatures):
+        if name.startswith("_"):
+            continue
+        if "Needs:" in inspect.getdoc(func):
+            continue
 
+        @commands.command(name=name, help=inspect.getdoc(func))
+        async def func(self, ctx, thing: Optional[Image_Union]):
+            async with Processing(ctx):
+                url = await self.get_gif_url(ctx, thing)
+                img = await self.bot.dag.image_process(func(), url)
+                file = discord.File(fp=img.image, filename=f"The_Anime_Bot_{name}.{img.format}")
+                await ctx.reply(file=file)
+>>>>>>> 21aa42d073e5b902c017eba8ce37652ce399baa1
+
+        self.__cog__commands__ += (func,)
 
     # @commands.command()
     # async def polaroid(
