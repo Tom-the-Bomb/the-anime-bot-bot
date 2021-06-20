@@ -1485,7 +1485,7 @@ class Images(commands.Cog):
             embed.set_image(url=wtp.question)
             await message.edit(embed=embed)
             if msg.content.lower() == wtp.name.lower():
-                embed = discord.Embed(color=self.bot.color, description=f"Is a [{wtp.name}]({wto.link})")
+                embed = discord.Embed(color=self.bot.color, description=f"Is a [{wtp.name}]({wtp.link})")
                 embed.set_author(name=f"{ctx.author} won")
                 embed.set_image(url=wtp.answer)
                 embed.set_footer(test=f"ID: {wtp.id}")
@@ -1495,7 +1495,7 @@ class Images(commands.Cog):
                 return
             if tried == 0:
                 await message.delete()
-                embed = discord.Embed(color=self.bot.color, description=f"Is a [{wtp.name}]({wto.link})")
+                embed = discord.Embed(color=self.bot.color, description=f"Is a [{wtp.name}]({wtp.link})")
                 embed.set_author(name=f"{ctx.author} lost")
                 embed.set_image(url=wtp.answer)
                 embed.set_footer(test=f"ID: {wtp.id}")
